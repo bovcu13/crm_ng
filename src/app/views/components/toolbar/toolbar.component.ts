@@ -13,37 +13,47 @@ export class ToolbarComponent {
     this.items = [
       {
         label: 'CRM',
-        routerLink: ['/'] ,
+        routerLink: ['/main/dashboard'] ,
       },
       {
         label: '商機',
+        routerLink: ['/main/lead'],
       },
       {
         label: '帳戶',
+        routerLink: ['/main/account'],
       },
       {
         label: '聯絡人',
+        routerLink: ['/main/contact'],
       },
       {
         label: '機會',
+        routerLink: ['/main/opportunity'],
       },
       {
         label: '報價',
+        routerLink: ['/main/quote'],
       },
       {
         label: '行銷活動',
+        routerLink: ['/main/campaign'],
       },
       {
         label: '預測',
+        routerLink: ['/main/forecasting'],
       },
       {
         label: '報告',
+        routerLink: ['/main/report'],
       },
       {
         label: '顯示面板',
+        routerLink: ['/main/display'],
       },
       {
         label: '行事曆',
+        routerLink: ['/main/event'],
       },
       // {
       //   label: '報價',
