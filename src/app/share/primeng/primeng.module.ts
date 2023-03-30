@@ -40,6 +40,7 @@ import { ImageModule } from 'primeng/image';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChipsModule } from 'primeng/chips';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 @NgModule({
   declarations: [],
@@ -86,6 +87,7 @@ import { ChipsModule } from 'primeng/chips';
     TooltipModule,
     ChipsModule,
     RadioButtonModule,
+    FullCalendarModule
   ],
 })
 export class PrimengModule { }

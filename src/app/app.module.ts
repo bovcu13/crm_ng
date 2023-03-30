@@ -35,7 +35,7 @@ import { EventComponent } from './views/features/event/event.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    ShareModule
+    ShareModule,
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [],
