@@ -8,12 +8,11 @@ import { MenuItem } from 'primeng/api';
 })
 export class ToolbarComponent {
   showSidebar: any
-  items: MenuItem[] = [];
-  ngOnInit() {
+  items: MenuItem[] = []; ngOnInit() {
     this.items = [
       {
         label: 'CRM',
-        routerLink: ['/'] ,
+        routerLink: ['/'],
       },
       {
         label: '商機',

@@ -6,12 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-  items: any[]=[];
-  ngOnInit() {
-    //this.initChart();
-    this.items = [
-      { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-      { label: 'Remove', icon: 'pi pi-fw pi-minus' }
-    ];
-  }
+
 }
