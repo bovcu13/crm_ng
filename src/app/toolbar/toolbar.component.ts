@@ -12,92 +12,45 @@ export class ToolbarComponent {
   ngOnInit() {
     this.items = [
       {
-        label: 'CRM',
-        routerLink: ['/'] ,
-      },
-      {
         label: '商機',
+        routerLink: ['/Lead'],
       },
       {
         label: '帳戶',
+        routerLink: ['/Account'],
       },
       {
         label: '聯絡人',
+        routerLink: ['/Contact'],
       },
       {
         label: '機會',
+        routerLink: ['/Opportunity'],
       },
       {
         label: '報價',
+        routerLink: ['/Quote'],
       },
       {
         label: '行銷活動',
+        routerLink: ['/Campaign'],
       },
       {
         label: '預測',
+        routerLink: ['/Forecasting'],
       },
       {
         label: '報告',
+        routerLink: ['/Report'],
       },
       {
         label: '顯示面板',
+        routerLink: [''],
       },
       {
         label: '行事曆',
+        routerLink: ['/Event'],
       },
-      // {
-      //   label: '報價',
-      //   items: [
-      //     {
-      //       label: 'Submenu 1', icon: 'pi pi-fw pi-bookmark',
-      //       items: [
-      //         {
-      //           label: 'Submenu 1.1', icon: 'pi pi-fw pi-bookmark',
-      //           items: [
-      //             { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-      //             { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-      //             { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' },
-      //           ]
-      //         },
-      //         {
-      //           label: 'Submenu 1.2', icon: 'pi pi-fw pi-bookmark',
-      //           items: [
-      //             { label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }
-      //           ]
-      //         },
-      //       ]
-      //     },
-      //     {
-      //       label: 'Submenu 2', icon: 'pi pi-fw pi-bookmark',
-      //       items: [
-      //         {
-      //           label: 'Submenu 2.1', icon: 'pi pi-fw pi-bookmark',
-      //           items: [
-      //             { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-      //             { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' },
-      //           ]
-      //         },
-      //         {
-      //           label: 'Submenu 2.2', icon: 'pi pi-fw pi-bookmark',
-      //           items: [
-      //             { label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' },
-      //           ]
-      //         },
-      //       ]
-      //     }
-      //   ]
-      // },
-      // {
-      //   label: 'Get Started',
-      //   items: [
-      //     {
-      //       label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/documentation']
-      //     },
-      //     {
-      //       label: 'View Source', icon: 'pi pi-fw pi-search', target: '_blank'
-      //     }
-      //   ]
-      // }
     ];
   }
 }
