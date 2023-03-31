@@ -12,10 +12,6 @@ export class ToolbarComponent {
   ngOnInit() {
     this.items = [
       {
-        label: 'CRM',
-        routerLink: ['/main/dashboard'] ,
-      },
-      {
         label: '商機',
         routerLink: ['/main/lead'],
       },

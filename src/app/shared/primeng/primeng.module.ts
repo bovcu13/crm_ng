@@ -38,8 +38,8 @@ import { ImageModule } from 'primeng/image';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChipsModule } from 'primeng/chips';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import { ToolbarModule } from 'primeng/toolbar';
-import { RadioButtonModule } from 'primeng/radiobutton';
 
 
 @NgModule({
@@ -86,8 +86,9 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     TabMenuModule,
     TooltipModule,
     ChipsModule,
-    ToolbarModule,
-    RadioButtonModule
-  ]
+    ButtonModule,
+    FullCalendarModule,
+    ToolbarModule
+  ],
 })
 export class PrimengModule { }
