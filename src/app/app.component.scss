@@ -13,14 +13,14 @@ p-card {
     border-radius: 6px;
   }
 
-  .p-inputtext ,
-  .p-multiSelect{
+  .p-inputtext,
+  .p-multiSelect {
     width: 100%;
     border-radius: 6px;
   }
 
   .p-password,
-  .p-dropdown{
+  .p-dropdown {
     width: 100%;
     border-radius: 6px;
     margin-bottom: 5px;
@@ -29,6 +29,14 @@ p-card {
   .p-calendar {
     width: 100%;
   }
+
+  .p-dialog {
+    .p-button {
+      border-radius: 6px;
+      //框框跟label之間的間距
+      margin-right: 5px;
+    }
+  }
 }
 
 p-button {
@@ -36,6 +44,8 @@ p-button {
   //框框跟label之間的間距
   margin-right: 5px;
 }
+
+
 
 p-checkbox {
   //checkbox元件之間的間距
@@ -66,10 +76,10 @@ textarea {
 
 }
 
-h3,h5 {
+h3,
+h5 {
   text-align: center;
   font-weight: bold;
   //上、右、下、左
   margin: 0 0 10px 0;
 }
-
