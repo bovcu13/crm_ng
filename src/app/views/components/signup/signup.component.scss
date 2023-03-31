@@ -1,0 +1,8 @@
+@import 'src/app/app.component.scss';
+
+:host ::ng-deep {
+  .p-card {
+    width: 800px;
+    height: 450px;
+  }
+}
