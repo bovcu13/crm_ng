@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MenubarModule } from 'primeng/menubar';
 import { TableModule } from 'primeng/table';
-import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { FieldsetModule } from 'primeng/fieldset';
 import { CardModule } from 'primeng/card';
@@ -41,13 +39,15 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChipsModule } from 'primeng/chips';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { ToolbarModule } from 'primeng/toolbar';
+
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
   ],
-  exports:[
+  exports: [
     InputTextModule,
     CheckboxModule,
     MenubarModule,
@@ -86,8 +86,9 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     TabMenuModule,
     TooltipModule,
     ChipsModule,
-    RadioButtonModule,
-    FullCalendarModule
+    ButtonModule,
+    FullCalendarModule,
+    ToolbarModule
   ],
 })
 export class PrimengModule { }
