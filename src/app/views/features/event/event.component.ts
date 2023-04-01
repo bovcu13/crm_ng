@@ -3,16 +3,25 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
+
+interface employee_name {
+  name: string;
+}
 @Component({
   selector: 'app-event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss']
 })
 export class EventComponent {
-
+  employee_name: employee_name[] = [];
   options: any;
   visible: boolean = false;
   ngOnInit() {
+    this.employee_name = [
+      { name: '123'},
+      { name: '李小名'},
+      { name: '李小名'},
+    ]
     this.options = {
       plugins: [
         interactionPlugin,
@@ -48,10 +57,6 @@ export class EventComponent {
         { title: 'event 8', date: '2023-03-25' },
         { title: 'event 9', date: '2023-03-24' },
       ],
-      dateClick: (e: any) => {
-        this.showDialog;
-        console.log(e);
-      }
     };
   }
   showDialog() {
