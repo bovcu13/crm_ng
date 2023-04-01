@@ -1,22 +1,37 @@
 import { Component } from '@angular/core';
-interface lead {
-  name: string;
-  position: string;
-  company: string;
-  phone_number: string;
-  cell_phone: string;
-  email: string;
-}
 @Component({
   selector: 'app-lead',
   templateUrl: './lead.component.html',
   styleUrls: ['./lead.component.scss']
 })
 export class LeadComponent {
-  lead: lead[] = [];
-  ngOnInit(): void {
-    this.lead=[
-
-    ]
+  lead: any[] = [
+    {
+      "name": "David",
+      "stage": "潛在",
+      "owner": "林",
+      "account": "EIRC"
+    }
+  ];
+  stage: any[] = [
+    {
+      "name": "潛在",
+      "code": "potential"
+    },
+    {
+      "name": "談判中",
+      "code": "negotiating"
+    },
+    {
+      "name": "已結束",
+      "code": "closed"
+    }
+  ]
+  edit: boolean = false;
+  showDialog(): void {
+    this.edit = true;
+  }
+  stageValue(event: any): void {
+    console.log(event.value.code);
   }
 }
