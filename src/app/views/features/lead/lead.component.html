@@ -1,10 +1,12 @@
 <div class="container">
   <div class="row mb-5">
     <p-card>
-      <span>
-        <h3>商機</h3>
-        <div class="d-flex "></div>
-      </span>
+      <h3>商機</h3>
+      <div class="d-flex justify-content-end">
+        <span class="p-buttonset">
+          <p-button (click)="showDialog('add')" label="新增商機" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </span>
+      </div>
       <p-table [value]="lead">
         <ng-template pTemplate="header">
           <tr>
@@ -21,7 +23,7 @@
             <td>{{ lead.stage }}</td>
             <td>{{ lead.account }}</td>
             <td>{{ lead.owner }}</td>
-            <td><p-button (click)="showDialog()" icon="pi pi-pencil"
+            <td><p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"
                 styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
           </tr>
         </ng-template>
@@ -29,36 +31,38 @@
     </p-card>
   </div>
 </div>
-<p-dialog [(visible)]="edit" header="編輯">
-  <div class="row">
-    <div class="col-6">
-      <div class="field">
-        <label>姓名</label>
-        <input pInputText>
+<form [formGroup]="lead_form">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+    <div class="row">
+      <div class="col-6">
+        <div class="field">
+          <label>姓名</label>
+          <input pInputText formControlName="name">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>商機狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name" (onChange)="stageValue($event)"
+            formControlName="stage"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>公司</label>
+          <input pInputText formControlName="account">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>商機擁有者</label>
+          <input pInputText formControlName="owner">
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ms-1"></p-button>
       </div>
     </div>
-    <div class="col-6">
-      <div class="field">
-        <label>商機狀態</label>
-        <p-dropdown [options]="stage" optionLabel="name" placeholder="選擇目前商機狀態"
-          (onChange)="stageValue($event)"></p-dropdown>
-      </div>
-    </div>
-    <div class="col-6 mt-3">
-      <div class="field">
-        <label>公司</label>
-        <input pInputText>
-      </div>
-    </div>
-    <div class="col-6 mt-3">
-      <div class="field">
-        <label>商機擁有者</label>
-        <input pInputText>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end mt-3">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
-      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ms-1"></p-button>
-    </div>
-  </div>
-</p-dialog>
+  </p-dialog>
+</form>
