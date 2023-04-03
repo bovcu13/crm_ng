@@ -1,1 +1,118 @@
-<p>campaign works!</p>
+<div class="container">
+  <div class="row">
+    <p-card>
+      <span>
+        <h3>行銷活動</h3>
+        <div class="d-flex flex-row-reverse bd-highlight">
+          <div class="p-2 bd-highlight"><p-button label="新增" (click)="add_campaign()"
+              styleClass="p-button-text"></p-button></div>
+        </div>
+      </span>
+      <p-table [value]="campaign" >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>行銷活動名稱</th>
+            <th>父系行銷活動</th>
+            <th>類型</th>
+            <th>狀態</th>
+            <th>開始時間</th>
+            <th>結束時間</th>
+            <th>行銷活動中的回應</th>
+            <th>擁有者別名</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-campaign>
+          <tr>
+            <td>{{ campaign.campaign_name }}</td>
+            <td>{{ campaign.patrilineal_campaign_name }}</td>
+            <td>{{ campaign.type }}</td>
+            <td>{{ campaign.status }}</td>
+            <td>{{ campaign.start_date }}</td>
+            <td>{{ campaign.end_date }}</td>
+            <td>{{ campaign.responses }}</td>
+            <td>{{ campaign.owner }}</td>
+            <td><p-button icon="pi pi-bookmark" (click)="menu.toggle($event)"
+                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-menu #menu [model]="items" [popup]="true"></p-menu>
+    </p-card>
+  </div>
+</div>
+<p-dialog header="新增行銷活動" [(visible)]="visible">
+  <ng-template pTemplate="新增行銷活動">
+  </ng-template>
+  <div class="container">
+    <div class="row">
+      <strong>行銷活動資訊</strong>
+      <div class="col-6">
+        <label>行銷活動名稱</label>
+        <input type="text" pInputText />
+      </div>
+      <div class="col-6">
+        <label>行銷活動擁有者</label>
+        <br>
+        <label>王大明</label>
+      </div>
+      <div class="col-6">
+        <label>啟用</label>
+        <br>
+        <p-checkbox [binary]="true" inputId="binary"></p-checkbox>
+      </div>
+      <div class="col-6">
+        <label>狀態</label>
+        <p-dropdown [editable]="true" [options]="status" placeholder="選擇業務"></p-dropdown>
+      </div>
+      <div class="col-6">
+        <label>父系行銷活動</label>
+        <br>
+        <p-dropdown></p-dropdown>
+      </div>
+      <div class="col-6">
+        <label>類型</label>
+        <p-dropdown [editable]="true" [options]="type" placeholder="選擇業務"></p-dropdown>
+      </div>
+      <div class="col-6">
+        <label>開始日期</label>
+        <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"></p-calendar>
+      </div>
+      <div class="col-6">
+        <label>結束日期</label>
+        <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"></p-calendar>
+      </div>
+      <div class="col-12">
+        <label>描述</label>
+        <textarea rows="5" pInputTextarea></textarea>
+      </div>
+      <strong>計畫</strong>
+      <div class="col-6">
+        <label>行銷活動中的已傳送數目</label>
+        <input type="text" pInputText />
+      </div>
+      <div class="col-6">
+        <label>行銷活動中的預算成本</label>
+        <input type="text" pInputText />
+      </div>
+      <div class="col-6">
+        <label>預期回應 (%)</label>
+        <input type="text" pInputText />
+      </div>
+      <div class="col-6">
+        <label>行銷活動中的實際成本</label>
+        <input type="text" pInputText />
+      </div>
+      <div class="d-flex flex-row-reverse bd-highlight">
+        <div class="col-6 p-2 bd-highlight"><label>行銷活動中的預期收入</label>
+          <input type="text" pInputText />
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="新增" (click)="visible = false" styleClass="p-button-outlined p-button-info"></p-button>
+    <p-button label="取消" (click)="visible = false" styleClass="p-button-secondary ms-1"></p-button>
+  </ng-template>
+</p-dialog>
