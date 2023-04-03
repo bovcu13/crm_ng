@@ -13,7 +13,7 @@ export class LeadComponent {
       "name": "David",
       "stage": "談判中",
       "owner": "林",
-      "account": "EIRC"
+      "account_name": "EIRC"
     }
   ];
   stage: any[] = [
@@ -37,7 +37,8 @@ export class LeadComponent {
       name: ['', [Validators.required]],
       stage: ['', [Validators.required]],
       owner: ['', [Validators.required]],
-      account: ['', [Validators.required]],
+      account_name: ['', [Validators.required]],
+      opportunity_name: ['', [Validators.required]],
     });
   }
 
