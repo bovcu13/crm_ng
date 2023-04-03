@@ -1,43 +1,53 @@
-<p-card>
-  <div class="mb-3 d-flex justify-content-end">
-    <span class="p-buttonset">
-      <p-button label="新增報告" (click)="add_report()" styleClass="p-button-text"></p-button>
-      <p-button label="新增資料夾" (click)="add_folder()" styleClass="p-button-text"></p-button>
-    </span>
+<div class="container">
+  <div class="row mb-5">
+    <p-card>
+      <span>
+        <h3>報告</h3>
+        <div class="d-flex "></div>
+      </span>
+      <div class="mb-3 d-flex justify-content-end">
+        <span class="p-buttonset">
+          <p-button label="新增報告" (click)="add_report()" styleClass="p-button-text"></p-button>
+          <p-button label="新增資料夾" (click)="add_folder()" styleClass="p-button-text"></p-button>
+        </span>
+      </div>
+      <p-table [value]="report" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>報告名稱</th>
+            <th>描述</th>
+            <th>資料夾</th>
+            <th>建立者</th>
+            <th>建立時間</th>
+            <th>已訂閱</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-report>
+          <tr>
+            <td>{{ report.report_name }}</td>
+            <td>{{ report.description }}</td>
+            <td>{{ report.folder }}</td>
+            <td>{{ report.founder }}</td>
+            <td>{{ report.created_at }}</td>
+            <td>{{ report.subscription }}</td>
+            <td><p-button icon="pi pi-bookmark" (click)="menu.toggle($event)"
+                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-menu #menu [model]="items"
+      [popup]="true"></p-menu>
+    </p-card>
   </div>
-  <p-table [value]="report" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>報告名稱</th>
-        <th>描述</th>
-        <th>資料夾</th>
-        <th>建立者</th>
-        <th>建立時間</th>
-        <th>已訂閱</th>
-        <th></th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-report>
-      <tr>
-        <td>{{ report.report_name }}</td>
-        <td>{{ report.description }}</td>
-        <td>{{ report.folder }}</td>
-        <td>{{ report.founder }}</td>
-        <td>{{ report.created_at }}</td>
-        <td>{{ report.subscription }}</td>
-        <td><p-button icon="pi pi-bookmark" (click)="menu.toggle($event)"
-            styleClass="p-button-rounded p-button-secondary p-button-text"></p-button><p-menu #menu [model]="items"
-            [popup]="true"></p-menu>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</p-card>
+</div>
+
 <p-dialog header="新增報告" [(visible)]="visible" [style]="{ width: '50vw' }">
   <div class="container row">
     <div class="col-12 d-flex justify-content-end mt-2">
-      <p-button (click)="visible = false" label="取消"></p-button>
-      <p-button (click)="visible = false" label="新增"></p-button>
+      <p-button label="新增" (click)="visible" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="visible" styleClass="p-button-secondary ms-1"></p-button>
     </div>
   </div>
 </p-dialog>
@@ -52,8 +62,8 @@
       <input type="text" pInputText />
     </div>
     <div class="col-12 d-flex justify-content-end mt-4">
-      <p-button (click)="visible2 = false" label="取消"></p-button>
-      <p-button (click)="visible2 = false" label="新增"></p-button>
+      <p-button label="新增" (click)="visible2" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="visible2" styleClass="p-button-secondary ms-1"></p-button>
     </div>
   </div>
 </p-dialog>
