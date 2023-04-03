@@ -1,7 +1,17 @@
-<p-card>
-  <full-calendar [options]="options" (click)="showDialog()"></full-calendar>
-</p-card>
-<p-dialog header="新增事件" [(visible)]="visible" [style]="{ width: '50vw' }">
+<div class="container">
+  <div class="row mb-5">
+    <p-card>
+      <span>
+        <h3>行事曆</h3>
+        <div class="d-flex "></div>
+      </span>
+      <full-calendar [options]="options" (click)="showDialog()"></full-calendar>
+    </p-card>
+  </div>
+
+</div>
+
+<p-dialog header="新增事件" [(visible)]="visible" >
   <div class="container row">
     <div class="col-6">
       <label>主題</label>
@@ -23,16 +33,17 @@
     </div>
     <div class="col-6">
       <label>開始</label>
-      <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd" [showButtonBar]="true"></p-calendar>
+      <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+        [showButtonBar]="true"></p-calendar>
     </div>
     <div class="col-6">
       <label>結束</label>
-      <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd" [showButtonBar]="true"></p-calendar>
+      <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+        [showButtonBar]="true"></p-calendar>
     </div>
     <div class="col-12 d-flex justify-content-end mt-2">
-      <p-button (click)="visible = false" label="取消"></p-button>
-      <p-button (click)="visible = false" label="新增"></p-button>
+      <p-button label="儲存" (click)="visible" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="visible" styleClass="p-button-secondary ms-1"></p-button>
     </div>
-
   </div>
 </p-dialog>
