@@ -1,1 +1,66 @@
-<p>account works!</p>
+<div class="container">
+  <div class="row mb-5">
+    <p-card>
+      <h3>帳戶</h3>
+      <div class="d-flex justify-content-end">
+        <span class="p-buttonset">
+          <p-button (click)="showDialog('add')" label="新增帳戶" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </span>
+      </div>
+      <p-table [value]="account">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>帳戶名稱</th>
+            <th>電話</th>
+            <th>帳戶擁有者別名</th>
+            <th>編輯</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-account>
+          <tr>
+            <td>{{ account.account_name }}</td>
+            <td>{{ account.phone }}</td>
+            <td>{{ account.account_owner }}</td>
+            <td><p-button (click)="showDialog('edit',account)" icon="pi pi-pencil"
+                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
+<form [formGroup]="account_form">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+    <div class="row">
+      <div class="col-6">
+        <div class="field">
+          <label>帳戶名稱</label>
+          <input pInputText formControlName="account_name">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>電話</label>
+          <input pInputText formControlName="phone">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>帳戶擁有者別名</label>
+          <input pInputText formControlName="account_owner">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>類型</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name" (onChange)="typeValue($event)"
+            formControlName="type"></p-dropdown>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ms-1"></p-button>
+      </div>
+    </div>
+  </p-dialog>
+</form>
