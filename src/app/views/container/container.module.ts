@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ContainerComponent } from './container.component';
 import { ContainerRoutingModule } from './container-routing.module';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
@@ -35,7 +36,10 @@ import { ReportComponent } from '../features/report/report.component';
   imports: [
     CommonModule,
     ContainerRoutingModule,
-    SharedModule
+    SharedModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class ContainerModule { }
