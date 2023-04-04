@@ -1,1 +1,83 @@
-<p>quote works!</p>
+<div class="container">
+  <div class="row mb-5">
+    <p-card>
+      <h3>報價</h3>
+      <div class="d-flex justify-content-end">
+        <span class="p-buttonset">
+          <p-button (click)="showDialog('add')" label="新增報價" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </span>
+      </div>
+      <p-table [value]="quote">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>報價名稱</th>
+            <th>機會名稱</th>
+            <th>正在同步化</th>
+            <th>到期日期</th>
+            <th>小計</th>
+            <th>總價</th>
+            <th>編輯</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-quote>
+          <tr>
+            <td>{{ quote.quote_name }}</td>
+            <td>{{ quote.opportunity_name }}</td>
+            <td>{{ quote.syncing }}</td>
+            <td>{{ quote.expiration_date }}</td>
+            <td>{{ quote.subtotal }}</td>
+            <td>{{ quote.total_price }}</td>
+            <td><p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil"
+                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
+<form [formGroup]="quote_form">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+    <div class="row">
+      <div class="col-6">
+        <div class="field">
+          <label>報價名稱</label>
+          <input pInputText formControlName="quote_name">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>機會名稱</label>
+          <input pInputText formControlName="opportunity_name">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>正在同步化</label>
+          <input pInputText formControlName="syncing">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>到期日期</label>
+          <input pInputText formControlName="expiration_date">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>小計</label>
+          <input pInputText formControlName="subtotal">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>總價</label>
+          <input pInputText formControlName="total_price">
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ms-1"></p-button>
+      </div>
+    </div>
+  </p-dialog>
+</form>

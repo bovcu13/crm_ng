@@ -1,1 +1,83 @@
-<p>opportunity works!</p>
+<div class="container">
+  <div class="row mb-5">
+    <p-card>
+      <h3>機會</h3>
+      <div class="d-flex justify-content-end">
+        <span class="p-buttonset">
+          <p-button (click)="showDialog('add')" label="新增機會" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </span>
+      </div>
+      <p-table [value]="opportunity">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>機會名稱</th>
+            <th>帳戶名稱</th>
+            <th>階段</th>
+            <th>結束日期</th>
+            <th>機會擁有者別名</th>
+            <th>編輯</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-opportunity>
+          <tr>
+            <td>{{ opportunity.opportunity_name }}</td>
+            <td>{{ opportunity.account_name }}</td>
+            <td>{{ opportunity.stage }}</td>
+            <td>{{ opportunity.close_date }}</td>
+            <td>{{ opportunity.opportunity_owner }}</td>
+            <td><p-button (click)="showDialog('edit',opportunity)" icon="pi pi-pencil"
+                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
+<form [formGroup]="opportunity_form">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+    <div class="row">
+      <div class="col-6">
+        <div class="field">
+          <label>機會名稱</label>
+          <input pInputText formControlName="opportunity_name">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>帳戶名稱</label>
+          <input pInputText formControlName="account_name">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>階段</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name" (onChange)="stageValue($event)"
+            formControlName="stage" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>預測種類</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="forecast_category" optionLabel="name" (onChange)="forecast_categoryValue($event)"
+            formControlName="forecast_category" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6 mt-4">
+        <div class="field">
+          <label>結束日期</label>
+          <input pInputText formControlName="close_date">
+        </div>
+      </div>
+      <div class="col-6 mt-4">
+        <div class="field">
+          <label>機會擁有者</label>
+          <input pInputText formControlName="opportunity_owner">
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ms-1"></p-button>
+      </div>
+    </div>
+  </p-dialog>
+</form>
