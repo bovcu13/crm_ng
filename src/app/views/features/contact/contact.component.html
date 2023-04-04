@@ -1,1 +1,75 @@
-<p>contact works!</p>
+<div class="container">
+  <div class="row mb-5">
+    <p-card>
+      <h3>聯絡人</h3>
+      <div class="d-flex justify-content-end">
+        <span class="p-buttonset">
+          <p-button (click)="showDialog('add')" label="新增聯絡人" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </span>
+      </div>
+      <p-table [value]="contact">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>姓名</th>
+            <th>帳戶名稱</th>
+            <th>電話</th>
+            <th>電子郵件</th>
+            <th>聯絡人擁有者別名</th>
+            <th>編輯</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-contact>
+          <tr>
+            <td>{{ contact.name }}</td>
+            <td>{{ contact.account_name }}</td>
+            <td>{{ contact.phone }}</td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.contact_owner }}</td>
+            <td><p-button (click)="showDialog('edit',contact)" icon="pi pi-pencil"
+                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
+<form [formGroup]="contact_form">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+    <div class="row">
+      <div class="col-6">
+        <div class="field">
+          <label>姓名</label>
+          <input pInputText formControlName="name">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>帳戶名稱</label>
+          <input pInputText formControlName="account_name">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>電話</label>
+          <input pInputText formControlName="phone">
+        </div>
+      </div>
+      <div class="col-6 mt-3">
+        <div class="field">
+          <label>聯絡人擁有者</label>
+          <input pInputText formControlName="contact_owner">
+        </div>
+      </div>
+      <div class="col-12 mt-3">
+        <div class="field">
+          <label>電子郵件</label>
+          <input pInputText formControlName="email">
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ms-1"></p-button>
+      </div>
+    </div>
+  </p-dialog>
+</form>
