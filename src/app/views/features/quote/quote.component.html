@@ -1,8 +1,8 @@
-<div class="container">
-  <div class="row mb-5">
+<div class="flex justify-content-center">
+  <div class="col-10">
     <p-card>
-      <h3>報價</h3>
-      <div class="d-flex justify-content-end">
+      <h2>報價</h2>
+      <div class="flex justify-content-end">
         <span class="p-buttonset">
           <p-button (click)="showDialog('add')" label="新增報價" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
@@ -37,7 +37,7 @@
 </div>
 <form [formGroup]="quote_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}}>
-    <div class="row">
+    <div class="grid">
       <div class="col-6">
         <div class="field">
           <label>報價名稱</label>
@@ -50,34 +50,34 @@
           <input pInputText formControlName="opportunity_name">
         </div>
       </div>
-      <div class="col-6 mt-3">
+      <div class="col-6">
         <div class="field">
           <label>正在同步化</label>
           <input pInputText formControlName="syncing">
         </div>
       </div>
-      <div class="col-6 mt-3">
+      <div class="col-6">
         <div class="field">
           <label>到期日期</label>
           <input pInputText formControlName="expiration_date">
         </div>
       </div>
-      <div class="col-6 mt-3">
+      <div class="col-6">
         <div class="field">
           <label>小計</label>
           <input pInputText formControlName="subtotal">
         </div>
       </div>
-      <div class="col-6 mt-3">
+      <div class="col-6">
         <div class="field">
           <label>總價</label>
           <input pInputText formControlName="total_price">
         </div>
       </div>
-      <div class="d-flex justify-content-end mt-3">
-        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
-        <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ms-1"></p-button>
-      </div>
+    </div>
+    <div class="flex justify-content-end">
+      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
 </form>
