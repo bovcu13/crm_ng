@@ -3,10 +3,12 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 interface employee_name {
   name: string;
 }
+
 @Component({
   selector: 'app-event',
   templateUrl: './event.component.html',
@@ -15,12 +17,24 @@ interface employee_name {
 export class EventComponent {
   employee_name: employee_name[] = [];
   options: any;
-  visible: boolean = false;
+  //建立formgroup表單
+  event_form: FormGroup;
+  currentevent!: any;
+  constructor(private fb: FormBuilder) {
+    this.event_form = this.fb.group({
+      subject: ['', [Validators.required]],
+      assigned_to: ['', [Validators.required]],
+      location: ['', [Validators.required]],
+      all_day_event: [false, [Validators.required]],
+      start_date: ['', [Validators.required]],
+      end_date: ['', [Validators.required]],
+    });
+  }
   ngOnInit() {
     this.employee_name = [
-      { name: '123'},
-      { name: '李小名'},
-      { name: '李小名'},
+      { name: '123' },
+      { name: '李小名' },
+      { name: '李小名' },
     ]
     this.options = {
       plugins: [
@@ -47,21 +61,45 @@ export class EventComponent {
       dayMaxEvents: true,
       handleWindowResize: true, //隨瀏覽器窗口大小變化
       events: [
-        { title: 'event 1', date: '2023-03-31' },
-        { title: 'event 2', date: '2023-03-30' },
-        { title: 'event 3', date: '2023-03-29' },
-        { title: 'event 4', date: '2023-03-28' },
-        { title: 'event 5', date: '2023-03-29' },
-        { title: 'event 6', date: '2023-03-27' },
-        { title: 'event 7', date: '2023-03-26' },
-        { title: 'event 8', date: '2023-03-25' },
-        { title: 'event 9', date: '2023-03-24' },
+        { title: 'event 1', date: '2023-04-31T16:00:00' },
+        { title: 'event 2', date: '2023-04-30' },
+        { title: 'event 3', date: '2023-04-29' },
+        { title: 'event 4', date: '2023-04-28' },
+        { title: 'event 5', date: '2023-04-29' },
+        { title: 'event 6', date: '2023-04-27' },
+        { title: 'event 7', date: '2023-04-26' },
+        { title: 'event 8', date: '2023-04-25T6:00:00' },
+        { title: 'event 9', date: '2023-04-24' },
       ],
+      //點選日期開啟新增事件
+      dateClick: () => {
+        console.log("DATE CLICKED !!!");
+        this.showDialog('add')
+      },
+      //點選事件開啟編輯事件
+      eventClick: (info: any) => {
+        this.showDialog('edit',info.event)
+        console.log(info.event);
+      },
     };
   }
-  showDialog() {
+  visible: boolean = false;
+  dialogHeader!: string;
+  showDialog(type: string, event?: any) {
+    this.dialogHeader = type === 'edit' ? '編輯日曆事件' : '新增日曆事件';
     this.visible = true;
+    if (event) {
+      this.currentevent = event;
+      this.event_form.patchValue({
+        title: event.title,
+        start: event.start,
+        end: event.end,
+        allDay: event.allDay
+      });
+    } else {
+      this.currentevent = null;
+      this.event_form.reset();
+    }
   }
 }
-
 

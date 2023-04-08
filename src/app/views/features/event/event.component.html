@@ -1,49 +1,49 @@
-<div class="container">
-  <div class="row mb-5">
-    <p-card>
-      <span>
-        <h3>行事曆</h3>
-        <div class="d-flex "></div>
-      </span>
-      <full-calendar [options]="options" (click)="showDialog()"></full-calendar>
-    </p-card>
+<div class="flex justify-content-center">
+  <div class="col-10">
+    <span>
+      <h3>行事曆</h3>
+      <div class="d-flex "></div>
+    </span>
+    <full-calendar [options]="options"></full-calendar>
   </div>
-
 </div>
 
-<p-dialog header="新增事件" [(visible)]="visible" >
-  <div class="container row">
-    <div class="col-6">
-      <label>主題</label>
-      <input type="text" pInputText />
-    </div>
-    <div class="col-6">
-      <label>指派對象</label>
-      <p-dropdown [options]="employee_name" placeholder="搜尋人員" [editable]="true" optionLabel="name"></p-dropdown>
-    </div>
-    <div class="col-6">
-      <label>位置</label>
-      <input type="text" pInputText />
-    </div>
-    <div class="col-6">
-      <label>全天事件</label>
-      <div class="col-12">
-        <p-checkbox id="all-day-event" value="yes"></p-checkbox>
+<form [formGroup]="event_form">
+  <p-dialog [(visible)]="visible" header={{dialogHeader}}>
+    <div class="grid">
+      <div class="col-6">
+        <label>主題</label>
+        <input type="text" pInputText formControlName="subject" />
+      </div>
+      <div class="col-6">
+        <label>指派對象</label>
+        <p-dropdown [options]="employee_name" placeholder="搜尋人員" [editable]="true" optionLabel="name" formControlName="assigned_to"></p-dropdown>
+      </div>
+      <div class="col-6">
+        <label>位置</label>
+        <input type="text" pInputText formControlName="location" />
+      </div>
+      <div class="col-6">
+        <label>全天事件</label>
+        <div class="col-12">
+          <p-checkbox id="all-day-event" value="yes" formControlName="all_day_event"></p-checkbox>
+        </div>
+      </div>
+      <div class="col-6">
+        <label>開始</label>
+        <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+          [showButtonBar]="true" formControlName="start_date"></p-calendar>
+      </div>
+      <div class="col-6">
+        <label>結束</label>
+        <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+          [showButtonBar]="true" formControlName="end_date"></p-calendar>
+      </div>
+      <div class="col-12 flex justify-content-end">
+          <p-button label="儲存" (click)="visible= false" styleClass="p-button-outlined p-button-info"></p-button>
+          <p-button label="取消" (click)="visible= false" styleClass="p-button-secondary ml-1"></p-button>
       </div>
     </div>
-    <div class="col-6">
-      <label>開始</label>
-      <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
-        [showButtonBar]="true"></p-calendar>
-    </div>
-    <div class="col-6">
-      <label>結束</label>
-      <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
-        [showButtonBar]="true"></p-calendar>
-    </div>
-    <div class="col-12 d-flex justify-content-end mt-2">
-      <p-button label="儲存" (click)="visible" styleClass="p-button-outlined p-button-info"></p-button>
-      <p-button label="取消" (click)="visible" styleClass="p-button-secondary ms-1"></p-button>
-    </div>
-  </div>
-</p-dialog>
+  </p-dialog>
+</form>
+
