@@ -4,11 +4,12 @@
       <span>
         <h3>行銷活動</h3>
         <div class="d-flex flex-row-reverse bd-highlight">
-          <div class="p-2 bd-highlight"><p-button label="新增" (click)="add_campaign()"
+          <div class="p-2 bd-highlight"><p-button label="新增" (click)="showDialog('add')" icon="pi pi-plus"
               styleClass="p-button-text"></p-button></div>
         </div>
       </span>
-      <p-table [value]="campaign" >
+      {{campaign_table ? campaign_table.length : 0 }}個項目
+      <p-table [value]="campaign_table" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 15]">
         <ng-template pTemplate="header">
           <tr>
             <th>行銷活動名稱</th>
@@ -22,10 +23,10 @@
             <th></th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-campaign>
+        <ng-template pTemplate="body" let-campaign let-editing="editing">
           <tr>
-            <td>{{ campaign.campaign_name }}</td>
-            <td>{{ campaign.patrilineal_campaign_name }}</td>
+            <td>{{ campaign.name }}</td>
+            <td>{{ campaign.patrilineal_name }}</td>
             <td>{{ campaign.type }}</td>
             <td>{{ campaign.status }}</td>
             <td>{{ campaign.start_date }}</td>
@@ -42,77 +43,81 @@
     </p-card>
   </div>
 </div>
-<p-dialog header="新增行銷活動" [(visible)]="visible">
-  <ng-template pTemplate="新增行銷活動">
-  </ng-template>
-  <div class="container">
-    <div class="row">
-      <strong>行銷活動資訊</strong>
-      <div class="col-6">
-        <label>行銷活動名稱</label>
-        <input type="text" pInputText />
-      </div>
-      <div class="col-6">
-        <label>行銷活動擁有者</label>
-        <br>
-        <label>王大明</label>
-      </div>
-      <div class="col-6">
-        <label>啟用</label>
-        <br>
-        <p-checkbox [binary]="true" inputId="binary"></p-checkbox>
-      </div>
-      <div class="col-6">
-        <label>狀態</label>
-        <p-dropdown [editable]="true" [options]="status" placeholder="選擇業務"></p-dropdown>
-      </div>
-      <div class="col-6">
-        <label>父系行銷活動</label>
-        <br>
-        <p-dropdown></p-dropdown>
-      </div>
-      <div class="col-6">
-        <label>類型</label>
-        <p-dropdown [editable]="true" [options]="type" placeholder="選擇業務"></p-dropdown>
-      </div>
-      <div class="col-6">
-        <label>開始日期</label>
-        <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"></p-calendar>
-      </div>
-      <div class="col-6">
-        <label>結束日期</label>
-        <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"></p-calendar>
-      </div>
-      <div class="col-12">
-        <label>描述</label>
-        <textarea rows="5" pInputTextarea></textarea>
-      </div>
-      <strong>計畫</strong>
-      <div class="col-6">
-        <label>行銷活動中的已傳送數目</label>
-        <input type="text" pInputText />
-      </div>
-      <div class="col-6">
-        <label>行銷活動中的預算成本</label>
-        <input type="text" pInputText />
-      </div>
-      <div class="col-6">
-        <label>預期回應 (%)</label>
-        <input type="text" pInputText />
-      </div>
-      <div class="col-6">
-        <label>行銷活動中的實際成本</label>
-        <input type="text" pInputText />
-      </div>
-      <div class="d-flex flex-row-reverse bd-highlight">
-        <div class="col-6 p-2 bd-highlight"><label>行銷活動中的預期收入</label>
-          <input type="text" pInputText />
+<!-- p-dialog -->
+<form [formGroup]="compaign_form">
+  <p-dialog [(visible)]="visible" header={{dialogHeader}}>
+    <div class="container">
+      <div class="row">
+        <strong>行銷活動資訊</strong>
+        <div class="col-6">
+          <label>行銷活動名稱</label>
+          <input type="text" pInputText formControlName="name">
+        </div>
+        <div class="col-6">
+          <label>行銷活動擁有者</label>
+          <br>
+          {{campaign.owner}}
+        </div>
+        <div class="col-6">
+          <label>啟用</label>
+          <br>
+          <p-checkbox formControlName="enable" value="enable"></p-checkbox>
+        </div>
+        <div class="col-6">
+          <label>狀態</label>
+          <p-dropdown [editable]="true" [options]="status" formControlName="status"></p-dropdown>
+        </div>
+        <div class="col-6">
+          <label>父系行銷活動</label>
+          <br>
+          <p-dropdown formControlName="patrilineal_name"></p-dropdown>
+        </div>
+        <div class="col-6">
+          <label>類型</label>
+          <p-dropdown [editable]="true" [options]="type" formControlName="type"></p-dropdown>
+        </div>
+        <div class="col-6">
+          <label>開始日期</label>
+          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+            formControlName="start_date"></p-calendar>
+        </div>
+        <div class="col-6">
+          <label>結束日期</label>
+          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+            formControlName="end_date"></p-calendar>
+        </div>
+        <div class="col-12">
+          <label>描述</label>
+          <textarea rows="5" pInputTextarea formControlName="description"></textarea>
+        </div>
+        <strong>計畫</strong>
+        <div class="col-6">
+          <label>行銷活動中的已傳送數目</label>
+          <input type="text" pInputText formControlName="sent" />
+        </div>
+        <div class="col-6">
+          <label>行銷活動中的預算成本</label>
+          <input type="text" pInputText formControlName="budget_cost" />
+        </div>
+        <div class="col-6">
+          <label>預期回應 (%)</label>
+          <br>
+          <p-inputNumber  inputId="percent" formControlName="responses" suffix="%"> </p-inputNumber>
+        </div>
+        <div class="col-6">
+          <label>行銷活動中的實際成本</label>
+          <input type="text" pInputText formControlName="actual_cost" />
+        </div>
+        <div class="d-flex flex-row-reverse bd-highlight">
+          <div class="col-6 p-2 bd-highlight"><label>行銷活動中的預期收入</label>
+            <input type="text" pInputText formControlName="expected_income" />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <ng-template pTemplate="footer">
-    <p-button label="新增" (click)="visible = false" styleClass="p-button-outlined p-button-info"></p-button>
-    <p-button label="取消" (click)="visible = false" styleClass="p-button-secondary ms-1"></p-button>
-  </ng-template>
-</p-dialog>
+    <ng-template pTemplate="footer">
+      <p-button label="新增" (click)="visible = false" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="visible = false" styleClass="p-button-secondary ms-1"></p-button>
+    </ng-template>
+  </p-dialog>
+</form>
