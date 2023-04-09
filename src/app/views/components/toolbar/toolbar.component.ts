@@ -15,17 +15,17 @@ export class ToolbarComponent {
         label: '商機線索',
         routerLink: ['/main/lead'],
       },
-      // {
-      //   label: '帳戶',
-      //   routerLink: ['/main/account'],
-      // },
-      {
-        label: '商機',
-        routerLink: ['/main/opportunity'],
-      },
       {
         label: '客戶',
         routerLink: ['/main/contact'],
+      },
+      {
+        label: '客戶聯絡人',
+        routerLink: ['/main/account'],
+      },
+      {
+        label: '商機',
+        routerLink: ['/main/opportunity'],
       },
       {
         label: '報價',
