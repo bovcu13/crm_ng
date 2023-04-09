@@ -1,19 +1,19 @@
-<div class="container">
-  <div class="row mb-5">
+<div class="flex justify-content-center">
+  <div class="col-10">
     <p-card>
-      <h3>商機</h3>
-      <div class="d-flex justify-content-end">
+      <h2>商機線索</h2>
+      <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增商機" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" label="新增商機線索線索" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
       <p-table [value]="lead">
         <ng-template pTemplate="header">
           <tr>
             <th>姓名</th>
-            <th>商機狀態</th>
+            <th>商機線索狀態</th>
             <th>公司</th>
-            <th>商機擁有者</th>
+            <th>業務負責人</th>
             <th>編輯</th>
           </tr>
         </ng-template>
@@ -33,7 +33,7 @@
 </div>
 <form [formGroup]="lead_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}}>
-    <div class="row">
+    <div class="grid">
       <div class="col-6">
         <div class="field">
           <label>姓名</label>
@@ -42,33 +42,33 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>商機狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name" (onChange)="stageValue($event)"
-            formControlName="stage" appendTo="body"></p-dropdown>
+          <label>商機線索狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
+            (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6 mt-3">
+      <div class="col-6">
         <div class="field">
           <label>公司</label>
           <input pInputText formControlName="account_name">
         </div>
       </div>
-      <div class="col-6 mt-3">
+      <div class="col-6">
         <div class="field">
-          <label>商機擁有者</label>
+          <label>業務負責人</label>
           <input pInputText formControlName="owner">
         </div>
       </div>
-      <div class="col-12 mt-4">
+      <div class="col-12">
         <div class="field">
-          <label>商機名稱</label>
+          <label>商機線索名稱</label>
           <input pInputText formControlName="opportunity_name">
         </div>
       </div>
-      <div class="d-flex justify-content-end mt-3">
-        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
-        <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ms-1"></p-button>
-      </div>
+    </div>
+    <div class="flex justify-content-end">
+      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
 </form>
