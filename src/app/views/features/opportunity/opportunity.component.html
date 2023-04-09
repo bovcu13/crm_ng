@@ -1,20 +1,20 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>機會</h2>
+      <h2>商機</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增機會" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" label="新增商機" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
       <p-table [value]="opportunity">
         <ng-template pTemplate="header">
           <tr>
-            <th>機會名稱</th>
+            <th>商機名稱</th>
             <th>帳戶名稱</th>
             <th>階段</th>
             <th>結束日期</th>
-            <th>機會擁有者別名</th>
+            <th>業務負責人</th>
             <th>編輯</th>
           </tr>
         </ng-template>
@@ -38,13 +38,13 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>機會名稱</label>
+          <label>商機名稱</label>
           <input pInputText formControlName="opportunity_name">
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>帳戶名稱</label>
+          <label>客戶名稱</label>
           <input pInputText formControlName="account_name">
         </div>
       </div>
@@ -71,7 +71,7 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>機會擁有者</label>
+          <label>業務負責人</label>
           <input pInputText formControlName="opportunity_owner">
         </div>
       </div>
