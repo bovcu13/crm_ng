@@ -1,13 +1,14 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <span>
-      <h3>行事曆</h3>
-      <div class="d-flex "></div>
+      <h2>行事曆</h2>
     </span>
     <full-calendar [options]="options"></full-calendar>
   </div>
 </div>
-
+<div class="row">
+  <div class="col-6"></div>
+</div>
 <form [formGroup]="event_form">
   <p-dialog [(visible)]="visible" header={{dialogHeader}}>
     <div class="grid">
@@ -17,7 +18,8 @@
       </div>
       <div class="col-6">
         <label>指派對象</label>
-        <p-dropdown [options]="employee_name" placeholder="搜尋人員" [editable]="true" optionLabel="name" formControlName="assigned_to"></p-dropdown>
+        <p-dropdown [options]="employee_name" placeholder="搜尋人員" [editable]="true" optionLabel="name"
+          formControlName="assigned_to"></p-dropdown>
       </div>
       <div class="col-6">
         <label>位置</label>
@@ -26,24 +28,30 @@
       <div class="col-6">
         <label>全天事件</label>
         <div class="col-12">
-          <p-checkbox id="all-day-event" value="yes" formControlName="all_day_event"></p-checkbox>
+          <p-checkbox formControlName="allday" value="allday" [binary]="true"></p-checkbox>
         </div>
       </div>
-      <div class="col-6">
+      <!-- 如果勾選全天日期則p-calendar 只顯示開始日期且無時間選擇 -->
+      <div class="col-6" *ngIf="event_form.get('allday')?.value">
         <label>開始</label>
-        <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+        <p-calendar  [appendTo]="'body'" #startDate dateFormat="yy-mm-dd"
           [showButtonBar]="true" formControlName="start_date"></p-calendar>
       </div>
-      <div class="col-6">
+      <!-- 如果無勾選全天日期則p-calendar 顯示開始與結束日期，並開啟時間選擇 -->
+      <div class="col-6" *ngIf="!event_form.get('allday')?.value">
+        <label>開始</label>
+        <p-calendar  [showTime]="true" #startDate [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+          [showButtonBar]="true" formControlName="start_date" [readonlyInput]="true"></p-calendar>
+      </div>
+      <div class="col-6" *ngIf="!event_form.get('allday')?.value">
         <label>結束</label>
-        <p-calendar [showTime]="true" [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
-          [showButtonBar]="true" formControlName="end_date"></p-calendar>
+        <p-calendar [showTime]="true" #endDate [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+          [showButtonBar]="true" formControlName="end_date" [minDate]="event_form.controls['start_date'].value" [readonlyInput]="true"></p-calendar>
       </div>
       <div class="col-12 flex justify-content-end">
-          <p-button label="儲存" (click)="visible= false" styleClass="p-button-outlined p-button-info"></p-button>
-          <p-button label="取消" (click)="visible= false" styleClass="p-button-secondary ml-1"></p-button>
+        <p-button label="儲存" (click)="visible= false" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="取消" (click)="visible= false" styleClass="p-button-secondary ml-1"></p-button>
       </div>
     </div>
   </p-dialog>
 </form>
-
