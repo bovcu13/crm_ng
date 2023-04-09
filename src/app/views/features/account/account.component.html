@@ -1,18 +1,18 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>帳戶</h2>
+      <h2>客戶</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增帳戶" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" label="新增客戶" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
       <p-table [value]="account">
         <ng-template pTemplate="header">
           <tr>
-            <th>帳戶名稱</th>
+            <th>客戶名稱</th>
             <th>電話</th>
-            <th>帳戶擁有者別名</th>
+            <th>業務負責人</th>
             <th>編輯</th>
           </tr>
         </ng-template>
@@ -34,7 +34,7 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>帳戶名稱</label>
+          <label>客戶名稱</label>
           <input pInputText formControlName="account_name">
         </div>
       </div>
@@ -46,7 +46,7 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>帳戶擁有者別名</label>
+          <label>業務負責人</label>
           <input pInputText formControlName="account_owner">
         </div>
       </div>
