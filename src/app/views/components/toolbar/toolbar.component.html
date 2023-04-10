@@ -1,9 +1,12 @@
-<div class="p-toolbar-group-left">
+<div class="p-toolbar-group-left ">
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
-      <label [routerLink]="['/main/dashboard']">CRM</label>
+
     </ng-template>
-  </p-menubar>
+    <ng-template pTemplate="end">
+
+    </ng-template>
+</p-menubar>
 </div>
 <div class="p-toolbar-group-right">
 
