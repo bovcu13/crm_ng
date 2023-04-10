@@ -11,7 +11,6 @@
         <ng-template pTemplate="header">
           <tr>
             <th>狀態</th>
-            <th>檢視</th>
             <th>姓名</th>
             <th>公司</th>
             <th>電話</th>
@@ -19,22 +18,19 @@
             <th>電子郵件</th>
             <th>LINE</th>
             <th>業務負責人</th>
+            <th>檢視</th>
             <th>編輯</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-lead>
           <tr>
-            <td><i pTooltip={{lead.stage}} tooltipPosition="top" [ngClass]="{
+            <td><span pTooltip={{lead.stage}} tooltipPosition="top" [ngClass]="{
                 'text-400': lead.stage === '不明確',
                 'text-blue-300': lead.stage === '新線索',
                 'text-yellow-300': lead.stage === '評估中',
                 'text-orange-300': lead.stage === '發展中',
                 'text-green-300': lead.stage === '已轉換'
-            }" class="pi pi-circle-fill"></i>
-            </td>
-            <td>
-              <p-button icon="pi pi-eye" routerLink="/main/lead/view"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            }" class="pi pi-circle-fill ml-2"></span>
             </td>
             <td>{{ lead.name }}</td>
             <td>{{ lead.account_name }}</td>
@@ -44,8 +40,12 @@
             <td>{{ lead.line }}</td>
             <td>{{ lead.owner }}</td>
             <td>
+              <p-button icon="pi pi-eye" routerLink="/main/lead/view"
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            </td>
+            <td>
               <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"
-                        styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             </td>
           </tr>
         </ng-template>
