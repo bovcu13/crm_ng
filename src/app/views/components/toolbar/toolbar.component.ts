@@ -12,16 +12,20 @@ export class ToolbarComponent {
   ngOnInit() {
     this.items = [
       {
+        label: 'CRM',
+        routerLink: ['/main/dashboard'],
+      },
+      {
         label: '商機線索',
         routerLink: ['/main/lead'],
       },
       {
         label: '客戶',
-        routerLink: ['/main/contact'],
+        routerLink: ['/main/account'],
       },
       {
         label: '客戶聯絡人',
-        routerLink: ['/main/account'],
+        routerLink: ['/main/contact'],
       },
       {
         label: '商機',

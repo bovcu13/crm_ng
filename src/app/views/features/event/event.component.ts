@@ -14,9 +14,6 @@ interface employee_name {
   selector: 'app-event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
-  template: `
-  <p-calendar #startDate></p-calendar>
-`,
 })
 export class EventComponent {
   @ViewChild('startDate') startDate!: Calendar;
@@ -25,10 +22,6 @@ export class EventComponent {
   options: any;
   //建立formgroup表單
   event_form: FormGroup;
-  //讓全天事件顯示二個日期輸入框
-  showtwo = true;
-  //讓全天事件只顯示日期輸入框
-  showone = true;
   constructor(private fb: FormBuilder) {
     this.event_form = this.fb.group({
       subject: ['', [Validators.required]],
