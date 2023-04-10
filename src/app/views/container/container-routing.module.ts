@@ -12,6 +12,7 @@ import { LeadComponent } from '../features/lead/lead.component';
 import { OpportunityComponent } from '../features/opportunity/opportunity.component';
 import { QuoteComponent } from '../features/quote/quote.component';
 import { ReportComponent } from '../features/report/report.component';
+import { ViewLeadComponent} from "../features/lead/view-lead/view-lead.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -26,6 +27,7 @@ const routes: Routes = [
       { path: 'event', component: EventComponent },
       { path: 'forecasting', component: ForecastingComponent },
       { path: 'lead', component: LeadComponent },
+      { path: 'lead/view', component: ViewLeadComponent },
       { path: 'opportunity', component: OpportunityComponent },
       { path: 'quote', component: QuoteComponent },
       { path: 'report', component: ReportComponent },
