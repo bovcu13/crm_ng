@@ -8,7 +8,17 @@ a {
     font-size: x-large;
   }
 }
-:host ::ng-deep .p-menubar{
-  background: #2E5C6E;
+
+:host ::ng-deep {
+  .p-menubar {
+    background: #2E5C6E;
+    border: none;
+  }
+
+  .p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-link .p-menuitem-text {
+    color: #FFFFFB;
+    font-size: larger;
+    font-weight: bold;
+  }
 }
 
