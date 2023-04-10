@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 
@@ -7,27 +7,109 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
   templateUrl: './lead.component.html',
   styleUrls: ['./lead.component.scss']
 })
-export class LeadComponent {
+export class LeadComponent implements OnInit {
   lead: any[] = [
     {
       "name": "David",
-      "stage": "談判中",
+      "stage": "不明確",
       "owner": "林",
+      "email": "abc@gmail.com",
+      "phone_number": "07-1234567",
+      "cell_phone": "0912345678",
+      "line": "@12345",
       "account_name": "EIRC"
-    }
-  ];
+    },
+    {
+      "name": "David",
+      "stage": "新線索",
+      "owner": "林",
+      "email": "abc@gmail.com",
+      "phone_number": "07-1234567",
+      "cell_phone": "0912345678",
+      "line": "@12345",
+      "account_name": "EIRC"
+    },
+    {
+      "name": "David",
+      "stage": "評估中",
+      "owner": "林",
+      "email": "abc@gmail.com",
+      "phone_number": "07-1234567",
+      "cell_phone": "0912345678",
+      "line": "@12345",
+      "account_name": "EIRC"
+    },
+    {
+      "name": "David",
+      "stage": "發展中",
+      "owner": "林",
+      "email": "abc@gmail.com",
+      "phone_number": "07-1234567",
+      "cell_phone": "0912345678",
+      "line": "@12345",
+      "account_name": "EIRC"
+    },
+    {
+      "name": "David",
+      "stage": "已轉換",
+      "owner": "林",
+      "email": "abc@gmail.com",
+      "phone_number": "07-1234567",
+      "cell_phone": "0912345678",
+      "line": "@12345",
+      "account_name": "EIRC"
+    },
+  ]
+
   stage: any[] = [
     {
-      "name": "潛在",
-      "code": "potential"
+      "name": "不明確",
+      "code": "unqualified"
     },
     {
-      "name": "談判中",
-      "code": "negotiating"
+      "name": "新線索",
+      "code": "new"
     },
     {
-      "name": "已結束",
+      "name": "評估中",
+      "code": "working"
+    },
+    {
+      "name": "發展中",
+      "code": "nurturing"
+    },
+    {
+      "name": "已轉換",
       "code": "closed"
+    }
+  ]
+
+  lead_source: any = [
+    {
+      "name": "",
+      "code": ""
+    },
+  ]
+
+  industry: any = [
+    {
+      "name": "",
+      "code": ""
+    },
+  ]
+
+  rating: any = [
+    {
+      "name": "很有可能成交",
+      "code": "hot"
+    },
+    {
+      "name": "可能性不明確",
+      "code": "warm"
+    },
+    {
+      "name": "很有可能不成交",
+      "code": "cold"
     }
   ]
 
@@ -36,31 +118,64 @@ export class LeadComponent {
     this.lead_form = this.fb.group({
       name: ['', [Validators.required]],
       stage: ['', [Validators.required]],
+      title: ['', [Validators.required]],
+      phone_number: ['', [Validators.required]],
+      cell_phone: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      line: ['', [Validators.required]],
+      lead_source: ['', [Validators.required]],
+      industry: ['', [Validators.required]],
+      rating: ['', [Validators.required]],
       owner: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
-      opportunity_name: ['', [Validators.required]],
     });
+  }
+
+  ngOnInit(): void {
+
   }
 
   edit: boolean = false;
   dialogHeader!: string;
   showDialog(type: string, lead?: any): void {
+    this.lead_form.controls['owner'].disable();
     this.edit = true;
     if (type === 'add') {
-      this.dialogHeader = '新增';
+      this.dialogHeader = '新增商機線索';
       this.lead_form.reset();
     } else if (type === 'edit') {
       console.log("lead: " + JSON.stringify(lead))
-      this.dialogHeader = '編輯';
+      this.dialogHeader = '編輯商機線索';
       this.lead_form.patchValue(lead);
       this.lead_form.patchValue({
-        stage: this.stage.find(s => s.name === lead.stage)
+        stage: this.stage.find(s => s.name === lead.stage),
+        // lead_source: this.lead_source.find(s => s.name === lead.lead_source),
+        // rating: this.rating.find(s => s.name === lead.rating)
       });
     }
   }
+
   stageValue(event: any): void {
     const selectedStage = this.stage.find((s) => s.code === event.value.code);
     console.log(event.value.code);
     console.log(selectedStage.name);
+  }
+
+  leadSourceValue(event: any): void {
+    const selectedLeadSource = this.lead_source.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code);
+    console.log(selectedLeadSource.name);
+  }
+
+  ratingValue(event: any): void {
+    const selectedRating = this.rating.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code);
+    console.log(selectedRating.name);
+  }
+
+  industryValue(event: any): void {
+    const selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code);
+    console.log(selectedIndustry.name);
   }
 }

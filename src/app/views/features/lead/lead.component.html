@@ -4,27 +4,49 @@
       <h2>商機線索</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增商機線索" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" label="新增" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
       <p-table [value]="lead">
         <ng-template pTemplate="header">
           <tr>
+            <th>狀態</th>
+            <th>檢視</th>
             <th>姓名</th>
-            <th>商機線索狀態</th>
             <th>公司</th>
+            <th>電話</th>
+            <th>行動電話</th>
+            <th>電子郵件</th>
+            <th>LINE</th>
             <th>業務負責人</th>
             <th>編輯</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-lead>
           <tr>
+            <td><i pTooltip={{lead.stage}} tooltipPosition="top" [ngClass]="{
+                'text-400': lead.stage === '不明確',
+                'text-blue-300': lead.stage === '新線索',
+                'text-yellow-300': lead.stage === '評估中',
+                'text-orange-300': lead.stage === '發展中',
+                'text-green-300': lead.stage === '已轉換'
+            }" class="pi pi-circle-fill"></i>
+            </td>
+            <td>
+              <p-button icon="pi pi-eye" routerLink="/main/lead/view"
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            </td>
             <td>{{ lead.name }}</td>
-            <td>{{ lead.stage }}</td>
             <td>{{ lead.account_name }}</td>
+            <td>{{ lead.phone_number }}</td>
+            <td>{{ lead.cell_phone }}</td>
+            <td>{{ lead.email }}</td>
+            <td>{{ lead.line }}</td>
             <td>{{ lead.owner }}</td>
-            <td><p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"
-                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
+            <td>
+              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"
+                        styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+            </td>
           </tr>
         </ng-template>
       </p-table>
@@ -42,12 +64,11 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>商機線索狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
-            (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
+          <label>業務負責人</label>
+          <input pInputText formControlName="owner">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12">
         <div class="field">
           <label>公司</label>
           <input pInputText formControlName="account_name">
@@ -55,14 +76,60 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>業務負責人</label>
-          <input pInputText formControlName="owner">
+          <label>職稱</label>
+          <input pInputText formControlName="title">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>行業</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
+                      (onChange)="industryValue($event)" formControlName="industry" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>商機線索狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
+                      (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>分級</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
+                      (onChange)="ratingValue($event)" formControlName="rating" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>電話</label>
+          <input pInputText formControlName="phone_number">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>行動電話</label>
+          <input pInputText formControlName="cell_phone">
         </div>
       </div>
       <div class="col-12">
         <div class="field">
-          <label>商機線索名稱</label>
-          <input pInputText formControlName="opportunity_name">
+          <label>電子郵件</label>
+          <input pInputText formControlName="email">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>LINE</label>
+          <input pInputText formControlName="line">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>商機線索來源</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="lead_source" optionLabel="name"
+                      (onChange)="leadSourceValue($event)" formControlName="lead_source" appendTo="body"></p-dropdown>
         </div>
       </div>
     </div>
