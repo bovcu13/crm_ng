@@ -13,6 +13,8 @@ import { OpportunityComponent } from '../features/opportunity/opportunity.compon
 import { QuoteComponent } from '../features/quote/quote.component';
 import { ReportComponent } from '../features/report/report.component';
 import { ViewLeadComponent} from "../features/lead/view-lead/view-lead.component";
+import { ViewAccountComponent } from '../features/account/view-account/view-account.component';
+import { ViewContactComponent } from '../features/contact/view-contact/view-contact.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -21,7 +23,9 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'account', component: AccountComponent },
+      { path: 'account/view', component: ViewAccountComponent },
       { path: 'campaign', component: CampaignComponent },
+      { path: 'campaign/view', component: ViewContactComponent },
       { path: 'contact', component: ContactComponent },
       { path: 'display', component: DisplayComponent },
       { path: 'event', component: EventComponent },
