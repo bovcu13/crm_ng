@@ -102,20 +102,17 @@ export class AccountComponent {
         type: selectedType,
         updated_at: currentDate
       });
-      console.log("industry: "+ selectedIndustry + "type: "+ selectedType + "updated_at: "+ currentDate )
     }
   }
   industryValue(event: any): void {
-    const selectedIndustry = this.industry.find((s) => s.code === event.value.code);
-    this.account_form.patchValue({
-      industry: selectedIndustry
-    });
+    const selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code);
+    console.log(selectedIndustry.name);
   }
 
   typeValue(event: any): void {
-    const selectedType = this.type.find((s) => s.code === event.value.code);
-    this.account_form.patchValue({
-      type: selectedType
-    });
+    const selectedType = this.type.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code);
+    console.log(selectedType.name);
   }
 }
