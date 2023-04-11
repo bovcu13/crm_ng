@@ -58,14 +58,27 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>姓名</label>
-          <input pInputText formControlName="name">
+          <label>商機線索狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
+                      (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>業務負責人</label>
           <input pInputText formControlName="owner">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>姓名</label>
+          <input pInputText formControlName="name">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>職稱</label>
+          <input pInputText formControlName="title">
         </div>
       </div>
       <div class="col-12">
@@ -76,29 +89,9 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>職稱</label>
-          <input pInputText formControlName="title">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
           <label>行業</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
                       (onChange)="industryValue($event)" formControlName="industry" appendTo="body"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>商機線索狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
-                      (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>分級</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
-                      (onChange)="ratingValue($event)" formControlName="rating" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -113,6 +106,12 @@
           <input pInputText formControlName="cell_phone">
         </div>
       </div>
+      <div class="col-6">
+        <div class="field">
+          <label>LINE</label>
+          <input pInputText formControlName="line">
+        </div>
+      </div>
       <div class="col-12">
         <div class="field">
           <label>電子郵件</label>
@@ -121,8 +120,9 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>LINE</label>
-          <input pInputText formControlName="line">
+          <label>分級</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
+                      (onChange)="ratingValue($event)" formControlName="rating" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
