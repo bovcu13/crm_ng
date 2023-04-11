@@ -1,26 +1,39 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>客戶</h2>
+      <h2>帳戶</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增客戶" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" label="新增帳戶" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
       <p-table [value]="account">
         <ng-template pTemplate="header">
           <tr>
-            <th>客戶名稱</th>
-            <th>電話</th>
+            <th>帳戶名稱</th>
             <th>業務負責人</th>
+            <th>電話</th>
+            <th>行業</th>
+            <th>類型</th>
+            <th>父系帳戶</th>
+            <th>建立者</th>
+            <th>修改者</th>
+            <th>檢視</th>
             <th>編輯</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-account>
           <tr>
             <td>{{ account.account_name }}</td>
-            <td>{{ account.phone }}</td>
             <td>{{ account.account_owner }}</td>
+            <td>{{ account.phone }}</td>
+            <td>{{ account.industry }}</td>
+            <td>{{ account.type }}</td>
+            <td>{{ account.parent_account }}</td>
+            <td>{{ account.created_by }}</td>
+            <td>{{ account.updated_by }}</td>
+            <td><p-button icon="pi pi-eye" routerLink="/main/account/view"
+              styleClass="p-button-rounded p-button-secondary p-button-text"></p-button></td>
             <td><p-button (click)="showDialog('edit',account)" icon="pi pi-pencil"
                 styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
           </tr>
@@ -34,14 +47,8 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>客戶名稱</label>
+          <label>帳戶名稱</label>
           <input pInputText formControlName="account_name">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>電話</label>
-          <input pInputText formControlName="phone">
         </div>
       </div>
       <div class="col-6">
@@ -52,9 +59,42 @@
       </div>
       <div class="col-6">
         <div class="field">
+          <label>電話</label>
+          <input pInputText formControlName="phone">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>行業</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name" (onChange)="typeValue($event)"
+            formControlName="industry" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
           <label>類型</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name" (onChange)="typeValue($event)"
             formControlName="type" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>父系帳戶</label>
+          <p-dropdown placeholder="請選擇" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>建立者</label>
+          <br>
+          {{account[0].created_by}}{{account[0].created_at}}
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>修改者</label>
+          <br>
+          {{account[0].updated_by}}{{account[0].updated_at}}
         </div>
       </div>
     </div>
