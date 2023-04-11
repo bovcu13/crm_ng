@@ -17,6 +17,8 @@ import { OpportunityComponent } from '../features/opportunity/opportunity.compon
 import { QuoteComponent } from '../features/quote/quote.component';
 import { ReportComponent } from '../features/report/report.component';
 import { ViewLeadComponent} from "../features/lead/view-lead/view-lead.component";
+import { ViewAccountComponent } from '../features/account/view-account/view-account.component';
+import { ViewContactComponent } from '../features/contact/view-contact/view-contact.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { ViewLeadComponent} from "../features/lead/view-lead/view-lead.component
     OpportunityComponent,
     QuoteComponent,
     ReportComponent,
-    ViewLeadComponent
+    ViewLeadComponent,
+    ViewAccountComponent,
+    ViewContactComponent,
   ],
   imports: [
     CommonModule,
