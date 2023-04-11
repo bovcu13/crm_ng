@@ -13,12 +13,27 @@ a {
   .p-menubar {
     background: #2E5C6E;
     border: none;
-  }
+    border-radius: 0;
 
-  .p-menubar .p-menubar-root-list>.p-menuitem>.p-menuitem-link .p-menuitem-text {
-    color: #FFFFFB;
-    font-size: larger;
-    font-weight: bold;
+    .p-menubar-root-list .p-menuitem .p-menuitem-link {
+      .p-menuitem-text {
+        color: #FFFFFB;
+        font-size: larger;
+        font-weight: bold;
+
+        &:hover {
+          color: #FFFFFB;
+        }
+      }
+
+      &:hover {
+        background: #356d86;
+        color: #FFFFFB;
+      }
+
+      &:not(.p-disabled):hover .p-menuitem-text {
+        color: #FFFFFB;
+      }
+    }
   }
 }
-
