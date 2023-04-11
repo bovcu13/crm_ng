@@ -19,7 +19,6 @@ export class AccountComponent {
       "created_by": "林",
       "updated_by": "林",
       "created_at": "2023-04-10  in the evening11:35", //建立日期
-      "updated_at": "2023-04-11  in the evening11:35", //更新時間
     },
     {
       "account_name": "Mars",
@@ -31,7 +30,6 @@ export class AccountComponent {
       "created_by": "林",
       "updated_by": "林",
       "created_at": "2023-04-09  in the evening17:55", //建立日期
-      "updated_at": "2023-04-10  in the evening21:25", //更新時間
     }
   ];
   industry: any[] = [
@@ -72,9 +70,15 @@ export class AccountComponent {
       industry: ['', [Validators.required]],
       type: ['', [Validators.required]],
       parent_account: ['', [Validators.required]],
-      created_by: ['', [Validators.required]],
-      updated_by: ['', [Validators.required]],
+      created_at: [''],
+      updated_at: [''],
+      created_by: ['', Validators.required],
+      updated_by: ['', Validators.required],
     });
+  }
+  //時間調整
+  localToUtc(date: Date): Date {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
   }
 
   edit: boolean = false;
@@ -88,12 +92,17 @@ export class AccountComponent {
       console.log("account: " + JSON.stringify(account));
       this.dialogHeader = '編輯';
       this.account_form.patchValue(account);
+      //dropdown
       const selectedIndustry = this.industry.find((s) => s.name === account.industry);
       const selectedType = this.type.find((s) => s.name === account.type);
+      //更新時間為現在時間
+      const currentDate = new Date()
       this.account_form.patchValue({
         industry: selectedIndustry,
-        type: selectedType
+        type: selectedType,
+        updated_at: currentDate
       });
+      console.log("industry: "+ selectedIndustry + "type: "+ selectedType + "updated_at: "+ currentDate )
     }
   }
   industryValue(event: any): void {
