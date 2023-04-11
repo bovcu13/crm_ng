@@ -20,11 +20,11 @@ export class ToolbarComponent {
         routerLink: ['/main/lead'],
       },
       {
-        label: '客戶',
+        label: '帳戶',
         routerLink: ['/main/account'],
       },
       {
-        label: '客戶聯絡人',
+        label: '帳戶聯絡人',
         routerLink: ['/main/contact'],
       },
       {
