@@ -85,17 +85,28 @@ export class AccountComponent {
       this.dialogHeader = '新增';
       this.account_form.reset();
     } else if (type === 'edit') {
-      console.log("account: " + JSON.stringify(account))
+      console.log("account: " + JSON.stringify(account));
       this.dialogHeader = '編輯';
       this.account_form.patchValue(account);
+      const selectedIndustry = this.industry.find((s) => s.name === account.industry);
+      const selectedType = this.type.find((s) => s.name === account.type);
       this.account_form.patchValue({
-        type: this.type.find(s => s.name === account.type)
+        industry: selectedIndustry,
+        type: selectedType
       });
     }
   }
+  industryValue(event: any): void {
+    const selectedIndustry = this.industry.find((s) => s.code === event.value.code);
+    this.account_form.patchValue({
+      industry: selectedIndustry
+    });
+  }
+
   typeValue(event: any): void {
     const selectedType = this.type.find((s) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedType.name);
+    this.account_form.patchValue({
+      type: selectedType
+    });
   }
 }
