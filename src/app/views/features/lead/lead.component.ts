@@ -86,16 +86,48 @@ export class LeadComponent implements OnInit {
 
   lead_source: any = [
     {
-      "name": "",
-      "code": ""
+      "name": "廣告",
+      "code": "advertising"
     },
+    {
+      "name": "推薦",
+      "code": "referral"
+    },
+    {
+      "name": "直接流量",
+      "code": "direct_traffic"
+    },
+    {
+      "name": "網路搜尋",
+      "code": "web_search"
+    },
+    {
+      "name": "朋友推薦",
+      "code": "friend_referral"
+    }
   ]
 
   industry: any = [
     {
-      "name": "",
-      "code": ""
+      "name": "教育",
+      "code": "education"
     },
+    {
+      "name": "金融服務",
+      "code": "financial_services"
+    },
+    {
+      "name": "醫療保健",
+      "code": "healthcare"
+    },
+    {
+      "name": "零售",
+      "code": "retail"
+    },
+    {
+      "name": "科技",
+      "code": "technology"
+    }
   ]
 
   rating: any = [
