@@ -85,6 +85,11 @@ export class AccountComponent {
   dialogHeader!: string;
   showDialog(type: string, account?: any): void {
     this.edit = true;
+    this.account_form.controls['account_owner'].disable();
+    this.account_form.controls['created_by'].disable();
+    this.account_form.controls['updated_by'].disable();
+    this.account_form.controls['created_at'].disable();
+    this.account_form.controls['updated_at'].disable();
     if (type === 'add') {
       this.dialogHeader = '新增';
       this.account_form.reset();
@@ -102,20 +107,17 @@ export class AccountComponent {
         type: selectedType,
         updated_at: currentDate
       });
-      console.log("industry: "+ selectedIndustry + "type: "+ selectedType + "updated_at: "+ currentDate )
     }
   }
   industryValue(event: any): void {
-    const selectedIndustry = this.industry.find((s) => s.code === event.value.code);
-    this.account_form.patchValue({
-      industry: selectedIndustry
-    });
+    const selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code);
+    console.log(selectedIndustry.name);
   }
 
   typeValue(event: any): void {
-    const selectedType = this.type.find((s) => s.code === event.value.code);
-    this.account_form.patchValue({
-      type: selectedType
-    });
+    const selectedType = this.type.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code);
+    console.log(selectedType.name);
   }
 }
