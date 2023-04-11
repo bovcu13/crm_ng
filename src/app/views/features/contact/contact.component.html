@@ -1,20 +1,21 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>客戶聯絡人</h2>
+      <h2>帳戶聯絡人</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增客戶聯絡人" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" label="新增帳戶聯絡人" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
       <p-table [value]="contact">
         <ng-template pTemplate="header">
           <tr>
             <th>姓名</th>
-            <th>客戶名稱</th>
-            <th>電話</th>
+            <th>帳戶名稱</th>
+            <th>行動電話</th>
             <th>電子郵件</th>
             <th>業務負責人</th>
+            <th>檢視</th>
             <th>編輯</th>
           </tr>
         </ng-template>
@@ -22,9 +23,11 @@
           <tr>
             <td>{{ contact.name }}</td>
             <td>{{ contact.account_name }}</td>
-            <td>{{ contact.phone }}</td>
+            <td>{{ contact.mobile }}</td>
             <td>{{ contact.email }}</td>
             <td>{{ contact.contact_owner }}</td>
+            <td><p-button icon="pi pi-eye" routerLink="/main/campaign/view"
+              styleClass="p-button-rounded p-button-secondary p-button-text"></p-button></td>
             <td><p-button (click)="showDialog('edit',contact)" icon="pi pi-pencil"
                 styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
           </tr>
@@ -38,20 +41,8 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>姓名</label>
-          <input pInputText formControlName="name">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>客戶名稱</label>
+          <label>帳戶名稱</label>
           <input pInputText formControlName="account_name">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>電話</label>
-          <input pInputText formControlName="phone">
         </div>
       </div>
       <div class="col-6">
@@ -60,13 +51,77 @@
           <input pInputText formControlName="contact_owner">
         </div>
       </div>
+      <div class="col-6">
+        <div class="field">
+          <label>姓名</label>
+          <input pInputText formControlName="name">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>稱謂</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="salutation" optionLabel="name" (onChange)="salutationValue($event)"
+            formControlName="salutation" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>行動電話</label>
+          <input pInputText formControlName="mobile">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>公司電話</label>
+          <input pInputText formControlName="phone">
+        </div>
+      </div>
       <div class="col-12">
         <div class="field">
           <label>電子郵件</label>
           <input pInputText formControlName="email">
         </div>
       </div>
+      <div class="col-6">
+        <div class="field">
+          <label>職稱</label>
+          <input pInputText formControlName="title">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>部門</label>
+          <input pInputText formControlName="department">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>直屬上司</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true"
+            formControlName="reports_to" appendTo="body"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>建立者</label>
+          <input placeholder="此處無法自行填寫" pInputText formControlName="created_by" readonly>
+          <div class="mt-2"></div>
+          <input placeholder="此處無法自行填寫" pInputText formControlName="created_at" readonly>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>修改者</label>
+          <br>
+          <input placeholder="此處無法自行填寫" pInputText formControlName="updated_by" readonly>
+          <div class="mt-2"></div>
+          <input placeholder="此處無法自行填寫" pInputText formControlName="updated_at" readonly>
+        </div>
+      </div>
     </div>
+
     <div class="flex justify-content-end mt-3">
       <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
