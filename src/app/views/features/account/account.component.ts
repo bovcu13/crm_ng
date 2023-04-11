@@ -11,11 +11,43 @@ export class AccountComponent {
   account: any[] = [
     {
       "account_name": "David",
-      "phone": "0912345678",
       "account_owner": "林",
-      "type": "夥伴"
+      "phone": "0912345678",
+      "industry": "金融服務",
+      "type": "夥伴",
+      "parent_account": "NKUST",
+      "created_by": "林",
+      "updated_by": "林",
+      "created_at": "2023-04-10  in the evening11:35", //建立日期
+      "updated_at": "2023-04-11  in the evening11:35", //更新時間
+    },
+    {
+      "account_name": "Mars",
+      "account_owner": "林",
+      "phone": "0987654321",
+      "industry": "零售業",
+      "type": "對手",
+      "parent_account": "NKUST",
+      "created_by": "林",
+      "updated_by": "林",
+      "created_at": "2023-04-09  in the evening17:55", //建立日期
+      "updated_at": "2023-04-10  in the evening21:25", //更新時間
     }
   ];
+  industry: any[] = [
+    {
+      "name": "零售業",
+      "code": "retail"
+    },
+    {
+      "name": "技術",
+      "code": "technology "
+    },
+    {
+      "name": "通訊",
+      "code": "telecommunications"
+    }
+  ]
   type: any[] = [
     {
       "name": "客戶",
@@ -29,15 +61,19 @@ export class AccountComponent {
       "name": "競爭對手",
       "code": "competitor"
     }
-  ]
+  ];
 
   account_form: FormGroup;
   constructor(private fb: FormBuilder) {
     this.account_form = this.fb.group({
       account_name: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
       account_owner: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
+      industry: ['', [Validators.required]],
       type: ['', [Validators.required]],
+      parent_account: ['', [Validators.required]],
+      created_by: ['', [Validators.required]],
+      updated_by: ['', [Validators.required]],
     });
   }
 

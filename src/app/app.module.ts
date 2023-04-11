@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { LoginComponent } from './views/components/login/login.component';
 import { SignupComponent } from './views/components/signup/signup.component';
+import { ViewAccountComponent } from './views/features/account/view-account/view-account.component';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { SignupComponent } from './views/components/signup/signup.component';
     AppComponent,
     LoginComponent,
     SignupComponent,
+    ViewAccountComponent,
   ],
   imports: [
     BrowserModule,
