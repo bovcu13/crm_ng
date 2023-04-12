@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 
 
 @Component({
@@ -86,16 +86,48 @@ export class LeadComponent implements OnInit {
 
   lead_source: any = [
     {
-      "name": "",
-      "code": ""
+      "name": "廣告",
+      "code": "advertising"
     },
+    {
+      "name": "推薦",
+      "code": "referral"
+    },
+    {
+      "name": "直接訪問",
+      "code": "direct_traffic"
+    },
+    {
+      "name": "網路搜尋",
+      "code": "web_search"
+    },
+    {
+      "name": "朋友推薦",
+      "code": "friend_referral"
+    }
   ]
 
   industry: any = [
     {
-      "name": "",
-      "code": ""
+      "name": "教育",
+      "code": "education"
     },
+    {
+      "name": "金融服務",
+      "code": "financial_services"
+    },
+    {
+      "name": "醫療保健",
+      "code": "healthcare"
+    },
+    {
+      "name": "零售",
+      "code": "retail"
+    },
+    {
+      "name": "科技",
+      "code": "technology"
+    }
   ]
 
   rating: any = [
@@ -114,6 +146,7 @@ export class LeadComponent implements OnInit {
   ]
 
   lead_form: FormGroup;
+
   constructor(private fb: FormBuilder) {
     this.lead_form = this.fb.group({
       name: ['', [Validators.required]],
@@ -137,7 +170,9 @@ export class LeadComponent implements OnInit {
 
   edit: boolean = false;
   dialogHeader!: string;
+
   showDialog(type: string, lead?: any): void {
+    //將"業務負責人"設定為不可修改
     this.lead_form.controls['owner'].disable();
     this.edit = true;
     if (type === 'add') {
@@ -156,26 +191,22 @@ export class LeadComponent implements OnInit {
   }
 
   stageValue(event: any): void {
-    const selectedStage = this.stage.find((s) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedStage.name);
+    console.log("code: " + event.value.code);
+    console.log("name: " + event.value.name);
   }
 
   leadSourceValue(event: any): void {
-    const selectedLeadSource = this.lead_source.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedLeadSource.name);
+    console.log("code: " + event.value.code);
+    console.log("name: " + event.value.name);
   }
 
   ratingValue(event: any): void {
-    const selectedRating = this.rating.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedRating.name);
+    console.log("code: " + event.value.code);
+    console.log("name: " + event.value.name);
   }
 
   industryValue(event: any): void {
-    const selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedIndustry.name);
+    console.log("code: " + event.value.code);
+    console.log("name: " + event.value.name);
   }
 }
