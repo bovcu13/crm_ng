@@ -82,6 +82,11 @@ export class ContactComponent {
   dialogHeader!: string;
   showDialog(type: string, contact?: any): void {
     this.edit = true;
+    this.contact_form.controls['contact_owner'].disable();
+    this.contact_form.controls['created_by'].disable();
+    this.contact_form.controls['updated_by'].disable();
+    this.contact_form.controls['created_at'].disable();
+    this.contact_form.controls['updated_at'].disable();
     if (type === 'add') {
       this.dialogHeader = '新增';
       this.contact_form.reset();
@@ -89,6 +94,9 @@ export class ContactComponent {
       console.log("contact: " + JSON.stringify(contact))
       this.dialogHeader = '編輯';
       this.contact_form.patchValue(contact);
+      this.contact_form.patchValue({
+        salutation: this.salutation.find(s => s.name === contact.salutation),
+      });
       //更新時間為現在時間
       const currentDate = new Date()
       this.contact_form.patchValue({
@@ -98,9 +106,7 @@ export class ContactComponent {
   }
 
   salutationValue(event: any): void {
-    const selectedsalutation = this.salutation.find((s) => s.code === event.value.code);
-    this.contact_form.patchValue({
-      salutation: selectedsalutation,
-    });
+    const selectedsalutation = this.salutation.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code , selectedsalutation.name);
   }
 }
