@@ -10,12 +10,23 @@ a {
 }
 
 :host ::ng-deep {
+  // 下拉選單
+  .p-menubar-root-list .p-menuitem-active p-menubarsub .p-submenu-list {
+    background: #2E5C6E;
+    border-radius: 6px;
+  }
+
   .p-menubar {
     background: #2E5C6E;
     border: none;
     border-radius: 0;
 
     .p-menubar-root-list .p-menuitem .p-menuitem-link {
+      .p-menuitem-active:not(.p-disabled):hover {
+        background: #356d86;
+      }
+
+      .p-submenu-icon,
       .p-menuitem-text {
         color: #FFFFFB;
         font-size: larger;
@@ -26,14 +37,52 @@ a {
         }
       }
 
-      &:hover {
-        background: #356d86;
-        color: #FFFFFB;
+      &:focus {
+        box-shadow: none;
       }
 
+      &:hover,
+      &:not(.p-disabled):hover .p-submenu-icon,
       &:not(.p-disabled):hover .p-menuitem-text {
         color: #FFFFFB;
+        background: #356d86;
+      }
+    }
+
+    .p-float-label input.p-filled ~ label{
+      background: #356d86;
+    }
+
+    input {
+      border-radius: 20px;
+      border: none;
+      background: #356d86;
+      color: #FFFFFB;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    .p-input-icon-left > .p-inputtext {
+      padding-left: 3rem;
+    }
+
+    // 右邊icon點擊無外框
+    .p-button.p-button-secondary:enabled {
+      &:hover {
+        background: #356d86;
+      }
+
+      &:focus {
+        box-shadow: none;
       }
     }
   }
+
+  .p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link,
+  .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link, .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover {
+    background: #356d86;
+  }
 }
+
