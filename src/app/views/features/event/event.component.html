@@ -4,49 +4,80 @@
       <h2>行事曆</h2>
     </span>
     <full-calendar [options]="options"></full-calendar>
+    <div class="field mt-2">
+      <label><span class="reddot"></span>紅色: meeting</label>
+      <label><span class="orangedot"></span>橙色: meeting</label>
+      <label><span class="yellowdot"></span>黃色: meeting</label>
+      <label><span class="greendot"></span>綠色: meeting</label>
+      <label><span class="bluedot"></span>藍色: meeting</label>
+      <label><span class="cornflowerbluedot"></span>靛色: meeting</label>
+      <label><span class="purpledot"></span>紫色: meeting</label>
+      <label><span class="pinkdot"></span>粉色: meeting</label>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-6"></div>
 </div>
 <form [formGroup]="event_form">
   <p-dialog [(visible)]="visible" header={{dialogHeader}}>
     <div class="grid">
       <div class="col-6">
-        <label>主題</label>
-        <input type="text" pInputText formControlName="subject" />
+        <div class="field">
+          <label>主題</label>
+          <input type="text" pInputText formControlName="subject"/>
+        </div>
       </div>
       <div class="col-6">
-        <label>指派對象</label>
-        <p-dropdown [options]="employee_name" placeholder="搜尋人員" [editable]="true" optionLabel="name"
-          formControlName="assigned_to"></p-dropdown>
+        <div class="field">
+          <label>指派對象</label>
+          <p-dropdown [options]="assigned_to" placeholder="搜尋人員" [editable]="true" optionLabel="name"
+                      appendTo="body"
+                      formControlName="assigned_to"></p-dropdown>
+        </div>
       </div>
       <div class="col-6">
-        <label>位置</label>
-        <input type="text" pInputText formControlName="location" />
+        <div class="field">
+          <label>位置</label>
+          <input type="text" pInputText formControlName="location"/>
+        </div>
       </div>
       <div class="col-6">
-        <label>全天事件</label>
-        <div class="col-12">
-          <p-checkbox formControlName="allday" value="allday" [binary]="true"></p-checkbox>
+        <div class="field">
+          <label>全天事件</label>
+          <div class="col-12">
+            <p-checkbox formControlName="allday" value="allday" [binary]="true"></p-checkbox>
+          </div>
         </div>
       </div>
       <!-- 如果勾選全天日期則p-calendar 只顯示開始日期且無時間選擇 -->
       <div class="col-6" *ngIf="event_form.get('allday')?.value">
-        <label>開始</label>
-        <p-calendar  [appendTo]="'body'" #startDate dateFormat="yy-mm-dd"
-          [showButtonBar]="true" formControlName="start_date"></p-calendar>
+        <div class="field">
+          <label>開始</label>
+          <p-calendar [appendTo]="'body'" #startDate dateFormat="yy-mm-dd"
+                      [showButtonBar]="true" formControlName="start_date"></p-calendar>
+        </div>
       </div>
       <!-- 如果無勾選全天日期則p-calendar 顯示開始與結束日期，並開啟時間選擇 -->
       <div class="col-6" *ngIf="!event_form.get('allday')?.value">
-        <label>開始</label>
-        <p-calendar  [showTime]="true" #startDate [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
-          [showButtonBar]="true" formControlName="start_date" [readonlyInput]="true"></p-calendar>
+        <div class="field">
+          <label>開始</label>
+          <p-calendar [showTime]="true" #startDate [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+                      [showButtonBar]="true" formControlName="start_date" [readonlyInput]="true"></p-calendar>
+        </div>
       </div>
       <div class="col-6" *ngIf="!event_form.get('allday')?.value">
-        <label>結束</label>
-        <p-calendar [showTime]="true" #endDate [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
-          [showButtonBar]="true" formControlName="end_date" [minDate]="event_form.controls['start_date'].value" [readonlyInput]="true"></p-calendar>
+        <div class="field">
+          <label>結束</label>
+          <p-calendar [showTime]="true" #endDate [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
+                      [showButtonBar]="true" formControlName="end_date"
+                      [minDate]="event_form.controls['start_date'].value" [readonlyInput]="true"></p-calendar>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>類型</label>
+          <p-dropdown [options]="type" [editable]="true" optionLabel="name" appendTo="body"
+                      (onChange)="typeValue($event)"
+                      formControlName="type"></p-dropdown>
+        </div>
       </div>
       <div class="col-12 flex justify-content-end">
         <p-button label="儲存" (click)="visible= false" styleClass="p-button-outlined p-button-info"></p-button>

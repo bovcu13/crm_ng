@@ -1,1 +1,65 @@
 @import 'src/app/app.component.scss';
+.reddot {
+  height: 10px;
+  width: 10px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.orangedot {
+  height: 10px;
+  width: 10px;
+  background-color: orange;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.yellowdot {
+  height: 10px;
+  width: 10px;
+  background-color: yellow;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.greendot {
+  height: 10px;
+  width: 10px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.bluedot {
+  height: 10px;
+  width: 10px;
+  background-color: deepskyblue;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.cornflowerbluedot {
+  height: 10px;
+  width: 10px;
+  background-color: cornflowerblue;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.purpledot {
+  height: 10px;
+  width: 10px;
+  background-color: rebeccapurple;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.pinkdot {
+  height: 10px;
+  width: 10px;
+  background-color: hotpink;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
