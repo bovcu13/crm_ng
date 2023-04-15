@@ -1,7 +1,7 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>商機線索</h2>
+      <h2>線索</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
           <p-button (click)="showDialog('add')" label="新增" icon="pi pi-plus" styleClass="p-button-text"></p-button>
@@ -70,7 +70,7 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>商機線索狀態</label>
+          <label>線索狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
                       (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
         </div>
@@ -139,7 +139,7 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>商機線索來源</label>
+          <label>線索來源</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="lead_source" optionLabel="name"
                       (onChange)="leadSourceValue($event)" formControlName="lead_source" appendTo="body"></p-dropdown>
         </div>

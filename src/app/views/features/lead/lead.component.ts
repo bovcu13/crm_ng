@@ -176,11 +176,11 @@ export class LeadComponent implements OnInit {
     this.lead_form.controls['owner'].disable();
     this.edit = true;
     if (type === 'add') {
-      this.dialogHeader = '新增商機線索';
+      this.dialogHeader = '新增線索';
       this.lead_form.reset();
     } else if (type === 'edit') {
       console.log("lead: " + JSON.stringify(lead))
-      this.dialogHeader = '編輯商機線索';
+      this.dialogHeader = '編輯線索';
       this.lead_form.patchValue(lead);
       this.lead_form.patchValue({
         stage: this.stage.find(s => s.name === lead.stage),
