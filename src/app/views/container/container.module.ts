@@ -19,7 +19,8 @@ import { ReportComponent } from '../features/report/report.component';
 import { ViewLeadComponent} from "../features/lead/view-lead/view-lead.component";
 import { ViewAccountComponent } from '../features/account/view-account/view-account.component';
 import { ViewContactComponent } from '../features/contact/view-contact/view-contact.component';
-
+import { ProductComponent } from '../features/product/product.component';
+import { OrderComponent } from '../features/order/order.component';
 @NgModule({
   declarations: [
     ContainerComponent,
@@ -38,6 +39,8 @@ import { ViewContactComponent } from '../features/contact/view-contact/view-cont
     ViewLeadComponent,
     ViewAccountComponent,
     ViewContactComponent,
+    ProductComponent,
+    OrderComponent
   ],
   imports: [
     CommonModule,

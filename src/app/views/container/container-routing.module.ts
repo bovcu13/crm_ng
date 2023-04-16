@@ -15,6 +15,8 @@ import { ReportComponent } from '../features/report/report.component';
 import { ViewLeadComponent} from "../features/lead/view-lead/view-lead.component";
 import { ViewAccountComponent } from '../features/account/view-account/view-account.component';
 import { ViewContactComponent } from '../features/contact/view-contact/view-contact.component';
+import { ProductComponent } from '../features/product/product.component';
+import { OrderComponent } from '../features/order/order.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -32,7 +34,9 @@ const routes: Routes = [
       { path: 'forecasting', component: ForecastingComponent },
       { path: 'lead', component: LeadComponent },
       { path: 'lead/view', component: ViewLeadComponent },
+      { path: 'product', component: ProductComponent },
       { path: 'opportunity', component: OpportunityComponent },
+      { path: 'order', component: OrderComponent },
       { path: 'quote', component: QuoteComponent },
       { path: 'report', component: ReportComponent },
     ],
