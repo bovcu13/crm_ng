@@ -1,1 +1,108 @@
-<p>order works!</p>
+<div class="flex justify-content-center">
+  <div class="col-10">
+    <p-card>
+      <h2>訂單</h2>
+      <div class="flex justify-content-end">
+        <span class="p-buttonset">
+          <p-button label="新增訂單" (click)="showDialog('add')" icon="pi pi-plus"
+                    styleClass="p-button-text"></p-button>
+        </span>
+      </div>
+      <p-table [value]="order_table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>訂單號碼</th>
+            <th>帳戶名稱</th>
+            <th>訂單金額</th>
+            <th>訂單開始日期</th>
+            <th>狀態</th>
+            <th>契約號碼</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+          <tr>
+            <td>{{ order.number }}</td>
+            <td>{{ order.account_name }}</td>
+            <td>{{ order.order_amount }}</td>
+            <td>{{ order.start_date }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.contract_number }}</td>
+            <td>
+              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-menu #menu [model]="items" [popup]="true"></p-menu>
+    </p-card>
+  </div>
+</div>
+<form [formGroup]="order_form">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+    <div class="grid">
+      <div class="col-6">
+        <div class="field">
+          <label>訂單編號</label>
+          <input pInputText formControlName="number">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>契約號碼</label>
+          <p-dropdown placeholder="搜尋契約" [disabled]="true" optionLabel="name" formControlName="contract_number"
+                      appendTo="body"
+                      [ngClass]="{'ng-dirty':order_form.controls['contract_number'].hasError && order_form.controls['contract_number'].touched}"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>帳戶名稱</label>
+          <input pInputText formControlName="account_name"
+                 [ngClass]="{'ng-dirty':order_form.controls['account_name'].hasError && order_form.controls['account_name'].touched}">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>訂單開始日期</label>
+          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd"
+                      [showButtonBar]="true" formControlName="start_date"
+                      [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="status" optionLabel="name"
+                      formControlName="status"
+                      appendTo="body"
+                      [ngClass]="{'ng-dirty':order_form.controls['status'].hasError && order_form.controls['status'].touched}"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6"></div>
+      <div class="col-6">
+        <label>建立者：</label>
+      </div>
+      <div class="col-6">
+        <label>上次修改者：</label>
+      </div>
+      <div class="col-1">
+        <input pInputText formControlName="created_by">
+      </div>
+      <div class="col-5">
+        <input pInputText formControlName="created_at">
+      </div>
+      <div class="col-1">
+        <input pInputText formControlName="updated_by">
+      </div>
+      <div class="col-5">
+        <input pInputText formControlName="updated_at">
+      </div>
+    </div>
+    <div class="flex justify-content-end">
+      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
+    </div>
+  </p-dialog>
+</form>
