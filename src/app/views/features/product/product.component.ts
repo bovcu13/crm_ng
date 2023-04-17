@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { MenuItem } from "primeng/api";
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -12,16 +13,30 @@ export class ProductComponent {
       enable: true,
       code: "00001",
       describe: "",
-      series: "none"
+      series: "none",
+      created_at: "2023-04-15",
+      created_by: "林",
+      updated_by: "林",
     },
     {
       name: "grava",
       enable: false,
       code: "00002",
       describe: "",
-      series: "none"
+      series: "none",
+      created_at: "2023-04-15",
+      created_by: "林",
+      updated_by: "林",
     }
   ]
+  //表格最後下拉控制選項
+  items: MenuItem[] = [{ label: '編輯', command: () => { this.showDialog('edit', this.product[0]) } },
+  { label: '刪除', }];
+
+  OnInit() {
+
+  }
+
   //建立formgroup
   product_form: FormGroup;
   constructor(private fb: FormBuilder) {
@@ -52,7 +67,19 @@ export class ProductComponent {
     } else if (type === 'edit') {
       console.log("product: " + JSON.stringify(product))
       this.dialogHeader = '編輯產品';
+      //取得目前時間
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const day = now.getDate().toString().padStart(2, '0');
+      const hour = now.getHours().toString().padStart(2, '0');
+      const minute = now.getMinutes().toString().padStart(2, '0');
+      const formattedTime = `${year}-${month}-${day} ${hour}:${minute}`;
+      //console.log(formattedTime);
       this.product_form.patchValue(product);
+      this.product_form.patchValue({
+        updated_at: formattedTime
+      });
     }
   }
 }

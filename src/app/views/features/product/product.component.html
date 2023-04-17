@@ -14,8 +14,7 @@
             <th>產品代碼</th>
             <th>產品描述</th>
             <th>產品系列</th>
-            <th>編輯</th>
-            <th>刪除</th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-product>
@@ -25,15 +24,13 @@
             <td>{{ product.describe }}</td>
             <td>{{ product.series }}</td>
             <td>
-              <p-button icon="pi pi-pencil" (click)="showDialog('edit',product)"
-                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-            </td>
-            <td>
-              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             </td>
           </tr>
         </ng-template>
       </p-table>
+      <p-menu #menu [model]="items" [popup]="true"></p-menu>
     </p-card>
   </div>
 </div>
@@ -42,22 +39,9 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>產品名稱</label>
+          <label><span class="required-star">*</span>產品名稱</label>
           <input pInputText formControlName="name"
             [ngClass]="{'ng-dirty':product_form.controls['name'].hasError && product_form.controls['name'].touched}">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>產品系列</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" formControlName="series"
-            appendTo="body"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>產品代碼</label>
-          <input pInputText formControlName="code">
         </div>
       </div>
       <div class="col-6">
@@ -67,23 +51,49 @@
           <p-checkbox formControlName="enable" value="enable" [binary]="true"></p-checkbox>
         </div>
       </div>
+      <!-- <div class="col-6">
+        <div class="field">
+          <label>產品系列</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" formControlName="series"
+            appendTo="body"></p-dropdown>
+        </div>
+      </div> -->
+      <div class="col-6">
+        <div class="field">
+          <label>產品代碼</label>
+          <input pInputText formControlName="code">
+        </div>
+      </div>
+      <!-- <div class="col-6">
+        <div class="field">
+          <label>已啟用</label>
+          <br>
+          <p-checkbox formControlName="enable" value="enable" [binary]="true"></p-checkbox>
+        </div>
+      </div> -->
       <div class="col-12">
         <div class="field">
           <label>產品描述</label>
           <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
         </div>
       </div>
-      <div class="col-6" *ngIf="edit">
-        <div class="field">
-          <label for="created_by">建立者：</label>
-          <input pInputText formControlName="created_by">
-        </div>
+      <div class="col-6">
+        <label>建立者：</label>
       </div>
-      <div class="col-6" *ngIf="edit">
-        <div class="field">
-          <label for="updated_by">上次修改者：</label>
-          <input pInputText formControlName="updated_by">
-        </div>
+      <div class="col-6">
+        <label>上次修改者：</label>
+      </div>
+      <div class="col-1">
+        <input pInputText formControlName="created_by">
+      </div>
+      <div class="col-5">
+        <input pInputText formControlName="created_at">
+      </div>
+      <div class="col-1">
+        <input pInputText formControlName="updated_by">
+      </div>
+      <div class="col-5">
+        <input pInputText formControlName="updated_at">
       </div>
     </div>
     <div class="flex justify-content-end">
