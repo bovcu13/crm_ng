@@ -26,7 +26,14 @@ a {
         background: #356d86;
       }
 
-      .p-submenu-icon,
+      .p-submenu-icon {
+        color: #FFFFFB;
+
+        &:hover {
+          color: #FFFFFB;
+        }
+      }
+
       .p-menuitem-text {
         color: #FFFFFB;
         font-size: larger;
@@ -49,7 +56,7 @@ a {
       }
     }
 
-    .p-float-label input.p-filled ~ label{
+    .p-float-label input.p-filled ~ label {
       background: #356d86;
     }
 
