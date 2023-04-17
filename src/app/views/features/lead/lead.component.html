@@ -1,7 +1,7 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>商機線索</h2>
+      <h2>線索</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
           <p-button (click)="showDialog('add')" label="新增" icon="pi pi-plus" styleClass="p-button-text"></p-button>
@@ -18,8 +18,7 @@
             <th>電子郵件</th>
             <th>LINE</th>
             <th>業務負責人</th>
-            <th>檢視</th>
-            <th>編輯</th>
+            <th>更多</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-lead>
@@ -40,16 +39,21 @@
             <td>{{ lead.line }}</td>
             <td>{{ lead.owner }}</td>
             <td>
-              <p-button icon="pi pi-eye" routerLink="/main/lead/view"
+              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event);getLead(lead)"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             </td>
-            <td>
-              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-            </td>
+            <!--            <td>-->
+            <!--              <p-button icon="pi pi-eye" routerLink="/main/lead/view"-->
+            <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
+            <!--            </td>-->
+            <!--            <td>-->
+            <!--              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"-->
+            <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
+            <!--            </td>-->
           </tr>
         </ng-template>
       </p-table>
+      <p-menu #menu [model]="items" [popup]="true"></p-menu>
       <div class="flex align-items-center mt-3 ml-4">
         <span class="text-400 pi pi-circle-fill mr-1"></span>
         <span>{{stage[0].name}}</span>
@@ -70,15 +74,24 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>商機線索狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
-                      (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
+          <label><span class="text-red-600">*</span>線索狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" [options]="stage"
+                      formControlName="stage" appendTo="body" (onChange)="stageValue($event)"
+                      [ngClass]="{'ng-dirty':lead_form.controls['stage'].hasError && lead_form.controls['stage'].touched}"
+          ></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>業務負責人</label>
           <input pInputText formControlName="owner">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="field">
+          <label><span class="text-red-600">*</span>公司</label>
+          <input pInputText formControlName="account_name"
+                 [ngClass]="{'ng-dirty':lead_form.controls['account_name'].hasError && lead_form.controls['account_name'].touched}">
         </div>
       </div>
       <div class="col-6">
@@ -91,12 +104,6 @@
         <div class="field">
           <label>職稱</label>
           <input pInputText formControlName="title">
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="field">
-          <label>公司</label>
-          <input pInputText formControlName="account_name">
         </div>
       </div>
       <div class="col-6">
@@ -139,14 +146,43 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>商機線索來源</label>
+          <label>線索來源</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="lead_source" optionLabel="name"
                       (onChange)="leadSourceValue($event)" formControlName="lead_source" appendTo="body"></p-dropdown>
         </div>
       </div>
     </div>
+    <ng-container *ngIf="dialogHeader === '編輯線索'">
+      <p-divider></p-divider>
+      <div class="grid">
+        <div class="col-6">
+          <label>建立者：</label>
+        </div>
+        <div class="col-6">
+          <label>上次修改者：</label>
+        </div>
+        <div class="col-1">
+          <input pInputText formControlName="created_by">
+        </div>
+        <div class="col-5">
+          <input pInputText formControlName="created_at">
+        </div>
+        <div class="col-1">
+          <input pInputText formControlName="updated_by">
+        </div>
+        <div class="col-5">
+          <input pInputText formControlName="updated_at">
+        </div>
+      </div>
+    </ng-container>
     <div class="flex justify-content-end">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+
+      <ng-container *ngIf="dialogHeader === '編輯線索'">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="dialogHeader !== '編輯線索'">
+        <p-button label="新增" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>

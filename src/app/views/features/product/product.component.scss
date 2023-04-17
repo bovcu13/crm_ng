@@ -1,9 +1,4 @@
 @import 'src/app/app.component.scss';
-input[formControlName="owner"] {
-  border: none;
-  color: black;
-  margin-left: -9px;
-}
 input[formControlName="created_by"] {
   border: none;
   color: black;
@@ -23,4 +18,7 @@ input[formControlName="updated_at"] {
   border: none;
   color: black;
   margin-left: -9px;
+}
+.required-star {
+  color: red;
 }
