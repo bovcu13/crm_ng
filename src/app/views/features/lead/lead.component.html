@@ -70,15 +70,24 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>線索狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
-                      (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
+          <label><span class="text-red-600">*</span>線索狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" [options]="stage"
+                      formControlName="stage" appendTo="body" (onChange)="stageValue($event)"
+                      [ngClass]="{'ng-dirty':lead_form.controls['stage'].hasError && lead_form.controls['stage'].touched}"
+          ></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>業務負責人</label>
           <input pInputText formControlName="owner">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="field">
+          <label><span class="text-red-600">*</span>公司</label>
+          <input pInputText formControlName="account_name"
+                 [ngClass]="{'ng-dirty':lead_form.controls['account_name'].hasError && lead_form.controls['account_name'].touched}">
         </div>
       </div>
       <div class="col-6">
@@ -91,12 +100,6 @@
         <div class="field">
           <label>職稱</label>
           <input pInputText formControlName="title">
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="field">
-          <label>公司</label>
-          <input pInputText formControlName="account_name">
         </div>
       </div>
       <div class="col-6">
