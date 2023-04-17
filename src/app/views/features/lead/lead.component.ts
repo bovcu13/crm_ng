@@ -177,8 +177,12 @@ export class LeadComponent implements OnInit {
       lead_source: [''],
       industry: [''],
       rating: ['',],
-      owner: ['',],
+      owner: [''],
       account_name: ['', [Validators.required]],
+      created_by: [''],
+      created_at: [''],
+      updated_by: [''],
+      updated_at: [''],
     });
   }
 
@@ -218,17 +222,17 @@ export class LeadComponent implements OnInit {
     // console.log(selectedStage.name);
   }
 
-  leadSourceValue(event:any):void {
+  leadSourceValue(event: any): void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }
 
-  ratingValue(event:any):void {
+  ratingValue(event: any): void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }
 
-  industryValue(event:any):void {
+  industryValue(event: any): void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }

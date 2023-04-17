@@ -38,16 +38,18 @@
             <td>{{ lead.email }}</td>
             <td>{{ lead.line }}</td>
             <td>{{ lead.owner }}</td>
-            <td><p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event);getLead(lead)"
-                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button></td>
-<!--            <td>-->
-<!--              <p-button icon="pi pi-eye" routerLink="/main/lead/view"-->
-<!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"-->
-<!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
-<!--            </td>-->
+            <td>
+              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event);getLead(lead)"
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            </td>
+            <!--            <td>-->
+            <!--              <p-button icon="pi pi-eye" routerLink="/main/lead/view"-->
+            <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
+            <!--            </td>-->
+            <!--            <td>-->
+            <!--              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"-->
+            <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
+            <!--            </td>-->
           </tr>
         </ng-template>
       </p-table>
@@ -150,8 +152,37 @@
         </div>
       </div>
     </div>
+    <ng-container *ngIf="dialogHeader === '編輯線索'">
+      <p-divider></p-divider>
+      <div class="grid">
+        <div class="col-6">
+          <label>建立者：</label>
+        </div>
+        <div class="col-6">
+          <label>上次修改者：</label>
+        </div>
+        <div class="col-1">
+          <input pInputText formControlName="created_by">
+        </div>
+        <div class="col-5">
+          <input pInputText formControlName="created_at">
+        </div>
+        <div class="col-1">
+          <input pInputText formControlName="updated_by">
+        </div>
+        <div class="col-5">
+          <input pInputText formControlName="updated_at">
+        </div>
+      </div>
+    </ng-container>
     <div class="flex justify-content-end">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+
+      <ng-container *ngIf="dialogHeader === '編輯線索'">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="dialogHeader !== '編輯線索'">
+        <p-button label="新增" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
