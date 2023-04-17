@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
-
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MenuItem} from "primeng/api";
 
 @Component({
   selector: 'app-lead',
@@ -144,13 +144,31 @@ export class LeadComponent implements OnInit {
       code: "cold"
     }
   ]
-
-  lead_form: FormGroup;
+  leadValue: any;
+  //表格最後下拉控制選項
+  items: MenuItem[] = [{
+    icon: "pi pi-eye",
+    label: '檢視', command: () => {
+      window.location.assign('/main/lead/view');
+    }
+  }, {
+    icon: "pi pi-pencil",
+    label: '編輯', command: () => {
+      this.showDialog('edit', this.leadValue)
+    }
+  },
+    {
+      icon: "pi pi-trash",
+      label: '刪除',
+    }];
+  lead_form!: FormGroup;
+  edit: boolean = false;
+  dialogHeader!: string;
 
   constructor(private fb: FormBuilder) {
     this.lead_form = this.fb.group({
       name: [''],
-      stage: ['', [Validators.required]],
+      stage: [this.stage[1], [Validators.required]],
       title: [''],
       phone_number: [''],
       cell_phone: [''],
@@ -164,19 +182,22 @@ export class LeadComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  getLead(lead: any): void {
+    this.leadValue = lead
   }
 
-  edit: boolean = false;
-  dialogHeader!: string;
+  ngOnInit(): void {
+
+  }
 
   showDialog(type: string, lead?: any): void {
     //將"業務負責人"設定為不可修改
     this.lead_form.controls['owner'].disable();
     this.edit = true;
-    if (type === 'add') {
+    if (type === 'add'
+    ) {
       this.dialogHeader = '新增線索';
-      this.lead_form.reset();
+      // this.lead_form.reset();
       console.log(this.lead_form.controls['stage'].value)
     } else if (type === 'edit') {
       console.log("lead: " + JSON.stringify(lead))
@@ -197,17 +218,17 @@ export class LeadComponent implements OnInit {
     // console.log(selectedStage.name);
   }
 
-  leadSourceValue(event: any): void {
+  leadSourceValue(event:any):void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }
 
-  ratingValue(event: any): void {
+  ratingValue(event:any):void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }
 
-  industryValue(event: any): void {
+  industryValue(event:any):void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }
