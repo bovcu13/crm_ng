@@ -59,10 +59,6 @@ export class OrderComponent {
   //表格最後下拉控制選項
   items: MenuItem[] = [{label: '編輯',command: () => {this.showDialog('edit',this.order)}},
     {label: '刪除',}];
-  //時間調整
-  localToUtc(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
-  }
   //建立formgroup
   order_form: FormGroup;
   constructor(private fb: FormBuilder) {
@@ -73,6 +69,7 @@ export class OrderComponent {
       start_date: ['', [Validators.required]],
       status: ['', [Validators.required]],
       contract_number: ['', [Validators.required]],
+      describe: [''],
       created_at: [''],
       updated_at: [''],
       created_by: [''],
@@ -91,16 +88,24 @@ export class OrderComponent {
     this.order_form.controls['created_at'].disable();
     this.order_form.controls['updated_at'].disable();
     if (type === 'add') {
-      this.dialogHeader = '新增產品';
+      this.dialogHeader = '新增訂單';
       this.order_form.reset();
     } else if (type === 'edit') {
       console.log("order: " + JSON.stringify(order))
-      this.dialogHeader = '編輯產品';
+      this.dialogHeader = '編輯訂單';
+      //取得電腦目前時區
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const day = now.getDate().toString().padStart(2, '0');
+      const hour = now.getHours().toString().padStart(2, '0');
+      const minute = now.getMinutes().toString().padStart(2, '0');
+      const formattedTime = `${year}-${month}-${day} ${hour}:${minute}`;
+      //console.log(formattedTime);
       this.order_form.patchValue(order);
       //更新時間為現在時間
-      const currentDate = new Date()
       this.order_form.patchValue({
-        updated_at: currentDate
+        updated_at: formattedTime
       });
     }
   }

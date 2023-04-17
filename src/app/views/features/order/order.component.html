@@ -50,7 +50,7 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>契約號碼</label>
+          <label><span class="required-star">*</span>契約號碼</label>
           <p-dropdown placeholder="搜尋契約" [disabled]="true" optionLabel="name" formControlName="contract_number"
                       appendTo="body"
                       [ngClass]="{'ng-dirty':order_form.controls['contract_number'].hasError && order_form.controls['contract_number'].touched}"></p-dropdown>
@@ -58,14 +58,14 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>帳戶名稱</label>
+          <label><span class="required-star">*</span>帳戶名稱</label>
           <input pInputText formControlName="account_name"
                  [ngClass]="{'ng-dirty':order_form.controls['account_name'].hasError && order_form.controls['account_name'].touched}">
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>訂單開始日期</label>
+          <label><span class="required-star">*</span>訂單開始日期</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd"
                       [showButtonBar]="true" formControlName="start_date"
                       [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
@@ -73,7 +73,7 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>狀態</label>
+          <label><span class="required-star">*</span>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="status" optionLabel="name"
                       formControlName="status"
                       appendTo="body"
@@ -81,6 +81,12 @@
         </div>
       </div>
       <div class="col-6"></div>
+      <div class="col-12">
+        <div class="field">
+          <label>產品描述</label>
+          <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
+        </div>
+      </div>
       <div class="col-6">
         <label>建立者：</label>
       </div>
