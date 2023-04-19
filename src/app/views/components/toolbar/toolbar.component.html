@@ -7,9 +7,9 @@
     </span>
     <p-button pTooltip="行事曆" tooltipPosition="bottom" icon="pi pi-calendar" routerLink="/main/event"
               styleClass="text-white p-button-rounded p-button-secondary p-button-text p-button-lg mr-2"></p-button>
-    <p-button icon="pi pi-user"
+    <p-button pTooltip="帳號" tooltipPosition="bottom" icon="pi pi-user" (click)="menu.toggle($event)"
               styleClass="text-white p-button-rounded p-button-secondary p-button-text p-button-lg mr-3"></p-button>
   </ng-template>
 </p-menubar>
-
+<p-menu #menu [model]="account" [popup]="true"></p-menu>
 
