@@ -3,40 +3,40 @@
     <h1 class="mb-4">CRM系統</h1>
     <p-divider></p-divider>
     <div class="flex justify-content-center mt-5">
-      <p-card>
-        <h3>登入</h3>
-        <p-divider></p-divider>
-        <div class="grid">
-          <div class="col-12">
-            <div class="field">
-              <label>帳號</label>
-              <input pInputText>
+        <p-card>
+          <h3>登入</h3>
+          <p-divider></p-divider>
+          <div class="grid">
+            <div class="col-12">
+              <div class="field">
+                <label>帳號</label>
+                <input pInputText [(ngModel)]="form.username">
+              </div>
+            </div>
+            <div class="col-12 mt-1">
+              <label>密碼</label>
+              <p-password [(ngModel)]="form.password" [feedback]="false"></p-password>
+            </div>
+            <div class="col-6">
+              <div class="flex justify-content-start mt-3">
+                <a href="">忘記密碼?</a>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="flex justify-content-end align-items-center mt-3">
+                <p-button label="登入" routerLink="/main" (click)="onSubmit()"></p-button>
+              </div>
             </div>
           </div>
-          <div class="col-12 mt-1">
-            <label>密碼</label>
-            <p-password></p-password>
+          <p-divider></p-divider>
+          <div class="flex justify-content-center">
+            <h4>未註冊帳戶?</h4>
           </div>
-          <div class="col-6">
-            <div class="flex justify-content-start mt-3">
-              <a href="">忘記密碼?</a>
-            </div>
+          <div class="flex justify-content-center mt-1">
+            <p-button label="註冊" routerLink="/signup" styleClass="p-button-raised p-button-text p-button-secondary"
+                      icon="pi pi-arrow-right" iconPos="right"></p-button>
           </div>
-          <div class="col-6">
-            <div class="flex justify-content-end align-items-center mt-3">
-              <p-button label="登入" routerLink="/main"></p-button>
-            </div>
-          </div>
-        </div>
-        <p-divider></p-divider>
-        <div class="flex justify-content-center">
-          <h4>未註冊帳戶?</h4>
-        </div>
-        <div class="flex justify-content-center mt-1">
-          <p-button label="註冊" routerLink="/signup" styleClass="p-button-raised p-button-text p-button-secondary"
-            icon="pi pi-arrow-right" iconPos="right"></p-button>
-        </div>
-      </p-card>
+        </p-card>
     </div>
   </div>
 </div>
