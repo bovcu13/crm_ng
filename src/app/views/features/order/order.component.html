@@ -4,11 +4,10 @@
       <h2>訂單</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button label="新增訂單" (click)="showDialog('add')" icon="pi pi-plus"
-                    styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [value]="order_table">
+      <p-table [value]="order">
         <ng-template pTemplate="header">
           <tr>
             <th>訂單號碼</th>
@@ -28,19 +27,24 @@
             <td>{{ order.start_date }}</td>
             <td>{{ order.status }}</td>
             <td>{{ order.contract_number }}</td>
-            <td>
-              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            <td><p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button (click)="showDialog('edit',order)" icon="pi pi-pencil"
+                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button icon="pi pi-trash"
+                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             </td>
+            <!-- <td><p-button (click)="showDialog('edit',order)" icon="pi pi-pencil"
+                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
+            <td><p-button icon="pi pi-trash"
+                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td> -->
           </tr>
         </ng-template>
       </p-table>
-      <p-menu #menu [model]="items" [popup]="true"></p-menu>
     </p-card>
   </div>
 </div>
 <form [formGroup]="order_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true" [responsive]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
@@ -50,37 +54,57 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>契約號碼</label>
+          <label><span class="required-star">*</span>契約號碼</label>
           <p-dropdown placeholder="搜尋契約" [disabled]="true" optionLabel="name" formControlName="contract_number"
-                      appendTo="body"
-                      [ngClass]="{'ng-dirty':order_form.controls['contract_number'].hasError && order_form.controls['contract_number'].touched}"></p-dropdown>
+            appendTo="body"
+            [ngClass]="{'ng-dirty':order_form.controls['contract_number'].hasError && order_form.controls['contract_number'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>帳戶名稱</label>
+          <label><span class="required-star">*</span>帳戶名稱</label>
           <input pInputText formControlName="account_name"
-                 [ngClass]="{'ng-dirty':order_form.controls['account_name'].hasError && order_form.controls['account_name'].touched}">
+            [ngClass]="{'ng-dirty':order_form.controls['account_name'].hasError && order_form.controls['account_name'].touched}">
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>訂單開始日期</label>
-          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd"
-                      [showButtonBar]="true" formControlName="start_date"
-                      [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
+          <label><span class="required-star">*</span>訂單開始日期</label>
+          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="start_date"
+            [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="status" optionLabel="name"
-                      formControlName="status"
-                      appendTo="body"
-                      [ngClass]="{'ng-dirty':order_form.controls['status'].hasError && order_form.controls['status'].touched}"></p-dropdown>
+          <label><span class="required-star">*</span>狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="status" optionLabel="name" formControlName="status"
+            appendTo="body"
+            [ngClass]="{'ng-dirty':order_form.controls['status'].hasError && order_form.controls['status'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-6"></div>
+      <div class="col-12">
+        <div class="field">
+          <label>產品描述</label>
+          <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
+        </div>
+      </div>
+      <ng-container *ngIf="showedit && order_form.get('status')?.value === '啟動中'">
+        <div class="col-6">
+          <div class="field">
+            <label>啟用者</label>
+            <input pInputText formControlName="activated_by">
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="showedit && order_form.get('status')?.value === '啟動中'">
+        <div class="col-6">
+          <div class="field">
+            <label>啟用日期</label>
+            <input pInputText formControlName="activated_date">
+          </div>
+        </div>
+      </ng-container>
       <div class="col-6">
         <label>建立者：</label>
       </div>

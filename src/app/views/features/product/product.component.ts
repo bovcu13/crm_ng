@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { MenuItem } from "primeng/api";
+
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -29,10 +29,6 @@ export class ProductComponent {
       updated_by: "林",
     }
   ]
-  //表格最後下拉控制選項
-  items: MenuItem[] = [{ label: '編輯', command: () => { this.showDialog('edit', this.product[0]) } },
-  { label: '刪除', }];
-
   OnInit() {
 
   }
@@ -62,11 +58,11 @@ export class ProductComponent {
     this.product_form.controls['created_at'].disable();
     this.product_form.controls['updated_at'].disable();
     if (type === 'add') {
-      this.dialogHeader = '新增產品';
+      this.dialogHeader = '新增商品';
       this.product_form.reset();
     } else if (type === 'edit') {
       console.log("product: " + JSON.stringify(product))
-      this.dialogHeader = '編輯產品';
+      this.dialogHeader = '編輯商品';
       //取得目前時間
       const now = new Date();
       const year = now.getFullYear();
