@@ -2,6 +2,14 @@
 input[formControlName="number"] {
   border: none;
   color: black;
+}
+input[formControlName="activated_by"] {
+  border: none;
+  color: black;
+}
+input[formControlName="activated_date"] {
+  border: none;
+  color: black;
   margin-left: -9px;
 }
 input[formControlName="created_by"] {
