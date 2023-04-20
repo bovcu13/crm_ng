@@ -5,15 +5,15 @@
       <div class="flex flex-row justify-content-start">
         <div class="flex align-items-center mb-3 ml-4">
           <span class="text-400 pi pi-circle-fill mr-1"></span>
-          <span>{{stage[0].name}}</span>
+          <span>{{status[0].name}}</span>
           <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
-          <span>{{stage[1].name}}</span>
+          <span>{{status[1].name}}</span>
           <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
-          <span>{{stage[2].name}}</span>
+          <span>{{status[2].name}}</span>
           <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
-          <span>{{stage[3].name}}</span>
+          <span>{{status[3].name}}</span>
           <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
-          <span>{{stage[4].name}}</span>
+          <span>{{status[4].name}}</span>
         </div>
         <div class="flex ml-auto mr-2">
         <span class="p-buttonset">
@@ -25,25 +25,25 @@
       <p-table [value]="lead">
         <ng-template pTemplate="header">
           <tr>
-            <th>狀態</th>
-            <th>姓名</th>
-            <th>公司</th>
-            <th>電話</th>
-            <th>行動電話</th>
-            <th>電子郵件</th>
-            <th>LINE</th>
-            <th>業務負責人</th>
+            <th pSortableColumn="status">狀態 <p-sortIcon field="status"></p-sortIcon></th>
+            <th pSortableColumn="name">姓名 <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="account_name">公司 <p-sortIcon field="account_name"></p-sortIcon></th>
+            <th pSortableColumn="phone_number">電話 <p-sortIcon field="phone_number"></p-sortIcon></th>
+            <th pSortableColumn="cell_phone">行動電話 <p-sortIcon field="cell_phone"></p-sortIcon></th>
+            <th pSortableColumn="email">電子郵件 <p-sortIcon field="email"></p-sortIcon></th>
+            <th pSortableColumn="line">LINE <p-sortIcon field="line"></p-sortIcon></th>
+            <th pSortableColumn="owner">業務負責人 <p-sortIcon field="owner"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-lead>
           <tr>
-            <td><span pTooltip={{lead.stage}} tooltipPosition="top" [ngClass]="{
-                'text-400': lead.stage === stage[0].name,
-                'text-blue-300': lead.stage === stage[1].name,
-                'text-yellow-300': lead.stage === stage[2].name,
-                'text-orange-300': lead.stage === stage[3].name,
-                'text-green-300': lead.stage === stage[4].name
+            <td><span pTooltip={{lead.status}} tooltipPosition="top" [ngClass]="{
+                'text-400': lead.status === status[0].name,
+                'text-blue-300': lead.status === status[1].name,
+                'text-yellow-300': lead.status === status[2].name,
+                'text-orange-300': lead.status === status[3].name,
+                'text-green-300': lead.status === status[4].name
             }" class="pi pi-circle-fill ml-2"></span>
             </td>
             <td>{{ lead.name }}</td>
@@ -77,9 +77,9 @@
       <div class="col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>線索狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" [options]="stage"
-                      formControlName="stage" appendTo="body" (onChange)="stageValue($event)"
-                      [ngClass]="{'ng-dirty':lead_form.controls['stage'].hasError && lead_form.controls['stage'].touched}"
+          <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" [options]="status"
+                      formControlName="status" appendTo="body" (onChange)="statusValue($event)"
+                      [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError && lead_form.controls['status'].touched}"
           ></p-dropdown>
         </div>
       </div>
@@ -111,8 +111,8 @@
       <div class="col-6">
         <div class="field">
           <label>行業</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
-                      (onChange)="industryValue($event)" formControlName="industry" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry_id" optionLabel="name"
+                      (onChange)="industry_idValue($event)" formControlName="industry_id" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -149,8 +149,8 @@
       <div class="col-6">
         <div class="field">
           <label>線索來源</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="lead_source" optionLabel="name"
-                      (onChange)="leadSourceValue($event)" formControlName="lead_source" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source_id" optionLabel="name"
+                      (onChange)="leadSourceValue($event)" formControlName="source_id" appendTo="body"></p-dropdown>
         </div>
       </div>
     </div>
