@@ -2,10 +2,25 @@
   <div class="col-10">
     <p-card>
       <h2>線索</h2>
-      <div class="flex justify-content-end">
+      <div class="flex flex-row justify-content-start">
+        <div class="flex align-items-center mb-3 ml-4">
+          <span class="text-400 pi pi-circle-fill mr-1"></span>
+          <span>{{stage[0].name}}</span>
+          <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
+          <span>{{stage[1].name}}</span>
+          <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
+          <span>{{stage[2].name}}</span>
+          <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
+          <span>{{stage[3].name}}</span>
+          <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
+          <span>{{stage[4].name}}</span>
+        </div>
+        <div class="flex ml-auto mr-2">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" pTooltip="新增" tooltipPosition="top" icon="pi pi-plus"
+                    styleClass="p-button-text"></p-button>
         </span>
+        </div>
       </div>
       <p-table [value]="lead">
         <ng-template pTemplate="header">
@@ -18,7 +33,7 @@
             <th>電子郵件</th>
             <th>LINE</th>
             <th>業務負責人</th>
-            <th>更多</th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-lead>
@@ -39,33 +54,20 @@
             <td>{{ lead.line }}</td>
             <td>{{ lead.owner }}</td>
             <td>
-              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event);getLead(lead)"
+              <p-button icon="pi pi-eye" routerLink="/main/lead/view" pTooltip="檢視" tooltipPosition="top"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+
+              <!--              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event);getLead(lead)"-->
+              <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
             </td>
-            <!--            <td>-->
-            <!--              <p-button icon="pi pi-eye" routerLink="/main/lead/view"-->
-            <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
-            <!--            </td>-->
-            <!--            <td>-->
-            <!--              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"-->
-            <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
-            <!--            </td>-->
           </tr>
         </ng-template>
       </p-table>
       <p-menu #menu [model]="items" [popup]="true"></p-menu>
-      <div class="flex align-items-center mt-3 ml-4">
-        <span class="text-400 pi pi-circle-fill mr-1"></span>
-        <span>{{stage[0].name}}</span>
-        <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
-        <span>{{stage[1].name}}</span>
-        <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
-        <span>{{stage[2].name}}</span>
-        <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
-        <span>{{stage[3].name}}</span>
-        <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
-        <span>{{stage[4].name}}</span>
-      </div>
     </p-card>
   </div>
 </div>
