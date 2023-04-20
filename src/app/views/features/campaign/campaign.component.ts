@@ -8,20 +8,98 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 })
 export class CampaignComponent {
   //table內容
-  campaign: any = {name: "123", patrilineal_name: "", type: "Event", status: "Aborted", start_date: "2023-04-07", end_date: "2023-04-09", responses: "40",owner: "王大明"  };
-  campaign_table: any[] = [{ name: "123", patrilineal_name: "", type: "Event", status: "Aborted", start_date: "2023-04-07", end_date: "2023-04-09", responses: "40", owner: "王大明" },];
+  campaign: any = { name: "123", patrilineal_name: "", type: "Event", status: "Aborted", start_date: "2023-04-07", end_date: "2023-04-09", responses: "40", owner: "王大明" };
+  campaign_table: any[] = [
+    {
+      name: "1+1",
+      active: true,
+      patrilineal_name: "15%off",
+      type: "社交媒體",
+      status: "策劃中",
+      start_date: "2023-04-07",
+      end_date: "2023-04-09",
+      responses: "40",
+      owner: "王大明",
+      created_at: "2023-04-15",
+      created_by: "林",
+      updated_by: "林",
+    },
+    {
+      name: "sam",
+      active: false,
+      patrilineal_name: "1+1",
+      type: "電子郵件",
+      status: "已完成",
+      start_date: "2023-04-14",
+      end_date: "2023-04-19",
+      responses: "30",
+      owner: "王大明",
+      created_at: "2023-04-15",
+      created_by: "林",
+      updated_by: "林",
+    },
+  ];
+
   //p-dropdown狀態
-  status = ['--無--', 'In Progress', 'Completed', 'Aborted', 'Planned'];
+  status = [
+    {
+      name: "策劃中",
+      code: "planned",
+    },
+    {
+      name: "進行中",
+      code: "in_progress",
+    },
+    {
+      name: "已完成",
+      code: "completed",
+    },
+    {
+      name: "已中止",
+      code: "aborted",
+    },
+  ];
   //p-dropdown狀態
-  type = ['Event', 'Demo Signup', 'Email', 'Search', 'Social Media', 'Website Direct', 'Other'];
-  //table下拉選單
-  items: MenuItem[] = [{label: '編輯',command: () => {this.showDialog('edit',this.campaign)}},
-  {label: '刪除',},{label: '變更擁有者',},];
+  type = [
+    {
+      name: "活動",
+      code: "event",
+    },
+    {
+      name: "樣品申請",
+      code: "demo_signup",
+    },
+    {
+      name: "社交媒體",
+      code: "social_media",
+    },
+    {
+      name: "領袖思維",
+      code: "thought_leadership",
+    },
+    {
+      name: "電子郵件",
+      code: "email",
+    },
+    {
+      name: "搜尋",
+      code: "search",
+    },
+    {
+      name: "直接瀏覽網站",
+      code: "Website_direct",
+    },
+    {
+      name: "其他",
+      code: "Other",
+    },
+  ];
+
   //建立formgroup表單
-  compaign_form: FormGroup;
+  campaign_form: FormGroup;
   currentCampaign!: any;
   constructor(private fb: FormBuilder) {
-    this.compaign_form = this.fb.group({
+    this.campaign_form = this.fb.group({
       name: ['', [Validators.required]],
       owner: ['', [Validators.required]],
       enable: [false, [Validators.required]],
@@ -40,33 +118,21 @@ export class CampaignComponent {
   }
   ngOnInit() {
 
-    }
+  }
   //dialog方法
   visible: boolean = false;
   dialogHeader!: string;
-  // showDialog(type: string, campaign?: any): void {
-  //   this.visible = true;
-  //   console.log('Invalid type: ' + type);
-  //   if (type === 'add') {
-  //     this.dialogHeader = '新增行銷活動';
-  //     this.compaign_form.reset();
-  //   } else if (type === 'edit') {
-  //     console.log("campaign: " + JSON.stringify(campaign))
-  //     this.dialogHeader = '編輯行銷活動';
-  //     this.compaign_form.patchValue(campaign);
-  //   }
-  // }
-
-  showDialog(type: string, campaign?: any) {
-    this.dialogHeader = type === 'edit' ? '編輯行銷活動' : '新增行銷活動';
+  showDialog(type: string, campaign?: any): void {
     this.visible = true;
-    if (campaign) {
-      this.currentCampaign = campaign;
-      this.compaign_form.patchValue(campaign);
+    console.log('Invalid type: ' + type);
+    if (type === 'add') {
+      this.dialogHeader = '新增行銷活動';
+      this.campaign_form.reset();
+    } else if (type === 'edit') {
       console.log("campaign: " + JSON.stringify(campaign))
-    } else {
-      this.currentCampaign = null;
-      this.compaign_form.reset();
+      this.dialogHeader = '編輯行銷活動';
+      this.campaign_form.patchValue(campaign);
     }
   }
+
 }
