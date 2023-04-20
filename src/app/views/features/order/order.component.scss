@@ -1,37 +1,45 @@
 @import 'src/app/app.component.scss';
+
 input[formControlName="number"] {
   border: none;
   color: black;
 }
+
 input[formControlName="activated_by"] {
   border: none;
   color: black;
 }
+
 input[formControlName="activated_date"] {
   border: none;
   color: black;
   margin-left: -9px;
 }
+
 input[formControlName="created_by"] {
   border: none;
   color: black;
   margin-left: -9px;
 }
+
 input[formControlName="updated_by"] {
   border: none;
   color: black;
   margin-left: -9px;
 }
+
 input[formControlName="created_at"] {
   border: none;
   color: black;
   margin-left: -9px;
 }
+
 input[formControlName="updated_at"] {
   border: none;
   color: black;
   margin-left: -9px;
 }
+
 .required-star {
   color: red;
 }
