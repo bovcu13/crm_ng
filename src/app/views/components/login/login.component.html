@@ -3,6 +3,7 @@
     <h1 class="mb-4">CRM系統</h1>
     <p-divider></p-divider>
     <div class="flex justify-content-center mt-5">
+      <form [formGroup]="login_form">
         <p-card>
           <h3>登入</h3>
           <p-divider></p-divider>
@@ -10,12 +11,12 @@
             <div class="col-12">
               <div class="field">
                 <label>帳號</label>
-                <input pInputText [(ngModel)]="form.username">
+                <input pInputText formControlName="user_name">
               </div>
             </div>
             <div class="col-12 mt-1">
               <label>密碼</label>
-              <p-password [(ngModel)]="form.password" [feedback]="false"></p-password>
+              <p-password formControlName="password" [feedback]="false"></p-password>
             </div>
             <div class="col-6">
               <div class="flex justify-content-start mt-3">
@@ -37,6 +38,7 @@
                       icon="pi pi-arrow-right" iconPos="right"></p-button>
           </div>
         </p-card>
+      </form>
     </div>
   </div>
 </div>
