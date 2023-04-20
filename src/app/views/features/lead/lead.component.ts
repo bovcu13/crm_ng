@@ -11,57 +11,57 @@ export class LeadComponent implements OnInit {
   lead: any[] = [
     {
       name: "David",
-      stage: "不明確",
+      status: "不明確",
       owner: "林",
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
       line: "@12345",
-      account_name: "EIRC"
+      company_name: "EIRC"
     },
     {
       name: "David",
-      stage: "新線索",
+      status: "新線索",
       owner: "林",
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
       line: "@12345",
-      account_name: "EIRC"
+      company_name: "EIRC"
     },
     {
       name: "David",
-      stage: "評估中",
+      status: "評估中",
       owner: "林",
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
       line: "@12345",
-      account_name: "EIRC"
+      company_name: "EIRC"
     },
     {
       name: "David",
-      stage: "發展中",
+      status: "發展中",
       owner: "林",
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
       line: "@12345",
-      account_name: "EIRC"
+      company_name: "EIRC"
     },
     {
       name: "David",
-      stage: "已轉換",
+      status: "已轉換",
       owner: "林",
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
       line: "@12345",
-      account_name: "EIRC"
+      company_name: "EIRC"
     },
   ]
 
-  stage: any[] = [
+  status: any[] = [
     {
       name: "不明確",
       code: "unqualified",
@@ -84,7 +84,7 @@ export class LeadComponent implements OnInit {
     }
   ]
 
-  lead_source: any = [
+  source_id: any = [
     {
       name: "廣告",
       code: "advertising"
@@ -107,7 +107,7 @@ export class LeadComponent implements OnInit {
     }
   ]
 
-  industry: any = [
+  industry_id: any = [
     {
       name: "教育",
       code: "education"
@@ -168,17 +168,17 @@ export class LeadComponent implements OnInit {
   constructor(private fb: FormBuilder) {
     this.lead_form = this.fb.group({
       name: [''],
-      stage: [this.stage[1], [Validators.required]],
+      status: [this.status[1], [Validators.required]],
       title: [''],
       phone_number: [''],
       cell_phone: [''],
       email: [''],
       line: [''],
-      lead_source: [''],
-      industry: [''],
+      source_id: [''],
+      industry_id: [''],
       rating: ['',],
       owner: [''],
-      account_name: ['', [Validators.required]],
+      company_name: ['', [Validators.required]],
       created_by: [''],
       created_at: [''],
       updated_by: [''],
@@ -202,24 +202,24 @@ export class LeadComponent implements OnInit {
     ) {
       this.dialogHeader = '新增線索';
       // this.lead_form.reset();
-      console.log(this.lead_form.controls['stage'].value)
+      console.log(this.lead_form.controls['status'].value)
     } else if (type === 'edit') {
       console.log("lead: " + JSON.stringify(lead))
       this.dialogHeader = '編輯線索';
       this.lead_form.patchValue(lead);
       this.lead_form.patchValue({
-        stage: this.stage.find(s => s.name === lead.stage),
-        // lead_source: this.lead_source.find(s => s.name === lead.lead_source),
+        status: this.status.find(s => s.name === lead.status),
+        // source_id: this.source_id.find(s => s.name === lead.source_id),
         // rating: this.rating.find(s => s.name === lead.rating)
       });
     }
   }
 
-  stageValue(event: any): void {
-    // const selectedStage = this.stage.find((s) => s.code === event.value.code);
+  statusValue(event: any): void {
+    // const selectedStatus = this.status.find((s) => s.code === event.value.code);
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
-    // console.log(selectedStage.name);
+    // console.log(selectedStatus.name);
   }
 
   leadSourceValue(event: any): void {
@@ -232,7 +232,7 @@ export class LeadComponent implements OnInit {
     console.log("name: " + event.value.name);
   }
 
-  industryValue(event: any): void {
+  industry_idValue(event: any): void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }
