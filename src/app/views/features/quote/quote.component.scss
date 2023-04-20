@@ -1,1 +1,52 @@
 @import 'src/app/app.component.scss';
+.required-star {
+  color: red;
+}
+input[formControlName="number"] {
+  border: none;
+  color: black;
+}
+input[formControlName="created_by"] {
+  border: none;
+  color: black;
+  margin-left: -9px;
+}
+
+input[formControlName="updated_by"] {
+  border: none;
+  color: black;
+  margin-left: -9px;
+}
+
+input[formControlName="created_at"] {
+  border: none;
+  color: black;
+  margin-left: -9px;
+}
+
+input[formControlName="updated_at"] {
+  border: none;
+  color: black;
+  margin-left: -9px;
+}
+input[formControlName="opportunity_name"] {
+  border: none;
+  color: black;
+}
+input[formControlName="account_name"] {
+  border: none;
+  color: black;
+}
+p-inputNumber[formControlName="subtotal"] {
+  border: none !important;
+  color: black;
+}
+p-inputNumber[formControlName="discount"] {
+  border: none !important;
+  color: black;
+}
+p-inputNumber[formControlName="total_price"] {
+  border: none!important;
+  color: black;
+}
+

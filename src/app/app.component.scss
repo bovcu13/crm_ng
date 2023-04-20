@@ -13,12 +13,15 @@ p-card {
     border-radius: 6px;
   }
 
-  .p-inputtext,
-  .p-multiSelect {
+  .p-multiSelect,
+  .p-inputtext {
     width: 100%;
     border-radius: 6px;
   }
-
+  .p-inputNumber {
+    width: 100%;
+    border-radius: 6px;
+  }
   .p-password,
   .p-dropdown {
     width: 100%;
@@ -67,14 +70,13 @@ label {
   margin-right: 15px
 }
 
-input {
+input,p-inputNumber{
   width: 100%;
   border-radius: 6px;
 }
 
 textarea {
   width: 100%;
-
 }
 
 h1,
