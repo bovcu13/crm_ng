@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Calendar } from 'primeng/calendar';
 @Component({
   selector: 'app-campaign',
   templateUrl: './campaign.component.html',
   styleUrls: ['./campaign.component.scss']
 })
 export class CampaignComponent {
+  @ViewChild('startDate') startDate: Calendar | undefined;
+  @ViewChild('endDate') endDate: Calendar| undefined;
   //table內容
   campaign: any = { name: "123", patrilineal_name: "", type: "Event", status: "Aborted", start_date: "2023-04-07", end_date: "2023-04-09", responses: "40", owner: "王大明" };
   campaign_table: any[] = [
     {
       name: "1+1",
-      active: true,
+      enable: true,
       patrilineal_name: "15%off",
       type: "社交媒體",
       status: "策劃中",
@@ -26,7 +29,7 @@ export class CampaignComponent {
     },
     {
       name: "sam",
-      active: false,
+      enable: false,
       patrilineal_name: "1+1",
       type: "電子郵件",
       status: "已完成",
@@ -98,26 +101,32 @@ export class CampaignComponent {
   //建立formgroup表單
   campaign_form: FormGroup;
   currentCampaign!: any;
+  start_date!: Date;
+  end_date!: Date;
+
   constructor(private fb: FormBuilder) {
     this.campaign_form = this.fb.group({
       name: ['', [Validators.required]],
-      owner: ['', [Validators.required]],
-      enable: [false, [Validators.required]],
-      status: ['', [Validators.required]],
-      patrilineal_name: ['', [Validators.required]],
-      type: ['', [Validators.required]],
-      start_date: ['', [Validators.required]],
-      end_date: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      sent: ['', [Validators.required]],
-      budget_cost: ['', [Validators.required]],
-      responses: ['', [Validators.required]],
-      actual_cost: ['', [Validators.required]],
-      expected_income: ['', [Validators.required]],
+      owner: [''],
+      enable: [false],
+      status: [''],
+      patrilineal_name: [''],
+      type: [''],
+      start_date: [''],
+      end_date: [''],
+      description: [''],
+      sent: [''],
+      budget_cost: [''],
+      responses: [''],
+      actual_cost: [''],
+      expected_income: [''],
     });
+    //驗證日期是否有效
+    if (this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {
+      this.campaign_form.controls['end_date'].setErrors({ 'incorrect': true });
+    }
   }
   ngOnInit() {
-
   }
   //dialog方法
   visible: boolean = false;
@@ -132,7 +141,10 @@ export class CampaignComponent {
       console.log("campaign: " + JSON.stringify(campaign))
       this.dialogHeader = '編輯行銷活動';
       this.campaign_form.patchValue(campaign);
+      this.campaign_form.patchValue({
+        start_date: new Date(campaign.start_date),
+        end_date: new Date(campaign.end_date)
+      });
     }
   }
-
 }
