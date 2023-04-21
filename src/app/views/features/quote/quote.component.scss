@@ -37,7 +37,7 @@ input[formControlName="account_name"] {
   border: none;
   color: black;
 }
-p-inputNumber[formControlName="subtotal"] {
+p-inputNumber-input[formControlName="subtotal"] {
   border: none ;
   color: black;
 }
@@ -48,5 +48,13 @@ p-inputnumber[formControlName="discount"] {
 p-inputnumber[formControlName="total_price"] {
   border: none;
   color: black;
+}
+:host ::ng-deep {
+  p-inputnumber{
+    input{
+      width: 100%!important;
+      border: none!important;
+    }
+  }
 }
 

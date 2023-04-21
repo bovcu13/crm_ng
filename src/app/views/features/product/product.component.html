@@ -1,7 +1,7 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>商品</h2>
+      <h2>商品/服務</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
@@ -40,7 +40,7 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label><span class="required-star">*</span>商品名稱</label>
+          <label><span class="required-star">*</span>商品/服務名稱</label>
           <input pInputText formControlName="name"
             [ngClass]="{'ng-dirty':product_form.controls['name'].hasError && product_form.controls['name'].touched}">
         </div>

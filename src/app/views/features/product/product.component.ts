@@ -58,11 +58,11 @@ export class ProductComponent {
     this.product_form.controls['created_at'].disable();
     this.product_form.controls['updated_at'].disable();
     if (type === 'add') {
-      this.dialogHeader = '新增商品';
+      this.dialogHeader = '新增商品/服務';
       this.product_form.reset();
     } else if (type === 'edit') {
       console.log("product: " + JSON.stringify(product))
-      this.dialogHeader = '編輯商品';
+      this.dialogHeader = '編輯商品/服務';
       //取得目前時間
       const now = new Date();
       const year = now.getFullYear();
