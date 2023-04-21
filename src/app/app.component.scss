@@ -18,9 +18,10 @@ p-card {
     width: 100%;
     border-radius: 6px;
   }
-  .p-inputNumber {
+  .p-inputnumber {
     width: 100%;
     border-radius: 6px;
+    // display: none;
   }
   .p-password,
   .p-dropdown {
@@ -68,11 +69,6 @@ p-radioButton {
 
 label {
   margin-right: 15px
-}
-
-input,p-inputNumber{
-  width: 100%;
-  border-radius: 6px;
 }
 
 textarea {

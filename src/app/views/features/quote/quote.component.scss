@@ -38,15 +38,15 @@ input[formControlName="account_name"] {
   color: black;
 }
 p-inputNumber[formControlName="subtotal"] {
-  border: none !important;
+  border: none ;
   color: black;
 }
-p-inputNumber[formControlName="discount"] {
-  border: none !important;
+p-inputnumber[formControlName="discount"] {
+  border: none ;
   color: black;
 }
-p-inputNumber[formControlName="total_price"] {
-  border: none!important;
+p-inputnumber[formControlName="total_price"] {
+  border: none;
   color: black;
 }
 

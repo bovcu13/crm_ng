@@ -90,19 +90,19 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="field">
-          <label>開始日期</label>
-          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
-            formControlName="start_date"></p-calendar>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>結束日期</label>
-          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="end_date"
-            [minDate]="campaign_form.controls['start_date'].value"></p-calendar>
-        </div>
-      </div>
+  <div class="field">
+    <label>開始日期</label>
+    <p-calendar #startDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+      formControlName="start_date" [readonlyInput]="true"></p-calendar>
+  </div>
+</div>
+<div class="col-6">
+  <div class="field">
+    <label>結束日期</label>
+    <p-calendar #endDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+      formControlName="end_date" [minDate]="campaign_form.controls['start_date'].value" [readonlyInput]="true"></p-calendar>
+  </div>
+</div>
       <div class="col-12">
         <div class="field">
           <label>描述</label>
@@ -125,7 +125,8 @@
         <div class="field">
           <label>預期回應 (%)</label>
           <br>
-          <p-inputNumber [style]="{'width':'100%'}" inputId="percent" formControlName="responses" suffix="%"> </p-inputNumber>
+          <p-inputNumber [style]="{'width':'100%'}" inputId="percent" formControlName="responses" suffix="%">
+          </p-inputNumber>
         </div>
       </div>
       <div class="col-6">
