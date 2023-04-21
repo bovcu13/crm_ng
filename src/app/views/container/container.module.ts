@@ -21,6 +21,7 @@ import { ViewAccountComponent } from '../features/account/view-account/view-acco
 import { ViewContactComponent } from '../features/contact/view-contact/view-contact.component';
 import { ProductComponent } from '../features/product/product.component';
 import { OrderComponent } from '../features/order/order.component';
+import { ContractComponent } from '../features/contract/contract.component';
 @NgModule({
   declarations: [
     ContainerComponent,
@@ -40,7 +41,8 @@ import { OrderComponent } from '../features/order/order.component';
     ViewAccountComponent,
     ViewContactComponent,
     ProductComponent,
-    OrderComponent
+    OrderComponent,
+    ContractComponent
   ],
   imports: [
     CommonModule,

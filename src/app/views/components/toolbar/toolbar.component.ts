@@ -48,6 +48,10 @@ export class ToolbarComponent implements OnInit {
         routerLink: ['/main/quote'],
       },
       {
+        label: '契約',
+        routerLink: ['/main/contract'],
+      },
+      {
         label: '訂單',
         routerLink: ['/main/order'],
       },

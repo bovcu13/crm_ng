@@ -103,7 +103,9 @@
         <div class="field">
           <label>小計</label>
           <br>
-          <p-inputNumber class="w-full" formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>
+
+          <label class="mt-2 ml-2">{{getNumber(quote_form.controls['subtotal'].value)}}</label>
+<!--          <p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
         </div>
       </div>
       <div class="col-6">

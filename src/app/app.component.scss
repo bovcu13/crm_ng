@@ -51,6 +51,22 @@ p-card {
   .p-datatable .p-datatable-tbody>tr>td.icon-align-right {
     text-align: right !important;
   }
+
+  p-inputnumber{
+    input{
+      .disable{
+        width: 100%!important;
+        border: none!important;
+      }
+    }
+  }
+  input{
+    .disable{
+      border: none;
+      color: black;
+    }
+
+  }
 }
 
 p-checkbox {
@@ -87,4 +103,8 @@ h3 {
 
 .text-white{
   color: #FFFFFB;
+}
+
+.required-star {
+  color: red;
 }

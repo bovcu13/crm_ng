@@ -122,4 +122,9 @@ export class QuoteComponent {
       this.quote_form.patchValue(quote);
     }
   }
+
+  getNumber(number: number){
+    number = number * 2;
+    return number
+  }
 }
