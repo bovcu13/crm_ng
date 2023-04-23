@@ -80,15 +80,9 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>同步到商機</label>
+          <label>報價金額同步到商機</label>
           <br>
           <p-checkbox formControlName="syncing" value="syncing" [binary]="true"></p-checkbox>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field" *ngIf="quote_form.get('syncing')?.value">
-          <label>同步的商機</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" formControlName="opportunity" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">
@@ -105,7 +99,7 @@
             optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12">
         <div class="field">
           <label>產品描述</label>
           <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
@@ -153,7 +147,6 @@
         <div class="field">
           <label>總計</label>
           <br>
-          <!-- <input type="number" class="form-control" formControlName="total_price" [value]="getNumber(quote_form.controls['total_price'].value)" /> -->
           <label class="mt-2 ml-2">{{quote_form.controls['total_price'].value}}</label>
         </div>
       </div>
@@ -174,9 +167,9 @@
         </div>
       </div>
     </div>
-    <div class="flex justify-content-end">
+    <ng-template pTemplate="footer">
       <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
-    </div>
+    </ng-template>
   </p-dialog>
 </form>
