@@ -45,7 +45,8 @@
       <div class="col-6">
         <div class="field">
           <label>編號</label>
-          <input pInputText formControlName="number">
+          <br>
+          <label class="mt-2 ml-2 disable">{{(quote_form.controls['number'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -57,18 +58,20 @@
       <div class="col-6">
         <div class="field">
           <label>商機名稱</label>
-          <input pInputText formControlName="opportunity_name">
+          <br>
+          <label class="mt-2 ml-2 disable">{{(quote_form.controls['opportunity_name'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>帳戶名稱</label>
-          <input pInputText formControlName="account_name">
+          <label>客戶(個人or法人)</label>
+          <br>
+          <label class="mt-2 ml-2 disable">{{(quote_form.controls['account_name'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>與商機同步化</label>
+          <label>同步到商機</label>
           <br>
           <p-checkbox formControlName="syncing" value="syncing" [binary]="true"></p-checkbox>
         </div>
@@ -96,30 +99,31 @@
       <div class="col-6">
         <div class="field">
           <label>到期日期</label>
-          <input pInputText formControlName="expiration_date">
+          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+            formControlName="expiration_date"
+            [readonlyInput]="true"></p-calendar>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>小計</label>
           <br>
-
-          <label class="mt-2 ml-2">{{getNumber(quote_form.controls['subtotal'].value)}}</label>
-<!--          <p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
+          <label class="mt-2 ml-2">{{quote_form.controls['subtotal'].value}}</label>
+        <!--<p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>稅額</label>
           <br>
-          <p-inputNumber class="w-full"  formControlName="tax" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>
+          <p-inputNumber class="w-full" formControlName="tax" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>折扣</label>
           <br>
-          <p-inputNumber class="w-full"  formControlName="discount" suffix="%" [minFractionDigits]="2"></p-inputNumber>
+          <label class="mt-2 ml-2">{{quote_form.controls['discount'].value}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -131,28 +135,27 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>總價</label>
+          <label>總計</label>
           <br>
-          <p-inputNumber class="w-full"  formControlName="total_price" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>
+          <!-- <input type="number" class="form-control" formControlName="total_price" [value]="getNumber(quote_form.controls['total_price'].value)" /> -->
+          <label class="mt-2 ml-2">{{quote_form.controls['total_price'].value}}</label>
         </div>
       </div>
       <div class="col-6">
         <label>建立者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label class="disable">{{(quote_form.controls['created_by'].value)}}</label>
+          <label class="ml-2 disable">{{(quote_form.controls['created_at'].value)}}</label>
+        </div>
       </div>
       <div class="col-6">
         <label>上次修改者：</label>
-      </div>
-      <div class="col-1">
-        <input pInputText formControlName="created_by">
-      </div>
-      <div class="col-5">
-        <input pInputText formControlName="created_at">
-      </div>
-      <div class="col-1">
-        <input pInputText formControlName="updated_by">
-      </div>
-      <div class="col-5">
-        <input pInputText formControlName="updated_at">
+        <br>
+        <div class="mt-3 field">
+        <label class="disable">{{(quote_form.controls['updated_by'].value)}}</label>
+        <label class="ml-2 disable">{{(quote_form.controls['updated_at'].value)}}</label>
+        </div>
       </div>
     </div>
     <div class="flex justify-content-end">
