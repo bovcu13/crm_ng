@@ -1,5 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-contract',
@@ -23,7 +23,7 @@ export class ContractComponent {
       "owner": "林",
       "number": "00002",
       "account_name": "nkust",
-      "status": "草稿",
+      "status": "審批中",
       "start_date": "2023-02-15",
       "term": 7,
       "created_at": "2023-02-05",
@@ -37,13 +37,46 @@ export class ContractComponent {
     {
       name: "草稿",
       code: "draft",
-    }
+    },
+    {
+      name: "審批中",
+      code: "in_approval",
+    },
+    {
+      name: "拒絕",
+      code: "rejected",
+    },
+    {
+      name: "等待簽名",
+      code: "awaiting_signature",
+    },
+    {
+      name: "等待簽名",
+      code: "awaiting_signature",
+    },
+    {
+      name: "已簽署",
+      code: "signed",
+    },
+    {
+      name: "已取消",
+      code: "canceled",
+    },
+    {
+      name: "契約已終止",
+      code: "contract_terminated",
+    },
   ]
 
   calculateEndDate(startDate: string, term: number): string {
     const start = new Date(startDate);
     const end = new Date(start.getFullYear(), start.getMonth() + term, start.getDate());
     return end.toISOString().slice(0, 10);
+  }
+
+  //偵測status變量
+  onStatusChange(event: any) {
+    console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
 
   //建立formgroup
@@ -71,12 +104,12 @@ export class ContractComponent {
   //新增&編輯dialog
   edit: boolean = false;
   dialogHeader!: string;
-
+  showedit = true;//判斷是否dialog為新增與編輯
+  selectedStatus!: any;
   showDialog(type: string, contract?: any): void {
     this.edit = true;
     this.contract_form.controls['owner'].disable();
     this.contract_form.controls['number'].disable();
-    this.contract_form.controls['status'].disable();
     this.contract_form.controls['created_by'].disable();
     this.contract_form.controls['updated_by'].disable();
     this.contract_form.controls['created_at'].disable();
@@ -84,6 +117,8 @@ export class ContractComponent {
     if (type === 'add') {
       this.dialogHeader = '新增契約';
       this.contract_form.reset();
+      this.showedit = false;
+      this.contract_form.patchValue({ status: this.status[0].name });
     } else if (type === 'edit') {
       console.log("contract: " + JSON.stringify(contract))
       this.dialogHeader = '編輯契約';
@@ -91,6 +126,9 @@ export class ContractComponent {
       this.contract_form.patchValue({
         start_date: new Date(contract.start_date),
       });
+      this.showedit = true;
+      // 綁定已經選擇的狀態
+      this.selectedStatus = this.status.find(s => s.name === contract.status);
     }
   }
 }

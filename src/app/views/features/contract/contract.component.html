@@ -76,11 +76,18 @@
                  [ngClass]="{'ng-dirty':contract_form.controls['account_name'].hasError && contract_form.controls['account_name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
           <br>
-          <label class="mt-2 ml-2 disable">{{(contract_form.controls['status'].value)}}</label>
+          <label class="mt-2 ml-2" [textContent]="contract_form.controls['status'].value"></label>
+        </div>
+      </div>
+      <div class="col-6" *ngIf="showedit">
+        <div class="field">
+          <label>狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
+            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
