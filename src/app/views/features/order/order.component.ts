@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { MenuItem } from "primeng/api";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-order',
@@ -9,11 +8,12 @@ import { MenuItem } from "primeng/api";
 })
 export class OrderComponent {
   //table的死值
+  filteredOrders: any[] = [];
   order: any[] = [
     {
       number: "00001",
       account_name: "NKUST",
-      order_amount: "150000",
+      order_amount: 150000,
       start_date: "2023-04-16",
       status: "草稿",
       contract_number: "00001",
@@ -26,7 +26,7 @@ export class OrderComponent {
     {
       number: "00002",
       account_name: "sam",
-      order_amount: "120000",
+      order_amount: 120000,
       start_date: "2023-03-15",
       status: "啟動中",
       contract_number: "00002",
@@ -36,7 +36,33 @@ export class OrderComponent {
       created_by: "林",
       updated_by: "林",
     }
-  ]
+  ];
+
+  filterText: any = '';
+  filterorders() {
+    if (this.filterText === '') {
+      this.filteredOrders = this.order;
+    } else {
+      this.filteredOrders = this.order.filter(order => {
+        return (
+          order.number.toLowerCase().includes(this.filterText) ||
+          order.account_name.toLowerCase().includes(this.filterText) ||
+          order.order_amount.toString().toLowerCase().includes(this.filterText) ||
+          order.start_date.toLowerCase().includes(this.filterText) ||
+          order.status.toLowerCase().includes(this.filterText) ||
+          order.contract_number.toLowerCase().includes(this.filterText) ||
+          order.activated_by.toLowerCase().includes(this.filterText) ||
+          order.activated_date.toLowerCase().includes(this.filterText)
+        );
+      });
+    }
+    console.log(this.filteredOrders)
+  }
+  ngOnInit() {
+    this.filteredOrders = this.order;
+  }
+
+
   //p-dropdown status的下拉值
   status: any[] = [
     {

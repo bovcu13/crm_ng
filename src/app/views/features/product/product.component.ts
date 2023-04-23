@@ -7,12 +7,13 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent {
+  filteredProducts: any[] = [];
   product: any[] = [
     {
       name: "pen",
       enable: true,
       code: "00001",
-      describe: "",
+      describe: "這是筆",
       series: "none",
       created_at: "2023-04-15",
       created_by: "林",
@@ -22,15 +23,32 @@ export class ProductComponent {
       name: "grava",
       enable: false,
       code: "00002",
-      describe: "",
+      describe: "這是芭樂",
       series: "none",
       created_at: "2023-04-15",
       created_by: "林",
       updated_by: "林",
     }
   ]
-  OnInit() {
-
+  filterText: any = '';
+  filterproducts() {
+    if (this.filterText === '') {
+      this.filteredProducts = this.product;
+    } else {
+      this.filteredProducts = this.product.filter(product => {
+        return (
+          product.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          product.code.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          product.describe.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          product.series.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          (product.enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
+        );
+      });
+    }
+    console.log(this.filteredProducts)
+  }
+  ngOnInit() {
+    this.filteredProducts = this.product;
   }
 
   //建立formgroup

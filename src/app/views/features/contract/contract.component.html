@@ -7,7 +7,15 @@
           <p-button icon="pi pi-plus" (click)="showDialog('add')" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [value]="contract">
+      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="filteredContracts" [paginator]="true" [rows]="5" [totalRecords]="100" [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} entries'">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filtercontracts()" pInputText
+                  placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="number">號碼
@@ -53,7 +61,7 @@
   </div>
 </div>
 <form [formGroup]="contract_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
@@ -76,11 +84,18 @@
                  [ngClass]="{'ng-dirty':contract_form.controls['account_name'].hasError && contract_form.controls['account_name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
           <br>
-          <label class="mt-2 ml-2 disable">{{(contract_form.controls['status'].value)}}</label>
+          <label class="mt-2 ml-2" [textContent]="contract_form.controls['status'].value"></label>
+        </div>
+      </div>
+      <div class="col-6" *ngIf="showedit">
+        <div class="field">
+          <label>狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
+            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
