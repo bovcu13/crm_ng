@@ -84,7 +84,7 @@ export class LeadComponent implements OnInit {
     }
   ]
 
-  source_id: any = [
+  source: any = [
     {
       name: "廣告",
       code: "advertising"
@@ -104,6 +104,21 @@ export class LeadComponent implements OnInit {
     {
       name: "朋友推薦",
       code: "friend_referral"
+    }
+  ]
+
+  account: any = [
+    {
+      name: "公司A",
+      code: "company_a"
+    },
+    {
+      name: "公司B",
+      code: "company_b"
+    },
+    {
+      name: "公司C",
+      code: "company_c"
     }
   ]
 
@@ -169,16 +184,18 @@ export class LeadComponent implements OnInit {
     this.lead_form = this.fb.group({
       name: [''],
       status: ['', [Validators.required]],
+      account_id: ['', [Validators.required]],
+      description: ['', [Validators.required]],
       title: [''],
       phone_number: [''],
       cell_phone: [''],
       email: [''],
       line: [''],
-      source_id: [''],
+      source: [''],
       industry_id: [''],
       rating: ['',],
       owner: [''],
-      company_name: ['', [Validators.required]],
+      company_name: [''],
       created_by: [''],
       created_at: [''],
       updated_by: [''],
@@ -214,7 +231,7 @@ export class LeadComponent implements OnInit {
       this.lead_form.patchValue(lead);
       this.lead_form.patchValue({
         status: this.status.find(s => s.name === lead.status),
-        // source_id: this.source_id.find(s => s.name === lead.source_id),
+        // source: this.source.find(s => s.name === lead.source),
         // rating: this.rating.find(s => s.name === lead.rating)
       });
     }
@@ -225,6 +242,11 @@ export class LeadComponent implements OnInit {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
     // console.log(selectedStatus.name);
+  }
+
+  accountValue(event: any): void {
+    console.log("code: " + event.value.code);
+    console.log("name: " + event.value.name);
   }
 
   leadSourceValue(event: any): void {
