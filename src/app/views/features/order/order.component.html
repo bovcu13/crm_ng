@@ -7,7 +7,15 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [value]="order">
+      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="filteredOrders" [paginator]="true" [rows]="5" [totalRecords]="100" [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} entries'">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filterorders()" pInputText
+                  placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="number">號碼<p-sortIcon field="number"></p-sortIcon></th>
@@ -44,7 +52,7 @@
   </div>
 </div>
 <form [formGroup]="order_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true" [responsive]="true">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
@@ -88,6 +96,13 @@
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
             optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"
             [ngClass]="{'ng-dirty':order_form.controls['status'].hasError && order_form.controls['status'].touched}"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6" *ngIf="showedit">
+        <div class="field">
+          <label>訂單金額</label>
+          <br>
+          <label class="mt-2 ml-2" [textContent]="order_form.controls['order_amount'].value"></label>
         </div>
       </div>
       <div class="col-6"></div>
