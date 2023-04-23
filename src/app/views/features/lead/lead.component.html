@@ -88,7 +88,7 @@
   </div>
 </div>
 <form [formGroup]="lead_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
@@ -107,54 +107,30 @@
           <!--          <input pInputText formControlName="owner">-->
         </div>
       </div>
-      <div class="col-12">
-        <div class="field">
-          <label><span class="text-red-600">*</span>公司</label>
-          <input pInputText formControlName="company_name"
-                 [ngClass]="{'ng-dirty':lead_form.controls['company_name'].hasError && lead_form.controls['company_name'].touched}">
-        </div>
-      </div>
       <div class="col-6">
         <div class="field">
-          <label>姓名</label>
-          <input pInputText formControlName="name">
+          <label><span class="text-red-600">*</span>帳戶</label>
+          <p-dropdown [options]="account" (onChange)="accountValue($event)" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="選擇現有帳戶">
+            <ng-template pTemplate="account">
+              <div class="flex align-items-center gap-2" *ngIf="account">
+                <div>{{ account.name }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ country.name }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </div>
       </div>
-      <div class="col-6">
-        <div class="field">
-          <label>職稱</label>
-          <input pInputText formControlName="title">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>行業</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry_id" optionLabel="name"
-                      (onChange)="industry_idValue($event)" formControlName="industry_id" appendTo="body"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>電話</label>
-          <input pInputText formControlName="phone_number">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>行動電話</label>
-          <input pInputText formControlName="cell_phone">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>LINE</label>
-          <input pInputText formControlName="line">
-        </div>
+      <div class="col-6 flex justify-content-start mt-4">
+        <p-button icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top" styleClass="p-button-raised p-button-text"></p-button>
       </div>
       <div class="col-12">
-        <div class="field">
-          <label>電子郵件</label>
-          <input pInputText formControlName="email">
+        <div>
+          <label><span class="text-red-600">*</span>描述</label>
+          <textarea class="mt-2" rows="3" pInputTextarea></textarea>
         </div>
       </div>
       <div class="col-6">
@@ -167,8 +143,8 @@
       <div class="col-6">
         <div class="field">
           <label>線索來源</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source_id" optionLabel="name"
-                      (onChange)="leadSourceValue($event)" formControlName="source_id" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source" optionLabel="name"
+                      (onChange)="leadSourceValue($event)" formControlName="source" appendTo="body"></p-dropdown>
         </div>
       </div>
     </div>

@@ -84,7 +84,7 @@ export class LeadComponent implements OnInit {
     }
   ]
 
-  source_id: any = [
+  source: any = [
     {
       name: "廣告",
       code: "advertising"
@@ -104,6 +104,21 @@ export class LeadComponent implements OnInit {
     {
       name: "朋友推薦",
       code: "friend_referral"
+    }
+  ]
+
+  account: any = [
+    {
+      name: "公司A",
+      code: "company_a"
+    },
+    {
+      name: "公司B",
+      code: "company_b"
+    },
+    {
+      name: "公司C",
+      code: "company_c"
     }
   ]
 
@@ -168,17 +183,19 @@ export class LeadComponent implements OnInit {
   constructor(private fb: FormBuilder) {
     this.lead_form = this.fb.group({
       name: [''],
-      status: [this.status[1], [Validators.required]],
+      status: ['', [Validators.required]],
+      account_id: ['', [Validators.required]],
+      description: ['', [Validators.required]],
       title: [''],
       phone_number: [''],
       cell_phone: [''],
       email: [''],
       line: [''],
-      source_id: [''],
+      source: [''],
       industry_id: [''],
       rating: ['',],
       owner: [''],
-      company_name: ['', [Validators.required]],
+      company_name: [''],
       created_by: [''],
       created_at: [''],
       updated_by: [''],
@@ -195,21 +212,26 @@ export class LeadComponent implements OnInit {
   }
 
   showDialog(type: string, lead?: any): void {
-    //將"業務員"設定為不可修改
-    this.lead_form.controls['owner'].disable();
+    // 將"業務員"設定為不可修改
+    // this.lead_form.controls['owner'].disable();
     this.edit = true;
+    console.log(this.lead_form.controls['status'].value)
     if (type === 'add'
     ) {
       this.dialogHeader = '新增線索';
-      // this.lead_form.reset();
-      console.log(this.lead_form.controls['status'].value)
+      this.lead_form.reset();
+      // 將"線索狀態"設定為不可修改
+      this.lead_form.controls['status'].disable();
+      this.lead_form.patchValue({
+        status: this.status.find(s => s.name === this.status[1].name),
+      });
     } else if (type === 'edit') {
       console.log("lead: " + JSON.stringify(lead))
       this.dialogHeader = '編輯線索';
       this.lead_form.patchValue(lead);
       this.lead_form.patchValue({
         status: this.status.find(s => s.name === lead.status),
-        // source_id: this.source_id.find(s => s.name === lead.source_id),
+        // source: this.source.find(s => s.name === lead.source),
         // rating: this.rating.find(s => s.name === lead.rating)
       });
     }
@@ -220,6 +242,11 @@ export class LeadComponent implements OnInit {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
     // console.log(selectedStatus.name);
+  }
+
+  accountValue(event: any): void {
+    console.log("code: " + event.value.code);
+    console.log("name: " + event.value.name);
   }
 
   leadSourceValue(event: any): void {

@@ -32,7 +32,7 @@ export class ViewLeadComponent implements OnInit {
     }
   ]
 
-  source_id: any = [
+  source: any = [
     {
       name: "廣告",
       code: "advertising"
@@ -106,7 +106,7 @@ export class ViewLeadComponent implements OnInit {
       cell_phone: [''],
       email: [''],
       line: [''],
-      source_id: [''],
+      source: [''],
       industry_id: [''],
       rating: ['',],
       owner: [''],
