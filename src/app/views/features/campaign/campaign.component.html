@@ -7,8 +7,15 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      {{campaign_table ? campaign_table.length : 0 }}個項目
-      <p-table [value]="campaign_table" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5, 10, 15]">
+      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="filteredCampaigns" [paginator]="true" [rows]="5" [totalRecords]="100" [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} entries'">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filterCampaigns()" pInputText
+                  placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name">活動名稱<p-sortIcon field="name"></p-sortIcon></th>
@@ -17,12 +24,11 @@
             <th pSortableColumn="status">狀態<p-sortIcon field="status"></p-sortIcon></th>
             <th pSortableColumn="start_date">開始時間<p-sortIcon field="start_date"></p-sortIcon></th>
             <th pSortableColumn="end_date">結束時間<p-sortIcon field="end_date"></p-sortIcon></th>
-            <th pSortableColumn="responses">回應個數<p-sortIcon field="responses"></p-sortIcon></th>
-            <th pSortableColumn="owner">業務負責人<p-sortIcon field="owner"></p-sortIcon></th>
+            <th pSortableColumn="owner">業務員<p-sortIcon field="owner"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-campaign let-editing="editing">
+        <ng-template pTemplate="body" let-campaign>
           <tr>
             <td>{{ campaign.name }}</td>
             <td>{{ campaign.patrilineal_name }}</td>
@@ -30,13 +36,13 @@
             <td>{{ campaign.status }}</td>
             <td>{{ campaign.start_date }}</td>
             <td>{{ campaign.end_date }}</td>
-            <td>{{ campaign.responses }}</td>
             <td>{{ campaign.owner }}</td>
-            <td class="icon-align-right"><p-button icon="pi pi-eye"
+            <td class="icon-align-right"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button (click)="showDialog('edit',campaign)" icon="pi pi-pencil"
+              <p-button (click)="showDialog('edit',campaign)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             </td>
           </tr>
         </ng-template>
@@ -44,7 +50,6 @@
     </p-card>
   </div>
 </div>
-<!-- p-dialog -->
 <form [formGroup]="campaign_form">
   <p-dialog [(visible)]="visible" header={{dialogHeader}}>
     <div class="grid">
@@ -58,7 +63,8 @@
       <div class="col-6">
         <div class="field">
           <label>業務負責人</label>
-          <input type="text" pInputText formControlName="owner">
+          <br>
+          <label class="mt-2 ml-2 disable">{{(campaign_form.controls['owner'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -68,11 +74,18 @@
           <p-checkbox formControlName="enable" value="enable" [binary]="true"></p-checkbox>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6" *ngIf="!showedit">
+        <div class="field">
+          <label>狀態</label>
+          <br>
+          <label class="mt-2 ml-2" [textContent]="campaign_form.controls['status'].value"></label>
+        </div>
+      </div>
+      <div class="col-6" *ngIf="showedit">
         <div class="field">
           <label>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
-            optionLabel="name"></p-dropdown>
+            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -90,26 +103,27 @@
         </div>
       </div>
       <div class="col-6">
-  <div class="field">
-    <label>開始日期</label>
-    <p-calendar #startDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
-      formControlName="start_date" [readonlyInput]="true"></p-calendar>
-  </div>
-</div>
-<div class="col-6">
-  <div class="field">
-    <label>結束日期</label>
-    <p-calendar #endDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
-      formControlName="end_date" [minDate]="campaign_form.controls['start_date'].value" [readonlyInput]="true"></p-calendar>
-  </div>
-</div>
+        <div class="field">
+          <label>開始日期</label>
+          <p-calendar #startDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+            formControlName="start_date" [readonlyInput]="true"></p-calendar>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>結束日期</label>
+          <p-calendar #endDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+            formControlName="end_date" [minDate]="campaign_form.controls['start_date'].value"
+            [readonlyInput]="true"></p-calendar>
+        </div>
+      </div>
       <div class="col-12">
         <div class="field">
           <label>描述</label>
           <textarea rows="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
-      <div class="col-6">
+      <!-- <div class="col-6">
         <div class="field">
           <label>已傳送數目</label>
           <input type="text" pInputText formControlName="sent" />
@@ -139,6 +153,22 @@
         <div class="field">
           <label>預期收入</label>
           <input type="text" pInputText formControlName="expected_income" />
+        </div>
+      </div> -->
+      <div class="col-6">
+        <label>建立者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label class="disable">{{(campaign_form.controls['created_by'].value)}}</label>
+          <label class="ml-2 disable">{{(campaign_form.controls['created_at'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <label>上次修改者：</label>
+        <br>
+        <div class="mt-3 field">
+        <label class="disable">{{(campaign_form.controls['updated_by'].value)}}</label>
+        <label class="ml-2 disable">{{(campaign_form.controls['updated_at'].value)}}</label>
         </div>
       </div>
     </div>
