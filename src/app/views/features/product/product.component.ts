@@ -47,28 +47,6 @@ export class ProductComponent {
     }
     console.log(this.filteredProducts)
   }
-  // filterproducts() {
-  //   if (this.filterText) {
-  //     this.filteredProducts = this.product.filter((product) => {
-  //       return product.name.toLowerCase().includes(this.filterText.toLowerCase());
-  //     });
-  //   } else {
-  //     this.filteredProducts = this.product;
-  //   }
-  //   if (this.filterText === '') {
-  //     this.filteredProducts = this.product;
-  //   } else {
-  //     this.filteredProducts = this.product.filter(product => {
-  //       return (
-  //         product.name.toLowerCase().includes(this.filterText) ||
-  //         product.enable ? 'true' : 'false'.toLowerCase().includes(this.filterText) ||
-  //         product.code.toLowerCase().includes(this.filterText) ||
-  //         product.describe.toLowerCase().includes(this.filterText)
-  //       );
-  //     });
-  //   }
-  //   console.log(this.filteredProducts)
-  // }
   ngOnInit() {
     this.filteredProducts = this.product;
   }
