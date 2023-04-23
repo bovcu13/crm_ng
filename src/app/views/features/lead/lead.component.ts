@@ -195,7 +195,7 @@ export class LeadComponent implements OnInit {
   }
 
   showDialog(type: string, lead?: any): void {
-    //將"業務負責人"設定為不可修改
+    //將"業務員"設定為不可修改
     this.lead_form.controls['owner'].disable();
     this.edit = true;
     if (type === 'add'

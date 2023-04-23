@@ -25,14 +25,30 @@
       <p-table [value]="lead">
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="status">狀態 <p-sortIcon field="status"></p-sortIcon></th>
-            <th pSortableColumn="name">姓名 <p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="account_name">公司 <p-sortIcon field="account_name"></p-sortIcon></th>
-            <th pSortableColumn="phone_number">電話 <p-sortIcon field="phone_number"></p-sortIcon></th>
-            <th pSortableColumn="cell_phone">行動電話 <p-sortIcon field="cell_phone"></p-sortIcon></th>
-            <th pSortableColumn="email">電子郵件 <p-sortIcon field="email"></p-sortIcon></th>
-            <th pSortableColumn="line">LINE <p-sortIcon field="line"></p-sortIcon></th>
-            <th pSortableColumn="owner">業務負責人 <p-sortIcon field="owner"></p-sortIcon></th>
+            <th pSortableColumn="status">狀態
+              <p-sortIcon field="status"></p-sortIcon>
+            </th>
+            <th pSortableColumn="name">姓名
+              <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="account_name">公司
+              <p-sortIcon field="account_name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="phone_number">電話
+              <p-sortIcon field="phone_number"></p-sortIcon>
+            </th>
+            <th pSortableColumn="cell_phone">行動電話
+              <p-sortIcon field="cell_phone"></p-sortIcon>
+            </th>
+            <th pSortableColumn="email">電子郵件
+              <p-sortIcon field="email"></p-sortIcon>
+            </th>
+            <th pSortableColumn="line">LINE
+              <p-sortIcon field="line"></p-sortIcon>
+            </th>
+            <th pSortableColumn="owner">業務員
+              <p-sortIcon field="owner"></p-sortIcon>
+            </th>
             <th></th>
           </tr>
         </ng-template>
@@ -47,7 +63,7 @@
             }" class="pi pi-circle-fill ml-2"></span>
             </td>
             <td>{{ lead.name }}</td>
-            <td>{{ lead.account_name }}</td>
+            <td>{{ lead.company_name }}</td>
             <td>{{ lead.phone_number }}</td>
             <td>{{ lead.cell_phone }}</td>
             <td>{{ lead.email }}</td>
@@ -85,8 +101,10 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>業務負責人</label>
-          <input pInputText formControlName="owner">
+          <label>業務員</label>
+          <br>
+          <label class="ml-2 disable">{{(lead_form.controls['owner'].value)}}</label>
+          <!--          <input pInputText formControlName="owner">-->
         </div>
       </div>
       <div class="col-12">
@@ -159,21 +177,19 @@
       <div class="grid">
         <div class="col-6">
           <label>建立者：</label>
+          <br>
+          <div class="mt-3 field">
+            <label>{{(lead_form.controls['created_by'].value)}}</label>
+            <label class="ml-2">{{(lead_form.controls['created_at'].value)}}</label>
+          </div>
         </div>
         <div class="col-6">
           <label>上次修改者：</label>
-        </div>
-        <div class="col-1">
-          <input pInputText formControlName="created_by">
-        </div>
-        <div class="col-5">
-          <input pInputText formControlName="created_at">
-        </div>
-        <div class="col-1">
-          <input pInputText formControlName="updated_by">
-        </div>
-        <div class="col-5">
-          <input pInputText formControlName="updated_at">
+          <br>
+          <div class="mt-3 field">
+            <label>{{(lead_form.controls['updated_by'].value)}}</label>
+            <label class="ml-2">{{(lead_form.controls['updated_at'].value)}}</label>
+          </div>
         </div>
       </div>
     </ng-container>
