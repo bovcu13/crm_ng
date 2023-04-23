@@ -27,11 +27,11 @@
             <td>{{ quote.expiration_date }}</td>
             <td>{{ quote.subtotal }}</td>
             <td>{{ quote.total_price }}</td>
-            <td class="icon-align-right"><p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            <td class="icon-align-right"><p-button icon="pi pi-eye"
+                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash"
-                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             </td>
           </tr>
         </ng-template>
@@ -40,7 +40,7 @@
   </div>
 </div>
 <form [formGroup]="quote_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
@@ -52,7 +52,8 @@
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>名稱</label>
-          <input pInputText formControlName="name"  [ngClass]="{'ng-dirty':quote_form.controls['name'].hasError && quote_form.controls['name'].touched}">
+          <input pInputText formControlName="name"
+            [ngClass]="{'ng-dirty':quote_form.controls['name'].hasError && quote_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-6">
@@ -79,15 +80,21 @@
       <div class="col-6">
         <div class="field" *ngIf="quote_form.get('syncing')?.value">
           <label>同步的商機</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true"
-          formControlName="opportunity" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" formControlName="opportunity" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="status" optionLabel="name" formControlName="status"
-            appendTo="body"></p-dropdown>
+          <br>
+          <label class="mt-2 ml-2" [textContent]="quote_form.controls['status'].value"></label>
+        </div>
+      </div>
+      <div class="col-6" *ngIf="showedit">
+        <div class="field">
+          <label>狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
+            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -99,8 +106,7 @@
       <div class="col-6">
         <div class="field">
           <label>到期日期</label>
-          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
-            formControlName="expiration_date"
+          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="expiration_date"
             [readonlyInput]="true"></p-calendar>
         </div>
       </div>
@@ -109,14 +115,15 @@
           <label>小計</label>
           <br>
           <label class="mt-2 ml-2">{{quote_form.controls['subtotal'].value}}</label>
-        <!--<p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
+          <!--<p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>稅額</label>
           <br>
-          <p-inputNumber class="w-full" formControlName="tax" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>
+          <p-inputNumber class="w-full" formControlName="tax" mode="currency" currency="USD" locale="en-US"
+            [minFractionDigits]="2"> </p-inputNumber>
         </div>
       </div>
       <div class="col-6">
@@ -130,7 +137,8 @@
         <div class="field">
           <label>運輸處理</label>
           <br>
-          <p-inputNumber class="w-full" formControlName="shipping_and_handling" suffix="%" [minFractionDigits]="2"></p-inputNumber>
+          <p-inputNumber class="w-full" formControlName="shipping_and_handling" suffix="%"
+            [minFractionDigits]="2"></p-inputNumber>
         </div>
       </div>
       <div class="col-6">
@@ -153,8 +161,8 @@
         <label>上次修改者：</label>
         <br>
         <div class="mt-3 field">
-        <label class="disable">{{(quote_form.controls['updated_by'].value)}}</label>
-        <label class="ml-2 disable">{{(quote_form.controls['updated_at'].value)}}</label>
+          <label class="disable">{{(quote_form.controls['updated_by'].value)}}</label>
+          <label class="ml-2 disable">{{(quote_form.controls['updated_at'].value)}}</label>
         </div>
       </div>
     </div>

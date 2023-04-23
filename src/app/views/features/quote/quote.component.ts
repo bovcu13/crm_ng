@@ -94,11 +94,17 @@ export class QuoteComponent {
       created_by: [''],
       updated_by: [''],
     });
-
   }
+
+  //偵測status變量
+  onStatusChange(event: any) {
+    console.log("狀態選擇status: " + event.value.code + event.value.name);
+  }
+
   edit: boolean = false;
   dialogHeader!: string;
   showedit = true;//判斷是否dialog為新增與編輯
+  selectedStatus!: any;
   showDialog(type: string, quote?: any): void {
     this.edit = true;
     this.quote_form.controls['number'].disable();
@@ -113,11 +119,14 @@ export class QuoteComponent {
       this.dialogHeader = '新增報價';
       this.quote_form.reset();
       this.showedit = false;
+      this.quote_form.patchValue({ status: this.status[0].name });
     } else if (type === 'edit') {
       console.log("quote: " + JSON.stringify(quote))
       this.dialogHeader = '編輯報價';
       this.quote_form.patchValue(quote);
       this.showedit = true;
+      // 綁定已經選擇的狀態
+      this.selectedStatus = this.status.find(s => s.name === quote.status);
     }
   }
 }
