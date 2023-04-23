@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import {Component, OnInit} from '@angular/core';
+import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent {
+export class ToolbarComponent implements OnInit {
   showSidebar: any
   items: MenuItem[] = [];
+  account: MenuItem[] = [];
+
   ngOnInit() {
     this.items = [
       {
@@ -16,12 +18,8 @@ export class ToolbarComponent {
         routerLink: ['/main/dashboard'],
       },
       {
-        label: '線索',
-        routerLink: ['/main/lead'],
-      },
-      {
         label: '帳戶',
-        routerLink: ['/main/account'],
+        // routerLink: ['/main/account'],
         items: [
           {
             label: '帳戶',
@@ -34,16 +32,24 @@ export class ToolbarComponent {
         ]
       },
       {
+        label: '線索',
+        routerLink: ['/main/lead'],
+      },
+      {
         label: '商機',
         routerLink: ['/main/opportunity'],
       },
       {
-        label: '產品',
+        label: '商品/服務',
         routerLink: ['/main/product'],
       },
       {
         label: '報價',
         routerLink: ['/main/quote'],
+      },
+      {
+        label: '契約',
+        routerLink: ['/main/contract'],
       },
       {
         label: '訂單',
@@ -66,5 +72,19 @@ export class ToolbarComponent {
       //   routerLink: ['/main/display'],
       // },
     ];
+    this.account = [
+      {
+        icon: "pi pi-user",
+        label: '個人資料',
+      },
+      {
+        icon: "pi pi-cog",
+        label: '設定',
+      },
+      {
+        icon: "pi pi-sign-out",
+        label: '登出',
+        routerLink: ['/login'],
+      }];
   }
 }

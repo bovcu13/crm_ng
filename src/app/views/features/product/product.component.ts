@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { MenuItem } from "primeng/api";
+
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent {
+  filteredProducts: any[] = [];
   product: any[] = [
     {
       name: "pen",
       enable: true,
       code: "00001",
-      describe: "",
+      describe: "這是筆",
       series: "none",
       created_at: "2023-04-15",
       created_by: "林",
@@ -22,19 +23,32 @@ export class ProductComponent {
       name: "grava",
       enable: false,
       code: "00002",
-      describe: "",
+      describe: "這是芭樂",
       series: "none",
       created_at: "2023-04-15",
       created_by: "林",
       updated_by: "林",
     }
   ]
-  //表格最後下拉控制選項
-  items: MenuItem[] = [{ label: '編輯', command: () => { this.showDialog('edit', this.product[0]) } },
-  { label: '刪除', }];
-
-  OnInit() {
-
+  filterText: any = '';
+  filterproducts() {
+    if (this.filterText === '') {
+      this.filteredProducts = this.product;
+    } else {
+      this.filteredProducts = this.product.filter(product => {
+        return (
+          product.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          product.code.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          product.describe.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          product.series.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          (product.enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
+        );
+      });
+    }
+    console.log(this.filteredProducts)
+  }
+  ngOnInit() {
+    this.filteredProducts = this.product;
   }
 
   //建立formgroup
@@ -62,11 +76,11 @@ export class ProductComponent {
     this.product_form.controls['created_at'].disable();
     this.product_form.controls['updated_at'].disable();
     if (type === 'add') {
-      this.dialogHeader = '新增產品';
+      this.dialogHeader = '新增商品/服務';
       this.product_form.reset();
     } else if (type === 'edit') {
       console.log("product: " + JSON.stringify(product))
-      this.dialogHeader = '編輯產品';
+      this.dialogHeader = '編輯商品/服務';
       //取得目前時間
       const now = new Date();
       const year = now.getFullYear();

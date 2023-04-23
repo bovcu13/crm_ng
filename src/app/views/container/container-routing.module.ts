@@ -17,6 +17,7 @@ import { ViewAccountComponent } from '../features/account/view-account/view-acco
 import { ViewContactComponent } from '../features/contact/view-contact/view-contact.component';
 import { ProductComponent } from '../features/product/product.component';
 import { OrderComponent } from '../features/order/order.component';
+import { ContractComponent } from '../features/contract/contract.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -38,6 +39,7 @@ const routes: Routes = [
       { path: 'opportunity', component: OpportunityComponent },
       { path: 'order', component: OrderComponent },
       { path: 'quote', component: QuoteComponent },
+      { path: 'contract', component: ContractComponent },
       { path: 'report', component: ReportComponent },
     ],
   },

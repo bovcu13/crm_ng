@@ -1,133 +1,136 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>商機線索</h2>
-      <div class="flex justify-content-end">
+      <h2>線索</h2>
+      <div class="flex flex-row justify-content-start">
+        <div class="flex align-items-center mb-3 ml-4">
+          <span class="text-400 pi pi-circle-fill mr-1"></span>
+          <span>{{status[0].name}}</span>
+          <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
+          <span>{{status[1].name}}</span>
+          <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
+          <span>{{status[2].name}}</span>
+          <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
+          <span>{{status[3].name}}</span>
+          <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
+          <span>{{status[4].name}}</span>
+        </div>
+        <div class="flex ml-auto mr-2">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" pTooltip="新增" tooltipPosition="top" icon="pi pi-plus"
+                    styleClass="p-button-text"></p-button>
         </span>
+        </div>
       </div>
       <p-table [value]="lead">
         <ng-template pTemplate="header">
           <tr>
-            <th>狀態</th>
-            <th>姓名</th>
-            <th>公司</th>
-            <th>電話</th>
-            <th>行動電話</th>
-            <th>電子郵件</th>
-            <th>LINE</th>
-            <th>業務負責人</th>
-            <th>檢視</th>
-            <th>編輯</th>
+            <th pSortableColumn="status">狀態
+              <p-sortIcon field="status"></p-sortIcon>
+            </th>
+            <th pSortableColumn="name">姓名
+              <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="account_name">公司
+              <p-sortIcon field="account_name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="phone_number">電話
+              <p-sortIcon field="phone_number"></p-sortIcon>
+            </th>
+            <th pSortableColumn="cell_phone">行動電話
+              <p-sortIcon field="cell_phone"></p-sortIcon>
+            </th>
+            <th pSortableColumn="email">電子郵件
+              <p-sortIcon field="email"></p-sortIcon>
+            </th>
+            <th pSortableColumn="line">LINE
+              <p-sortIcon field="line"></p-sortIcon>
+            </th>
+            <th pSortableColumn="owner">業務員
+              <p-sortIcon field="owner"></p-sortIcon>
+            </th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-lead>
           <tr>
-            <td><span pTooltip={{lead.stage}} tooltipPosition="top" [ngClass]="{
-                'text-400': lead.stage === stage[0].name,
-                'text-blue-300': lead.stage === stage[1].name,
-                'text-yellow-300': lead.stage === stage[2].name,
-                'text-orange-300': lead.stage === stage[3].name,
-                'text-green-300': lead.stage === stage[4].name
+            <td><span pTooltip={{lead.status}} tooltipPosition="top" [ngClass]="{
+                'text-400': lead.status === status[0].name,
+                'text-blue-300': lead.status === status[1].name,
+                'text-yellow-300': lead.status === status[2].name,
+                'text-orange-300': lead.status === status[3].name,
+                'text-green-300': lead.status === status[4].name
             }" class="pi pi-circle-fill ml-2"></span>
             </td>
             <td>{{ lead.name }}</td>
-            <td>{{ lead.account_name }}</td>
+            <td>{{ lead.company_name }}</td>
             <td>{{ lead.phone_number }}</td>
             <td>{{ lead.cell_phone }}</td>
             <td>{{ lead.email }}</td>
             <td>{{ lead.line }}</td>
             <td>{{ lead.owner }}</td>
             <td>
-              <p-button icon="pi pi-eye" routerLink="/main/lead/view"
+              <p-button icon="pi pi-eye" routerLink="/main/lead/view" pTooltip="檢視" tooltipPosition="top"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-            </td>
-            <td>
-              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil"
+              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+
+              <!--              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event);getLead(lead)"-->
+              <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
             </td>
           </tr>
         </ng-template>
       </p-table>
-      <div class="flex align-items-center mt-3 ml-4">
-        <span class="text-400 pi pi-circle-fill mr-1"></span>
-        <span>{{stage[0].name}}</span>
-        <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
-        <span>{{stage[1].name}}</span>
-        <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
-        <span>{{stage[2].name}}</span>
-        <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
-        <span>{{stage[3].name}}</span>
-        <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
-        <span>{{stage[4].name}}</span>
-      </div>
+      <p-menu #menu [model]="items" [popup]="true"></p-menu>
     </p-card>
   </div>
 </div>
 <form [formGroup]="lead_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>商機線索狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="stage" optionLabel="name"
-                      (onChange)="stageValue($event)" formControlName="stage" appendTo="body"></p-dropdown>
+          <label><span class="text-red-600">*</span>線索狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" [options]="status"
+                      formControlName="status" appendTo="body" (onChange)="statusValue($event)"
+                      [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError && lead_form.controls['status'].touched}"
+          ></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>業務負責人</label>
-          <input pInputText formControlName="owner">
+          <label>業務員</label>
+          <br>
+          <label class="ml-2 disable">{{(lead_form.controls['owner'].value)}}</label>
+          <!--          <input pInputText formControlName="owner">-->
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>姓名</label>
-          <input pInputText formControlName="name">
+          <label><span class="text-red-600">*</span>帳戶</label>
+          <p-dropdown [options]="account" (onChange)="accountValue($event)" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="選擇現有帳戶">
+            <ng-template pTemplate="account">
+              <div class="flex align-items-center gap-2" *ngIf="account">
+                <div>{{ account.name }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ country.name }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </div>
       </div>
-      <div class="col-6">
-        <div class="field">
-          <label>職稱</label>
-          <input pInputText formControlName="title">
-        </div>
+      <div class="col-6 flex justify-content-start mt-4">
+        <p-button icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top" styleClass="p-button-raised p-button-text"></p-button>
       </div>
       <div class="col-12">
-        <div class="field">
-          <label>公司</label>
-          <input pInputText formControlName="account_name">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>行業</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
-                      (onChange)="industryValue($event)" formControlName="industry" appendTo="body"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>電話</label>
-          <input pInputText formControlName="phone_number">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>行動電話</label>
-          <input pInputText formControlName="cell_phone">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>LINE</label>
-          <input pInputText formControlName="line">
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="field">
-          <label>電子郵件</label>
-          <input pInputText formControlName="email">
+        <div>
+          <label><span class="text-red-600">*</span>描述</label>
+          <textarea class="mt-2" rows="3" pInputTextarea></textarea>
         </div>
       </div>
       <div class="col-6">
@@ -139,14 +142,41 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>商機線索來源</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="lead_source" optionLabel="name"
-                      (onChange)="leadSourceValue($event)" formControlName="lead_source" appendTo="body"></p-dropdown>
+          <label>線索來源</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source" optionLabel="name"
+                      (onChange)="leadSourceValue($event)" formControlName="source" appendTo="body"></p-dropdown>
         </div>
       </div>
     </div>
+    <ng-container *ngIf="dialogHeader === '編輯線索'">
+      <p-divider></p-divider>
+      <div class="grid">
+        <div class="col-6">
+          <label>建立者：</label>
+          <br>
+          <div class="mt-3 field">
+            <label>{{(lead_form.controls['created_by'].value)}}</label>
+            <label class="ml-2">{{(lead_form.controls['created_at'].value)}}</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <label>上次修改者：</label>
+          <br>
+          <div class="mt-3 field">
+            <label>{{(lead_form.controls['updated_by'].value)}}</label>
+            <label class="ml-2">{{(lead_form.controls['updated_at'].value)}}</label>
+          </div>
+        </div>
+      </div>
+    </ng-container>
     <div class="flex justify-content-end">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+
+      <ng-container *ngIf="dialogHeader === '編輯線索'">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="dialogHeader !== '編輯線索'">
+        <p-button label="新增" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>

@@ -1,19 +1,27 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>產品</h2>
+      <h2>商品/服務</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button label="新增產品" (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [value]="product">
+      <p-table  [rowsPerPageOptions]="[5, 10, 15]" [value]="filteredProducts" [paginator]="true" [rows]="5" [totalRecords]="100" [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} entries'">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filterproducts()" pInputText
+                  placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th>產品名稱</th>
-            <th>產品代碼</th>
-            <th>產品描述</th>
-            <th>產品系列</th>
+            <th pSortableColumn="name">名稱<p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="code">識別碼<p-sortIcon field="code"></p-sortIcon></th>
+            <th pSortableColumn="describe">描述<p-sortIcon field="describe"></p-sortIcon></th>
+            <!-- <th>系列</th> -->
             <th></th>
           </tr>
         </ng-template>
@@ -22,24 +30,25 @@
             <td>{{ product.name }}</td>
             <td>{{ product.code }}</td>
             <td>{{ product.describe }}</td>
-            <td>{{ product.series }}</td>
-            <td>
-              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event)"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            <!-- <td>{{ product.series }}</td> -->
+            <td class="icon-align-right">
+              <p-button (click)="showDialog('edit',product)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button icon="pi pi-trash"
+                styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除" tooltipPosition="top"></p-button>
             </td>
           </tr>
         </ng-template>
       </p-table>
-      <p-menu #menu [model]="items" [popup]="true"></p-menu>
     </p-card>
   </div>
 </div>
 <form [formGroup]="product_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label><span class="required-star">*</span>產品名稱</label>
+          <label><span class="required-star">*</span>商品/服務名稱</label>
           <input pInputText formControlName="name"
             [ngClass]="{'ng-dirty':product_form.controls['name'].hasError && product_form.controls['name'].touched}">
         </div>
@@ -53,14 +62,14 @@
       </div>
       <!-- <div class="col-6">
         <div class="field">
-          <label>產品系列</label>
+          <label>系列</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" formControlName="series"
             appendTo="body"></p-dropdown>
         </div>
       </div> -->
       <div class="col-6">
         <div class="field">
-          <label>產品代碼</label>
+          <label>識別碼</label>
           <input pInputText formControlName="code">
         </div>
       </div>
@@ -73,27 +82,25 @@
       </div> -->
       <div class="col-12">
         <div class="field">
-          <label>產品描述</label>
+          <label>描述</label>
           <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
         </div>
       </div>
       <div class="col-6">
         <label>建立者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label class="disable">{{(product_form.controls['created_by'].value)}}</label>
+          <label class="ml-2 disable">{{(product_form.controls['created_at'].value)}}</label>
+        </div>
       </div>
       <div class="col-6">
         <label>上次修改者：</label>
-      </div>
-      <div class="col-1">
-        <input pInputText formControlName="created_by">
-      </div>
-      <div class="col-5">
-        <input pInputText formControlName="created_at">
-      </div>
-      <div class="col-1">
-        <input pInputText formControlName="updated_by">
-      </div>
-      <div class="col-5">
-        <input pInputText formControlName="updated_at">
+        <br>
+        <div class="mt-3 field">
+        <label class="disable">{{(product_form.controls['updated_by'].value)}}</label>
+        <label class="ml-2 disable">{{(product_form.controls['updated_at'].value)}}</label>
+        </div>
       </div>
     </div>
     <div class="flex justify-content-end">
