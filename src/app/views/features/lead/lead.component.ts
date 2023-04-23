@@ -195,14 +195,16 @@ export class LeadComponent implements OnInit {
   }
 
   showDialog(type: string, lead?: any): void {
-    //將"業務員"設定為不可修改
-    this.lead_form.controls['owner'].disable();
+    // 將"業務員"設定為不可修改
+    // this.lead_form.controls['owner'].disable();
     this.edit = true;
     console.log(this.lead_form.controls['status'].value)
     if (type === 'add'
     ) {
       this.dialogHeader = '新增線索';
       this.lead_form.reset();
+      // 將"線索狀態"設定為不可修改
+      this.lead_form.controls['status'].disable();
       this.lead_form.patchValue({
         status: this.status.find(s => s.name === this.status[1].name),
       });
