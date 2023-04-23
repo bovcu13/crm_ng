@@ -18,10 +18,6 @@ export class ToolbarComponent implements OnInit {
         routerLink: ['/main/dashboard'],
       },
       {
-        label: '線索',
-        routerLink: ['/main/lead'],
-      },
-      {
         label: '帳戶',
         // routerLink: ['/main/account'],
         items: [
@@ -36,11 +32,15 @@ export class ToolbarComponent implements OnInit {
         ]
       },
       {
+        label: '線索',
+        routerLink: ['/main/lead'],
+      },
+      {
         label: '商機',
         routerLink: ['/main/opportunity'],
       },
       {
-        label: '產品',
+        label: '商品/服務',
         routerLink: ['/main/product'],
       },
       {
