@@ -19,10 +19,8 @@ export class QuoteComponent {
       "describe": "test1",
       "expiration_date": "2023-04-05",
       "tax": 10,
-      "discount": 10,
-      "shipping_and_handling": 1.5,
-      "subtotal": 50,
-      "total_price": 0,
+      "shipping_and_handling": "1.5",
+      "subtotal": 50.00,
       "created_at": "2023-04-15",
       "created_by": "林",
       "updated_by": "林",
@@ -38,10 +36,8 @@ export class QuoteComponent {
       "describe": "test2",
       "expiration_date": "2023-04-04",
       "tax": "",
-      "discount": 5,
-      "shipping_and_handling": 0,
-      "subtotal": 60,
-      "total_price": 0,
+      "shipping_and_handling": "",
+      "subtotal": 60.00,
       "created_at": "2023-04-14",
       "created_by": "林",
       "updated_by": "林",
@@ -90,9 +86,9 @@ export class QuoteComponent {
       expiration_date: [''],
       tax: [''],
       discount: [''],
+      total_price: [''],
       shipping_and_handling: [''],
       subtotal: [''],
-      total_price: [''],
       created_at: [''],
       updated_at: [''],
       created_by: [''],
@@ -102,6 +98,7 @@ export class QuoteComponent {
   }
   edit: boolean = false;
   dialogHeader!: string;
+  showedit = true;//判斷是否dialog為新增與編輯
   showDialog(type: string, quote?: any): void {
     this.edit = true;
     this.quote_form.controls['number'].disable();
@@ -109,22 +106,18 @@ export class QuoteComponent {
     this.quote_form.controls['account_name'].disable();
     this.quote_form.controls['subtotal'].disable();
     this.quote_form.controls['discount'].disable();
-    this.quote_form.controls['total_price'].disable();
     this.quote_form.controls['updated_by'].disable();
     this.quote_form.controls['created_at'].disable();
     this.quote_form.controls['updated_at'].disable();
     if (type === 'add') {
       this.dialogHeader = '新增報價';
       this.quote_form.reset();
+      this.showedit = false;
     } else if (type === 'edit') {
       console.log("quote: " + JSON.stringify(quote))
       this.dialogHeader = '編輯報價';
       this.quote_form.patchValue(quote);
+      this.showedit = true;
     }
-  }
-
-  getNumber(number: number){
-    number = number * 2;
-    return number
   }
 }

@@ -69,9 +69,15 @@ export class OrderComponent {
     });
   }
 
+   //偵測status變量
+   onStatusChange(event: any) {
+    console.log("狀態選擇status: " + event.value.code + event.value.name);
+  }
+
   //編輯&新增dialog
   edit: boolean = false;
   dialogHeader!: string;
+  selectedStatus!: any;
   showedit = true;//判斷是否dialog為新增與編輯
   showDialog(type: string, order?: any): void {
     // 新增與編輯dialog都無法自行編輯訂單號碼、建立者、建立時間、更新者、更新時間
@@ -86,6 +92,7 @@ export class OrderComponent {
       this.dialogHeader = '新增訂單';
       this.order_form.reset();
       this.showedit = false; // 不顯示 activated_by 控件
+      this.order_form.patchValue({ status: this.status[0].name});
     } else if (type === 'edit') {
       console.log("order: " + JSON.stringify(order))
       this.dialogHeader = '編輯訂單';
@@ -104,6 +111,8 @@ export class OrderComponent {
       });
       this.order_form.patchValue(order);
       this.showedit = true; // 不顯示 activated_by 控件
+       // 綁定已經選擇的狀態
+       this.selectedStatus = this.status.find(s => s.name === order.status);
     }
     this.edit = true;
   }
