@@ -25,6 +25,7 @@
             <th pSortableColumn="start_date">開始時間<p-sortIcon field="start_date"></p-sortIcon></th>
             <th pSortableColumn="end_date">結束時間<p-sortIcon field="end_date"></p-sortIcon></th>
             <th pSortableColumn="owner">業務員<p-sortIcon field="owner"></p-sortIcon></th>
+            <th pSortableColumn="sent">成員已回應<p-sortIcon field="sent"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
@@ -37,6 +38,7 @@
             <td>{{ campaign.start_date }}</td>
             <td>{{ campaign.end_date }}</td>
             <td>{{ campaign.owner }}</td>
+            <td>{{ campaign.member }}</td>
             <td class="icon-align-right"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button (click)="showDialog('edit',campaign)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
@@ -123,7 +125,7 @@
           <textarea rows="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
-      <!-- <div class="col-6">
+      <div class="col-6">
         <div class="field">
           <label>已傳送數目</label>
           <input type="text" pInputText formControlName="sent" />
@@ -139,7 +141,7 @@
         <div class="field">
           <label>預期回應 (%)</label>
           <br>
-          <p-inputNumber [style]="{'width':'100%'}" inputId="percent" formControlName="responses" suffix="%">
+          <p-inputNumber class="w-full" inputId="percent" formControlName="responses" suffix="%">
           </p-inputNumber>
         </div>
       </div>
@@ -154,7 +156,8 @@
           <label>預期收入</label>
           <input type="text" pInputText formControlName="expected_income" />
         </div>
-      </div> -->
+      </div>
+      <div class="col-6"></div>
       <div class="col-6">
         <label>建立者：</label>
         <br>
