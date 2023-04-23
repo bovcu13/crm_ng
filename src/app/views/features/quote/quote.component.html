@@ -80,7 +80,7 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>報價金額同步到商機</label>
+          <label>同步到商機</label>
           <br>
           <p-checkbox formControlName="syncing" value="syncing" [binary]="true"></p-checkbox>
         </div>
@@ -101,7 +101,7 @@
       </div>
       <div class="col-12">
         <div class="field">
-          <label>產品描述</label>
+          <label>描述</label>
           <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
         </div>
       </div>
@@ -147,6 +147,7 @@
         <div class="field">
           <label>總計</label>
           <br>
+          <!-- <input type="number" class="form-control" formControlName="total_price" [value]="getNumber(quote_form.controls['total_price'].value)" /> -->
           <label class="mt-2 ml-2">{{quote_form.controls['total_price'].value}}</label>
         </div>
       </div>
@@ -167,9 +168,9 @@
         </div>
       </div>
     </div>
-    <ng-template pTemplate="footer">
+    <div class="flex justify-content-end">
       <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
-    </ng-template>
+    </div>
   </p-dialog>
 </form>
