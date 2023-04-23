@@ -1,1 +1,179 @@
-<p>view-lead works!</p>
+<div class="grid">
+  <div class="col-3">
+    <div class="mb-3">
+      <p-card>
+        <h3>Gina</h3>
+        <p-divider></p-divider>
+        <span class="p-buttonset flex justify-content-center">
+        <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+        <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+        <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+        <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
+      </span>
+        <div class="grid mt-2">
+          <div class="col-12 flex justify-content-center">
+            <label>姓名: </label>
+            {{name}}
+          </div>
+          <div class="col-12 flex justify-content-center">
+            <label>職稱: </label>
+            {{title}}
+          </div>
+        </div>
+      </p-card>
+      <div class="flex justify-content-center mt-3">
+        <p-button pTooltip="新增聯絡人" tooltipPosition="top" icon="pi pi-plus" styleClass="p-button-outlined p-button-secondary"></p-button>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="mb-3">
+      <p-card>
+      <span class="p-buttonset flex justify-content-center">
+        <p-button label="不明確" styleClass="p-button-secondary border-round-left-3xl"></p-button>
+        <p-button label="新線索" styleClass="p-button-secondary"></p-button>
+        <p-button label="評估中" styleClass="p-button-secondary"></p-button>
+        <p-button label="發展中" styleClass="p-button-secondary"></p-button>
+        <p-button label="已轉換" styleClass="p-button-secondary border-round-right-3xl"></p-button>
+      </span>
+      </p-card>
+    </div>
+    <div>
+      <form [formGroup]="lead_form">
+        <p-card>
+          <p-tabView>
+            <p-tabPanel header="詳細資料">
+              <ng-container *ngIf="edit==false">
+
+              </ng-container>
+              <ng-container *ngIf="edit==true">
+                <div class="grid">
+                  <div class="col-6">
+                    <div class="field">
+                      <label><span class="text-red-600">*</span>線索狀態</label>
+                      <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" [options]="status"
+                                  formControlName="status" appendTo="body" (onChange)="statusValue($event)"
+                                  [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError && lead_form.controls['status'].touched}"
+                      ></p-dropdown>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>業務員</label>
+                      <br>
+                      <label class="ml-2">{{(lead_form.controls['owner'].value)}}</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="field">
+                      <label><span class="text-red-600">*</span>公司</label>
+                      <input pInputText formControlName="company_name"
+                             [ngClass]="{'ng-dirty':lead_form.controls['company_name'].hasError && lead_form.controls['company_name'].touched}">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>姓名</label>
+                      <input pInputText formControlName="name">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>職稱</label>
+                      <input pInputText formControlName="title">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>行業</label>
+                      <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry_id" optionLabel="name"
+                                  (onChange)="industry_idValue($event)" formControlName="industry_id"
+                                  appendTo="body"></p-dropdown>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>電話</label>
+                      <input pInputText formControlName="phone_number">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>行動電話</label>
+                      <input pInputText formControlName="cell_phone">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>LINE</label>
+                      <input pInputText formControlName="line">
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="field">
+                      <label>電子郵件</label>
+                      <input pInputText formControlName="email">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>分級</label>
+                      <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
+                                  (onChange)="ratingValue($event)" formControlName="rating"
+                                  appendTo="body"></p-dropdown>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="field">
+                      <label>線索來源</label>
+                      <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source_id" optionLabel="name"
+                                  (onChange)="leadSourceValue($event)" formControlName="source_id"
+                                  appendTo="body"></p-dropdown>
+                    </div>
+                  </div>
+                </div>
+                <p-divider></p-divider>
+                <div class="grid">
+                  <div class="col-6">
+                    <label>建立者：</label>
+                    <br>
+                    <div class="mt-3 field">
+                      <label>{{(lead_form.controls['created_by'].value)}}</label>
+                      <label class="ml-2">{{(lead_form.controls['created_at'].value)}}</label>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <label>上次修改者：</label>
+                    <br>
+                    <div class="mt-3 field">
+                      <label>{{(lead_form.controls['updated_by'].value)}}</label>
+                      <label class="ml-2">{{(lead_form.controls['updated_at'].value)}}</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex justify-content-end">
+                  <p-button label="儲存" (click)="edit=false" styleClass="p-button-outlined p-button-info"></p-button>
+                  <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
+                </div>
+              </ng-container>
+            </p-tabPanel>
+            <p-tabPanel header="活動">
+              <h3>(待完成)</h3>
+            </p-tabPanel>
+          </p-tabView>
+        </p-card>
+      </form>
+    </div>
+  </div>
+  <div class="col-3">
+    <p-card>
+      <h3>拜訪紀錄</h3>
+      <p-divider></p-divider>
+      <h3>(待完成)</h3>
+    </p-card>
+  </div>
+</div>
