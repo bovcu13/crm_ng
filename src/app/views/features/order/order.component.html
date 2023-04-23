@@ -49,7 +49,8 @@
       <div class="col-6">
         <div class="field">
           <label>訂單號碼</label>
-          <input pInputText formControlName="number">
+          <br>
+          <label class="mt-2 ml-2 disable">{{(order_form.controls['number'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -74,11 +75,18 @@
             [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6" *ngIf="!showedit">
+        <div class="field">
+          <label>狀態</label>
+          <br>
+          <label class="mt-2 ml-2" [textContent]="order_form.controls['status'].value"></label>
+        </div>
+      </div>
+      <div class="col-6" *ngIf="showedit">
         <div class="field">
           <label><span class="required-star">*</span>狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="status" optionLabel="name" formControlName="status"
-            appendTo="body"
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
+            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"
             [ngClass]="{'ng-dirty':order_form.controls['status'].hasError && order_form.controls['status'].touched}"></p-dropdown>
         </div>
       </div>
@@ -107,21 +115,19 @@
       </ng-container>
       <div class="col-6">
         <label>建立者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label class="disable">{{(order_form.controls['created_by'].value)}}</label>
+          <label class="ml-2 disable">{{(order_form.controls['created_at'].value)}}</label>
+        </div>
       </div>
       <div class="col-6">
         <label>上次修改者：</label>
-      </div>
-      <div class="col-1">
-        <input pInputText formControlName="created_by">
-      </div>
-      <div class="col-5">
-        <input pInputText formControlName="created_at">
-      </div>
-      <div class="col-1">
-        <input pInputText formControlName="updated_by">
-      </div>
-      <div class="col-5">
-        <input pInputText formControlName="updated_at">
+        <br>
+        <div class="mt-3 field">
+        <label class="disable">{{(order_form.controls['updated_by'].value)}}</label>
+        <label class="ml-2 disable">{{(order_form.controls['updated_at'].value)}}</label>
+        </div>
       </div>
     </div>
     <div class="flex justify-content-end">
