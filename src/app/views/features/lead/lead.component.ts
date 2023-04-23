@@ -168,7 +168,7 @@ export class LeadComponent implements OnInit {
   constructor(private fb: FormBuilder) {
     this.lead_form = this.fb.group({
       name: [''],
-      status: [this.status[1], [Validators.required]],
+      status: ['', [Validators.required]],
       title: [''],
       phone_number: [''],
       cell_phone: [''],
@@ -198,11 +198,14 @@ export class LeadComponent implements OnInit {
     //將"業務員"設定為不可修改
     this.lead_form.controls['owner'].disable();
     this.edit = true;
+    console.log(this.lead_form.controls['status'].value)
     if (type === 'add'
     ) {
       this.dialogHeader = '新增線索';
-      // this.lead_form.reset();
-      console.log(this.lead_form.controls['status'].value)
+      this.lead_form.reset();
+      this.lead_form.patchValue({
+        status: this.status.find(s => s.name === this.status[1].name),
+      });
     } else if (type === 'edit') {
       console.log("lead: " + JSON.stringify(lead))
       this.dialogHeader = '編輯線索';
