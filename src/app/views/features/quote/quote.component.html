@@ -7,7 +7,15 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [value]="quote">
+      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="filteredQuotes" [paginator]="true" [rows]="5" [totalRecords]="100" [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} entries'">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filterquotes()" pInputText
+                  placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name">名稱<p-sortIcon field="name"></p-sortIcon></th>
@@ -27,11 +35,11 @@
             <td>{{ quote.expiration_date }}</td>
             <td>{{ quote.subtotal }}</td>
             <td>{{ quote.total_price }}</td>
-            <td class="icon-align-right"><p-button icon="pi pi-eye"
+            <td class="icon-align-right"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil"
+              <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除" tooltipPosition="top"></p-button>
             </td>
           </tr>
         </ng-template>

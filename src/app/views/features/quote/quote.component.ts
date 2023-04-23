@@ -7,9 +7,10 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
   styleUrls: ['./quote.component.scss']
 })
 export class QuoteComponent {
+   filteredQuotes: any[] = [];
   quote: any[] = [
     {
-      quote_id: 1,
+      "quote_id": 1,
       "number": "00001",
       "name": "milk",
       "opportunity_name": "12345",
@@ -26,7 +27,7 @@ export class QuoteComponent {
       "updated_by": "林",
     },
     {
-      quote_id: 2,
+      "quote_id": 2,
       "number": "00002",
       "name": "aaa",
       "opportunity_name": "sam",
@@ -43,6 +44,40 @@ export class QuoteComponent {
       "updated_by": "林",
     }
   ];
+  filterText: any = '';
+  filterquotes() {
+    if (this.filterText) {
+      this.filteredQuotes = this.quote.filter((quote) => {
+        return quote.name.toLowerCase().includes(this.filterText.toLowerCase());
+      });
+    } else {
+      this.filteredQuotes = this.quote;
+    }
+    if (this.filterText === '') {
+      this.filteredQuotes = this.quote;
+    } else {
+      this.filteredQuotes = this.quote.filter(quote => {
+        return (
+          quote.quote_id.toString().toLowerCase().includes(this.filterText.toLowerCase()) ||
+          quote.name.toLowerCase().includes(this.filterText) ||
+          quote.opportunity_name.toLowerCase().includes(this.filterText) ||
+          quote.account_name.toLowerCase().includes(this.filterText) ||
+          (quote.syncing ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase()) ||
+          quote.status.toLowerCase().includes(this.filterText) ||
+          quote.describe.toLowerCase().includes(this.filterText) ||
+          quote.expiration_date.toLowerCase().includes(this.filterText) ||
+          quote.tax.toString().toLowerCase().includes(this.filterText.toLowerCase()) ||
+          quote.shipping_and_handling.toLowerCase().includes(this.filterText) ||
+          quote.subtotal.toString().toLowerCase().includes(this.filterText.toLowerCase())
+        );
+      });
+    }
+    console.log(this.filteredQuotes)
+  }
+  ngOnInit() {
+    this.filteredQuotes = this.quote;
+  }
+
   //p-dropdown status的下拉值
   status: any[] = [
     {

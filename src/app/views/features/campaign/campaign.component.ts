@@ -129,7 +129,6 @@ export class CampaignComponent {
   campaign_form: FormGroup;
   start_date!: Date;
   end_date!: Date;
-
   constructor(private fb: FormBuilder) {
     this.campaign_form = this.fb.group({
       name: ['', [Validators.required]],
