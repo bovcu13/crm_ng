@@ -161,17 +161,22 @@ export class CampaignComponent {
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
+  //偵測type變量
+  ontypeChange(event: any) {
+    console.log("類型選擇type: " + event.value.code + event.value.name);
+  }
 
   //dialog方法
   visible: boolean = false;
   dialogHeader!: string;
   selectedStatus!: any;
+  selectedType!: any;
   showedit = true;//判斷是否dialog為新增與編輯
   showDialog(type: string, campaign?: any): void {
     this.visible = true;
     console.log('點擊: ' + type);
     this.campaign_form.reset()
-    this.campaign_form.patchValue({ status: this.status[0].name});
+    this.campaign_form.patchValue({ status: this.status[0].name });
     console.log(this.status)
     if (type === 'add') {
       this.dialogHeader = '新增行銷活動';
@@ -187,6 +192,7 @@ export class CampaignComponent {
       this.showedit = true;
       // 綁定已經選擇的狀態
       this.selectedStatus = this.status.find(s => s.name === campaign.status);
+      this.selectedType = this.status.find(s => s.name === campaign.type);
     }
   }
 }

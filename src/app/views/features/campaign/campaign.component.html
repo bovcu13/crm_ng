@@ -99,7 +99,7 @@
         <div class="field">
           <label>類型</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="type" formControlName="type"
-            optionLabel="name"></p-dropdown>
+            optionLabel="name" (onChange)="ontypeChange($event)" [(ngModel)]="selectedType"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
