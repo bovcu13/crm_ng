@@ -28,7 +28,7 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent },
       { path: 'account/view', component: ViewAccountComponent },
       { path: 'campaign', component: CampaignComponent },
-      { path: 'campaign/view', component: ViewContactComponent },
+      { path: 'contact/view', component: ViewContactComponent },
       { path: 'contact', component: ContactComponent },
       { path: 'display', component: DisplayComponent },
       { path: 'event', component: EventComponent },
