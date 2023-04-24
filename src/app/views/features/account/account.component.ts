@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-account',
@@ -61,7 +61,27 @@ export class AccountComponent {
     }
   ];
 
+  accountType!: string;
+  account_type: MenuItem[] = [
+    {
+      label: "個人帳戶",
+      icon: "pi pi-user",
+      command: () => {
+        this.showDialog('add');
+        this.accountType = "個人帳戶";
+      }
+    },
+    {
+      label: "法人帳戶",
+      icon: "pi pi-building",
+      command: () => {
+        this.showDialog('add');
+        this.accountType = "法人帳戶";
+      }
+    }
+  ]
   account_form: FormGroup;
+
   constructor(private fb: FormBuilder) {
     this.account_form = this.fb.group({
       name: ['', [Validators.required]],
@@ -76,6 +96,7 @@ export class AccountComponent {
       updated_by: ['', Validators.required],
     });
   }
+
   //時間調整
   localToUtc(date: Date): Date {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
@@ -83,6 +104,7 @@ export class AccountComponent {
 
   edit: boolean = false;
   dialogHeader!: string;
+
   showDialog(type: string, account?: any): void {
     this.edit = true;
     if (type === 'add') {
@@ -104,6 +126,7 @@ export class AccountComponent {
       });
     }
   }
+
   industryValue(event: any): void {
     const selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
     console.log(event.value.code);
@@ -115,4 +138,5 @@ export class AccountComponent {
     console.log(event.value.code);
     console.log(selectedType.name);
   }
+
 }

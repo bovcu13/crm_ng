@@ -4,10 +4,11 @@
       <h2>帳戶</h2>
       <div class="flex justify-content-end mr-2">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" pTooltip="新增" tooltipPosition="top" icon="pi pi-plus"
+          <p-button (click)="menu.toggle($event)" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"
                     styleClass="p-button-text"></p-button>
         </span>
       </div>
+      <p-menu #menu [model]="account_type" [popup]="true"></p-menu>
       <p-table [value]="account">
         <ng-template pTemplate="header">
           <tr>
@@ -43,7 +44,7 @@
 <form [formGroup]="account_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
           <input pInputText formControlName="name" [ngClass]="{'ng-dirty':account_form.controls['name'].hasError && account_form.controls['name'].touched}">
@@ -53,7 +54,14 @@
         <div class="field">
           <label>業務員</label>
           <br>
-          <label class="ml-2 disable">{{(account_form.controls['owner'].value)}}</label>
+          <label>{{(account_form.controls['owner'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>帳戶類別</label>
+          <br>
+          <label>{{accountType}}</label>
         </div>
       </div>
       <div class="col-6">
