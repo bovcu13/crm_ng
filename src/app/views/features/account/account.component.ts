@@ -65,11 +65,11 @@ export class AccountComponent {
   constructor(private fb: FormBuilder) {
     this.account_form = this.fb.group({
       account_name: ['', [Validators.required]],
-      account_owner: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
-      industry: ['', [Validators.required]],
-      type: ['', [Validators.required]],
-      parent_account: ['', [Validators.required]],
+      owner: [''],
+      phone_number: [''],
+      industry: [''],
+      type: [''],
+      parent_account: [''],
       created_at: [''],
       updated_at: [''],
       created_by: ['', Validators.required],
