@@ -17,7 +17,7 @@
         </div>
         <div class="flex ml-auto mr-2">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" pTooltip="新增" tooltipPosition="top" icon="pi pi-plus"
+          <p-button (click)="showDialog('add')" pTooltip="新增線索" tooltipPosition="top" icon="pi pi-plus"
                     styleClass="p-button-text"></p-button>
         </span>
         </div>
@@ -70,12 +70,14 @@
             <td>{{ lead.line }}</td>
             <td>{{ lead.owner }}</td>
             <td>
-              <p-button icon="pi pi-eye" routerLink="/main/lead/view" pTooltip="檢視" tooltipPosition="top"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <div class="flex justify-content-end">
+                <p-button icon="pi pi-eye" routerLink="/main/lead/view" pTooltip="檢視" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              </div>
 
               <!--              <p-button icon="pi pi-ellipsis-h" (click)="menu.toggle($event);getLead(lead)"-->
               <!--                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
@@ -110,22 +112,24 @@
       <div class="col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
-          <p-dropdown [options]="account" (onChange)="accountValue($event)" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="選擇現有帳戶">
+          <p-dropdown [options]="account" (onChange)="accountValue($event)" optionLabel="name" [filter]="true"
+                      filterBy="name" [showClear]="true" placeholder="選擇現有帳戶">
             <ng-template pTemplate="account">
               <div class="flex align-items-center gap-2" *ngIf="account">
                 <div>{{ account.name }}</div>
               </div>
             </ng-template>
-            <ng-template let-country pTemplate="item">
+            <ng-template let-account pTemplate="item">
               <div class="flex align-items-center gap-2">
-                <div>{{ country.name }}</div>
+                <div>{{ account.name }}</div>
               </div>
             </ng-template>
           </p-dropdown>
         </div>
       </div>
       <div class="col-6 flex justify-content-start mt-4">
-        <p-button icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top" styleClass="p-button-raised p-button-text"></p-button>
+        <p-button icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top"
+                  styleClass="p-button-raised p-button-text"></p-button>
       </div>
       <div class="col-12">
         <div>
