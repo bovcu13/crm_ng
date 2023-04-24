@@ -1,35 +1,41 @@
 <div class="flex justify-content-center">
   <div class="col-10">
     <p-card>
-      <h2>帳戶聯絡人</h2>
+      <h2>聯絡人</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增帳戶聯絡人" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" pTooltip="新增聯絡人" tooltipPosition="top" icon="pi pi-plus"
+                    styleClass="p-button-text"></p-button>
         </span>
       </div>
       <p-table [value]="contact">
         <ng-template pTemplate="header">
           <tr>
             <th>姓名</th>
-            <th>帳戶名稱</th>
+            <th>帳戶</th>
             <th>行動電話</th>
             <th>電子郵件</th>
-            <th>業務負責人</th>
-            <th>檢視</th>
-            <th>編輯</th>
+            <th>業務員</th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-contact>
           <tr>
             <td>{{ contact.name }}</td>
             <td>{{ contact.account_name }}</td>
-            <td>{{ contact.mobile }}</td>
+            <td>{{ contact.cell_phone }}</td>
             <td>{{ contact.email }}</td>
-            <td>{{ contact.contact_owner }}</td>
-            <td><p-button icon="pi pi-eye" routerLink="/main/campaign/view"
-              styleClass="p-button-rounded p-button-secondary p-button-text"></p-button></td>
-            <td><p-button (click)="showDialog('edit',contact)" icon="pi pi-pencil"
-                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
+            <td>{{ contact.owner }}</td>
+            <td>
+              <div class="flex justify-content-end">
+                <p-button icon="pi pi-eye" routerLink="/main/contact/view" pTooltip="檢視" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button (click)="showDialog('edit',contact)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              </div>
+            </td>
           </tr>
         </ng-template>
       </p-table>
@@ -41,14 +47,15 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>帳戶名稱</label>
+          <label>帳戶</label>
           <input pInputText formControlName="account_name">
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>業務負責人</label>
-          <input pInputText formControlName="contact_owner">
+          <label>業務員</label>
+          <br>
+          <label>{{(contact_form.controls['owner'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -60,20 +67,21 @@
       <div class="col-6">
         <div class="field">
           <label>稱謂</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="salutation" optionLabel="name" (onChange)="salutationValue($event)"
-            formControlName="salutation" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="salutation" optionLabel="name"
+                      (onChange)="salutationValue($event)"
+                      formControlName="salutation" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>行動電話</label>
-          <input pInputText formControlName="mobile">
+          <input pInputText formControlName="cell_phone">
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>公司電話</label>
-          <input pInputText formControlName="phone">
+          <input pInputText formControlName="phone_number">
         </div>
       </div>
       <div class="col-12">
@@ -98,26 +106,27 @@
         <div class="field">
           <label>直屬上司</label>
           <p-dropdown placeholder="請選擇" [disabled]="true"
-            formControlName="reports_to" appendTo="body"></p-dropdown>
+                      formControlName="reports_to" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
       </div>
       <div class="col-6">
-        <div class="field">
-          <label>建立者</label>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="created_by" readonly>
-          <div class="mt-2"></div>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="created_at" readonly>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>修改者</label>
+        <label>建立者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label>{{(contact_form.controls['created_by'].value)}}</label>
           <br>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="updated_by" readonly>
-          <div class="mt-2"></div>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="updated_at" readonly>
+          <label>{{(contact_form.controls['created_at'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <label>上次修改者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label>{{(contact_form.controls['updated_by'].value)}}</label>
+          <br>
+          <label>{{(contact_form.controls['updated_at'].value)}}</label>
         </div>
       </div>
     </div>
