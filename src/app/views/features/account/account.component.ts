@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-account',
@@ -10,9 +10,9 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 export class AccountComponent {
   account: any[] = [
     {
-      "account_name": "David",
-      "account_owner": "林",
-      "phone": "0912345678",
+      "name": "David",
+      "owner": "林",
+      "phone_number": "0912345678",
       "industry": "金融服務",
       "type": "夥伴",
       "parent_account": "NKUST",
@@ -21,9 +21,9 @@ export class AccountComponent {
       "created_at": "2023-04-10  in the evening11:35", //建立日期
     },
     {
-      "account_name": "Mars",
-      "account_owner": "林",
-      "phone": "0987654321",
+      "name": "Mars",
+      "owner": "林",
+      "phone_number": "0987654321",
       "industry": "零售業",
       "type": "對手",
       "parent_account": "NKUST",
@@ -61,21 +61,42 @@ export class AccountComponent {
     }
   ];
 
+  accountType!: string;
+  account_type: MenuItem[] = [
+    {
+      label: "個人帳戶",
+      icon: "pi pi-user",
+      command: () => {
+        this.showDialog('add');
+        this.accountType = "個人帳戶";
+      }
+    },
+    {
+      label: "法人帳戶",
+      icon: "pi pi-building",
+      command: () => {
+        this.showDialog('add');
+        this.accountType = "法人帳戶";
+      }
+    }
+  ]
   account_form: FormGroup;
+
   constructor(private fb: FormBuilder) {
     this.account_form = this.fb.group({
-      account_name: ['', [Validators.required]],
-      account_owner: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
-      industry: ['', [Validators.required]],
-      type: ['', [Validators.required]],
-      parent_account: ['', [Validators.required]],
+      name: ['', [Validators.required]],
+      owner: [''],
+      phone_number: [''],
+      industry: [''],
+      type: [''],
+      parent_account: [''],
       created_at: [''],
       updated_at: [''],
       created_by: ['', Validators.required],
       updated_by: ['', Validators.required],
     });
   }
+
   //時間調整
   localToUtc(date: Date): Date {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
@@ -83,19 +104,15 @@ export class AccountComponent {
 
   edit: boolean = false;
   dialogHeader!: string;
+
   showDialog(type: string, account?: any): void {
     this.edit = true;
-    this.account_form.controls['account_owner'].disable();
-    this.account_form.controls['created_by'].disable();
-    this.account_form.controls['updated_by'].disable();
-    this.account_form.controls['created_at'].disable();
-    this.account_form.controls['updated_at'].disable();
     if (type === 'add') {
-      this.dialogHeader = '新增';
+      this.dialogHeader = '新增帳戶';
       this.account_form.reset();
     } else if (type === 'edit') {
       console.log("account: " + JSON.stringify(account));
-      this.dialogHeader = '編輯';
+      this.dialogHeader = '編輯帳戶';
       this.account_form.patchValue(account);
       //dropdown
       const selectedIndustry = this.industry.find((s) => s.name === account.industry);
@@ -109,6 +126,7 @@ export class AccountComponent {
       });
     }
   }
+
   industryValue(event: any): void {
     const selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
     console.log(event.value.code);
@@ -120,4 +138,5 @@ export class AccountComponent {
     console.log(event.value.code);
     console.log(selectedType.name);
   }
+
 }

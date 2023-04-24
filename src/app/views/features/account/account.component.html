@@ -2,32 +2,39 @@
   <div class="col-10">
     <p-card>
       <h2>帳戶</h2>
-      <div class="flex justify-content-end">
+      <div class="flex justify-content-end mr-2">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" label="新增帳戶" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="menu.toggle($event)" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"
+                    styleClass="p-button-text"></p-button>
         </span>
       </div>
+      <p-menu #menu [model]="account_type" [popup]="true"></p-menu>
       <p-table [value]="account">
         <ng-template pTemplate="header">
           <tr>
-            <th>帳戶名稱</th>
+            <th>帳戶</th>
             <th>電話</th>
             <th>類型</th>
-            <th>業務負責人</th>
-            <th>檢視</th>
-            <th>編輯</th>
+            <th>業務員</th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-account>
           <tr>
-            <td>{{ account.account_name }}</td>
-            <td>{{ account.phone }}</td>
+            <td>{{ account.name }}</td>
+            <td>{{ account.phone_number }}</td>
             <td>{{ account.type }}</td>
-            <td>{{ account.account_owner }}</td>
-            <td><p-button icon="pi pi-eye" routerLink="/main/account/view"
-              styleClass="p-button-rounded p-button-secondary p-button-text"></p-button></td>
-            <td><p-button (click)="showDialog('edit',account)" icon="pi pi-pencil"
-                styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button></td>
+            <td>{{ account.owner }}</td>
+            <td>
+              <div class="flex justify-content-end">
+                <p-button icon="pi pi-eye" routerLink="/main/account/view" pTooltip="檢視" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button (click)="showDialog('edit',account)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              </div>
+            </td>
           </tr>
         </ng-template>
       </p-table>
@@ -35,65 +42,82 @@
   </div>
 </div>
 <form [formGroup]="account_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12">
         <div class="field">
-          <label>帳戶名稱</label>
-          <input pInputText formControlName="account_name">
+          <label><span class="text-red-600">*</span>帳戶</label>
+          <input pInputText formControlName="name" [ngClass]="{'ng-dirty':account_form.controls['name'].hasError && account_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>業務負責人 </label>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="account_owner">
+          <label>業務員</label>
+          <br>
+          <label>{{(account_form.controls['owner'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>帳戶類別</label>
+          <br>
+          <label>{{accountType}}</label>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>電話</label>
-          <input pInputText formControlName="phone">
+          <input pInputText formControlName="phone_number">
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>行業</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name" (onChange)="industryValue($event)"
-            formControlName="industry" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
+                      (onChange)="industryValue($event)"
+                      formControlName="industry" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>類型</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name" (onChange)="typeValue($event)"
-            formControlName="type" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"
+                      (onChange)="typeValue($event)"
+                      formControlName="type" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>父系帳戶</label>
-          <p-dropdown placeholder="請選擇" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
-        <div class="field">
-          <label>建立者</label>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="created_by" readonly>
-          <div class="mt-2"></div>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="created_at" readonly>
+        <label>建立者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label>{{(account_form.controls['created_by'].value)}}</label>
+          <br>
+          <label>{{(account_form.controls['created_at'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
-        <div class="field">
-          <label>修改者</label>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="updated_by" readonly>
-          <div class="mt-2"></div>
-          <input placeholder="此處無法自行填寫" pInputText formControlName="updated_at" readonly>
+        <label>上次修改者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label>{{(account_form.controls['updated_by'].value)}}</label>
+          <br>
+          <label>{{(account_form.controls['updated_at'].value)}}</label>
         </div>
       </div>
     </div>
     <div class="flex justify-content-end">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      <ng-container *ngIf="dialogHeader === '編輯帳戶'">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="dialogHeader !== '編輯帳戶'">
+        <p-button label="新增" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
