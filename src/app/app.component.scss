@@ -13,15 +13,11 @@ p-card {
     border-radius: 6px;
   }
 
-  .p-multiSelect,
-  .p-inputtext {
+  .p-inputtext,.p-multiselect,.p-inputnumber {
     width: 100%;
     border-radius: 6px;
   }
-  .p-inputnumber{
-    width: 100%!important;
-    border-radius: 6px;
-  }
+
   .p-password,
   .p-dropdown {
     width: 100%;
@@ -49,22 +45,6 @@ p-card {
   }
   .p-datatable .p-datatable-tbody>tr>td.icon-align-right {
     text-align: right !important;
-  }
-
-  p-inputnumber{
-    input{
-      .disable{
-        width: 100%!important;
-        border: none!important;
-      }
-    }
-  }
-  input{
-    .disable{
-      border: none;
-      color: black;
-    }
-
   }
 }
 

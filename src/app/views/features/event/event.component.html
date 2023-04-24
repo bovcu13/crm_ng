@@ -4,15 +4,21 @@
       <h2>行事曆</h2>
     </span>
     <full-calendar [options]="options"></full-calendar>
+
+    <div class="card flex justify-content-center">
+      <form [formGroup]="event_form">
+        <p-multiSelect [options]="main" formControlName="main" optionLabel="name"></p-multiSelect>
+      </form>
+    </div>
     <div class="field mt-2">
-      <label><span class="reddot"></span>紅色: meeting</label>
-      <label><span class="orangedot"></span>橙色: meeting</label>
-      <label><span class="yellowdot"></span>黃色: meeting</label>
-      <label><span class="greendot"></span>綠色: meeting</label>
-      <label><span class="bluedot"></span>藍色: meeting</label>
-      <label><span class="cornflowerbluedot"></span>靛色: meeting</label>
-      <label><span class="purpledot"></span>紫色: meeting</label>
-      <label><span class="pinkdot"></span>粉色: meeting</label>
+      <label><span class="reddot"></span>紅色: 今日</label>
+      <label><span class="orangedot"></span>橙色: 客戶拜訪</label>
+      <label><span class="yellowdot"></span>黃色: 電話</label>
+      <label><span class="greendot"></span>綠色: 會議</label>
+      <label><span class="bluedot"></span>藍色: 研討會</label>
+      <label><span class="cornflowerbluedot"></span>靛色: 行銷</label>
+      <label><span class="purpledot"></span>紫色: 年度拜訪</label>
+      <label><span class="pinkdot"></span>粉色: 其他</label>
     </div>
   </div>
 </div>
@@ -21,22 +27,19 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>主題</label>
-          <input type="text" pInputText formControlName="subject"/>
+          <label><span class="required-star">*</span>主題</label>
+          <input type="text" pInputText formControlName="subject"
+                 [ngClass]="{'ng-dirty':event_form.controls['subject'].hasError && event_form.controls['subject'].touched}"/>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>指派對象</label>
-          <p-dropdown [options]="assigned_to" placeholder="搜尋人員" [editable]="true" optionLabel="name"
-                      appendTo="body"
-                      formControlName="assigned_to"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>位置</label>
-          <input type="text" pInputText formControlName="location"/>
+          <label><span class="required-star">*</span>主要人員</label>
+          <p-multiSelect [options]="main" placeholder="搜尋人員" formControlName="main" appendTo="body"
+                         optionLabel="name" display="chip" [defaultLabel]="selectedMainNames()"
+                         [ngClass]="{'ng-dirty':event_form.controls['main'].hasError && event_form.controls['main'].touched}">
+
+          </p-multiSelect>
         </div>
       </div>
       <div class="col-6">
@@ -50,7 +53,7 @@
       <!-- 如果勾選全天日期則p-calendar 只顯示開始日期且無時間選擇 -->
       <div class="col-6" *ngIf="event_form.get('allday')?.value">
         <div class="field">
-          <label>開始</label>
+          <label><span class="required-star">*</span>開始</label>
           <p-calendar [appendTo]="'body'" #startDate dateFormat="yy-mm-dd"
                       [showButtonBar]="true" formControlName="start_date"></p-calendar>
         </div>
@@ -58,31 +61,60 @@
       <!-- 如果無勾選全天日期則p-calendar 顯示開始與結束日期，並開啟時間選擇 -->
       <div class="col-6" *ngIf="!event_form.get('allday')?.value">
         <div class="field">
-          <label>開始</label>
+          <label><span class="required-star">*</span>開始</label>
           <p-calendar [showTime]="true" #startDate [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
-                      [showButtonBar]="true" formControlName="start_date" [readonlyInput]="true"></p-calendar>
+                      [showButtonBar]="true" formControlName="start_date" [readonlyInput]="true"
+                      [ngClass]="{'ng-dirty':event_form.controls['start_date'].hasError && event_form.controls['start_date'].touched}"></p-calendar>
         </div>
       </div>
       <div class="col-6" *ngIf="!event_form.get('allday')?.value">
         <div class="field">
-          <label>結束</label>
+          <label><span class="required-star">*</span>結束</label>
           <p-calendar [showTime]="true" #endDate [appendTo]="'body'" [showSeconds]="true" dateFormat="yy-mm-dd"
                       [showButtonBar]="true" formControlName="end_date"
-                      [minDate]="event_form.controls['start_date'].value" [readonlyInput]="true"></p-calendar>
+                      [minDate]="event_form.controls['start_date'].value" [readonlyInput]="true"
+                      [ngClass]="{'ng-dirty':event_form.controls['end_date'].hasError && event_form.controls['end_date'].touched}"></p-calendar>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>類型</label>
+          <label><span class="required-star">*</span>類型</label>
           <p-dropdown [options]="type" [editable]="true" optionLabel="name" appendTo="body"
-                      (onChange)="typeValue($event)"
-                      formControlName="type"></p-dropdown>
+                      (onChange)="typeValue($event)" formControlName="type"
+                      [ngClass]="{'ng-dirty':event_form.controls['type'].hasError && event_form.controls['type'].touched}"></p-dropdown>
         </div>
       </div>
-      <div class="col-12 flex justify-content-end">
-        <p-button label="儲存" (click)="visible= false" styleClass="p-button-outlined p-button-info"></p-button>
-        <p-button label="取消" (click)="visible= false" styleClass="p-button-secondary ml-1"></p-button>
+      <div class="col-6">
+        <div class="field">
+          <label>參加成員</label>
+          <p-multiSelect [options]="member" placeholder="搜尋人員" formControlName="member" appendTo="body"
+                         optionLabel="name" [defaultLabel]="selectedMemberNames()"
+                         display="chip"></p-multiSelect>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>客戶</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body"
+                      formControlName="account_name"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>聯絡人</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" formControlName="contact"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>位置</label>
+          <input type="text" pInputText formControlName="location"/>
+        </div>
       </div>
     </div>
+    <ng-template pTemplate="footer">
+      <p-button label="儲存" (click)="visible= false" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="visible= false" styleClass="p-button-secondary ml-1"></p-button>
+    </ng-template>
   </p-dialog>
 </form>
