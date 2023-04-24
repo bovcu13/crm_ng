@@ -10,10 +10,10 @@
       <p-table [value]="account">
         <ng-template pTemplate="header">
           <tr>
-            <th>帳戶名稱</th>
+            <th>帳戶</th>
             <th>電話</th>
             <th>類型</th>
-            <th>業務負責人</th>
+            <th>業務員</th>
             <th>檢視</th>
             <th>編輯</th>
           </tr>
@@ -39,13 +39,13 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>帳戶名稱</label>
+          <label>帳戶</label>
           <input pInputText formControlName="account_name">
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>業務負責人 </label>
+          <label>業務員 </label>
           <input placeholder="此處無法自行填寫" pInputText formControlName="account_owner">
         </div>
       </div>
