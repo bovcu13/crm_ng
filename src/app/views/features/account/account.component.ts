@@ -10,9 +10,9 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 export class AccountComponent {
   account: any[] = [
     {
-      "account_name": "David",
-      "account_owner": "林",
-      "phone": "0912345678",
+      "name": "David",
+      "owner": "林",
+      "phone_number": "0912345678",
       "industry": "金融服務",
       "type": "夥伴",
       "parent_account": "NKUST",
@@ -21,9 +21,9 @@ export class AccountComponent {
       "created_at": "2023-04-10  in the evening11:35", //建立日期
     },
     {
-      "account_name": "Mars",
-      "account_owner": "林",
-      "phone": "0987654321",
+      "name": "Mars",
+      "owner": "林",
+      "phone_number": "0987654321",
       "industry": "零售業",
       "type": "對手",
       "parent_account": "NKUST",
@@ -64,7 +64,7 @@ export class AccountComponent {
   account_form: FormGroup;
   constructor(private fb: FormBuilder) {
     this.account_form = this.fb.group({
-      account_name: ['', [Validators.required]],
+      name: ['', [Validators.required]],
       owner: [''],
       phone_number: [''],
       industry: [''],
@@ -85,17 +85,12 @@ export class AccountComponent {
   dialogHeader!: string;
   showDialog(type: string, account?: any): void {
     this.edit = true;
-    this.account_form.controls['account_owner'].disable();
-    this.account_form.controls['created_by'].disable();
-    this.account_form.controls['updated_by'].disable();
-    this.account_form.controls['created_at'].disable();
-    this.account_form.controls['updated_at'].disable();
     if (type === 'add') {
-      this.dialogHeader = '新增';
+      this.dialogHeader = '新增帳戶';
       this.account_form.reset();
     } else if (type === 'edit') {
       console.log("account: " + JSON.stringify(account));
-      this.dialogHeader = '編輯';
+      this.dialogHeader = '編輯帳戶';
       this.account_form.patchValue(account);
       //dropdown
       const selectedIndustry = this.industry.find((s) => s.name === account.industry);
