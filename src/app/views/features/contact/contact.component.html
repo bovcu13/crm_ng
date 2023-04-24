@@ -47,8 +47,22 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>帳戶</label>
-          <input pInputText formControlName="account_name">
+          <label><span class="text-red-600">*</span>帳戶</label>
+          <p-dropdown
+            [ngClass]="{'ng-dirty':contact_form.controls['account_name'].hasError && contact_form.controls['account_name'].touched}"
+            [options]="account_name" (onChange)="accountValue($event)" optionLabel="name" [filter]="true" formControlName="account_name"
+            filterBy="name" [showClear]="true" placeholder="選擇現有帳戶">
+            <ng-template pTemplate="account">
+              <div class="flex align-items-center gap-2" *ngIf="account_name">
+                <div>{{ account_name.name }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-account pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ account.name }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -60,8 +74,8 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>姓名</label>
-          <input pInputText formControlName="name">
+          <label><span class="text-red-600">*</span>姓名</label>
+          <input pInputText formControlName="name" [ngClass]="{'ng-dirty':contact_form.controls['name'].hasError && contact_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-6">
@@ -80,8 +94,8 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>公司電話</label>
-          <input pInputText formControlName="phone_number">
+          <label><span class="text-red-600">*</span>公司電話</label>
+          <input [ngClass]="{'ng-dirty':contact_form.controls['phone_number'].hasError && contact_form.controls['phone_number'].touched}" pInputText formControlName="phone_number">
         </div>
       </div>
       <div class="col-12">
@@ -132,7 +146,12 @@
     </div>
 
     <div class="flex justify-content-end mt-3">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
+        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="dialogHeader !== '編輯聯絡人'">
+        <p-button label="新增" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
