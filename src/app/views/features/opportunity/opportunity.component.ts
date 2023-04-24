@@ -19,12 +19,20 @@ export class OpportunityComponent {
   ];
   stage: any[] = [
     {
-      "name": "潛在",
+      "name": "資格評估",
+      "code": "qualification"
+    },
+    {
+      "name": "需求分析",
+      "code": "needs_analysis "
+    },
+    {
+      "name": "提案",
       "code": "potential"
     },
     {
-      "name": "談判中",
-      "code": "negotiating"
+      "name": "談判",
+      "code": "negotiation"
     },
     {
       "name": "已結束",
