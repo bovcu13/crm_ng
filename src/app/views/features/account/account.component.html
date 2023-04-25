@@ -9,13 +9,21 @@
         </span>
       </div>
       <p-menu #menu [model]="account_type" [popup]="true"></p-menu>
-      <p-table [value]="account">
+      <p-table [value]="filteredAccount">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filter()" pInputText
+                         placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th>帳戶</th>
-            <th>電話</th>
-            <th>類型</th>
-            <th>業務員</th>
+            <th pSortableColumn="name">帳戶<p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="phone_number">電話<p-sortIcon field="phone_number"></p-sortIcon></th>
+            <th pSortableColumn="type">類型<p-sortIcon field="type"></p-sortIcon></th>
+            <th pSortableColumn="owner">業務員<p-sortIcon field="owner"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
