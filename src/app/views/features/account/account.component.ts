@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MenuItem} from 'primeng/api';
 
@@ -7,7 +7,8 @@ import {MenuItem} from 'primeng/api';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponent {
+export class AccountComponent implements OnInit {
+  filteredAccount: any[] = [];
   account: any[] = [
     {
       "name": "David",
@@ -95,6 +96,27 @@ export class AccountComponent {
       created_by: ['', Validators.required],
       updated_by: ['', Validators.required],
     });
+  }
+
+  filterText: any = '';
+  filter() {
+    if (this.filterText === '') {
+      this.filteredAccount = this.account;
+    } else {
+      this.filteredAccount = this.account.filter(account => {
+        return (
+          account.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          account.phone_number.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          account.type.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          account.owner.toLowerCase().includes(this.filterText.toLowerCase())
+        );
+      });
+    }
+    console.log(this.filteredAccount)
+  }
+
+  ngOnInit() {
+    this.filteredAccount = this.account
   }
 
   //時間調整
