@@ -10,6 +10,7 @@ import { EventComponent } from '../features/event/event.component';
 import { ForecastingComponent } from '../features/forecasting/forecasting.component';
 import { LeadComponent } from '../features/lead/lead.component';
 import { OpportunityComponent } from '../features/opportunity/opportunity.component';
+import { ViewOpportunityComponent} from "../features/opportunity/view-opportunity/view-opportunity.component";
 import { QuoteComponent } from '../features/quote/quote.component';
 import { ReportComponent } from '../features/report/report.component';
 import { ViewLeadComponent} from "../features/lead/view-lead/view-lead.component";
@@ -37,6 +38,7 @@ const routes: Routes = [
       { path: 'lead/view', component: ViewLeadComponent },
       { path: 'product', component: ProductComponent },
       { path: 'opportunity', component: OpportunityComponent },
+      { path: 'opportunity/view', component: ViewOpportunityComponent },
       { path: 'order', component: OrderComponent },
       { path: 'quote', component: QuoteComponent },
       { path: 'contract', component: ContractComponent },

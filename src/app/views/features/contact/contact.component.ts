@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit {
+  filteredContacts: any[] = [];
   contact: any[] = [
     {
       "account_name": "NKUST",
@@ -70,6 +71,7 @@ export class ContactComponent {
   ]
 
   contact_form: FormGroup;
+
   constructor(private fb: FormBuilder) {
     this.contact_form = this.fb.group({
       account_name: ['', [Validators.required]],
@@ -88,6 +90,30 @@ export class ContactComponent {
       updated_by: ['', Validators.required],
     });
   }
+
+  filterText: any = '';
+
+  filtercontacts() {
+    if (this.filterText === '') {
+      this.filteredContacts = this.contact;
+    } else {
+      this.filteredContacts = this.contact.filter(contact => {
+        return (
+          contact.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          contact.account_name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          contact.cell_phone.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          contact.email.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          contact.owner.toLowerCase().includes(this.filterText.toLowerCase())
+        );
+      });
+    }
+    console.log(this.filteredContacts)
+  }
+
+  ngOnInit() {
+    this.filteredContacts = this.contact;
+  }
+
   //時間調整
   localToUtc(date: Date): Date {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
@@ -95,6 +121,7 @@ export class ContactComponent {
 
   edit: boolean = false;
   dialogHeader!: string;
+
   showDialog(type: string, contact?: any): void {
     this.edit = true;
     if (type === 'add') {
@@ -117,7 +144,7 @@ export class ContactComponent {
 
   salutationValue(event: any): void {
     const selectedsalutation = this.salutation.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code , selectedsalutation.name);
+    console.log(event.value.code, selectedsalutation.name);
   }
 
   accountValue(event: any): void {

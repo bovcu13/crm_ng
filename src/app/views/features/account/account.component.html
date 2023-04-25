@@ -9,13 +9,21 @@
         </span>
       </div>
       <p-menu #menu [model]="account_type" [popup]="true"></p-menu>
-      <p-table [value]="account">
+      <p-table [value]="filteredAccount">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filter()" pInputText
+                         placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th>帳戶</th>
-            <th>電話</th>
-            <th>類型</th>
-            <th>業務員</th>
+            <th pSortableColumn="name">帳戶<p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="phone_number">電話<p-sortIcon field="phone_number"></p-sortIcon></th>
+            <th pSortableColumn="type">類型<p-sortIcon field="type"></p-sortIcon></th>
+            <th pSortableColumn="owner">業務員<p-sortIcon field="owner"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
@@ -61,7 +69,7 @@
         <div class="field">
           <label>帳戶類別</label>
           <br>
-          <label>{{accountType}}</label>
+          <label>{{(account_form.controls['type'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -80,17 +88,17 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>類型</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"
-                      (onChange)="typeValue($event)"
-                      formControlName="type" appendTo="body"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
           <label>父系帳戶</label>
           <p-dropdown placeholder="請選擇" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
         </div>
+      </div>
+      <div class="col-6">
+        <!--        <div class="field">-->
+        <!--          <label>類型</label>-->
+        <!--          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"-->
+        <!--                      (onChange)="typeValue($event)"-->
+        <!--                      formControlName="type" appendTo="body"></p-dropdown>-->
+        <!--        </div>-->
       </div>
       <div class="col-6">
         <label>建立者：</label>

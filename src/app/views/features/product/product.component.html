@@ -9,7 +9,7 @@
       </div>
       <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllProduct" [paginator]="true"
                [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
-               currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+               [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -48,7 +48,7 @@
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button icon="pi pi-trash"
                         styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
-                        tooltipPosition="top"></p-button>
+                        tooltipPosition="top" (click)="deleteProductRequest(product.product_id)"></p-button>
             </td>
           </tr>
         </ng-template>
@@ -93,6 +93,7 @@
         <div class="field">
           <label>識別碼</label>
           <input pInputText formControlName="code">
+          <small *ngIf="BadRequest" style="color: red">{{BadRequest}}</small>
         </div>
       </div>
       <div class="col-12">
@@ -118,13 +119,14 @@
         </div>
       </div>
     </div>
-    <ng-template pTemplate="footer" *ngIf="!showedit">
-      <p-button label="新增" (click)="postProductRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+    <div class="flex justify-content-end">
+      <ng-container *ngIf="!showedit">
+        <p-button label="新增" (click)="postProductRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="showedit">
+        <p-button label="儲存" (click)="patchProductRequest(p_id)" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
-    </ng-template>
-    <ng-template pTemplate="footer" *ngIf="showedit">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
-      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
-    </ng-template>
+    </div>
   </p-dialog>
 </form>

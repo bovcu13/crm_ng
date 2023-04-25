@@ -8,14 +8,22 @@
                     styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [value]="contact">
+      <p-table [value]="filteredContacts">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filtercontacts()" pInputText
+                         placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th>姓名</th>
-            <th>帳戶</th>
-            <th>行動電話</th>
-            <th>電子郵件</th>
-            <th>業務員</th>
+            <th pSortableColumn="name">姓名<p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="account_name">帳戶<p-sortIcon field="account_name"></p-sortIcon></th>
+            <th pSortableColumn="cell_phone">行動電話<p-sortIcon field="cell_phone"></p-sortIcon></th>
+            <th pSortableColumn="email">電子郵件<p-sortIcon field="email"></p-sortIcon></th>
+            <th pSortableColumn="owner">業務員<p-sortIcon field="owner"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
@@ -43,7 +51,7 @@
   </div>
 </div>
 <form [formGroup]="contact_form">
-  <p-dialog [(visible)]="edit" header={{dialogHeader}}>
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">

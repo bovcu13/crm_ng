@@ -2,14 +2,13 @@ import {Component} from '@angular/core';
 import {HttpApiService} from "../../../api/http-api.service";
 import {Product} from "../../../shared/models/product";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { LazyLoadEvent } from 'primeng/api';
+import {LazyLoadEvent} from 'primeng/api';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
-
 export class ProductComponent {
 
   // product: any[] = [
@@ -57,43 +56,41 @@ export class ProductComponent {
         console.log(error);
       });
   }
+
 //POST 一筆product
   PostOneProduct!: HttpApiService[];
-  postProductRequest(): void{
+  BadRequest: any
+  postProductRequest(): void {
     let body = {
       name: this.product_form.value.name,
       code: this.product_form.value.code,
       is_enable: this.product_form.value.is_enable,
       description: this.product_form.value.description,
       price: this.product_form.value.price,
-      created_by : "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+      created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
     }
     this.HttpApi.postProductRequest(body).subscribe(Request => {
-      this.PostOneProduct = [Request]
+      this.PostOneProduct = Request
       console.log(Request)
-    })
+      this.getAllProductRequest()
+        if (Request.code === 400){
+          this.BadRequest = "識別碼不可重複!!!";
+          this.edit = true;
+        } else if (Request.code === 200) {
+          this.edit = false;
+        }
+    },
+      error => {
+        console.log(error);
+      })
   }
-  // patchProductRequest() {
-  //   let id = this.j_id
-  //   console.log(id)
-  //   let body = {
-  //     kind: this.JigData.kind,
-  //     type: this.JigData.type,
-  //     title: this.JigData.title,
-  //     customer_name: this.JigData.customer_name,
-  //   }
-  //   this.HttpApi.patchJigDemandRequest(id, body)
-  //     .subscribe(Request => {
-  //       console.log('patch date_for_demand: ' + this.JigData.date_for_demand)
-  //       this.PATCHJigDemand = [Request]
-  //       console.log(this.PATCHJigDemand)
-  //     })
-  // }
+
   //取得使用者
   getUserNameById(id: string): string {
     // 取得使用者名稱的邏輯，例如從 API 取得該使用者名稱
     return "林";
   }
+
 //日期轉換
   formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -120,6 +117,7 @@ export class ProductComponent {
       product.price.toString().toLowerCase().includes(this.filterText.toLowerCase())
     );
   }
+
   //懶加載
   totalRecords: any;
   first: any;
@@ -142,10 +140,8 @@ export class ProductComponent {
         this.totalRecords = total;
         this.first = first;
         this.last = last;
-        console.log(this.totalRecords)
-        console.log(this.first)
-        console.log(this.last)
         this.getAllProductRequest()
+        console.log(this.GetAllProduct)
       },
       error => {
         console.log(error);
@@ -158,11 +154,12 @@ export class ProductComponent {
 
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.product_form = this.fb.group({
-      name: ['',[Validators.required]],
+      product_id: [''],
+      name: ['', [Validators.required]],
       series: [''],
       code: [''],
       enable: [false],
-      price: ['',[Validators.required]],
+      price: ['', [Validators.required]],
       description: [''],
       created_at: [''],
       created_by: [''],
@@ -170,10 +167,12 @@ export class ProductComponent {
       updated_by: [''],
     });
   }
-
 //編輯&新增dialog
   edit: boolean = false;
   dialogHeader!: string;
+  p_id: any;
+  //PatchProduct: HttpApiService[] = [];
+  PatchProduct!: Product;
   showedit = true;//判斷是否dialog為新增與編輯
   showDialog(type: string, product ?: any): void {
     this.edit = true;
@@ -185,11 +184,46 @@ export class ProductComponent {
       this.dialogHeader = '新增商品/服務';
       this.product_form.reset();
       this.showedit = false;
+      this.BadRequest = null
     } else if (type === 'edit') {
-      console.log("product: " + JSON.stringify(product))
       this.dialogHeader = '編輯商品/服務';
-      this.product_form.patchValue(product);
+      this.product_form.patchValue(product);//讓編輯按鈕按下時有個別的資料出現
+      this.PatchProduct = product
       this.showedit = true;
+      this.p_id = this.PatchProduct.product_id;
     }
   }
+  Repeated: any;
+  patchProductRequest(p_id: any): void{
+    console.log(p_id)
+      let body = {
+        name: this.product_form.get('name')?.value,
+        code: this.product_form.get('code')?.value,
+        is_enable: this.product_form.get('is_enable')?.value,
+        description: this.product_form.get('description')?.value,
+        price: this.product_form.get('price')?.value,
+        updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a"
+    }
+    this.HttpApi.patchProductRequest(p_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        this.Repeated = Request
+        this.getAllProductRequest()
+          console.log(this.Repeated)
+        if (this.Repeated.code === 400){
+          this.BadRequest = "識別碼不可重複!!!";
+          this.edit = true;
+          this.getAllProductRequest()
+        }else if (this.Repeated.code === 200){
+          this.edit = false
+        }
+      })
+  }
+  deleteProductRequest(p_id: any): void {
+    this.HttpApi.deleteProductRequest(p_id).subscribe(Request => {
+      console.log(Request)
+      this.getAllProductRequest()
+    })
+  }
 }
+
