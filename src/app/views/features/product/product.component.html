@@ -7,20 +7,31 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table  [rowsPerPageOptions]="[5, 10, 15]" [value]="filteredProducts" [paginator]="true" [rows]="5" [totalRecords]="100" [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} entries'">
+      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllProduct" [paginator]="true"
+               [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
+               [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" [(ngModel)]="filterText" (input)="filterproducts()" pInputText
-                  placeholder="輸入關鍵字"></td>
+              <td><input type="text" [(ngModel)]="filterText" (input)="filterProducts()" pInputText
+                         placeholder="輸入關鍵字"></td>
             </span>
           </div>
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name">名稱<p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="code">識別碼<p-sortIcon field="code"></p-sortIcon></th>
-            <th pSortableColumn="describe">描述<p-sortIcon field="describe"></p-sortIcon></th>
+            <th pSortableColumn="name">名稱
+              <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="code">識別碼
+              <p-sortIcon field="code"></p-sortIcon>
+            </th>
+            <th pSortableColumn="price">價格
+              <p-sortIcon field="price"></p-sortIcon>
+            </th>
+            <th pSortableColumn="description">描述
+              <p-sortIcon field="description"></p-sortIcon>
+            </th>
             <!-- <th>系列</th> -->
             <th></th>
           </tr>
@@ -29,13 +40,15 @@
           <tr>
             <td>{{ product.name }}</td>
             <td>{{ product.code }}</td>
-            <td>{{ product.describe }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.description }}</td>
             <!-- <td>{{ product.series }}</td> -->
             <td class="icon-align-right">
               <p-button (click)="showDialog('edit',product)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
-                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash"
-                styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除" tooltipPosition="top"></p-button>
+                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-trash"
+                        styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
+                        tooltipPosition="top" (click)="deleteProductRequest(product.product_id)"></p-button>
             </td>
           </tr>
         </ng-template>
@@ -50,7 +63,16 @@
         <div class="field">
           <label><span class="required-star">*</span>商品/服務名稱</label>
           <input pInputText formControlName="name"
-            [ngClass]="{'ng-dirty':product_form.controls['name'].hasError && product_form.controls['name'].touched}">
+                 [ngClass]="{'ng-dirty':product_form.controls['name'].hasError && product_form.controls['name'].touched}">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label><span class="required-star">*</span>價錢</label>
+          <br>
+          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="price" [minFractionDigits]="0"
+                         [ngClass]="{'ng-dirty':product_form.controls['price'].hasError && product_form.controls['price'].touched}">
+          </p-inputNumber>
         </div>
       </div>
       <div class="col-6">
@@ -71,19 +93,13 @@
         <div class="field">
           <label>識別碼</label>
           <input pInputText formControlName="code">
+          <small *ngIf="BadRequest" style="color: red">{{BadRequest}}</small>
         </div>
       </div>
-      <!-- <div class="col-6">
-        <div class="field">
-          <label>已啟用</label>
-          <br>
-          <p-checkbox formControlName="enable" value="enable" [binary]="true"></p-checkbox>
-        </div>
-      </div> -->
       <div class="col-12">
         <div class="field">
           <label>描述</label>
-          <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
+          <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
       <div class="col-6">
@@ -98,13 +114,18 @@
         <label>上次修改者：</label>
         <br>
         <div class="mt-3 field">
-        <label class="disable">{{(product_form.controls['updated_by'].value)}}</label>
-        <label class="ml-2 disable">{{(product_form.controls['updated_at'].value)}}</label>
+          <label class="disable">{{(product_form.controls['updated_by'].value)}}</label>
+          <label class="ml-2 disable">{{(product_form.controls['updated_at'].value)}}</label>
         </div>
       </div>
     </div>
     <div class="flex justify-content-end">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      <ng-container *ngIf="!showedit">
+        <p-button label="新增" (click)="postProductRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="showedit">
+        <p-button label="儲存" (click)="patchProductRequest(p_id)" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
