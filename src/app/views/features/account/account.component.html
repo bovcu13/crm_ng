@@ -69,7 +69,7 @@
         <div class="field">
           <label>帳戶類別</label>
           <br>
-          <label>{{accountType}}</label>
+          <label>{{(account_form.controls['type'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -88,17 +88,17 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>類型</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"
-                      (onChange)="typeValue($event)"
-                      formControlName="type" appendTo="body"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
           <label>父系帳戶</label>
           <p-dropdown placeholder="請選擇" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
         </div>
+      </div>
+      <div class="col-6">
+        <!--        <div class="field">-->
+        <!--          <label>類型</label>-->
+        <!--          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"-->
+        <!--                      (onChange)="typeValue($event)"-->
+        <!--                      formControlName="type" appendTo="body"></p-dropdown>-->
+        <!--        </div>-->
       </div>
       <div class="col-6">
         <label>建立者：</label>

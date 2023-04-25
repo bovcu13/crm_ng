@@ -15,7 +15,7 @@ export class AccountComponent implements OnInit {
       "owner": "林",
       "phone_number": "0912345678",
       "industry": "金融服務",
-      "type": "夥伴",
+      "type": "個人帳戶",
       "parent_account": "NKUST",
       "created_by": "林",
       "updated_by": "林",
@@ -26,7 +26,7 @@ export class AccountComponent implements OnInit {
       "owner": "林",
       "phone_number": "0987654321",
       "industry": "零售業",
-      "type": "對手",
+      "type": "法人帳戶",
       "parent_account": "NKUST",
       "created_by": "林",
       "updated_by": "林",
@@ -47,29 +47,29 @@ export class AccountComponent implements OnInit {
       "code": "telecommunications"
     }
   ]
-  type: any[] = [
-    {
-      "name": "客戶",
-      "code": "customer"
-    },
-    {
-      "name": "夥伴",
-      "code": "partner "
-    },
-    {
-      "name": "競爭對手",
-      "code": "competitor"
-    }
-  ];
+  // type: any[] = [
+  //   {
+  //     "name": "客戶",
+  //     "code": "customer"
+  //   },
+  //   {
+  //     "name": "夥伴",
+  //     "code": "partner "
+  //   },
+  //   {
+  //     "name": "競爭對手",
+  //     "code": "competitor"
+  //   }
+  // ];
 
-  accountType!: string;
   account_type: MenuItem[] = [
     {
       label: "個人帳戶",
       icon: "pi pi-user",
       command: () => {
         this.showDialog('add');
-        this.accountType = "個人帳戶";
+        this.account_form.controls['type'].setValue('個人帳戶');
+        console.log(this.account_form.controls['type'].value)
       }
     },
     {
@@ -77,7 +77,8 @@ export class AccountComponent implements OnInit {
       icon: "pi pi-building",
       command: () => {
         this.showDialog('add');
-        this.accountType = "法人帳戶";
+        this.account_form.controls['type'].setValue('法人帳戶');
+        console.log(this.account_form.controls['type'].value)
       }
     }
   ]
@@ -99,6 +100,7 @@ export class AccountComponent implements OnInit {
   }
 
   filterText: any = '';
+
   filter() {
     if (this.filterText === '') {
       this.filteredAccount = this.account;
@@ -138,12 +140,12 @@ export class AccountComponent implements OnInit {
       this.account_form.patchValue(account);
       //dropdown
       const selectedIndustry = this.industry.find((s) => s.name === account.industry);
-      const selectedType = this.type.find((s) => s.name === account.type);
+      // const selectedType = this.type.find((s) => s.name === account.type);
       //更新時間為現在時間
       const currentDate = new Date()
       this.account_form.patchValue({
         industry: selectedIndustry,
-        type: selectedType,
+        // type: selectedType,
         updated_at: currentDate
       });
     }
@@ -155,10 +157,10 @@ export class AccountComponent implements OnInit {
     console.log(selectedIndustry.name);
   }
 
-  typeValue(event: any): void {
-    const selectedType = this.type.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedType.name);
-  }
+  // typeValue(event: any): void {
+  //   const selectedType = this.type.find((s: { code: any; }) => s.code === event.value.code);
+  //   console.log(event.value.code);
+  //   console.log(selectedType.name);
+  // }
 
 }
