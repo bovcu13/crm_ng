@@ -8,6 +8,7 @@ import {MenuItem} from "primeng/api";
   styleUrls: ['./lead.component.scss']
 })
 export class LeadComponent implements OnInit {
+  filteredLead: any[] = [];
   lead: any[] = [
     {
       name: "David",
@@ -16,7 +17,7 @@ export class LeadComponent implements OnInit {
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
-      line: "@12345",
+      line: "@11111",
       company_name: "EIRC"
     },
     {
@@ -26,7 +27,7 @@ export class LeadComponent implements OnInit {
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
-      line: "@12345",
+      line: "@12222",
       company_name: "EIRC"
     },
     {
@@ -36,7 +37,7 @@ export class LeadComponent implements OnInit {
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
-      line: "@12345",
+      line: "@12333",
       company_name: "EIRC"
     },
     {
@@ -46,7 +47,7 @@ export class LeadComponent implements OnInit {
       email: "abc@gmail.com",
       phone_number: "07-1234567",
       cell_phone: "0912345678",
-      line: "@12345",
+      line: "@12344",
       company_name: "EIRC"
     },
     {
@@ -207,8 +208,30 @@ export class LeadComponent implements OnInit {
     this.leadValue = lead
   }
 
-  ngOnInit(): void {
+  filterText: any = '';
 
+  filtered() {
+    if (this.filterText === '') {
+      this.filteredLead = this.lead;
+    } else {
+      this.filteredLead = this.lead.filter(lead => {
+        return (
+          lead.status.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          lead.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          lead.company_name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          lead.phone_number.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          lead.cell_phone.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          lead.email.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          lead.line.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          lead.owner.toLowerCase().includes(this.filterText.toLowerCase())
+        );
+      });
+    }
+    console.log(this.filteredLead)
+  }
+
+  ngOnInit(): void {
+    this.filteredLead = this.lead
   }
 
   showDialog(type: string, lead?: any): void {
