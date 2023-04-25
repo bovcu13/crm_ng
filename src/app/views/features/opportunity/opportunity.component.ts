@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-opportunity',
   templateUrl: './opportunity.component.html',
   styleUrls: ['./opportunity.component.scss']
 })
-export class OpportunityComponent {
+export class OpportunityComponent implements OnInit {
+  filteredOpportunity: any[] = [];
   opportunity: any[] = [
     {
       "account_name": "David",
@@ -43,7 +44,7 @@ export class OpportunityComponent {
     {
       "account_name": "David",
       "name": "David - Acme",
-      "close_date": "2023-05-12",
+      "close_date": "2023-05-11",
       "stage": "資格評估",
       "forecast_category": "預期銷售",
       "owner": "林"
@@ -110,6 +111,7 @@ export class OpportunityComponent {
   ]
 
   opportunity_form: FormGroup;
+
   constructor(private fb: FormBuilder) {
     this.opportunity_form = this.fb.group({
       account_name: ['', [Validators.required]],
@@ -126,8 +128,32 @@ export class OpportunityComponent {
     });
   }
 
+  filterText: any = '';
+
+  filtered() {
+    if (this.filterText === '') {
+      this.filteredOpportunity = this.opportunity;
+    } else {
+      this.filteredOpportunity = this.opportunity.filter(opportunity => {
+        return (
+          opportunity.stage.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          opportunity.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          opportunity.account_name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          opportunity.close_date.toLowerCase().includes(this.filterText.toLowerCase()) ||
+          opportunity.owner.toLowerCase().includes(this.filterText.toLowerCase())
+        );
+      });
+    }
+    console.log(this.filteredOpportunity)
+  }
+
+  ngOnInit() {
+    this.filteredOpportunity = this.opportunity
+  }
+
   edit: boolean = false;
   dialogHeader!: string;
+
   showDialog(type: string, opportunity?: any): void {
     this.edit = true;
     if (type === 'add') {
@@ -148,11 +174,13 @@ export class OpportunityComponent {
       });
     }
   }
+
   stageValue(event: any): void {
     const selectedStage = this.stage.find((s) => s.code === event.value.code);
     console.log(event.value.code);
     console.log(selectedStage.code);
   }
+
   forecast_categoryValue(event: any): void {
     const selectedForecastCategory = this.forecast_category.find((s) => s.code === event.value.code);
     console.log(event.value.code);
