@@ -22,7 +22,15 @@
         </span>
         </div>
       </div>
-      <p-table [value]="opportunity">
+      <p-table [value]="filteredOpportunity">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <span class="p-input-icon-left ml-auto">
+              <td><input type="text" [(ngModel)]="filterText" (input)="filtered()" pInputText
+                         placeholder="輸入關鍵字"></td>
+            </span>
+          </div>
+        </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="stage">狀態<p-sortIcon field="stage"></p-sortIcon></th>
