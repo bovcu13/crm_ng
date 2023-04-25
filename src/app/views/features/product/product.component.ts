@@ -71,7 +71,6 @@ export class ProductComponent {
     }
     this.HttpApi.postProductRequest(body).subscribe(Request => {
       this.PostOneProduct = Request
-      console.log(Request)
       this.getAllProductRequest()
         if (Request.code === 400){
           this.BadRequest = "識別碼不可重複!!!";
@@ -173,9 +172,11 @@ export class ProductComponent {
   p_id: any;
   //PatchProduct: HttpApiService[] = [];
   PatchProduct!: Product;
+  originalProduct: Product | null = null;// 宣告一個原始的 Product 物件，並將其初始化為 null
   showedit = true;//判斷是否dialog為新增與編輯
   showDialog(type: string, product ?: any): void {
     this.edit = true;
+    this.BadRequest = null
     this.product_form.controls['created_by'].disable();
     this.product_form.controls['updated_by'].disable();
     this.product_form.controls['created_at'].disable();
@@ -184,36 +185,47 @@ export class ProductComponent {
       this.dialogHeader = '新增商品/服務';
       this.product_form.reset();
       this.showedit = false;
-      this.BadRequest = null
     } else if (type === 'edit') {
       this.dialogHeader = '編輯商品/服務';
       this.product_form.patchValue(product);//讓編輯按鈕按下時有個別的資料出現
       this.PatchProduct = product
+      this.originalProduct = product;// 當編輯對話框開啟時，設定原始的 Product 物件
       this.showedit = true;
       this.p_id = this.PatchProduct.product_id;
     }
   }
-  Repeated: any;
+  Repeated: any; //判斷是否重複
   patchProductRequest(p_id: any): void{
+    const updatedFields: any = {};
     console.log(p_id)
       let body = {
         name: this.product_form.get('name')?.value,
-        code: this.product_form.get('code')?.value,
         is_enable: this.product_form.get('is_enable')?.value,
         description: this.product_form.get('description')?.value,
         price: this.product_form.get('price')?.value,
-        updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a"
+        updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+        code: undefined
     }
+
+    // 如果原始的 Product 物件存在，而且 code 已經被修改了
+    if (this.originalProduct && this.originalProduct.code !== this.product_form.value.code) {
+      // 將更新的 code 加入到 Body 中
+      updatedFields.code = this.product_form.value.code;
+      body.code = updatedFields.code;
+    }
+    // if(this.PatchProduct.code !== this.product_form.get('code')?.value){
+    //   body.code = this.product_form.get('code')?.value;
+    // } else {
+    //   delete body.code;
+    // }
     this.HttpApi.patchProductRequest(p_id, body).subscribe(
       Request => {
-        console.log(Request)
         this.Repeated = Request
+        console.log(this.Repeated)
         this.getAllProductRequest()
-          console.log(this.Repeated)
         if (this.Repeated.code === 400){
           this.BadRequest = "識別碼不可重複!!!";
           this.edit = true;
-          this.getAllProductRequest()
         }else if (this.Repeated.code === 200){
           this.edit = false
         }
