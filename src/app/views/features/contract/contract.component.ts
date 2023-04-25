@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {HttpApiService} from "../../../api/http-api.service";
+import {LazyLoadEvent} from 'primeng/api';
 
 @Component({
   selector: 'app-contract',
@@ -7,54 +9,49 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./contract.component.scss']
 })
 export class ContractComponent {
-  filteredContracts: any[] = [];
-  contract: any[] = [
-    {
-      "owner": "林",
-      "number": "00001",
-      "account_name": "milk",
-      "status": "草稿",
-      "start_date": "2023-04-09",
-      "term": 1,
-      "created_at": "2023-03-15",
-      "created_by": "林",
-      "updated_by": "林",
-    },
-    {
-      "owner": "林",
-      "number": "00002",
-      "account_name": "nkust",
-      "status": "審批中",
-      "start_date": "2023-02-15",
-      "term": 7,
-      "created_at": "2023-02-05",
-      "created_by": "林",
-      "updated_by": "林",
+  // contract: any[] = [
+  //   {
+  //     "owner": "林",
+  //     "number": "00001",
+  //     "account_name": "milk",
+  //     "status": "草稿",
+  //     "start_date": "2023-04-09",
+  //     "term": 1,
+  //     "created_at": "2023-03-15",
+  //     "created_by": "林",
+  //     "updated_by": "林",
+  //   },
+  //   {
+  //     "owner": "林",
+  //     "number": "00002",
+  //     "account_name": "nkust",
+  //     "status": "審批中",
+  //     "start_date": "2023-02-15",
+  //     "term": 7,
+  //     "created_at": "2023-02-05",
+  //     "created_by": "林",
+  //     "updated_by": "林",
+  //   }
+  // ];
+  //搜尋功能
+  filterText: any;
+  filtercontracts(): void {
+    if (!this.filterText) {
+      this.getAllContractRequest()
+      return;
     }
-  ];
-
-  filterText: any = '';
-  filtercontracts() {
-    if (this.filterText === '') {
-      this.filteredContracts = this.contract;
-    } else {
-      this.filteredContracts = this.contract.filter(contract => {
-        return (
-          contract.number.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contract.owner.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contract.account_name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contract.status.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contract.start_date.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contract.term.toString().toLowerCase().includes(this.filterText.toLowerCase())
-        );
-      });
-    }
-    console.log(this.filteredContracts)
+    this.GetAllContract = this.GetAllContract.filter(contract =>
+      contract.code.toString().toLowerCase().includes(this.filterText.toLowerCase()) ||
+      contract.account_id.toLowerCase().includes(this.filterText.toLowerCase()) ||
+      contract.description.toLowerCase().includes(this.filterText.toLowerCase()) ||
+      contract.status.toLowerCase().includes(this.filterText.toLowerCase()) ||
+      contract.start_date.toLowerCase().includes(this.filterText.toLowerCase()) ||
+      contract.term.toString().toLowerCase().includes(this.filterText.toLowerCase()) ||
+      this.calculateEndDate(contract.start_date, contract.term)
+        .toLowerCase()
+        .includes(this.filterText.toLowerCase())
+    );
   }
-  ngOnInit() {
-    this.filteredContracts = this.contract;
-  }
-
   //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -90,25 +87,37 @@ export class ContractComponent {
       code: "contract_terminated",
     },
   ]
-  //換算契約結束日期
-  calculateEndDate(startDate: string, term: number): string {
-    const start = new Date(startDate);
-    const end = new Date(start.getFullYear(), start.getMonth() + term, start.getDate());
-    return end.toISOString().slice(0, 10);
+  ngOnInit() {
+    this.getAllContractRequest()
   }
+    //GET全部contract
+    GetAllContract!: HttpApiService[];
+    getAllContractRequest(){
+      this.HttpApi.getAllContractRequest(1).subscribe(res => {
+          this.GetAllContract = res.body.contracts;
+          this.GetAllContract = res.body.contracts.map((contract: any) => {
+            const start_date = this.formatDate2(contract.start_date)
+            const created_by = this.getUserNameById(contract.created_by);
+            const updated_by = this.getUserNameById(contract.updated_by);
+            const created_at = this.formatDate(contract.created_at);
+            const updated_at = this.formatDate(contract.updated_at);
+            return {...contract,start_date, created_by, updated_by, created_at, updated_at};
+          });
+        },
+        error => {
+          console.log(error);
+        });
+    }
 
-  //偵測status變量
-  onStatusChange(event: any) {
-    console.log("狀態選擇status: " + event.value.code + event.value.name);
-  }
 
   //建立formgroup
   contract_form: FormGroup;
-  constructor(private fb: FormBuilder) {
+  constructor(private HttpApi: HttpApiService,private fb: FormBuilder) {
     this.contract_form = this.fb.group({
+      contract_id: [''],
       owner: [''],
-      number: [''],
-      account_name: ['', [Validators.required]],
+      code: [''],
+      account_id: ['', [Validators.required]],
       status: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
       term: ['', [Validators.required]],
@@ -128,7 +137,7 @@ export class ContractComponent {
   showDialog(type: string, contract?: any): void {
     this.edit = true;
     this.contract_form.controls['owner'].disable();
-    this.contract_form.controls['number'].disable();
+    this.contract_form.controls['code'].disable();
     this.contract_form.controls['created_by'].disable();
     this.contract_form.controls['updated_by'].disable();
     this.contract_form.controls['created_at'].disable();
@@ -149,6 +158,47 @@ export class ContractComponent {
       // 綁定已經選擇的狀態
       this.selectedStatus = this.status.find(s => s.name === contract.status);
     }
+  }
+  //懶加載
+  totalRecords: any;
+  loadPostsLazy(event: LazyLoadEvent) {
+    const page = (event.first! / event.rows!) + 1;
+    this.HttpApi.getAllContractRequest(page).subscribe(request => {
+      this.totalRecords = request.body.total;
+      this.getAllContractRequest()
+      console.log(this.GetAllContract);
+    });
+  }
+
+  //取得使用者
+  getUserNameById(id: string): string {
+    // 取得使用者名稱的邏輯，例如從 API 取得該使用者名稱
+    return "林";
+  }
+
+//日期轉換
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const hour = ("0" + date.getHours()).slice(-2);
+    const minute = ("0" + date.getMinutes()).slice(-2);
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+  }
+  formatDate2(dateString2: string): string {
+    const date = new Date(dateString2);
+    const start_date = new Date(date.getFullYear(), date.getMonth() , date.getDate());
+    return start_date.toISOString().slice(0, 10);
+  }
+  calculateEndDate(startDate: string, term: number): string {
+    const start = new Date(startDate);
+    const end = new Date(start.getFullYear(), start.getMonth() + term, start.getDate());
+    return end.toISOString().slice(0, 10);
+  }
+  //偵測status變量
+  onStatusChange(event: any) {
+    console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
 }
 

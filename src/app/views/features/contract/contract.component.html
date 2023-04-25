@@ -7,7 +7,8 @@
           <p-button icon="pi pi-plus" (click)="showDialog('add')" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="filteredContracts" [paginator]="true" [rows]="5" [totalRecords]="100" [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} entries'">
+      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
+               [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -18,11 +19,11 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="number">號碼
-              <p-sortIcon field="number"></p-sortIcon>
+            <th pSortableColumn="code">號碼
+              <p-sortIcon field="code"></p-sortIcon>
             </th>
-            <th pSortableColumn="account_name">帳戶
-              <p-sortIcon field="account_name"></p-sortIcon>
+            <th pSortableColumn="account_id">帳戶
+              <p-sortIcon field="account_id"></p-sortIcon>
             </th>
             <th pSortableColumn="status">狀態
               <p-sortIcon field="status"></p-sortIcon>
@@ -41,8 +42,8 @@
         </ng-template>
         <ng-template pTemplate="body" let-contract>
           <tr>
-            <td>{{ contract.number }}</td>
-            <td>{{ contract.account_name }}</td>
+            <td>{{ contract.code }}</td>
+            <td>{{ contract.account_id }}</td>
             <td>{{ contract.status }}</td>
             <td>{{ contract.start_date }}</td>
             <td>{{ calculateEndDate(contract.start_date, contract.term) }}</td>
@@ -67,21 +68,21 @@
         <div class="field">
           <label>業務</label>
           <br>
-          <label class="mt-2 ml-2 disable">{{(contract_form.controls['owner'].value)}}</label>
+<!--          <label class="mt-2 ml-2 disable">{{(contract_form.controls['owner'].value)}}</label>-->
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>號碼</label>
           <br>
-          <label class="mt-2 ml-2 disable">{{(contract_form.controls['number'].value)}}</label>
+<!--          <label class="mt-2 ml-2 disable">{{(contract_form.controls['code'].value)}}</label>-->
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>帳戶</label>
-          <input type="text" pInputText formControlName="account_name"
-                 [ngClass]="{'ng-dirty':contract_form.controls['account_name'].hasError && contract_form.controls['account_name'].touched}">
+          <input type="text" pInputText formControlName="account_id"
+                 [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError && contract_form.controls['account_id'].touched}">
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">

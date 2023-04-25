@@ -42,6 +42,15 @@ export class HttpApiService {
     return this.http.delete<Product>(url);
   }
 
-
-
+  //--契約---------------------------------------------------------------------------------------------------
+  account_id: any;
+  status: any;
+  start_date: any;
+  end_date: any;
+  term: any;
+  //取得所有契約
+  getAllContractRequest(page: number): Observable<any> {
+    const url = this.BaseUrl + '/contracts' + '?page=' + page + '&limit=20';
+    return this.http.get<any>(url);
+  }
 }
