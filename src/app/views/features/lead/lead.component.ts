@@ -160,6 +160,21 @@ export class LeadComponent implements OnInit {
       code: "cold"
     }
   ]
+
+  industry: any[] = [
+    {
+      "name": "零售業",
+      "code": "retail"
+    },
+    {
+      "name": "技術",
+      "code": "technology "
+    },
+    {
+      "name": "通訊",
+      "code": "telecommunications"
+    }
+  ]
   leadValue: any;
   //表格最後下拉控制選項
   items: MenuItem[] = [{
@@ -177,8 +192,30 @@ export class LeadComponent implements OnInit {
       icon: "pi pi-trash",
       label: '刪除',
     }];
+  account_type: MenuItem[] = [
+    {
+      label: "個人帳戶",
+      icon: "pi pi-user",
+      command: () => {
+        this.addAccDialog();
+        this.account_form.controls['type'].setValue('個人帳戶');
+        console.log(this.account_form.controls['type'].value)
+      }
+    },
+    {
+      label: "法人帳戶",
+      icon: "pi pi-building",
+      command: () => {
+        this.addAccDialog();
+        this.account_form.controls['type'].setValue('法人帳戶');
+        console.log(this.account_form.controls['type'].value)
+      }
+    }
+  ]
   lead_form!: FormGroup;
+  account_form!: FormGroup;
   edit: boolean = false;
+  addAcount: boolean = false;
   dialogHeader!: string;
 
   constructor(private fb: FormBuilder) {
@@ -201,6 +238,18 @@ export class LeadComponent implements OnInit {
       created_at: [''],
       updated_by: [''],
       updated_at: [''],
+    });
+    this.account_form = this.fb.group({
+      name: ['', [Validators.required]],
+      owner: [''],
+      phone_number: [''],
+      industry: [''],
+      type: [''],
+      parent_account: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: ['', Validators.required],
+      updated_by: ['', Validators.required],
     });
   }
 
@@ -260,6 +309,11 @@ export class LeadComponent implements OnInit {
     }
   }
 
+  addAccDialog(): void {
+    this.addAcount = true;
+    this.edit = false;
+  }
+
   statusValue(event: any): void {
     // const selectedStatus = this.status.find((s) => s.code === event.value.code);
     console.log("code: " + event.value.code);
@@ -285,5 +339,11 @@ export class LeadComponent implements OnInit {
   industry_idValue(event: any): void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
+  }
+
+  industryValue(event: any): void {
+    const selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
+    console.log(event.value.code);
+    console.log(selectedIndustry.name);
   }
 }
