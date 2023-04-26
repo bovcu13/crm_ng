@@ -105,16 +105,27 @@ export class ProductComponent {
   filterText: any;
   filterProducts(): void {
     if (!this.filterText) {
-      this.getAllProductRequest()
+      this.getAllProductRequest();
       return;
     }
-    this.GetAllProduct = this.GetAllProduct.filter(product =>
-      product.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-      product.code.toLowerCase().includes(this.filterText.toLowerCase()) ||
-      product.description.toLowerCase().includes(this.filterText.toLowerCase()) ||
-      (product.enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase()) ||
-      product.price.toString().toLowerCase().includes(this.filterText.toLowerCase())
-    );
+    // 使用 Array 的 filter() 方法對 GetAllProduct 進行過濾
+    this.GetAllProduct = this.GetAllProduct.filter((product) => {
+      // 將所有要比對的欄位轉成小寫字母
+      const name = product.name?.toLowerCase() || '';
+      const code = product.code?.toLowerCase() || '';
+      const description = product.description?.toLowerCase() || '';
+      const price = product.price?.toString().toLowerCase() || '';
+
+      // 比對是否有任何一個欄位包含搜尋文字
+      return (
+        name.includes(this.filterText.toLowerCase()) ||
+        code.includes(this.filterText.toLowerCase()) ||
+        description.includes(this.filterText.toLowerCase()) ||
+        price.includes(this.filterText.toLowerCase()) ||
+        (product.enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
+      );
+    });
+    console.log(this.GetAllProduct)
   }
 
   //懶加載
@@ -204,20 +215,7 @@ export class ProductComponent {
         description: this.product_form.get('description')?.value,
         price: this.product_form.get('price')?.value,
         updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
-        code: undefined
     }
-
-    // 如果原始的 Product 物件存在，而且 code 已經被修改了
-    if (this.originalProduct && this.originalProduct.code !== this.product_form.value.code) {
-      // 將更新的 code 加入到 Body 中
-      updatedFields.code = this.product_form.value.code;
-      body.code = updatedFields.code;
-    }
-    // if(this.PatchProduct.code !== this.product_form.get('code')?.value){
-    //   body.code = this.product_form.get('code')?.value;
-    // } else {
-    //   delete body.code;
-    // }
     this.HttpApi.patchProductRequest(p_id, body).subscribe(
       Request => {
         this.Repeated = Request
