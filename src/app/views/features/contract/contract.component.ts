@@ -34,23 +34,37 @@ export class ContractComponent {
   //   }
   // ];
   //搜尋功能
-  filterText: any;
-  filtercontracts(): void {
+
+  filterText!: string;  // 定義一個 filterText 變數來儲存搜尋文字
+// 定義一個方法來過濾資料
+  filterContracts(): void {
+    // 如果沒有輸入搜尋文字，就直接返回原始資料
     if (!this.filterText) {
-      this.getAllContractRequest()
+      this.getAllContractRequest();
       return;
     }
-    this.GetAllContract = this.GetAllContract.filter(contract =>
-      contract.code.toString().toLowerCase().includes(this.filterText.toLowerCase()) ||
-      contract.account_id.toLowerCase().includes(this.filterText.toLowerCase()) ||
-      contract.description.toLowerCase().includes(this.filterText.toLowerCase()) ||
-      contract.status.toLowerCase().includes(this.filterText.toLowerCase()) ||
-      contract.start_date.toLowerCase().includes(this.filterText.toLowerCase()) ||
-      contract.term.toString().toLowerCase().includes(this.filterText.toLowerCase()) ||
-      this.calculateEndDate(contract.start_date, contract.term)
-        .toLowerCase()
-        .includes(this.filterText.toLowerCase())
-    );
+    // 使用 Array 的 filter() 方法對 GetAllContract 進行過濾
+    this.GetAllContract = this.GetAllContract.filter((contract) => {
+      // 將所有要比對的欄位轉成小寫字母
+      const code = contract.code.toString().toLowerCase();
+      const description = contract.description.toLowerCase();
+      const status = contract.status.toLowerCase();
+      const start_date = contract.start_date.toLowerCase();
+      const term = contract.term.toString().toLowerCase();
+
+      // 比對是否有任何一個欄位包含搜尋文字
+      return (
+        code.includes(this.filterText.toString().toLowerCase()) ||
+        description.includes(this.filterText.toLowerCase()) ||
+        status.includes(this.filterText.toLowerCase()) ||
+        start_date.includes(this.filterText.toLowerCase()) ||
+        this.calculateEndDate(contract.start_date, contract.term)
+          .toLowerCase()
+          .includes(this.filterText.toLowerCase()) ||
+        term.includes(this.filterText.toString().toLowerCase())
+      );
+    });
+    console.log(this.GetAllContract)
   }
   //p-dropdown status的下拉值
   status: any[] = [
