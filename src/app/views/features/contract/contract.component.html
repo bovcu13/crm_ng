@@ -7,7 +7,7 @@
           <p-button icon="pi pi-plus" (click)="showDialog('add')" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
+      <p-table  [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
                [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)">
         <ng-template pTemplate="caption">
           <div class="flex">
@@ -68,7 +68,7 @@
         <div class="field">
           <label>業務</label>
           <br>
-<!--          <label class="mt-2 ml-2 disable">{{(contract_form.controls['owner'].value)}}</label>-->
+          <label class="mt-2 ml-2">待完成</label>
         </div>
       </div>
       <div class="col-6">
@@ -137,9 +137,14 @@
         </div>
       </div>
     </div>
-    <ng-template pTemplate="footer">
-      <p-button label="新增" (click)="edit = false" styleClass="p-button-outlined p-button-info"></p-button>
-      <p-button label="取消" (click)="edit = false" styleClass="p-button-secondary ms-1"></p-button>
-    </ng-template>
+    <div class="flex justify-content-end">
+      <ng-container *ngIf="!showedit">
+        <p-button label="新增" (click)="postContractRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="showedit">
+        <p-button label="儲存"  styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
+    </div>
   </p-dialog>
 </form>

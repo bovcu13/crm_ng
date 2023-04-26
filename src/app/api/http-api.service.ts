@@ -50,7 +50,12 @@ export class HttpApiService {
   term: any;
   //取得所有契約
   getAllContractRequest(page: number): Observable<any> {
-    const url = this.BaseUrl + '/contracts' + '?page=' + page + '&limit=20';
+    const url = this.BaseUrl + '/contracts' + '?page=' + page + '&limit=5';
     return this.http.get<any>(url);
+  }
+  //新增 契約 post
+  postContractRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/contracts`;
+    return this.http.post<any>(url, body);
   }
 }

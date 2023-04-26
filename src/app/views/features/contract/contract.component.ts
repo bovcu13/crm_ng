@@ -107,8 +107,8 @@ export class ContractComponent {
     //GET全部contract
     GetAllContract!: HttpApiService[];
     getAllContractRequest(){
-      this.HttpApi.getAllContractRequest(1).subscribe(res => {
-          this.GetAllContract = res.body.contracts;
+      this.HttpApi.getAllContractRequest(this.page).subscribe(res => {
+          // this.GetAllContract = res.body.contracts;
           this.GetAllContract = res.body.contracts.map((contract: any) => {
             const start_date = this.formatDate2(contract.start_date)
             const created_by = this.getUserNameById(contract.created_by);
@@ -117,12 +117,33 @@ export class ContractComponent {
             const updated_at = this.formatDate(contract.updated_at);
             return {...contract,start_date, created_by, updated_by, created_at, updated_at};
           });
+          console.log(this.GetAllContract)
         },
         error => {
           console.log(error);
         });
     }
-
+//POST 一筆contract
+  PostOneContract!: HttpApiService[];
+  postContractRequest(): void {
+    let body = {
+      account_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+      code: this.contract_form.value.code,
+      status: this.contract_form.value.status,
+      description: this.contract_form.value.description,
+      start_date: this.contract_form.value.start_date,
+      term: this.contract_form.value.term,
+      created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+    }
+    this.HttpApi.postContractRequest(body).subscribe(Request => {
+        this.PostOneContract = Request
+        this.getAllContractRequest()
+      },
+      error => {
+        console.log(error);
+      })
+    console.log(Request)
+  }
 
   //建立formgroup
   contract_form: FormGroup;
@@ -175,9 +196,10 @@ export class ContractComponent {
   }
   //懶加載
   totalRecords: any;
+  page!: number
   loadPostsLazy(event: LazyLoadEvent) {
-    const page = (event.first! / event.rows!) + 1;
-    this.HttpApi.getAllContractRequest(page).subscribe(request => {
+    this.page = (event.first! / event.rows!) + 1;
+    this.HttpApi.getAllContractRequest(this.page).subscribe(request => {
       this.totalRecords = request.body.total;
       this.getAllContractRequest()
       console.log(this.GetAllContract);
