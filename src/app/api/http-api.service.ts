@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http'; //http協定
 import { Product} from "../shared/models/product";
+import { Contract} from "../shared/models/contract";
 import { Observable} from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,17 @@ export class HttpApiService {
   constructor(
     private http: HttpClient,
   ) { }
+  //--帳戶---------------------------------------------------------------------------------------------------
+  getAllAccountRequest(page: number): Observable<any> {
+    const url = this.BaseUrl + '/accounts' + '?page=' + page + '&limit=20';
+    return this.http.get<any>(url);
+  }
+  //--使用者---------------------------------------------------------------------------------------------------
+  getAllUserRequest(page: number): Observable<any> {
+    const url = this.BaseUrl + '/users' + '?page=' + page + '&limit=20';
+    return this.http.get<any>(url);
+  }
+
   //--商品/服務---------------------------------------------------------------------------------------------------
   name: any;
   code: any;
@@ -50,12 +62,21 @@ export class HttpApiService {
   term: any;
   //取得所有契約
   getAllContractRequest(page: number): Observable<any> {
-    const url = this.BaseUrl + '/contracts' + '?page=' + page + '&limit=5';
+    const url = this.BaseUrl + '/contracts' + '?page=' + page + '&limit=20';
     return this.http.get<any>(url);
   }
   //新增 契約 post
   postContractRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/contracts`;
     return this.http.post<any>(url, body);
+  }
+  //修改 契約 patch
+  patchContractRequest(sid: string, body: any): Observable<Contract> {
+    const url = `${this.BaseUrl}/contracts/${sid}`;
+    return this.http.patch<Contract>(url, body);
+  }
+  deleteContractRequest(sid: string): Observable<Product> {
+    const url = `${this.BaseUrl}/contracts/${sid}`;
+    return this.http.delete<Product>(url);
   }
 }

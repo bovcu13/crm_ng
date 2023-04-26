@@ -52,7 +52,7 @@
               <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash"
+              <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             </td>
           </tr>
@@ -68,35 +68,37 @@
         <div class="field">
           <label>業務</label>
           <br>
-          <label class="mt-2 ml-2">待完成</label>
+          <label class="mt-2 ml-2">{{(contract_form.controls['updated_by'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>號碼</label>
           <br>
-<!--          <label class="mt-2 ml-2 disable">{{(contract_form.controls['code'].value)}}</label>-->
+          <label class="mt-2 ml-2 disable">{{(contract_form.controls['code'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>帳戶</label>
-          <input type="text" pInputText formControlName="account_id"
-                 [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError && contract_form.controls['account_id'].touched}">
+          <p-dropdown [options]="Object.values(GetAllAccount)" [formControlName]="'account_id'" [(ngModel)]="selectedAccount_id"
+                      [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError && contract_form.controls['account_id'].touched}"></p-dropdown>
+
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
           <br>
-          <label class="mt-2 ml-2" [textContent]="contract_form.controls['status'].value"></label>
+          <label class="mt-2 ml-2">{{(contract_form.controls['status'].value)}}</label>
         </div>
       </div>
       <div class="col-6" *ngIf="showedit">
         <div class="field">
-          <label>狀態</label>
+          <label><span class="required-star">*</span>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
-            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
+            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus" name="status"
+                      [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError && contract_form.controls['status'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -142,7 +144,7 @@
         <p-button label="新增" (click)="postContractRequest()" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="showedit">
-        <p-button label="儲存"  styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchContractRequest(c_id)"  styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
