@@ -7,12 +7,12 @@
           <p-button icon="pi pi-plus" (click)="showDialog('add')" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
+      <p-table  [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
                [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" [(ngModel)]="filterText" (input)="filtercontracts()" pInputText
+              <td><input type="text" [(ngModel)]="filterText" (input)="filterContracts()" pInputText
                   placeholder="輸入關鍵字"></td>
             </span>
           </div>
@@ -52,7 +52,7 @@
               <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash"
+              <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             </td>
           </tr>
@@ -68,35 +68,37 @@
         <div class="field">
           <label>業務</label>
           <br>
-<!--          <label class="mt-2 ml-2 disable">{{(contract_form.controls['owner'].value)}}</label>-->
+          <label class="mt-2 ml-2">{{(contract_form.controls['updated_by'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>號碼</label>
           <br>
-<!--          <label class="mt-2 ml-2 disable">{{(contract_form.controls['code'].value)}}</label>-->
+          <label class="mt-2 ml-2 disable">{{(contract_form.controls['code'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>帳戶</label>
-          <input type="text" pInputText formControlName="account_id"
-                 [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError && contract_form.controls['account_id'].touched}">
+          <p-dropdown [options]="Object.values(GetAllAccount)" [formControlName]="'account_id'" [(ngModel)]="selectedAccount_id"
+                      [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError && contract_form.controls['account_id'].touched}"></p-dropdown>
+
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
           <br>
-          <label class="mt-2 ml-2" [textContent]="contract_form.controls['status'].value"></label>
+          <label class="mt-2 ml-2">{{(contract_form.controls['status'].value)}}</label>
         </div>
       </div>
       <div class="col-6" *ngIf="showedit">
         <div class="field">
-          <label>狀態</label>
+          <label><span class="required-star">*</span>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
-            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
+            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus" name="status"
+                      [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError && contract_form.controls['status'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -137,9 +139,14 @@
         </div>
       </div>
     </div>
-    <ng-template pTemplate="footer">
-      <p-button label="新增" (click)="edit = false" styleClass="p-button-outlined p-button-info"></p-button>
-      <p-button label="取消" (click)="edit = false" styleClass="p-button-secondary ms-1"></p-button>
-    </ng-template>
+    <div class="flex justify-content-end">
+      <ng-container *ngIf="!showedit">
+        <p-button label="新增" (click)="postContractRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="showedit">
+        <p-button label="儲存" (click)="patchContractRequest(c_id)"  styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
+    </div>
   </p-dialog>
 </form>
