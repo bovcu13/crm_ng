@@ -194,23 +194,41 @@ export class LeadComponent implements OnInit {
     }];
   account_type: MenuItem[] = [
     {
-      label: "個人帳戶",
+      label: "個人客戶",
       icon: "pi pi-user",
       command: () => {
         this.addAccDialog();
-        this.account_form.controls['type'].setValue('個人帳戶');
+        this.account_form.controls['type'].setValue('個人客戶');
         console.log(this.account_form.controls['type'].value)
       }
     },
     {
-      label: "法人帳戶",
+      label: "法人客戶",
       icon: "pi pi-building",
       command: () => {
         this.addAccDialog();
-        this.account_form.controls['type'].setValue('法人帳戶');
+        this.account_form.controls['type'].setValue('法人客戶');
         console.log(this.account_form.controls['type'].value)
       }
-    }
+    },
+    {
+      label: "夥伴",
+      icon: "pi pi-users",
+      command: () => {
+        this.addAccDialog();
+        this.account_form.controls['type'].setValue('夥伴');
+        console.log(this.account_form.controls['type'].value)
+      },
+    },
+    {
+      label: "競爭者",
+      icon: "pi pi-chart-line",
+      command: () => {
+        this.addAccDialog();
+        this.account_form.controls['type'].setValue('競爭者');
+        console.log(this.account_form.controls['type'].value)
+      },
+    },
   ]
   lead_form!: FormGroup;
   account_form!: FormGroup;
