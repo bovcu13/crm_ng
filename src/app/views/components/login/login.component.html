@@ -1,44 +1,92 @@
-<div class="flex justify-content-center">
-  <div class="col-10">
-    <h1 class="mb-4">顧客關係管理(CRM)</h1>
-    <p-divider></p-divider>
-    <div class="flex justify-content-center mt-5">
-      <form [formGroup]="login_form">
-        <p-card>
-          <h3>登入</h3>
-          <p-divider></p-divider>
-          <div class="grid">
-            <div class="col-12">
-              <div class="field">
-                <label>帳號</label>
-                <input pInputText formControlName="user_name">
-              </div>
-            </div>
-            <div class="col-12 mt-1">
-              <label>密碼</label>
-              <p-password formControlName="password" [feedback]="false"></p-password>
-            </div>
-            <div class="col-6">
-              <div class="flex justify-content-start mt-3">
-                <a href="">忘記密碼?</a>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="flex justify-content-end align-items-center mt-3">
-                <p-button label="登入" (click)="onSubmit()"></p-button>
-              </div>
-            </div>
-          </div>
-          <p-divider></p-divider>
-          <div class="flex justify-content-center">
-            <h4>未註冊帳戶?</h4>
-          </div>
-          <div class="flex justify-content-center mt-1">
-            <p-button label="註冊" routerLink="/signup" styleClass="p-button-raised p-button-text p-button-secondary"
-                      icon="pi pi-arrow-right" iconPos="right"></p-button>
-          </div>
-        </p-card>
-      </form>
+<!--<div class="flex justify-content-center">-->
+<!--  <div class="col-10">-->
+<!--    <h1 class="mb-4">顧客關係管理(CRM)</h1>-->
+<!--    <p-divider></p-divider>-->
+<!--    <div class="flex justify-content-center mt-5">-->
+<!--      <form [formGroup]="login_form">-->
+<!--        <p-card>-->
+<!--          <h3>登入</h3>-->
+<!--          <p-divider></p-divider>-->
+<!--          <div class="grid">-->
+<!--            <div class="col-12">-->
+<!--              <div class="field">-->
+<!--                <label>帳號</label>-->
+<!--                <input pInputText formControlName="user_name">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-12 mt-1">-->
+<!--              <label>密碼</label>-->
+<!--              <p-password formControlName="password" [feedback]="false"></p-password>-->
+<!--            </div>-->
+<!--            <div class="col-6">-->
+<!--              <div class="flex justify-content-start mt-3">-->
+<!--                <a href="">忘記密碼?</a>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-6">-->
+<!--              <div class="flex justify-content-end align-items-center mt-3">-->
+<!--                <p-button label="登入" (click)="onSubmit()"></p-button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <p-divider></p-divider>-->
+<!--          <div class="flex justify-content-center">-->
+<!--            <h4>未註冊帳戶?</h4>-->
+<!--          </div>-->
+<!--          <div class="flex justify-content-center mt-1">-->
+<!--            <p-button label="註冊" routerLink="/signup" styleClass="p-button-raised p-button-text p-button-secondary"-->
+<!--                      icon="pi pi-arrow-right" iconPos="right"></p-button>-->
+<!--          </div>-->
+<!--        </p-card>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+<div class="container" #container>
+  <div class="form-container sign-up-container">
+    <form action="#">
+      <h1>Create Account</h1>
+      <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>or use your email for registration</span>
+      <input type="text" placeholder="Name" />
+      <input type="email" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <button>Sign Up</button>
+    </form>
+  </div>
+  <div class="form-container sign-in-container">
+    <form action="#">
+      <h1>Sign in</h1>
+      <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>or use your account</span>
+      <input type="email" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <a href="#">Forgot your password?</a>
+      <button>Sign In</button>
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To keep connected with us please login with your personal info</p>
+        <button class="ghost" (click)="signIn()">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hello, Friend!</h1>
+        <p>Enter your personal details and start journey with us</p>
+        <button class="ghost" (click)="signUp()">Sign Up</button>
+      </div>
     </div>
   </div>
 </div>
