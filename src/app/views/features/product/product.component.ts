@@ -181,7 +181,7 @@ export class ProductComponent {
   edit: boolean = false;
   dialogHeader!: string;
   p_id: any;
-  //PatchProduct: HttpApiService[] = [];
+
   PatchProduct!: Product;
   originalProduct: Product | null = null;// 宣告一個原始的 Product 物件，並將其初始化為 null
   showedit = true;//判斷是否dialog為新增與編輯
@@ -205,27 +205,26 @@ export class ProductComponent {
       this.p_id = this.PatchProduct.product_id;
     }
   }
-  Repeated: any; //判斷是否重複
+  Repeated: any;//判斷是否重複
   patchProductRequest(p_id: any): void{
-    const updatedFields: any = {};
-    console.log(p_id)
       let body = {
         name: this.product_form.get('name')?.value,
         is_enable: this.product_form.get('is_enable')?.value,
         description: this.product_form.get('description')?.value,
         price: this.product_form.get('price')?.value,
+        code: this.product_form.get('code')?.value,
         updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
     }
     this.HttpApi.patchProductRequest(p_id, body).subscribe(
       Request => {
         this.Repeated = Request
-        console.log(this.Repeated)
-        this.getAllProductRequest()
+        console.log(Request)
         if (this.Repeated.code === 400){
           this.BadRequest = "識別碼不可重複!!!";
           this.edit = true;
         }else if (this.Repeated.code === 200){
           this.edit = false
+          this.getAllProductRequest()
         }
       })
   }
