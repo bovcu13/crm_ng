@@ -9,7 +9,8 @@
         </span>
       </div>
       <p-menu #menu [model]="account_type" [popup]="true"></p-menu>
-      <p-table [value]="filteredAccount">
+      <p-table [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
+               (onLazyLoad)="loadPostsLazy($event)">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -81,9 +82,9 @@
       <div class="col-6">
         <div class="field">
           <label>行業</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry_id" optionLabel="name"
                       (onChange)="industryValue($event)"
-                      formControlName="industry" appendTo="body"></p-dropdown>
+                      formControlName="industry_id" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -121,10 +122,10 @@
     </div>
     <div class="flex justify-content-end">
       <ng-container *ngIf="dialogHeader === '編輯帳戶'">
-        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchAccount()" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="dialogHeader !== '編輯帳戶'">
-        <p-button label="新增" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postAccount()" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
