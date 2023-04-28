@@ -40,6 +40,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ChipsModule } from 'primeng/chips';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { ToolbarModule } from 'primeng/toolbar';
+import { AnimateModule } from 'primeng/animate';
 
 
 @NgModule({
@@ -88,7 +89,8 @@ import { ToolbarModule } from 'primeng/toolbar';
     ChipsModule,
     ButtonModule,
     FullCalendarModule,
-    ToolbarModule
+    ToolbarModule,
+    AnimateModule
   ],
 })
 export class PrimengModule { }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AuthService} from "../../../_services/auth.service";
 import {TokenStorageService} from "../../../_services/token-storage.service";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -10,6 +10,8 @@ import {Router} from "@angular/router";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('container')
+  container!: ElementRef;
   login_form: FormGroup;
   isLoggedIn = false;
   isLoginFailed = false;
@@ -30,7 +32,11 @@ export class LoginComponent implements OnInit {
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
     }
+    setInterval(() => {
+      this.isFloating = !this.isFloating;
+    }, 1000);
   }
+  isFloating: boolean = false;
 
   onSubmit(): void {
     let body = {
@@ -66,4 +72,13 @@ export class LoginComponent implements OnInit {
   reloadPage(): void {
     window.location.reload();
   }
+
+  signIn() {
+    this.container.nativeElement.classList.remove('right-panel-active');
+  }
+
+  signUp() {
+    this.container.nativeElement.classList.add('right-panel-active');
+  }
 }
+
