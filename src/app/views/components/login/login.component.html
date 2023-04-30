@@ -43,50 +43,36 @@
 <!--  </div>-->
 <!--</div>-->
 
-
-<div class="container" #container>
-  <div class="form-container sign-up-container">
-    <form action="#">
-      <h1>Create Account</h1>
-      <div class="social-container">
-        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+<div class="container">
+  <input id="signup_toggle" type="checkbox">
+  <form class="form" [formGroup]="login_form">
+    <div class="form_front">
+      <div class="form_details">
+        <img class="img" src="./assets/img/logo/logo.png" width=200 height=130 alt="Collective_logo" title="Collective">
       </div>
-      <span>or use your email for registration</span>
-      <input type="text" placeholder="Name" />
-      <input type="email" placeholder="Email" />
-      <input type="password" placeholder="Password" />
-      <button>Sign Up</button>
-    </form>
-  </div>
-  <div class="form-container sign-in-container">
-    <form action="#">
-      <h1>Sign in</h1>
-      <div class="social-container">
-        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-      </div>
-      <span>or use your account</span>
-      <input type="email" placeholder="Email" />
-      <input type="password" placeholder="Password" />
-      <a href="#">Forgot your password?</a>
-      <button>Sign In</button>
-    </form>
-  </div>
-  <div class="overlay-container">
-    <div class="overlay">
-      <div class="overlay-panel overlay-left">
-        <h1>Welcome Back!</h1>
-        <p>To keep connected with us please login with your personal info</p>
-        <button class="ghost" (click)="signIn()">Sign In</button>
-      </div>
-      <div class="overlay-panel overlay-right">
-        <h1>Hello, Friend!</h1>
-        <p>Enter your personal details and start journey with us</p>
-        <button class="ghost" (click)="signUp()">Sign Up</button>
-      </div>
+      <input pInputText placeholder="帳號" formControlName="user_name">
+      <p-password placeholder="密碼" formControlName="password" [feedback]="false"></p-password>
+      <p-button label="登入" (click)="onSubmit()"></p-button>
+      <span class="switch">未註冊帳號?
+                <label for="signup_toggle" class="signup_tog">
+                    註冊
+                </label>
+            </span>
     </div>
-  </div>
+    <div class="form_back">
+      <div class="form_details">
+        <img class="img" src="./assets/img/logo/logo.png" width=200 height=130 alt="Collective_logo" title="Collective">
+      </div>
+      <input pInputText placeholder="Firstname">
+      <input pInputText placeholder="Username">
+      <input pInputText placeholder="Password">
+      <input pInputText placeholder="Confirm Password">
+      <p-button label="註冊"></p-button>
+      <span class="switch">擁有帳號?
+                <label for="signup_toggle" class="signup_tog">
+                    登入
+                </label>
+            </span>
+    </div>
+  </form>
 </div>
