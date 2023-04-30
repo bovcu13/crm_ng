@@ -46,12 +46,11 @@ export class LoginComponent implements OnInit {
     }
     this.authService.login(body).subscribe(
       data => {
-        console.log(data)
         // 帳密錯誤
-        if (data.code === 500){
+        if (data.code === 403){
+          console.log(data)
           return
         }
-        console.log(data.body.code)
         this.tokenStorage.saveToken(data.body.access_token);
         this.tokenStorage.saveRefreshToken(data.body.refresh_token);
         this.tokenStorage.saveUser(data);
