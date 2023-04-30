@@ -21,10 +21,18 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name">帳戶<p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="phone_number">電話<p-sortIcon field="phone_number"></p-sortIcon></th>
-            <th pSortableColumn="type">類型<p-sortIcon field="type"></p-sortIcon></th>
-            <th pSortableColumn="owner">業務員<p-sortIcon field="owner"></p-sortIcon></th>
+            <th pSortableColumn="name">帳戶
+              <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="phone_number">電話
+              <p-sortIcon field="phone_number"></p-sortIcon>
+            </th>
+            <th pSortableColumn="type">類型
+              <p-sortIcon field="type"></p-sortIcon>
+            </th>
+            <th pSortableColumn="owner">業務員
+              <p-sortIcon field="owner"></p-sortIcon>
+            </th>
             <th></th>
           </tr>
         </ng-template>
@@ -40,7 +48,8 @@
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',account)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                <p-button (click)="deleteAccount(account.account_id)" icon="pi pi-trash" pTooltip="刪除"
+                          tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
@@ -56,7 +65,8 @@
       <div class="col-12">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
-          <input pInputText formControlName="name" [ngClass]="{'ng-dirty':account_form.controls['name'].hasError && account_form.controls['name'].touched}">
+          <input pInputText formControlName="name"
+                 [ngClass]="{'ng-dirty':account_form.controls['name'].hasError && account_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-6">
@@ -122,7 +132,8 @@
     </div>
     <div class="flex justify-content-end">
       <ng-container *ngIf="dialogHeader === '編輯帳戶'">
-        <p-button label="儲存" (click)="patchAccount()" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchAccount();edit=false"
+                  styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="dialogHeader !== '編輯帳戶'">
         <p-button label="新增" (click)="postAccount()" styleClass="p-button-outlined p-button-info"></p-button>
