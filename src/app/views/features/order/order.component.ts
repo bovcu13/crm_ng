@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HttpApiService} from "../../../api/http-api.service";
+import {Order} from "../../../shared/models/order";
 
 @Component({
   selector: 'app-order',
@@ -8,7 +10,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class OrderComponent {
   //table的死值
-  filteredOrders: any[] = [];
   order: any[] = [
     {
       number: "00001",
@@ -38,30 +39,24 @@ export class OrderComponent {
     }
   ];
 
-  filterText: any = '';
+  searchTerm: string = '';// 定義一個 searchTerm 變數來儲存搜尋文字
+// 搜尋函數
   filterorders() {
-    if (this.filterText === '') {
-      this.filteredOrders = this.order;
-    } else {
-      this.filteredOrders = this.order.filter(order => {
-        return (
-          order.number.toLowerCase().includes(this.filterText) ||
-          order.account_name.toLowerCase().includes(this.filterText) ||
-          order.order_amount.toString().toLowerCase().includes(this.filterText) ||
-          order.start_date.toLowerCase().includes(this.filterText) ||
-          order.status.toLowerCase().includes(this.filterText) ||
-          order.contract_number.toLowerCase().includes(this.filterText) ||
-          order.activated_by.toLowerCase().includes(this.filterText) ||
-          order.activated_date.toLowerCase().includes(this.filterText)
-        );
-      });
+    // 如果沒有輸入搜尋文字，就直接返回原始資料
+    if (!this.searchTerm) {
+      this.getAllOrderRequest();
+      return;
     }
-    console.log(this.filteredOrders)
+    this.GetAllOrder = this.GetAllOrder.filter(order => {
+      return (
+        order.code.toString().toLowerCase().includes(this.searchTerm.toString().toLowerCase()) ||
+        order.status.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        order.start_date.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        order.description.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    });
+    console.log(this.GetAllOrder)
   }
-  ngOnInit() {
-    this.filteredOrders = this.order;
-  }
-
 
   //p-dropdown status的下拉值
   status: any[] = [
@@ -75,16 +70,64 @@ export class OrderComponent {
     }
   ]
 
+  // table lazyload
+  // 搜尋關鍵字
+  //search: string = '';
+  loading: boolean = true;
+  totalRecords = 0;
+
+  loadTable(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.getAllOrderRequest(limit, page);
+  }
+
+  ngOnInit() {
+    //this.getAllOrderRequest()
+  }
+
+  //取得所有訂單資料
+  GetAllOrder: Order[] = [];
+  first = 0;
+
+  getAllOrderRequest(limit?: number, page?: number) {
+    if (!page) {
+      this.first = 0;
+    }
+    this.HttpApi.getAllOrderRequest(limit, page).subscribe(
+      (res) => {
+        this.GetAllOrder = res.body.orders
+        this.GetAllOrder = res.body.orders.map((order: any) => {
+          const start_date = this.formatDate2(order.start_date)
+          const created_by = this.getUserNameById(order.created_by);
+          const updated_by = this.getUserNameById(order.updated_by);
+          const created_at = this.formatDate(order.created_at);
+          const updated_at = this.formatDate(order.updated_at);
+          return {...order, start_date, created_by, updated_by, created_at, updated_at};
+        });
+        this.totalRecords = res.body.total;
+        this.loading = false;
+        console.log(this.GetAllOrder)
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
   //建立formgroup
   order_form: FormGroup;
-  constructor(private fb: FormBuilder) {
+
+  constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.order_form = this.fb.group({
-      number: [''],
-      account_name: ['', [Validators.required]],
-      order_amount: [''],
+      code: [''],
+      account_id: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
       status: ['', [Validators.required]],
-      contract_number: ['', [Validators.required]],
+      contract_id: [''],
+      contract_code: [''],
+      amount: [''],
       describe: [''],
       activated_by: [''],
       activated_date: [''],
@@ -95,8 +138,8 @@ export class OrderComponent {
     });
   }
 
-   //偵測status變量
-   onStatusChange(event: any) {
+  //偵測status變量
+  onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
 
@@ -107,39 +150,43 @@ export class OrderComponent {
   showedit = true;//判斷是否dialog為新增與編輯
   showDialog(type: string, order?: any): void {
     // 新增與編輯dialog都無法自行編輯訂單號碼、建立者、建立時間、更新者、更新時間
-    this.order_form.controls['number'].disable();
-    this.order_form.controls['created_by'].disable();
-    this.order_form.controls['updated_by'].disable();
-    this.order_form.controls['created_at'].disable();
-    this.order_form.controls['updated_at'].disable();
-    this.order_form.controls['activated_by'].disable();
-    this.order_form.controls['activated_date'].disable();
     if (type === 'add') {
       this.dialogHeader = '新增訂單';
       this.order_form.reset();
       this.showedit = false; // 不顯示 activated_by 控件
-      this.order_form.patchValue({ status: this.status[0].name});
+      this.order_form.patchValue({status: this.status[0].name});
     } else if (type === 'edit') {
       console.log("order: " + JSON.stringify(order))
       this.dialogHeader = '編輯訂單';
-      //取得電腦目前時區
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = (now.getMonth() + 1).toString().padStart(2, '0');
-      const day = now.getDate().toString().padStart(2, '0');
-      const hour = now.getHours().toString().padStart(2, '0');
-      const minute = now.getMinutes().toString().padStart(2, '0');
-      const formattedTime = `${year}-${month}-${day} ${hour}:${minute}`;
-      //console.log(formattedTime);
-      //更新時間為現在時間
-      this.order_form.patchValue({
-        updated_at: formattedTime
-      });
       this.order_form.patchValue(order);
       this.showedit = true; // 不顯示 activated_by 控件
-       // 綁定已經選擇的狀態
-       this.selectedStatus = this.status.find(s => s.name === order.status);
+      // 綁定已經選擇的狀態
+      this.selectedStatus = this.status.find(s => s.name === order.status);
     }
     this.edit = true;
+  }
+
+
+  //取得使用者
+  getUserNameById(id: string): string {
+    // 取得使用者名稱的邏輯，例如從 API 取得該使用者名稱
+    return "林";
+  }
+
+  //日期轉換
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + (date.getDate())).slice(-2);
+    const hour = ("0" + (date.getHours())).slice(-2);
+    const minute = ("0" + date.getMinutes()).slice(-2);
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+  }
+
+  formatDate2(dateString2: string): string {
+    const date = new Date(dateString2);
+    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours() - 16);
+    return start_date.toISOString().slice(0, 10);
   }
 }
