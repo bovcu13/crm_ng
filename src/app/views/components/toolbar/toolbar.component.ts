@@ -85,6 +85,9 @@ export class ToolbarComponent implements OnInit {
         icon: "pi pi-sign-out",
         label: '登出',
         routerLink: ['/login'],
+        command: () => {
+          sessionStorage.clear();
+        },
       }];
   }
 }
