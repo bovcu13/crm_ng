@@ -189,7 +189,7 @@ export class AccountComponent implements OnInit {
     let body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
-      industry_id:'00000000-0000-4000-a000-000000000000',
+      industry_id: '00000000-0000-4000-a000-000000000000',
       type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
       created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a"
@@ -215,7 +215,7 @@ export class AccountComponent implements OnInit {
     let body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
-      industry_id:'00000000-0000-4000-a000-000000000000',
+      industry_id: '00000000-0000-4000-a000-000000000000',
       type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
       updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a"
@@ -226,14 +226,20 @@ export class AccountComponent implements OnInit {
         let event: LazyLoadEvent = {
           first: 0,
           rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
         };
         this.loadPostsLazy(event);
       })
+  }
+
+  deleteAccount(id: any): void {
+    this.HttpApi.deleteAccountRequest(id).subscribe(request => {
+      console.log(request)
+      let event: LazyLoadEvent = {
+        first: 0,
+        rows: 10,
+      };
+      this.loadPostsLazy(event);
+    })
   }
 
   industryValue(event: any): void {
