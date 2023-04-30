@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http'; //http協定
 import {Product} from "../shared/models/product";
 import {Contract} from "../shared/models/contract";
+import {Order} from "../shared/models/order";
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -85,7 +86,6 @@ export class HttpApiService {
   }
 
   //--契約---------------------------------------------------------------------------------------------------
-  account_id: any;
   status: any;
   start_date: any;
   end_date: any;
@@ -112,5 +112,67 @@ export class HttpApiService {
   deleteContractRequest(sid: string): Observable<Product> {
     const url = `${this.BaseUrl}/contracts/${sid}`;
     return this.http.delete<Product>(url);
+  }
+
+  //--訂單---------------------------------------------------------------------------------------------------
+  account_id: any;
+  accounts: any;
+  contracts: any;
+  amount:any;
+  contract_id : any;
+  activated_by : any;
+  activated_date : any;
+  //取得所有訂單 getall
+  getAllOrderRequest(limit = 20, page = 1): Observable<Order> {
+    // let obj: any = {
+    //   filter: {
+    //     code:search ? search : null,
+    //     status: search ? search : null,
+    //     start_date: search ? search : null,
+    //     //accounts: search ? search : null,
+    //     contracts: search ? search : null,
+    //   },
+    // };
+    // if (event) {
+    //   // 判斷是否有用全域搜尋欄
+    //   let keyword = event.globalFilter;
+    //   if (!event.globalFilter) {
+    //     keyword = event.data
+    //   }
+    //   obj = {
+    //     filter: {
+    //       code: keyword,
+    //       status: keyword,
+    //       start_date: keyword,
+    //       //accounts: keyword,
+    //       contracts: keyword,
+    //     },
+    //   };
+    // }
+    const url = this.BaseUrl + '/orders' + '?page=' + page + '&limit=' + limit;
+    return this.http.get<any>(url);
+  }
+
+  // getAllOrderRequest(page : number): Observable<any> {
+  //   const url = this.BaseUrl + '/orders' + '?page=' + page + '&limit=20';
+  //   return this.http.get<any>(url);
+  // }
+
+  //新增 訂單 post
+  postOrderRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/orders`;
+    return this.http.post<any>(url, body);
+  }
+
+  //修改 訂單 patch
+  patchOrderRequest(sid: string, body: any): Observable<any>{
+    const url = `${this.BaseUrl}/orders/${sid}`;
+    return this.http.patch<any>(url, body);
+  }
+
+  //刪除 訂單 delete
+  deleteOrderRequest(sid: string): Observable<any> {
+    const url = `${this.BaseUrl}/orders/${sid}`;
+    return this.http.delete<any>(url);
   }
 }
