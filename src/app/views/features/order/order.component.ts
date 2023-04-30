@@ -116,16 +116,59 @@ export class OrderComponent {
     );
   }
 
+  postOrderRequest(): void {
+    let body = {
+      status: this.order_form.value.status,
+      description: this.order_form.value.description,
+      start_date: this.order_form.value.start_date,
+      created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+      contract_id: "00000000-0000-4000-a000-000000000000",
+      account_id: "52f18d90-e4c3-43cb-b9d4-f62b409e7392",
+    }
+    this.HttpApi.postOrderRequest(body).subscribe(Request => {
+        console.log(Request)
+        this.getAllOrderRequest()
+        this.edit = false
+      },
+      error => {
+        console.log(error);
+      })
+  }
+
+  patchOrderRequest(o_id: any): void{
+    this.editStatus()//處理status的值，抓取name
+    let body = {
+      status: this.order_form.get('status')?.value,
+      start_date: this.order_form.get('start_date')?.value,
+      account_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a", //帳戶ID
+      description: this.order_form.get('description')?.value,
+      contract_id: "00000000-0000-4000-a000-000000000000", //契約ID
+      updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a", //修改者ID(必填)
+    }
+    this.HttpApi.patchOrderRequest(o_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        this.edit = false;
+        this.getAllOrderRequest()
+      })
+  }
+
+  deleteOrderRequest(o_id: any): void {
+    this.HttpApi.deleteOrderRequest(o_id).subscribe(Request => {
+      console.log(Request)
+      this.getAllOrderRequest()
+    })
+  }
+
   //建立formgroup
   order_form: FormGroup;
-
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.order_form = this.fb.group({
       code: [''],
       account_id: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
       status: ['', [Validators.required]],
-      contract_id: [''],
+      contract_id: ['',[Validators.required]],
       contract_code: [''],
       amount: [''],
       describe: [''],
@@ -148,6 +191,7 @@ export class OrderComponent {
   dialogHeader!: string;
   selectedStatus!: any;
   showedit = true;//判斷是否dialog為新增與編輯
+  o_id: any;
   showDialog(type: string, order?: any): void {
     // 新增與編輯dialog都無法自行編輯訂單號碼、建立者、建立時間、更新者、更新時間
     if (type === 'add') {
@@ -159,9 +203,14 @@ export class OrderComponent {
       console.log("order: " + JSON.stringify(order))
       this.dialogHeader = '編輯訂單';
       this.order_form.patchValue(order);
+      this.order_form.patchValue({
+        start_date: new Date(order.start_date),
+      });
       this.showedit = true; // 不顯示 activated_by 控件
       // 綁定已經選擇的狀態
       this.selectedStatus = this.status.find(s => s.name === order.status);
+      this.editStatus()//處理status的值，抓取name
+      this.o_id = order.order_id
     }
     this.edit = true;
   }
@@ -173,6 +222,13 @@ export class OrderComponent {
     return "林";
   }
 
+//處理status的值
+  editStatus(): void {
+    //判斷selectedStatus是否有值，若有值則取出name屬性
+    let statusName = this.selectedStatus ? this.selectedStatus.name : "";
+    //將statusName更新到表單中
+    this.order_form.patchValue({ status: statusName });
+  }
   //日期轉換
   formatDate(dateString: string): string {
     const date = new Date(dateString);

@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http'; //http協定
 import {Product} from "../shared/models/product";
 import {Contract} from "../shared/models/contract";
-import {Order} from "../shared/models/order";
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -123,7 +122,7 @@ export class HttpApiService {
   activated_by : any;
   activated_date : any;
   //取得所有訂單 getall
-  getAllOrderRequest(limit = 20, page = 1): Observable<Order> {
+  getAllOrderRequest(limit = 20, page = 1): Observable<any> {
     // let obj: any = {
     //   filter: {
     //     code:search ? search : null,
