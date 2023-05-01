@@ -175,4 +175,31 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/orders/${sid}`;
     return this.http.delete<any>(url);
   }
+
+  //----------行銷活動------------------------------------------------------------------------------------------------
+  is_enable: any;
+  parent_campaign_id: any;
+  type: any;
+  owner: any;
+  //取得所有行銷活動 getall
+  getAllCampaignRequest(limit = 20, page = 1): Observable<any> {
+    const url = this.BaseUrl + '/campaigns' + '?page=' + page + '&limit=' + limit;
+    return this.http.get<any>(url);
+  }
+  //新增 行銷活動 post
+  postCampaignRequest(body: any){
+    const url = `${this.BaseUrl}/campaigns`;
+    return this.http.post<any>(url, body);
+  }
+  //修改 行銷活動 patch
+  patchCampaignRequest(sid: string, body: any): Observable<any>{
+    const url = `${this.BaseUrl}/campaigns/${sid}`;
+    return this.http.patch<any>(url, body);
+  }
+
+  //刪除 行銷活動 delete
+  deleteCampaignRequest(sid: string): Observable<any> {
+    const url = `${this.BaseUrl}/campaigns/${sid}`;
+    return this.http.delete<any>(url);
+  }
 }
