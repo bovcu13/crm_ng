@@ -8,7 +8,9 @@
         </span>
       </div>
       <p-table  [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
-               [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)">
+                [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" [loading]="loading"
+               [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
+                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -19,9 +21,7 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="code">號碼
-              <p-sortIcon field="code"></p-sortIcon>
-            </th>
+            <th pSortableColumn="code">號碼 <p-sortIcon field="code"></p-sortIcon></th>
             <th pSortableColumn="account_id">帳戶
               <p-sortIcon field="account_id"></p-sortIcon>
             </th>
@@ -43,7 +43,7 @@
         <ng-template pTemplate="body" let-contract>
           <tr>
             <td>{{ contract.code }}</td>
-            <td>{{ contract.account_id }}</td>
+            <td>{{ contract.account_name }}</td>
             <td>{{ contract.status }}</td>
             <td>{{ contract.start_date }}</td>
             <td>{{ calculateEndDate(contract.start_date, contract.term) }}</td>
@@ -81,7 +81,7 @@
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>帳戶</label>
-          <p-dropdown [options]="Object.values(GetAllAccount)" [formControlName]="'account_id'" [(ngModel)]="selectedAccount_id"
+          <p-dropdown [options]="Object.values(GetAllAccount)" [formControlName]="'account_id'"
                       [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError && contract_form.controls['account_id'].touched}"></p-dropdown>
 
         </div>

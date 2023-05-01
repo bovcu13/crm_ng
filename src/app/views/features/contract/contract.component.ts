@@ -86,10 +86,6 @@ export class ContractComponent {
       code: "awaiting_signature",
     },
     {
-      name: "等待簽名",
-      code: "awaiting_signature",
-    },
-    {
       name: "已簽署",
       code: "signed",
     },
@@ -98,59 +94,48 @@ export class ContractComponent {
       code: "canceled",
     },
     {
-      name: "契約已終止",
-      code: "contract_terminated",
+      name: "已過期",
+      code: "expired",
     },
   ]
   ngOnInit() {
     this.getAllAccountRequest()
-    this.getAllUserRequest()
     this.getAllContractRequest()
   }
     //GET全部contract
     GetAllContract!: HttpApiService[];
-    getAllContractRequest(){
-      this.HttpApi.getAllContractRequest(1).subscribe(res => {
+    first = 0;
+    totalRecords= 0;
+    getAllContractRequest(limit?: number, page?: number){
+      if (!page) {
+        this.first = 0;
+      }
+      this.HttpApi.getAllContractRequest(limit, page).subscribe(res => {
           this.GetAllContract = res.body.contracts;
           this.GetAllContract = res.body.contracts.map((contract: any) => {
             const start_date = this.formatDate2(contract.start_date)
-            const created_by = this.getUserNameById(contract.created_by);
-            const updated_by = this.getUserNameById(contract.updated_by);
             const created_at = this.formatDate(contract.created_at);
             const updated_at = this.formatDate(contract.updated_at);
-            return {...contract,start_date, created_by, updated_by, created_at, updated_at};
+            return {...contract,start_date, created_at, updated_at};
           });
+          this.totalRecords = res.body.total;
+          this.loading = false;
         },
         error => {
           console.log(error);
         });
     }
-    //GET全部user
-  GetAllUser!: HttpApiService[];
-  getAllUserRequest(){
-    this.HttpApi.getAllUserRequest(1).subscribe(res => {
-        this.GetAllUser = res.body.users;
-        console.log(this.GetAllUser)
-        },
-      error => {
-        console.log(error);
-      });
-  }
+
   // GET全部Account
   GetAllAccount: { [key: string]: string } = {};
-  CreatedAccount_id: string = '';
-  UpdatedAccount_id: string = '';
   Account_id: string = '';
-  selectedAccount_id: string = ''; //雙向綁定 selectedAccount_id 變數
   protected readonly Object = Object;
   getAllAccountRequest() {
     this.HttpApi.getAllAccountRequest(1).subscribe(
       (res) => {
         this.GetAllAccount = res.body.accounts.reduce((acc: any, curr: any) => {
           acc[curr.account_id] = curr.name;
-          this.Account_id = curr.created_by
-          this.CreatedAccount_id = curr.created_by
-          this.UpdatedAccount_id = curr.updated_by;
+          this.Account_id = curr.account_id
           return acc;
         },{});
       },
@@ -163,14 +148,13 @@ export class ContractComponent {
   PostOneContract!: HttpApiService[];
   postContractRequest(): void {
     this.contract_form.value.account_id = this.Account_id;
-    this.contract_form.value.created_by = this.CreatedAccount_id;
     let body = {
       code: this.contract_form.value.code,
       status: this.contract_form.value.status,
       description: this.contract_form.value.description,
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,
-      created_by: this.contract_form.value.created_by,
+      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       account_id: this.contract_form.value.account_id,
     }
     this.HttpApi.postContractRequest(body).subscribe(Request => {
@@ -192,6 +176,7 @@ export class ContractComponent {
       owner: [''],
       code: [''],
       account_id: ['', [Validators.required]],
+      account_name: ['', [Validators.required]],
       status: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
       term: ['', [Validators.required]],
@@ -212,19 +197,12 @@ export class ContractComponent {
   c_id: any;
   showDialog(type: string, contract?: any): void {
     this.edit = true;
-    this.contract_form.controls['code'].disable();
-    this.contract_form.controls['created_by'].disable();
-    this.contract_form.controls['updated_by'].disable();
-    this.contract_form.controls['created_at'].disable();
-    this.contract_form.controls['updated_at'].disable();
     if (type === 'add') {
-      console.log(this.CreatedAccount_id)
       this.dialogHeader = '新增契約';
       this.contract_form.reset();
       this.showedit = false;
       this.contract_form.patchValue({ status: this.status[0].name });
     } else if (type === 'edit') {
-      console.log(this.UpdatedAccount_id)
       this.dialogHeader = '編輯契約';
       this.contract_form.patchValue(contract);
       this.contract_form.patchValue({
@@ -239,16 +217,13 @@ export class ContractComponent {
     }
   }
   patchContractRequest(c_id: any): void{
-    this.contract_form.patchValue({
-      updated_by: this.UpdatedAccount_id,//設定 updated_by值
-    });
     this.editStatus()//處理status的值，抓取name
     let body = {
       status: this.contract_form.get('status')?.value,
       start_date: this.contract_form.get('start_date')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
-      updated_by: this.contract_form.get('updated_by')?.value,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
     this.HttpApi.patchContractRequest(c_id, body).subscribe(
       Request => {
@@ -273,21 +248,32 @@ export class ContractComponent {
     })
   }
   //懶加載
-  totalRecords: any;
-  page!: number
+  loading: boolean = true;
+  sortField: any;
+  sortOrder: any;
+  code: any;
   loadPostsLazy(event: LazyLoadEvent) {
-    this.page = (event.first! / event.rows!) + 1;
-    this.HttpApi.getAllContractRequest(1).subscribe(request => {
-      this.page = request.body.page;
-      this.totalRecords = request.body.total;
-      this.getAllContractRequest()
-    });
+    this.loading = true;
+    let page = event.first! / event.rows! + 1;
+    let limit = event.rows;
+    // this.sortField = event.sortField || 'code';
+    // this.sortOrder = event.sortOrder || -1;
+    this.HttpApi.getAllContractRequest(limit, page, this.sortField, this.sortOrder)
+      .subscribe(res => {
+          this.GetAllContract = res.body.contracts.map((contract: any) => {
+            const start_date = this.formatDate2(contract.start_date)
+            const created_at = this.formatDate(contract.created_at);
+            const updated_at = this.formatDate(contract.updated_at);
+            return {...contract,start_date, created_at, updated_at};
+          });
+          this.totalRecords = res.body.total;
+          this.loading = false;
+        },
+        error => {
+          console.log(error);
+        });
   }
-  //取得使用者
-  getUserNameById(id: string): string {
-    // 取得使用者名稱的邏輯，例如從 API 取得該使用者名稱
-    return "林";
-  }
+
 //日期轉換
   formatDate(dateString: string): string {
     const date = new Date(dateString);

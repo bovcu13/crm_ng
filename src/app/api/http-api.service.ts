@@ -90,9 +90,12 @@ export class HttpApiService {
   end_date: any;
   term: any;
 
-  //取得所有契約
-  getAllContractRequest(page: number): Observable<any> {
-    const url = this.BaseUrl + '/contracts' + '?page=' + page + '&limit=20';
+//取得所有契約
+  getAllContractRequest(limit = 20, page = 1, sortField = '', sortOrder = 1): Observable<any> {
+    let url = this.BaseUrl + '/contracts' + '?page=' + page + '&limit=' + limit;
+    if (sortField !== '') {
+      url += '&sortField=' + sortField + '&sortOrder=' + sortOrder;
+    }
     return this.http.get<any>(url);
   }
 
