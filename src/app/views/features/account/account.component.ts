@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LazyLoadEvent, MenuItem} from 'primeng/api';
 import {HttpApiService} from "../../../api/http-api.service";
+import {Table} from 'primeng/table';
+import {Account} from "../../../shared/models/account";
 
 @Component({
   selector: 'app-account',
@@ -10,6 +12,8 @@ import {HttpApiService} from "../../../api/http-api.service";
 })
 export class AccountComponent implements OnInit {
   // filteredAccount: any[] = [];
+  @ViewChild('dt') dt!: Table;
+  // loading: boolean = true;
   account: any[] = [
     {
       "name": "David",
@@ -119,24 +123,25 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  getData!: HttpApiService[];
-  filterText: any = '';
+  getData!: Account[];
+  // getData!: HttpApiService[];
+  filterText: string = '';
 
-  filter() {
-    if (this.filterText === '') {
-      this.getData = this.account;
-    } else {
-      this.getData = this.account.filter(account => {
-        return (
-          account.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          account.phone_number.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          account.type.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          account.owner.toLowerCase().includes(this.filterText.toLowerCase())
-        );
-      });
-    }
-    console.log(this.getData)
-  }
+  // filter() {
+  //   if (this.filterText === '') {
+  //     this.getData;
+  //   } else {
+  //     this.getData.filter(account => {
+  //       return (
+  //         account.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
+  //         account.phone_number.toLowerCase().includes(this.filterText.toLowerCase()) ||
+  //         account.type.toLowerCase().includes(this.filterText.toLowerCase()) ||
+  //         account.owner.toLowerCase().includes(this.filterText.toLowerCase())
+  //       );
+  //     });
+  //   }
+  //   console.log(this.getData)
+  // }
 
   ngOnInit() {
 
@@ -175,15 +180,28 @@ export class AccountComponent implements OnInit {
   total!: number;
 
   // 懶加載
-  loadPostsLazy(event: LazyLoadEvent) {
-    const page = (event.first! / event.rows!) + 1;
+  loadPostsLazy(e: any) {
+    // this.loading = true;
+    let page = e.first / e.rows + 1;
+    // let limit = e.rows;
     this.HttpApi.getAllAccountRequest(page).subscribe(request => {
       this.getData = request.body.accounts;
       this.total = request.body.total
+      // this.loading = false;
       console.log(this.getData);
-      // console.log(this.total)
     });
   }
+
+  // 懶加載
+  // loadPostsLazy(event: LazyLoadEvent) {
+  //   const page = (event.first! / event.rows!) + 1;
+  //   this.HttpApi.getAllAccountRequest(page).subscribe(request => {
+  //     this.getData = request.body.accounts;
+  //     this.total = request.body.total
+  //     console.log(this.getData);
+  //     // console.log(this.total)
+  //   });
+  // }
 
   postAccount(): void {
     let body = {
@@ -254,4 +272,8 @@ export class AccountComponent implements OnInit {
   //   console.log(selectedType.name);
   // }
 
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.filterText = ($event.target as HTMLInputElement).value
+    this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
 }
