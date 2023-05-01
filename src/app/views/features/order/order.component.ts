@@ -241,7 +241,7 @@ export class OrderComponent {
   getAllContractRequest() {
     this.HttpApi.getAllContractRequest(1).subscribe(
       (res) => {
-        const contracts = res.body.contracts.filter((contract: any) => contract.status !== '草稿');
+        const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
         this.GetAllContract = contracts.map((contract: any) => {
           return {
             label: contract.code,
