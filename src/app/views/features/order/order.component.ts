@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
+
 //import {Order} from "../../../shared/models/order";
 
 @Component({
@@ -39,17 +40,18 @@ export class OrderComponent {
     }
   ];
 
-  searchTerm: string = '';// 定義一個 searchTerm 變數來儲存搜尋文字
+  searchTerm: any = '';// 定義一個 searchTerm 變數來儲存搜尋文字
 // 搜尋函數
   filterorders() {
     // 如果沒有輸入搜尋文字，就直接返回原始資料
-    if (!this.searchTerm) {
+    if (this.searchTerm === '') {
       this.getAllOrderRequest();
       return;
     }
     this.GetAllOrder = this.GetAllOrder.filter(order => {
       return (
         order.code.toString().toLowerCase().includes(this.searchTerm.toString().toLowerCase()) ||
+        order.account_name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         order.status.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         order.start_date.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         order.description.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -134,7 +136,7 @@ export class OrderComponent {
       })
   }
 
-  patchOrderRequest(o_id: any): void{
+  patchOrderRequest(o_id: any): void {
     this.editStatus()//處理status的值，抓取name
     let body = {
       status: this.order_form.get('status')?.value,
@@ -162,6 +164,7 @@ export class OrderComponent {
 
   //建立formgroup
   order_form: FormGroup;
+
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.order_form = this.fb.group({
       code: [''],
@@ -169,8 +172,8 @@ export class OrderComponent {
       account_name: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
       status: ['', [Validators.required]],
-      contract_id: ['',[Validators.required]],
-      contract_code: ['',[Validators.required]],
+      contract_id: ['', [Validators.required]],
+      contract_code: ['', [Validators.required]],
       amount: [''],
       describe: [''],
       activated_by: [''],
@@ -193,6 +196,7 @@ export class OrderComponent {
   selectedStatus!: any;
   showedit = true;//判斷是否dialog為新增與編輯
   o_id: any;
+
   showDialog(type: string, order?: any): void {
     // 新增與編輯dialog都無法自行編輯訂單號碼、建立者、建立時間、更新者、更新時間
     if (type === 'add') {
@@ -219,6 +223,7 @@ export class OrderComponent {
   // GET全部Account
   GetAllAccount: any[] = [];
   selectedAccount_id: string = '';
+
   getAllAccountRequest() {
     this.HttpApi.getAllAccountRequest(1).subscribe(
       (res) => {
@@ -238,8 +243,9 @@ export class OrderComponent {
   // GET全部Contract
   GetAllContract: any[] = [];
   selectedContract_id: any;
-  getAllContractRequest() {
-    this.HttpApi.getAllContractRequest(1).subscribe(
+
+  getAllContractRequest(limit?: number, page?: number) {
+    this.HttpApi.getAllContractRequest(limit, page).subscribe(
       (res) => {
         const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
         this.GetAllContract = contracts.map((contract: any) => {
@@ -249,7 +255,6 @@ export class OrderComponent {
             date: contract.start_date,
           };
         });
-        this.validateStartDate()
       },
       (error) => {
         console.log(error);
@@ -263,25 +268,33 @@ export class OrderComponent {
     //判斷selectedStatus是否有值，若有值則取出name屬性
     let statusName = this.selectedStatus ? this.selectedStatus.name : "";
     //將statusName更新到表單中
-    this.order_form.patchValue({ status: statusName });
+    this.order_form.patchValue({status: statusName});
   }
 
+
   //設定訂單開始天數不能開始於契約開始日期
-  minDate: any;
+  MinDate!: any;//契約日期
+  orderStartDate: any;
+
   validateStartDate() {
-//    const contractStartDate = this.GetAllContract.map((contract) => contract.date.split('T')[0]).join(', ');
+    const today: Date = new Date(); // 創建一個Date物件
+    let todayDate: string = today.toISOString().substr(0, 10);
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
-    const contractStartDate = selectedContract.date;
-    this.minDate = new Date(contractStartDate);
-    console.log(this.minDate)
-    const orderStartDate = this.order_form.controls['start_date'].value;
-    console.log(orderStartDate)
-    if (orderStartDate < this.minDate) {
-      this.order_form.controls['start_date'].setErrors({ dateError: true });
+    const contractStartDate = selectedContract?.date.substring(0, 10);
+    this.MinDate = new Date(contractStartDate);
+    if (this.order_form.controls['start_date'].value == null) {
+      this.orderStartDate = todayDate
+      this.order_form.patchValue({start_date: todayDate});
+    } else {
+      this.orderStartDate = this.order_form.controls['start_date'].value;
+    }
+    if (this.orderStartDate < this.MinDate) {
+      this.order_form.controls['start_date'].setErrors({dateError: true});
     } else {
       this.order_form.controls['start_date'].value;
     }
   }
+
   //日期轉換
   formatDate(dateString: string): string {
     const date = new Date(dateString);

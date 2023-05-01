@@ -115,6 +115,7 @@ export class HttpApiService {
 
   //--訂單---------------------------------------------------------------------------------------------------
   account_id: any;
+  account_name: any;
   accounts: any;
   contracts: any;
   amount:any;
