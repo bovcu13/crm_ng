@@ -1,5 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {LazyLoadEvent} from 'primeng/api';
+import {HttpApiService} from "../../../api/http-api.service";
+import {Contact} from "../../../shared/models/contact";
+
 
 @Component({
   selector: 'app-contact',
@@ -7,6 +11,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit {
+  getData!: Contact[];
   filteredContacts: any[] = [];
   contact: any[] = [
     {
@@ -72,8 +77,9 @@ export class ContactComponent implements OnInit {
 
   contact_form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.contact_form = this.fb.group({
+      contact_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
       owner: [''],
       name: ['', [Validators.required]],
@@ -95,7 +101,7 @@ export class ContactComponent implements OnInit {
 
   filtercontacts() {
     if (this.filterText === '') {
-      this.filteredContacts = this.contact;
+      this.filteredContacts;
     } else {
       this.filteredContacts = this.contact.filter(contact => {
         return (
@@ -111,7 +117,20 @@ export class ContactComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.filteredContacts = this.contact;
+    this.filteredContacts = this.getData;
+  }
+
+  total!: number;
+
+  // 懶加載
+  loadPostsLazy(event: LazyLoadEvent) {
+    const page = (event.first! / event.rows!) + 1;
+    this.HttpApi.getAllContactRequest(page).subscribe(request => {
+      this.getData = request.body.contacts;
+      this.total = request.body.total
+      console.log(this.getData);
+      // console.log(this.total)
+    });
   }
 
   //時間調整
@@ -142,9 +161,89 @@ export class ContactComponent implements OnInit {
     }
   }
 
+  postContact(): void {
+    let salutation = this.contact_form.controls['salutation'].value;
+    let body = {
+      account_name: this.contact_form.controls['account_name'].value,
+      owner: this.contact_form.controls['owner'].value,
+      name: this.contact_form.controls['name'].value,
+      salutation: this.contact_form.controls['salutation'].value,
+      cell_phone: this.contact_form.controls['cell_phone'].value,
+      phone_number: this.contact_form.controls['phone_number'].value,
+      email: this.contact_form.controls['email'].value,
+      title: this.contact_form.controls['title'].value,
+      department: this.contact_form.controls['department'].value,
+      reports_to: this.contact_form.controls['reports_to'].value,
+      supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
+      created_by: "7f5443f8-e607-4793-8370-560b8b688a61"
+    }
+    this.HttpApi.postContactRequest(body)
+      .subscribe(request => {
+        console.log(request)
+        let event: LazyLoadEvent = {
+          first: 0,
+          rows: 10,
+          sortField: undefined,
+          sortOrder: undefined,
+          multiSortMeta: undefined,
+          filters: undefined,
+          globalFilter: undefined,
+        };
+        this.loadPostsLazy(event);
+      })
+  }
+
+  patchContact(): void {
+    let id = this.contact_form.controls['contact_id'].value
+    let salutation = this.contact_form.controls['salutation'].value;
+    let body = {
+      account_name: this.contact_form.controls['account_name'].value,
+      owner: this.contact_form.controls['owner'].value,
+      name: this.contact_form.controls['name'].value,
+      salutation: this.contact_form.controls['salutation'].value,
+      cell_phone: this.contact_form.controls['cell_phone'].value,
+      phone_number: this.contact_form.controls['phone_number'].value,
+      email: this.contact_form.controls['email'].value,
+      title: this.contact_form.controls['title'].value,
+      department: this.contact_form.controls['department'].value,
+      reports_to: this.contact_form.controls['reports_to'].value,
+      supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+    }
+    this.HttpApi.patchContactRequest(id, body)
+      .subscribe(request => {
+        console.log(request)
+        let event: LazyLoadEvent = {
+          first: 0,
+          rows: 10,
+          sortField: undefined,
+          sortOrder: undefined,
+          multiSortMeta: undefined,
+          filters: undefined,
+          globalFilter: undefined,
+        };
+        this.loadPostsLazy(event);
+      })
+  }
+
+  deleteContact(id: any): void {
+    this.HttpApi.deleteContactRequest(id).subscribe(request => {
+      console.log(request)
+      let event: LazyLoadEvent = {
+        first: 0,
+        rows: 10,
+      };
+      this.loadPostsLazy(event);
+    })
+  }
+
   salutationValue(event: any): void {
     const selectedsalutation = this.salutation.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code, selectedsalutation.name);
+    console.log(selectedsalutation);
+    this.contact_form.value.salutation = selectedsalutation.name
+    console.log(this.contact_form.value.salutation)
   }
 
   accountValue(event: any): void {

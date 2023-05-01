@@ -47,6 +47,31 @@ export class HttpApiService {
     return this.http.get<any>(url);
   }
 
+  //--聯絡人---------------------------------------------------------------------------------------------------
+  getAllContactRequest(page: number): Observable<any> {
+    const url = `${this.BaseUrl}/contacts?page=${page}&limit=10`;
+    return this.http.get<any>(url);
+  }
+
+  getOneContactRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/contacts/${id}`;
+    return this.http.get<any>(url);
+  }
+
+  postContactRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/contacts`;
+    return this.http.post<any>(url, body);
+  }
+
+  patchContactRequest(id: any, body: any): Observable<any> {
+    const url = `${this.BaseUrl}/contacts/${id}`;
+    return this.http.patch<any>(url, body);
+  }
+
+  deleteContactRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/contacts/${id}`;
+    return this.http.delete<any>(url);
+  }
   //--商品/服務---------------------------------------------------------------------------------------------------
   name: any;
   code: any;
