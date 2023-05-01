@@ -258,7 +258,7 @@ export class ContractComponent {
     let limit = event.rows;
     // this.sortField = event.sortField || 'code';
     // this.sortOrder = event.sortOrder || -1;
-    this.HttpApi.getAllContractRequest(limit, page, this.sortField, this.sortOrder)
+    this.HttpApi.getAllContractRequest(limit, page)
       .subscribe(res => {
           this.GetAllContract = res.body.contracts.map((contract: any) => {
             const start_date = this.formatDate2(contract.start_date)
