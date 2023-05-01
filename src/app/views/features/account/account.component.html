@@ -9,12 +9,12 @@
         </span>
       </div>
       <p-menu #menu [model]="account_type" [popup]="true"></p-menu>
-      <p-table [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
-               (onLazyLoad)="loadPostsLazy($event)">
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
+               (onLazyLoad)="loadPostsLazy($event)" [globalFilterFields]="['name']">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" [(ngModel)]="filterText" (input)="filter()" pInputText
+              <td><input type="text" [(ngModel)]="filterText" (input)="applyFilterGlobal($event, 'contains')" pInputText
                          placeholder="輸入關鍵字"></td>
             </span>
           </div>
