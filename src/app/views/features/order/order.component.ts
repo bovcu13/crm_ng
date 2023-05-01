@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
-import {Order} from "../../../shared/models/order";
+//import {Order} from "../../../shared/models/order";
 
 @Component({
   selector: 'app-order',
@@ -84,11 +84,12 @@ export class OrderComponent {
   }
 
   ngOnInit() {
-    //this.getAllOrderRequest()
+    this.getAllAccountRequest()
+    this.getAllContractRequest()
   }
 
   //取得所有訂單資料
-  GetAllOrder: Order[] = [];
+  GetAllOrder: HttpApiService[] = [];
   first = 0;
 
   getAllOrderRequest(limit?: number, page?: number) {
@@ -100,11 +101,9 @@ export class OrderComponent {
         this.GetAllOrder = res.body.orders
         this.GetAllOrder = res.body.orders.map((order: any) => {
           const start_date = this.formatDate2(order.start_date)
-          const created_by = this.getUserNameById(order.created_by);
-          const updated_by = this.getUserNameById(order.updated_by);
           const created_at = this.formatDate(order.created_at);
           const updated_at = this.formatDate(order.updated_at);
-          return {...order, start_date, created_by, updated_by, created_at, updated_at};
+          return {...order, start_date, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
         this.loading = false;
@@ -121,9 +120,9 @@ export class OrderComponent {
       status: this.order_form.value.status,
       description: this.order_form.value.description,
       start_date: this.order_form.value.start_date,
-      created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
-      contract_id: "00000000-0000-4000-a000-000000000000",
-      account_id: "52f18d90-e4c3-43cb-b9d4-f62b409e7392",
+      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+      contract_id: this.selectedContract_id, //契約ID
+      account_id: this.selectedAccount_id //帳戶ID
     }
     this.HttpApi.postOrderRequest(body).subscribe(Request => {
         console.log(Request)
@@ -140,11 +139,12 @@ export class OrderComponent {
     let body = {
       status: this.order_form.get('status')?.value,
       start_date: this.order_form.get('start_date')?.value,
-      account_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a", //帳戶ID
+      account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
-      contract_id: "00000000-0000-4000-a000-000000000000", //契約ID
-      updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a", //修改者ID(必填)
+      contract_id: this.selectedContract_id, //契約ID
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
+    console.log(this.selectedContract_id)
     this.HttpApi.patchOrderRequest(o_id, body).subscribe(
       Request => {
         console.log(Request)
@@ -166,10 +166,11 @@ export class OrderComponent {
     this.order_form = this.fb.group({
       code: [''],
       account_id: ['', [Validators.required]],
+      account_name: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
       status: ['', [Validators.required]],
       contract_id: ['',[Validators.required]],
-      contract_code: [''],
+      contract_code: ['',[Validators.required]],
       amount: [''],
       describe: [''],
       activated_by: [''],
@@ -215,12 +216,47 @@ export class OrderComponent {
     this.edit = true;
   }
 
-
-  //取得使用者
-  getUserNameById(id: string): string {
-    // 取得使用者名稱的邏輯，例如從 API 取得該使用者名稱
-    return "林";
+  // GET全部Account
+  GetAllAccount: any[] = [];
+  selectedAccount_id: string = '';
+  getAllAccountRequest() {
+    this.HttpApi.getAllAccountRequest(1).subscribe(
+      (res) => {
+        this.GetAllAccount = res.body.accounts.map((account: any) => {
+          return {
+            label: account.name,
+            value: account.account_id
+          };
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
+
+  // GET全部Contract
+  GetAllContract: any[] = [];
+  selectedContract_id: any;
+  getAllContractRequest() {
+    this.HttpApi.getAllContractRequest(1).subscribe(
+      (res) => {
+        const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
+        this.GetAllContract = contracts.map((contract: any) => {
+          return {
+            label: contract.code,
+            value: contract.contract_id,
+            date: contract.start_date,
+          };
+        });
+        this.validateStartDate()
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
 
 //處理status的值
   editStatus(): void {
@@ -228,6 +264,23 @@ export class OrderComponent {
     let statusName = this.selectedStatus ? this.selectedStatus.name : "";
     //將statusName更新到表單中
     this.order_form.patchValue({ status: statusName });
+  }
+
+  //設定訂單開始天數不能開始於契約開始日期
+  minDate: any;
+  validateStartDate() {
+//    const contractStartDate = this.GetAllContract.map((contract) => contract.date.split('T')[0]).join(', ');
+    const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
+    const contractStartDate = selectedContract.date;
+    this.minDate = new Date(contractStartDate);
+    console.log(this.minDate)
+    const orderStartDate = this.order_form.controls['start_date'].value;
+    console.log(orderStartDate)
+    if (orderStartDate < this.minDate) {
+      this.order_form.controls['start_date'].setErrors({ dateError: true });
+    } else {
+      this.order_form.controls['start_date'].value;
+    }
   }
   //日期轉換
   formatDate(dateString: string): string {
@@ -245,4 +298,5 @@ export class OrderComponent {
     const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours() - 16);
     return start_date.toISOString().slice(0, 10);
   }
+
 }
