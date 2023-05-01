@@ -43,11 +43,11 @@
         <ng-template pTemplate="body" let-order>
           <tr>
             <td>{{ order.code }}</td>
-            <td>{{ order.account_id }}</td>
-            <!--            <td>{{ order.amount }}</td>-->
+            <td>{{ order.account_name }}</td>
+            <!--<td>{{ order.amount }}</td>-->
             <td>{{ order.start_date }}</td>
             <td>{{ order.status }}</td>
-            <td>{{ order.contract_number }}</td>
+            <td>{{ order.contract_code}}</td>
             <td class="icon-align-right">
               <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button (click)="showDialog('edit',order)" icon="pi pi-pencil"
@@ -74,23 +74,26 @@
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>契約號碼</label>
-          <p-dropdown placeholder="搜尋契約" [disabled]="true" optionLabel="name" formControlName="contract_code"
-                      appendTo="body"
-                      [ngClass]="{'ng-dirty':order_form.controls['contract_code'].hasError && order_form.controls['contract_code'].touched}"></p-dropdown>
+          <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_code"
+                      appendTo="body" [options]="GetAllContract" [(ngModel)]="selectedContract_id"
+                      [ngClass]="{'ng-dirty': order_form.controls['contract_code'].hasError && order_form.controls['contract_code'].touched}"
+          ></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label><span class="required-star">*</span>帳戶名稱</label>
-          <input pInputText formControlName="account_id"
-                 [ngClass]="{'ng-dirty':order_form.controls['account_id'].hasError && order_form.controls['account_id'].touched}">
+          <label><span class="required-star">*</span>帳戶</label>
+          <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'" [(ngModel)]="selectedAccount_id"
+                      [ngClass]="{'ng-dirty':order_form.controls['account_id'].hasError && order_form.controls['account_id'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>訂單開始日期</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="start_date"
+                      (ngModelChange)="validateStartDate()" [minDate]="minDate"
                       [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
+          <div *ngIf="order_form.controls['start_date'].hasError('dateError')">訂單日期不可早於契約日期</div>
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">
