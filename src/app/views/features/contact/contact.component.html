@@ -8,7 +8,8 @@
                     styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [value]="filteredContacts">
+      <p-table [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
+               (onLazyLoad)="loadPostsLazy($event)">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -40,7 +41,7 @@
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',contact)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                <p-button icon="pi pi-trash" (click)="deleteContact(contact.contact_id)" pTooltip="刪除" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
@@ -155,10 +156,10 @@
 
     <div class="flex justify-content-end mt-3">
       <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
-        <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchContact();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="dialogHeader !== '編輯聯絡人'">
-        <p-button label="新增" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postContact();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
