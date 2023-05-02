@@ -41,9 +41,9 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
-  //--使用者---------------------------------------------------------------------------------------------------
-  getAllUserRequest(page: number): Observable<any> {
-    const url = this.BaseUrl + '/users' + '?page=' + page + '&limit=20';
+  //--商機---------------------------------------------------------------------------------------------------
+  getAllopportunityRequest(limit=20,page=1): Observable<any> {
+    const url = this.BaseUrl + '/opportunities' + '?page=' + page + '&limit=' + limit;
     return this.http.get<any>(url);
   }
 
@@ -160,9 +160,9 @@ export class HttpApiService {
     return this.http.patch<Contract>(url, body);
   }
 
-  deleteContractRequest(sid: string): Observable<Product> {
+  deleteContractRequest(sid: string): Observable<any> {
     const url = `${this.BaseUrl}/contracts/${sid}`;
-    return this.http.delete<Product>(url);
+    return this.http.delete<any>(url);
   }
 
   //--訂單---------------------------------------------------------------------------------------------------
@@ -225,6 +225,37 @@ export class HttpApiService {
   //刪除 訂單 delete
   deleteOrderRequest(sid: string): Observable<any> {
     const url = `${this.BaseUrl}/orders/${sid}`;
+    return this.http.delete<any>(url);
+  }
+
+//-------------------------------------------------------------------------------------------------------
+
+  opportunity_name:any;
+  is_syncing:any;
+  expiration_date:any;
+  tax:any;
+  shipping_and_handling:any;
+  subtotal:any;
+  //取得所有報價 getall
+  getAllQuoteRequest(limit = 20, page = 1): Observable<any> {
+    let url = this.BaseUrl + '/quotes' + '?page=' + page + '&limit=' + limit;
+    return this.http.get<any>(url);
+  }
+
+  //新增 報價 post
+  postQuoteRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/quotes`;
+    return this.http.post<any>(url, body);
+  }
+
+  //修改 報價 patch
+  patchQuoteRequest(sid: string, body: any): Observable<any> {
+    const url = `${this.BaseUrl}/quotes/${sid}`;
+    return this.http.patch<any>(url, body);
+  }
+  //刪除 報價 delete
+  deleteQuoteRequest(sid: string): Observable<any> {
+    const url = `${this.BaseUrl}/quotes/${sid}`;
     return this.http.delete<any>(url);
   }
 }
