@@ -34,13 +34,35 @@ export class ProductComponent {
   //     updated_by: "林",
   //   }
   // ]
-  ngOnInit() {
-    this.getAllProductRequest()
-  }
+    //搜尋功能
+    filterText: any;
+    filterProducts(): void {
+      if (!this.filterText) {
+        this.getAllProductRequest();
+        return;
+      }
+      // 使用 Array 的 filter() 方法對 GetAllProduct 進行過濾
+      this.GetAllProduct = this.GetAllProduct.filter((product) => {
+        // 將所有要比對的欄位轉成小寫字母
+        const name = product.name?.toLowerCase() || '';
+        const code = product.code?.toLowerCase() || '';
+        const description = product.description?.toLowerCase() || '';
+        const price = product.price?.toString().toLowerCase() || '';
+        // 比對是否有任何一個欄位包含搜尋文字
+        return (
+          name.includes(this.filterText.toLowerCase()) ||
+          code.includes(this.filterText.toLowerCase()) ||
+          description.includes(this.filterText.toLowerCase()) ||
+          price.includes(this.filterText.toLowerCase()) ||
+          (product.is_enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
+        );
+      });
+      console.log(this.GetAllProduct)
+    }
 
 //GET全部product
   GetAllProduct!: HttpApiService[];
-  getAllProductRequest(limit?: number, page?: number): void {
+  getAllProductRequest(limit?: number, page?: number){
     if (!page) {
       this.first = 0;
     }
@@ -63,6 +85,9 @@ export class ProductComponent {
 //POST 一筆product
   BadRequest: any
   postProductRequest(): void {
+    if (this.product_form.controls['name'].hasError('required') || this.product_form.controls['price'].hasError('required')) {
+      return;
+    }
     let body = {
       name: this.product_form.value.name,
       code: this.product_form.value.code,
@@ -86,55 +111,6 @@ export class ProductComponent {
       })
   }
 
-
-//日期轉換
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    const hour = ("0" + date.getHours()).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
-  //搜尋功能
-  filterText: any;
-  filterProducts(): void {
-    if (!this.filterText) {
-      this.getAllProductRequest();
-      return;
-    }
-    // 使用 Array 的 filter() 方法對 GetAllProduct 進行過濾
-    this.GetAllProduct = this.GetAllProduct.filter((product) => {
-      // 將所有要比對的欄位轉成小寫字母
-      const name = product.name?.toLowerCase() || '';
-      const code = product.code?.toLowerCase() || '';
-      const description = product.description?.toLowerCase() || '';
-      const price = product.price?.toString().toLowerCase() || '';
-      // 比對是否有任何一個欄位包含搜尋文字
-      return (
-        name.includes(this.filterText.toLowerCase()) ||
-        code.includes(this.filterText.toLowerCase()) ||
-        description.includes(this.filterText.toLowerCase()) ||
-        price.includes(this.filterText.toLowerCase()) ||
-        (product.enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
-      );
-    });
-    console.log(this.GetAllProduct)
-  }
-
-  //懶加載
-  totalRecords= 0;
-  first: any;
-  loading: boolean = true;
-  loadPostsLazy(e: any) {
-    this.loading = true;
-    let limit = e.rows;
-    let page = e.first / e.rows + 1;
-    this.getAllProductRequest(limit, page);
-  }
-
 //建立formgroup
   product_form: FormGroup;
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
@@ -143,7 +119,7 @@ export class ProductComponent {
       name: ['', [Validators.required]],
       series: [''],
       code: [''],
-      enable: [false],
+      is_enable: [false],
       price: ['', [Validators.required]],
       description: [''],
       created_at: [''],
@@ -174,6 +150,9 @@ export class ProductComponent {
   }
   Repeated: any;//判斷是否重複
   patchProductRequest(p_id: any): void{
+    if (this.product_form.controls['name'].hasError('required') || this.product_form.controls['price'].hasError('required')) {
+      return;
+    }
       let body = {
         name: this.product_form.get('name')?.value,
         is_enable: this.product_form.get('is_enable')?.value,
@@ -200,6 +179,28 @@ export class ProductComponent {
       console.log(Request)
       this.getAllProductRequest()
     })
+  }
+
+    //懶加載
+    totalRecords= 0;
+    first = 0;
+    loading: boolean = true;
+    loadPostsLazy(e: any) {
+      this.loading = true;
+      let limit = e.rows;
+      let page = e.first / e.rows + 1;
+      this.getAllProductRequest(limit, page);
+    }
+
+  //日期轉換
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const hour = ("0" + date.getHours()).slice(-2);
+    const minute = ("0" + date.getMinutes()).slice(-2);
+    return `${year}-${month}-${day} ${hour}:${minute}`;
   }
 }
 
