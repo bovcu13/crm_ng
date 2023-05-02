@@ -7,7 +7,10 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="filteredQuotes" [paginator]="true" [rows]="5" [totalRecords]="100" [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} entries'">
+      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllQuote" [paginator]="true"
+      [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
+      [showCurrentPageReport]="true" [(first)]="first" [loading]="loading"
+      currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -20,7 +23,7 @@
           <tr>
             <th pSortableColumn="name">名稱<p-sortIcon field="name"></p-sortIcon></th>
             <th pSortableColumn="opportunity_name">商機名稱<p-sortIcon field="opportunity_name"></p-sortIcon></th>
-            <th pSortableColumn="syncing">正在同步化<p-sortIcon field="syncing"></p-sortIcon></th>
+            <th pSortableColumn="is_syncing">正在同步化<p-sortIcon field="is_syncing"></p-sortIcon></th>
             <th pSortableColumn="expiration_date">到期日期<p-sortIcon field="expiration_date"></p-sortIcon></th>
             <th pSortableColumn="subtotal">小計<p-sortIcon field="subtotal"></p-sortIcon></th>
             <th pSortableColumn="total_price">總價<p-sortIcon field="total_price"></p-sortIcon></th>
@@ -31,7 +34,7 @@
           <tr>
             <td>{{ quote.name }}</td>
             <td>{{ quote.opportunity_name }}</td>
-            <td>{{ quote.syncing }}</td>
+            <td>{{ quote.is_syncing }}</td>
             <td>{{ quote.expiration_date }}</td>
             <td>{{ quote.subtotal }}</td>
             <td>{{ quote.total_price }}</td>
@@ -39,7 +42,8 @@
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除" tooltipPosition="top"></p-button>
+              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
+                        (click)="deleteQuoteRequest(quote.quote_id)" tooltipPosition="top"></p-button>
             </td>
           </tr>
         </ng-template>
@@ -54,7 +58,7 @@
         <div class="field">
           <label>編號</label>
           <br>
-          <label class="mt-2 ml-2 disable">{{(quote_form.controls['number'].value)}}</label>
+          <label class="mt-2 ml-2 disable">{{(quote_form.controls['code'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -66,23 +70,23 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>商機名稱</label>
-          <br>
-          <label class="mt-2 ml-2 disable">{{(quote_form.controls['opportunity_name'].value)}}</label>
+          <label>商機</label>
+          <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'" [(ngModel)]="selectedOpportunity_id"
+                      [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError && quote_form.controls['opportunity_id'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label>客戶(個人or法人)</label>
-          <br>
-          <label class="mt-2 ml-2 disable">{{(quote_form.controls['account_name'].value)}}</label>
+          <label>帳戶</label>
+          <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'" [(ngModel)]="selectedAccount_id"
+                      [ngClass]="{'ng-dirty':quote_form.controls['account_id'].hasError && quote_form.controls['account_id'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>同步到商機</label>
           <br>
-          <p-checkbox formControlName="syncing" value="syncing" [binary]="true"></p-checkbox>
+          <p-checkbox formControlName="is_syncing" value="is_syncing" [binary]="true"></p-checkbox>
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">
@@ -102,7 +106,7 @@
       <div class="col-12">
         <div class="field">
           <label>描述</label>
-          <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
+          <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
       <div class="col-6">
@@ -124,7 +128,7 @@
         <div class="field">
           <label>稅額</label>
           <br>
-          <p-inputNumber class="w-full" formControlName="tax" mode="currency" currency="USD" locale="en-US"
+          <p-inputNumber class="w-full" formControlName="tax" mode="currency" currency="TWD" locale="en-US"
             [minFractionDigits]="2"> </p-inputNumber>
         </div>
       </div>
@@ -169,7 +173,12 @@
       </div>
     </div>
     <div class="flex justify-content-end">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      <ng-container *ngIf="!showedit">
+        <p-button label="新增" (click)="postQuoteRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="showedit">
+        <p-button label="儲存" (click)="patchQuoteRequest(q_id)" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
