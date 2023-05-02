@@ -127,27 +127,31 @@ export class ContractComponent {
     }
 
   // GET全部Account
-  GetAllAccount: { [key: string]: string } = {};
-  Account_id: string = '';
-  protected readonly Object = Object;
+  GetAllAccount: any[] = [];
+  selectedAccount_id: string = '';
   getAllAccountRequest() {
     this.HttpApi.getAllAccountRequest(1).subscribe(
       (res) => {
-        this.GetAllAccount = res.body.accounts.reduce((acc: any, curr: any) => {
-          acc[curr.account_id] = curr.name;
-          this.Account_id = curr.account_id
-          return acc;
-        },{});
+        this.GetAllAccount = res.body.accounts.map((account: any) => {
+          return {
+            label: account.name,
+            value: account.account_id
+          };
+        });
       },
       (error) => {
         console.log(error);
       }
     );
   }
+
 //POST 一筆contract
   PostOneContract!: HttpApiService[];
   postContractRequest(): void {
-    this.contract_form.value.account_id = this.Account_id;
+    if (this.contract_form.controls['start_date'].hasError('required') || this.contract_form.controls['account_id'].hasError('required')
+    || this.contract_form.controls['term'].hasError('required') ) {
+      return;
+    }
     let body = {
       code: this.contract_form.value.code,
       status: this.contract_form.value.status,
@@ -155,7 +159,7 @@ export class ContractComponent {
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      account_id: this.contract_form.value.account_id,
+      account_id:  this.selectedAccount_id, //帳戶ID
     }
     this.HttpApi.postContractRequest(body).subscribe(Request => {
         this.PostOneContract = Request
@@ -218,9 +222,14 @@ export class ContractComponent {
   }
   patchContractRequest(c_id: any): void{
     this.editStatus()//處理status的值，抓取name
+    if (this.contract_form.controls['start_date'].hasError('required') || this.contract_form.controls['account_id'].hasError('required')
+    || this.contract_form.controls['term'].hasError('required') ) {
+      return;
+    }
     let body = {
       status: this.contract_form.get('status')?.value,
       start_date: this.contract_form.get('start_date')?.value,
+      account_id: this.selectedAccount_id, //帳戶ID
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
