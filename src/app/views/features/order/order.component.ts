@@ -118,6 +118,10 @@ export class OrderComponent {
   }
 
   postOrderRequest(): void {
+    if (this.order_form.controls['account_id'].hasError('required')
+    || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
+      return;
+    }
     let body = {
       status: this.order_form.value.status,
       description: this.order_form.value.description,
@@ -138,6 +142,10 @@ export class OrderComponent {
 
   patchOrderRequest(o_id: any): void {
     this.editStatus()//處理status的值，抓取name
+    if (this.order_form.controls['account_id'].hasError('required')
+    || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
+      return;
+    }
     let body = {
       status: this.order_form.get('status')?.value,
       start_date: this.order_form.get('start_date')?.value,
@@ -282,12 +290,13 @@ export class OrderComponent {
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
-    if (this.order_form.controls['start_date'].value == null) {
-      this.orderStartDate = todayDate
-      this.order_form.patchValue({start_date: todayDate});
-    } else {
-      this.orderStartDate = this.order_form.controls['start_date'].value;
-    }
+    // if (this.order_form.controls['start_date'].value == null) {
+    //   this.orderStartDate = todayDate
+    //   this.order_form.patchValue({start_date: todayDate});
+    // } else {
+    //   this.orderStartDate = this.order_form.controls['start_date'].value;
+    // }
+    this.orderStartDate = this.order_form.controls['start_date'].value;
     if (this.orderStartDate < this.MinDate) {
       this.order_form.controls['start_date'].setErrors({dateError: true});
     } else {
