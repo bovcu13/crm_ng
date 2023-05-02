@@ -145,6 +145,8 @@ export class CampaignComponent {
 
   //取得所有行銷活動資料
   GetAllCampaign: HttpApiService[] = [];
+  GetAllparent_campaign: any[] = [];
+  selectedParent_id: any;//儲存行銷活動父系id
   first = 0;
   totalRecords = 0;
   loading: boolean = true;
@@ -154,6 +156,13 @@ export class CampaignComponent {
     }
     this.HttpApi.getAllCampaignRequest(limit, page).subscribe(
       (res) => {
+        const campaigns = res.body.campaigns
+        this.GetAllparent_campaign = campaigns.map((order: any) => {
+          return {
+            label: order.name,
+            value: order.campaign_id,
+          };
+        });
         this.GetAllCampaign = res.body.campaigns
         this.GetAllCampaign = res.body.campaigns.map((order: any) => {
           const start_date = this.formatDate2(order.start_date)
@@ -174,10 +183,21 @@ export class CampaignComponent {
 
   postCampaignRequest(): void {
     this.editType()//處理type的值，抓取name
+    if (this.campaign_form.value.parent_campaign_id == null){
+      this.campaign_form.value.parent_campaign_id = "00000000-0000-4000-a000-000000000000"
+    }else{
+      this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
+    }
+    if (this.campaign_form.value.start_date) {
+      this.campaign_form.value.start_date = ""
+    }
+    if (this.campaign_form.value.end_date) {
+      this.campaign_form.value.end_date = ""
+    }
     let body = {
       name: this.campaign_form.value.name,
       status: this.campaign_form.value.status,
-      parent_campaign_id: "00000000-0000-4000-a000-000000000000",
+      parent_campaign_id: this.campaign_form.value.parent_campaign_id,
       type: this.campaign_form.value.type,
       is_enable: this.campaign_form.value.is_enable,
       description: this.campaign_form.value.description,
@@ -193,6 +213,7 @@ export class CampaignComponent {
     this.HttpApi.postCampaignRequest(body).subscribe(Request => {
         console.log(Request)
         this.getAllCampaignRequest()
+        this.visible = false ;
       },
       error => {
         console.log(error);
@@ -211,7 +232,7 @@ export class CampaignComponent {
       owner: [''],
       is_enable: [false],
       status: [''],
-      parent_campaign_id: [''],
+      parent_campaign_id: ['', Validators.required],
       type: [''],
       start_date: [''],
       end_date: [''],
@@ -263,11 +284,19 @@ export class CampaignComponent {
   patchCampaignRequest(c_id: any): void{
     this.editStatus()//處理status的值，抓取name
     this.editType()//處理type的值，抓取name
+    if (this.campaign_form.value.parent_campaign_id == null || "00000000-0000-4000-a000-000000000000"){
+      this.campaign_form.value.parent_campaign_id = "00000000-0000-4000-a000-000000000000"
+    }else{
+      this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
+    }
+    if (this.campaign_form.controls['parent_campaign_id'].hasError('Parent_idError')) {
+      return;
+    }
     let body = {
       name: this.campaign_form.get('name')?.value,
       status: this.campaign_form.get('status')?.value,
       is_enable: this.campaign_form.get('is_enable')?.value,
-      parent_campaign_id: "00000000-0000-4000-a000-000000000000",
+      parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
       type: this.campaign_form.get('type')?.value,
       start_date: this.campaign_form.get('start_date')?.value,
       end_date: this.campaign_form.get('end_date')?.value,
@@ -287,12 +316,13 @@ export class CampaignComponent {
       })
   }
 
-  deleteCampaignRequest(p_id: any): void {
-    this.HttpApi.deleteCampaignRequest(p_id).subscribe(Request => {
+  deleteCampaignRequest(c_id: any): void {
+    this.HttpApi.deleteCampaignRequest(c_id).subscribe(Request => {
       console.log(Request)
       this.getAllCampaignRequest()
     })
   }
+
 
   //處理status的值
   editStatus(): void {
@@ -317,12 +347,22 @@ export class CampaignComponent {
     let page = e.first / e.rows + 1;
     this.getAllCampaignRequest(limit, page);
   }
+  //判斷父系行銷活動是否選取到本來的行銷活動
+  validateParent_id() {
+    if (this.selectedParent_id === this.c_id) {
+      this.campaign_form.controls['parent_campaign_id']
+      .setErrors({Parent_idError: true});
+    } else {
+      this.campaign_form.controls['parent_campaign_id'].value;
+    }
+  }
+
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = ("0" + (date.getMonth())).slice(-2);
-    const day = ("0" + (date.getDate()+ 29)).slice(-2);
-    const hour = ("0" + (date.getHours() + 16)).slice(-2);
+    const month = ("0" + (date.getMonth()+1)).slice(-2);
+    const day = ("0" + (date.getDate())).slice(-2);
+    const hour = ("0" + (date.getHours() )).slice(-2);
     const minute = ("0" + date.getMinutes()).slice(-2);
     return `${year}-${month}-${day} ${hour}:${minute}`;
   }
@@ -348,4 +388,5 @@ export class CampaignComponent {
   ontypeChange(event: any) {
     console.log("類型選擇type: " + event.value.code + event.value.name);
   }
+
 }

@@ -40,14 +40,14 @@
             <td>{{ campaign.status }}</td>
             <td>{{ campaign.start_date }}</td>
             <td>{{ campaign.end_date }}</td>
-            <td>{{ campaign.owner }}</td>
+            <td>{{ campaign.created_by }}</td>
             <td>{{ campaign.member }}</td>
             <td class="icon-align-right flex mt-1"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             <p-button (click)="showDialog('edit',campaign)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
-                      (click)="deleteCampaignRequest(c_id)"
+                      (click)="deleteCampaignRequest(campaign.campaign_id)"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button></td>
 
           </tr>
@@ -70,7 +70,7 @@
         <div class="field">
           <label>業務</label>
           <br>
-          <label class="mt-2 ml-2 disable">{{(campaign_form.controls['owner'].value)}}</label>
+          <label class="mt-2 ml-2 disable">{{(campaign_form.controls['created_by'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -98,8 +98,11 @@
       <div class="col-6">
         <div class="field">
           <label>父系行銷活動</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body"
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllparent_campaign"
+                      [(ngModel)]="selectedParent_id" (ngModelChange)="validateParent_id()"
             formControlName="parent_campaign_id"></p-dropdown>
+          <div class="required-star" *ngIf="campaign_form.controls['parent_campaign_id'].hasError('Parent_idError')">
+            無法選取同樣的行銷活動到父系行銷活動中</div>
         </div>
       </div>
       <div class="col-6">

@@ -212,7 +212,7 @@ export class HttpApiService {
     return this.http.get<any>(url);
   }
   //新增 行銷活動 post
-  postCampaignRequest(body: any){
+  postCampaignRequest(body: any): Observable<any>{
     const url = `${this.BaseUrl}/campaigns`;
     return this.http.post<any>(url, body);
   }
