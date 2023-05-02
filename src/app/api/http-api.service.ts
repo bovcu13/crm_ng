@@ -131,9 +131,9 @@ export class HttpApiService {
   }
 
   //刪除 商品/服務資料 delete
-  deleteProductRequest(sid: string): Observable<Product> {
+  deleteProductRequest(sid: string): Observable<any> {
     const url = `${this.BaseUrl}/products/${sid}`;
-    return this.http.delete<Product>(url);
+    return this.http.delete<any>(url);
   }
 
   //--契約---------------------------------------------------------------------------------------------------
@@ -228,8 +228,7 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
-//-------------------------------------------------------------------------------------------------------
-
+//----報價---------------------------------------------------------------------------------------------------
   opportunity_name:any;
   is_syncing:any;
   expiration_date:any;
@@ -256,6 +255,33 @@ export class HttpApiService {
   //刪除 報價 delete
   deleteQuoteRequest(sid: string): Observable<any> {
     const url = `${this.BaseUrl}/quotes/${sid}`;
+    return this.http.delete<any>(url);
+  }
+
+  //----------行銷活動------------------------------------------------------------------------------------------------
+  is_enable: any;
+  parent_campaign_id: any;
+  type: any;
+  owner: any;
+  //取得所有行銷活動 getall
+  getAllCampaignRequest(limit = 20, page = 1): Observable<any> {
+    const url = this.BaseUrl + '/campaigns' + '?page=' + page + '&limit=' + limit;
+    return this.http.get<any>(url);
+  }
+  //新增 行銷活動 post
+  postCampaignRequest(body: any): Observable<any>{
+    const url = `${this.BaseUrl}/campaigns`;
+    return this.http.post<any>(url, body);
+  }
+  //修改 行銷活動 patch
+  patchCampaignRequest(sid: string, body: any): Observable<any>{
+    const url = `${this.BaseUrl}/campaigns/${sid}`;
+    return this.http.patch<any>(url, body);
+  }
+
+  //刪除 行銷活動 delete
+  deleteCampaignRequest(sid: string): Observable<any> {
+    const url = `${this.BaseUrl}/campaigns/${sid}`;
     return this.http.delete<any>(url);
   }
 }
