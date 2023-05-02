@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MenuItem} from "primeng/api";
+import {LazyLoadEvent, MenuItem} from "primeng/api";
+import {HttpApiService} from "../../../api/http-api.service";
+import {Lead} from "../../../shared/models/lead";
+
 
 @Component({
   selector: 'app-lead',
@@ -8,6 +11,7 @@ import {MenuItem} from "primeng/api";
   styleUrls: ['./lead.component.scss']
 })
 export class LeadComponent implements OnInit {
+  getData!: Lead[];
   filteredLead: any[] = [];
   lead: any[] = [
     {
@@ -65,23 +69,23 @@ export class LeadComponent implements OnInit {
   status: any[] = [
     {
       name: "不明確",
-      code: "unqualified",
+      code: "Unqualified",
     },
     {
       name: "新線索",
-      code: "new",
+      code: "New",
     },
     {
       name: "評估中",
-      code: "working",
+      code: "Working",
     },
     {
       name: "發展中",
-      code: "nurturing",
+      code: "Nurturing",
     },
     {
       name: "已轉換",
-      code: "closed",
+      code: "Closed",
     }
   ]
 
@@ -149,15 +153,15 @@ export class LeadComponent implements OnInit {
   rating: any = [
     {
       name: "很有可能成交",
-      code: "hot"
+      code: "Hot"
     },
     {
       name: "可能性不明確",
-      code: "warm"
+      code: "Warm"
     },
     {
       name: "很有可能不成交",
-      code: "cold"
+      code: "Cold"
     }
   ]
 
@@ -236,8 +240,9 @@ export class LeadComponent implements OnInit {
   addAcount: boolean = false;
   dialogHeader!: string;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.lead_form = this.fb.group({
+      lead_id: ['', [Validators.required]],
       name: [''],
       status: ['', [Validators.required]],
       account_id: ['', [Validators.required]],
@@ -251,10 +256,10 @@ export class LeadComponent implements OnInit {
       industry_id: [''],
       rating: ['',],
       owner: [''],
-      company_name: [''],
-      created_by: [''],
+      account_name: [''],
+      created_by: ['', [Validators.required]],
       created_at: [''],
-      updated_by: [''],
+      updated_by: ['', [Validators.required]],
       updated_at: [''],
     });
     this.account_form = this.fb.group({
@@ -274,6 +279,7 @@ export class LeadComponent implements OnInit {
   getLead(lead: any): void {
     this.leadValue = lead
   }
+
   filterText: any = '';
 
   filtered() {
@@ -297,14 +303,27 @@ export class LeadComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filteredLead = this.lead
+    this.filteredLead = this.getData
+  }
+
+  total!: number;
+
+  // 懶加載
+  loadPostsLazy(event: LazyLoadEvent) {
+    const page = (event.first! / event.rows!) + 1;
+    this.HttpApi.getAllLeadRequest(page).subscribe(request => {
+      this.getData = request.body.leads;
+      this.total = request.body.total
+      console.log(this.getData);
+      // console.log(this.total)
+    });
   }
 
   showDialog(type: string, lead?: any): void {
     // 將"業務員"設定為不可修改
     // this.lead_form.controls['owner'].disable();
     this.edit = true;
-    console.log(this.lead_form.controls['status'].value)
+    // console.log(JSON.stringify(this.lead_form.controls['status'].value))
     if (type === 'add'
     ) {
       this.dialogHeader = '新增線索';
@@ -315,15 +334,85 @@ export class LeadComponent implements OnInit {
         status: this.status.find(s => s.name === this.status[1].name),
       });
     } else if (type === 'edit') {
-      console.log("lead: " + JSON.stringify(lead))
       this.dialogHeader = '編輯線索';
+      this.lead_form.controls['status'].enable();
       this.lead_form.patchValue(lead);
+      console.log(lead);
       this.lead_form.patchValue({
-        status: this.status.find(s => s.name === lead.status),
-        // source: this.source.find(s => s.name === lead.source),
-        // rating: this.rating.find(s => s.name === lead.rating)
+        status: this.status.find((s: { name: any; }) => s.name === lead.status),
+        source: this.source.find((s: { name: any; }) => s.name === lead.source),
+        rating: this.rating.find((s: { name: any; }) => s.name === lead.rating)
       });
+      console.log(this.lead_form.controls['status'].value);
     }
+  }
+
+  postLead(): void {
+    let body = {
+      description: this.lead_form.controls['description'].value,
+      status: this.status[1].name,
+      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
+      // source: this.lead_form.value.source,
+      source: this.selectedSource.name,
+      account_name: this.selectedAccount.name,
+      rating: this.selectedRating.name,
+      // rating: "Hot",
+      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+    }
+    this.HttpApi.postLeadRequest(body)
+      .subscribe(request => {
+        console.log(request)
+        let event: LazyLoadEvent = {
+          first: 0,
+          rows: 10,
+          sortField: undefined,
+          sortOrder: undefined,
+          multiSortMeta: undefined,
+          filters: undefined,
+          globalFilter: undefined,
+        };
+        this.loadPostsLazy(event);
+      })
+  }
+
+  patchLead(): void {
+    let id = this.lead_form.controls['lead_id'].value
+    let body = {
+      description: this.lead_form.controls['description'].value,
+      status: this.selectedStatus?.name,
+      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
+      // source: this.lead_form.value.source,
+      source: this.selectedSource?.name,
+      account_name: this.selectedAccount?.name,
+      rating: this.selectedRating?.name,
+      // rating: "Hot",
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+    }
+    this.HttpApi.patchLeadRequest(id, body)
+      .subscribe(request => {
+        console.log(request)
+        let event: LazyLoadEvent = {
+          first: 0,
+          rows: 10,
+          sortField: undefined,
+          sortOrder: undefined,
+          multiSortMeta: undefined,
+          filters: undefined,
+          globalFilter: undefined,
+        };
+        this.loadPostsLazy(event);
+      })
+  }
+
+  deleteLead(id: any): void {
+    this.HttpApi.deleteLeadRequest(id).subscribe(request => {
+      console.log(request)
+      let event: LazyLoadEvent = {
+        first: 0,
+        rows: 10,
+      };
+      this.loadPostsLazy(event);
+    })
   }
 
   addAccDialog(): void {
@@ -331,26 +420,36 @@ export class LeadComponent implements OnInit {
     this.edit = false;
   }
 
+  selectedStatus: any;
+
   statusValue(event: any): void {
-    // const selectedStatus = this.status.find((s) => s.code === event.value.code);
-    console.log("code: " + event.value.code);
-    console.log("name: " + event.value.name);
-    // console.log(selectedStatus.name);
+    this.selectedStatus = this.status.find((s: { name: any; }) => s.name === event.value.name);
+    // console.log("code: " + event.value.code);
+    // console.log("name: " + event.value.name);
+    this.lead_form.value.status = this.selectedStatus.name
   }
+
+  selectedAccount: any;
 
   accountValue(event: any): void {
-    console.log("code: " + event.value.code);
-    console.log("name: " + event.value.name);
+    this.selectedAccount = this.account.find((s: { name: any; }) => s.name === event.value.name);
+    this.lead_form.value.account_name = this.selectedAccount.name
   }
 
-  leadSourceValue(event: any): void {
-    console.log("code: " + event.value.code);
-    console.log("name: " + event.value.name);
+  selectedSource: any;
+
+  sourceValue(event: any): void {
+    this.selectedSource = this.source.find((s: { name: any; }) => s.name === event.value.name);
+    this.lead_form.value.source = this.selectedSource.name
   }
+
+  selectedRating: any;
 
   ratingValue(event: any): void {
-    console.log("code: " + event.value.code);
-    console.log("name: " + event.value.name);
+    this.selectedRating = this.rating.find((s: { name: any; }) => s.name === event.value.name);
+    this.lead_form.value.rating = this.selectedRating.name
+    // console.log(typeof this.selectedRating.name)
+    // console.log(this.selectedRating.name)
   }
 
   industry_idValue(event: any): void {
@@ -358,9 +457,10 @@ export class LeadComponent implements OnInit {
     console.log("name: " + event.value.name);
   }
 
+  selectedIndustry: any;
+
   industryValue(event: any): void {
-    const selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedIndustry.name);
+    this.selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
+    this.lead_form.value.industry = this.selectedIndustry.name
   }
 }
