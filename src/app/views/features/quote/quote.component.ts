@@ -1,10 +1,6 @@
-import { filter } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpApiService } from "../../../api/http-api.service";
-import { DatePipe } from "@angular/common";
-import { formatDate } from '@fullcalendar/core';
-
 @Component({
   selector: 'app-quote',
   templateUrl: './quote.component.html',
@@ -143,6 +139,10 @@ export class QuoteComponent {
 
   //POST 一筆quote
   postQuoteRequest(): void {
+    if (this.quote_form.controls['name'].hasError('required') || this.quote_form.controls['account_id'].hasError('required')
+    || this.quote_form.controls['opportunity_id'].hasError('required') ) {
+      return;
+    }
     let body = {
       name: this.quote_form.value.name,
       account_id: this.selectedAccount_id,//帳戶ID
@@ -167,6 +167,10 @@ export class QuoteComponent {
 
   patchQuoteRequest(p_id: any): void {
     this.editStatus()//處理status的值，抓取name
+    if (this.quote_form.controls['name'].hasError('required') || this.quote_form.controls['account_id'].hasError('required')
+    || this.quote_form.controls['opportunity_id'].hasError('required') ) {
+      return;
+    }
     let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
     let body = {
       name: this.quote_form.get('name')?.value,
