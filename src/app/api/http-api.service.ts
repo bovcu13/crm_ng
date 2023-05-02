@@ -72,6 +72,33 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/contacts/${id}`;
     return this.http.delete<any>(url);
   }
+
+  //--線索---------------------------------------------------------------------------------------------------
+  getAllLeadRequest(page: number): Observable<any> {
+    const url = `${this.BaseUrl}/leads?page=${page}&limit=10`;
+    return this.http.get<any>(url);
+  }
+
+  getOneLeadRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/leads/${id}`;
+    return this.http.get<any>(url);
+  }
+
+  postLeadRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/leads`;
+    return this.http.post<any>(url, body);
+  }
+
+  patchLeadRequest(id: any, body: any): Observable<any> {
+    const url = `${this.BaseUrl}/leads/${id}`;
+    return this.http.patch<any>(url, body);
+  }
+
+  deleteLeadRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/leads/${id}`;
+    return this.http.delete<any>(url);
+  }
+
   //--商品/服務---------------------------------------------------------------------------------------------------
   name: any;
   code: any;
