@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Calendar } from 'primeng/calendar';
-import { Table } from 'primeng/table';
+import {HttpApiService} from "../../../api/http-api.service";
 @Component({
   selector: 'app-campaign',
   templateUrl: './campaign.component.html',
@@ -12,7 +12,6 @@ export class CampaignComponent {
   @ViewChild('startDate') startDate: Calendar | undefined;
   @ViewChild('endDate') endDate: Calendar | undefined;
   //table內容
-  filteredCampaigns: any[] = [];
   campaign: any[] = [
     {
       name: "1+1",
@@ -53,34 +52,41 @@ export class CampaignComponent {
       updated_by: "林",
     },
   ];
+
+  //搜尋功能
   filterText: any = '';
   filterCampaigns() {
-    if (this.filterText) {
-      this.filteredCampaigns = this.campaign.filter((campaign) => {
-        return campaign.name.toLowerCase().includes(this.filterText.toLowerCase());
-      });
-    } else {
-      this.filteredCampaigns = this.campaign;
+    if (!this.filterText) {
+      this.getAllCampaignRequest();
+      return;
     }
-    if (this.filterText === '') {
-      this.filteredCampaigns = this.campaign;
-    } else {
-      this.filteredCampaigns = this.campaign.filter(campaign => {
+      this.GetAllCampaign = this.GetAllCampaign.filter(campaign => {
+        // 將所有要比對的欄位轉成小寫字母
+        const name = campaign.name?.toLowerCase() || '';
+        const status = campaign.status?.toLowerCase() || '';
+        //const parent_campaign_id = campaign.status?.toLowerCase() || '';
+        const type = campaign.type?.toLowerCase() || '';
+        const start_date = campaign.start_date?.toLowerCase() || '';
+        const end_date = campaign.end_date?.toLowerCase() || '';
+        const description = campaign.description?.toLowerCase() || '';
+        const owner = campaign.owner?.toLowerCase() || '';
         return (
-          campaign.name.toLowerCase().includes(this.filterText) ||
-          campaign.patrilineal_name.toLowerCase().includes(this.filterText) ||
-          campaign.type.toLowerCase().includes(this.filterText) ||
-          campaign.status.toLowerCase().includes(this.filterText) ||
-          campaign.start_date.toLowerCase().includes(this.filterText) ||
-          campaign.end_date.toLowerCase().includes(this.filterText) ||
-          campaign.owner.toLowerCase().includes(this.filterText)
+          name.toLowerCase().includes(this.filterText) ||
+          status.toLowerCase().includes(this.filterText) ||
+          (campaign.is_enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase()) ||
+          //campaign.parent_campaign_id.toLowerCase().includes(this.filterText) ||
+          type.toLowerCase().includes(this.filterText) ||
+          status.toLowerCase().includes(this.filterText) ||
+          start_date.toLowerCase().includes(this.filterText) ||
+          end_date.toLowerCase().includes(this.filterText) ||
+          description.toLowerCase().includes(this.filterText) ||
+          owner.toLowerCase().includes(this.filterText)
         );
       });
-    }
-    console.log(this.filteredCampaigns)
+    console.log(this.GetAllCampaign)
   }
   ngOnInit() {
-    this.filteredCampaigns = this.campaign;
+
   }
   //p-dropdown狀態
   status = [
@@ -137,17 +143,96 @@ export class CampaignComponent {
     },
   ];
 
+  //取得所有行銷活動資料
+  GetAllCampaign: HttpApiService[] = [];
+  GetAllparent_campaign: any[] = [];
+  selectedParent_id: any;//儲存行銷活動父系id
+  first = 0;
+  totalRecords = 0;
+  loading: boolean = true;
+  getAllCampaignRequest(limit?: number, page?: number) {
+    if (!page) {
+      this.first = 0;
+    }
+    this.HttpApi.getAllCampaignRequest(limit, page).subscribe(
+      (res) => {
+        const campaigns = res.body.campaigns
+        this.GetAllparent_campaign = campaigns.map((order: any) => {
+          return {
+            label: order.name,
+            value: order.campaign_id,
+          };
+        });
+        this.GetAllCampaign = res.body.campaigns
+        this.GetAllCampaign = res.body.campaigns.map((order: any) => {
+          const start_date = this.formatDate2(order.start_date)
+          const end_date = this.formatDate2(order.end_date)
+          const created_at = this.formatDate(order.created_at);
+          const updated_at = this.formatDate(order.updated_at);
+          return {...order, start_date,end_date, created_at, updated_at};
+        });
+        this.totalRecords = res.body.total;
+        this.loading = false;
+        console.log(this.GetAllCampaign)
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  postCampaignRequest(): void {
+    this.editType()//處理type的值，抓取name
+    if (this.campaign_form.value.parent_campaign_id == null){
+      this.campaign_form.value.parent_campaign_id = "00000000-0000-4000-a000-000000000000"
+    }else{
+      this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
+    }
+    if (this.campaign_form.value.start_date) {
+      this.campaign_form.value.start_date = ""
+    }
+    if (this.campaign_form.value.end_date) {
+      this.campaign_form.value.end_date = ""
+    }
+    let body = {
+      name: this.campaign_form.value.name,
+      status: this.campaign_form.value.status,
+      parent_campaign_id: this.campaign_form.value.parent_campaign_id,
+      type: this.campaign_form.value.type,
+      is_enable: this.campaign_form.value.is_enable,
+      description: this.campaign_form.value.description,
+      start_date: this.campaign_form.value.start_date,
+      end_date: this.campaign_form.value.end_date,
+      sent: this.campaign_form.value.sent,
+      budget_cost: this.campaign_form.value.budget_cost,
+      expected_responses: this.campaign_form.value.expected_responses,
+      expected_income: this.campaign_form.value.expected_income,
+      actual_cost: this.campaign_form.value.actual_cost,
+      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+    }
+    this.HttpApi.postCampaignRequest(body).subscribe(Request => {
+        console.log(Request)
+        this.getAllCampaignRequest()
+        this.visible = false ;
+      },
+      error => {
+        console.log(error);
+      })
+  }
+
+
   //建立formgroup表單
   campaign_form: FormGroup;
   start_date!: Date;
   end_date!: Date;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.campaign_form = this.fb.group({
+      campaign_id: [''],
       name: ['', [Validators.required]],
-      owner: new FormControl({ value: '', disabled: true }),
-      enable: [false],
+      owner: [''],
+      is_enable: [false],
       status: [''],
-      patrilineal_name: [''],
+      parent_campaign_id: ['', Validators.required],
       type: [''],
       start_date: [''],
       end_date: [''],
@@ -155,18 +240,144 @@ export class CampaignComponent {
       description: [''],
       sent: [''],
       budget_cost: [''],
-      expected_responses: [null],
+      expected_responses: [''],
       actual_cost: [''],
       expected_income: [''],
-      created_at: new FormControl({ value: '', disabled: true }),
-      updated_at: new FormControl({ value: '', disabled: true }),
-      created_by: new FormControl({ value: '', disabled: true }),
-      updated_by: new FormControl({ value: '', disabled: true }),
-    }, { formGroupName: 'campaign' });
+      created_at: [''],
+      updated_at:  [''],
+      created_by:  [''],
+      updated_by: [''],
+    });
     //驗證日期是否有效
     if (this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {
       this.campaign_form.controls['end_date'].setErrors({ 'incorrect': true });
     }
+  }
+
+  //dialog方法
+  visible: boolean = false;
+  dialogHeader!: string;
+  selectedStatus!: any;
+  selectedType!: any;
+  showedit = true;//判斷是否dialog為新增與編輯
+  c_id:any;
+  showDialog(type: string, campaign?: any): void {
+    this.visible = true;
+    if (type === 'add') {
+      this.dialogHeader = '新增行銷活動';
+      this.campaign_form.reset()
+      this.campaign_form.patchValue({ status: this.status[0].name });
+      this.showedit = false;
+    } else if (type === 'edit') {
+      console.log("campaign: " + JSON.stringify(campaign))
+      this.dialogHeader = '編輯行銷活動';
+      this.campaign_form.patchValue(campaign);
+      this.campaign_form.patchValue({
+        start_date: new Date(campaign.start_date),
+        end_date: new Date(campaign.end_date)
+      });
+      this.showedit = true;
+      this.c_id = campaign.campaign_id;
+    }
+  }
+
+  patchCampaignRequest(c_id: any): void{
+    this.editStatus()//處理status的值，抓取name
+    this.editType()//處理type的值，抓取name
+    if (this.campaign_form.value.parent_campaign_id == null || "00000000-0000-4000-a000-000000000000"){
+      this.campaign_form.value.parent_campaign_id = "00000000-0000-4000-a000-000000000000"
+    }else{
+      this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
+    }
+    if (this.campaign_form.controls['parent_campaign_id'].hasError('Parent_idError')) {
+      return;
+    }
+    let body = {
+      name: this.campaign_form.get('name')?.value,
+      status: this.campaign_form.get('status')?.value,
+      is_enable: this.campaign_form.get('is_enable')?.value,
+      parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
+      type: this.campaign_form.get('type')?.value,
+      start_date: this.campaign_form.get('start_date')?.value,
+      end_date: this.campaign_form.get('end_date')?.value,
+      description: this.campaign_form.get('description')?.value,
+      sent: this.campaign_form.get('sent')?.value,
+      budget_cost: this.campaign_form.get('budget_cost')?.value,
+      expected_responses: this.campaign_form.get('expected_responses')?.value,
+      expected_income: this.campaign_form.get('expected_income')?.value,
+      actual_cost: this.campaign_form.get('actual_cost')?.value,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+    }
+    this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        this.visible = false;
+        this.getAllCampaignRequest()
+      })
+  }
+
+  deleteCampaignRequest(c_id: any): void {
+    this.HttpApi.deleteCampaignRequest(c_id).subscribe(Request => {
+      console.log(Request)
+      this.getAllCampaignRequest()
+    })
+  }
+
+
+  //處理status的值
+  editStatus(): void {
+    //判斷selectedStatus是否有值，若有值則取出name屬性
+    let statusName = this.selectedStatus ? this.selectedStatus.name : "";
+    //將statusName更新到表單中
+    this.campaign_form.patchValue({ status: statusName });
+  }
+
+  //處理type的值
+  editType(): void {
+    //判斷selectedStatus是否有值，若有值則取出name屬性
+    let TypeName = this.selectedType ? this.selectedType.name : "";
+    //將statusName更新到表單中
+    this.campaign_form.patchValue({ type: TypeName });
+  }
+
+  //懶加載
+  loadTable(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.getAllCampaignRequest(limit, page);
+  }
+  //判斷父系行銷活動是否選取到本來的行銷活動
+  validateParent_id() {
+    if (this.selectedParent_id === this.c_id) {
+      this.campaign_form.controls['parent_campaign_id']
+      .setErrors({Parent_idError: true});
+    } else {
+      this.campaign_form.controls['parent_campaign_id'].value;
+    }
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth()+1)).slice(-2);
+    const day = ("0" + (date.getDate())).slice(-2);
+    const hour = ("0" + (date.getHours() )).slice(-2);
+    const minute = ("0" + date.getMinutes()).slice(-2);
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+  }
+
+  //日期轉換
+  formatDate2(dateString2: string): string {
+    const date = new Date(dateString2);
+    const trandate = new Date(date.getFullYear(), date.getMonth()-1, date.getDate() + 31, date.getHours() +16,date.getMinutes())
+    return trandate.toISOString().slice(0, 10);
+  }
+
+  //偵測is_enable變量
+  onIsEnableChange(event: any): void {
+    this.campaign_form.get('is_enable')?.setValue(event.checked);
+    console.log("啟用: " + this.campaign_form.get('is_enable')?.value)
   }
 
   //偵測status變量
@@ -178,33 +389,4 @@ export class CampaignComponent {
     console.log("類型選擇type: " + event.value.code + event.value.name);
   }
 
-  //dialog方法
-  visible: boolean = false;
-  dialogHeader!: string;
-  selectedStatus!: any;
-  selectedType!: any;
-  showedit = true;//判斷是否dialog為新增與編輯
-  showDialog(type: string, campaign?: any): void {
-    this.visible = true;
-    console.log('點擊: ' + type);
-    this.campaign_form.reset()
-    this.campaign_form.patchValue({ status: this.status[0].name });
-    console.log(this.status)
-    if (type === 'add') {
-      this.dialogHeader = '新增行銷活動';
-      this.showedit = false;
-    } else if (type === 'edit') {
-      console.log("campaign: " + JSON.stringify(campaign))
-      this.dialogHeader = '編輯行銷活動';
-      this.campaign_form.patchValue(campaign);
-      this.campaign_form.patchValue({
-        start_date: new Date(campaign.start_date),
-        end_date: new Date(campaign.end_date)
-      });
-      this.showedit = true;
-      // 綁定已經選擇的狀態
-      this.selectedStatus = this.status.find(s => s.name === campaign.status);
-      this.selectedType = this.status.find(s => s.name === campaign.type);
-    }
-  }
 }
