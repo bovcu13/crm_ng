@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LazyLoadEvent, MenuItem} from "primeng/api";
 import {HttpApiService} from "../../../api/http-api.service";
 import {Lead} from "../../../shared/models/lead";
+import {concatMap, tap} from 'rxjs/operators';
+import {Observable, of} from "rxjs";
 
 
 @Component({
@@ -112,20 +114,20 @@ export class LeadComponent implements OnInit {
     }
   ]
 
-  account: any = [
-    {
-      name: "公司A",
-      code: "company_a"
-    },
-    {
-      name: "公司B",
-      code: "company_b"
-    },
-    {
-      name: "公司C",
-      code: "company_c"
-    }
-  ]
+  // account: any = [
+  //   {
+  //     name: "公司A",
+  //     code: "company_a"
+  //   },
+  //   {
+  //     name: "公司B",
+  //     code: "company_b"
+  //   },
+  //   {
+  //     name: "公司C",
+  //     code: "company_c"
+  //   }
+  // ]
 
   industry_id: any = [
     {
@@ -268,12 +270,31 @@ export class LeadComponent implements OnInit {
       phone_number: [''],
       industry: [''],
       type: [''],
-      parent_account: [''],
+      parent_account_id: [''],
       created_at: [''],
       updated_at: [''],
       created_by: ['', Validators.required],
       updated_by: ['', Validators.required],
     });
+  }
+
+  GetAllAccount!: any[];
+
+  getAllAccountRequest() {
+    this.HttpApi.getAllAccountRequest(1).subscribe(
+      (res) => {
+        this.GetAllAccount = res.body.accounts.map((account: any) => {
+          console.log(account)
+          return {
+            label: account.name,
+            value: account.account_id
+          };
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   getLead(lead: any): void {
@@ -303,7 +324,8 @@ export class LeadComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filteredLead = this.getData
+    this.filteredLead = this.getData;
+    this.getAllAccountRequest();
   }
 
   total!: number;
@@ -323,27 +345,31 @@ export class LeadComponent implements OnInit {
     // 將"業務員"設定為不可修改
     // this.lead_form.controls['owner'].disable();
     this.edit = true;
-    // console.log(JSON.stringify(this.lead_form.controls['status'].value))
+    // console.log(lead.account_name)
     if (type === 'add'
     ) {
       this.dialogHeader = '新增線索';
       this.lead_form.reset();
       // 將"線索狀態"設定為不可修改
+      this.lead_form.controls['account_name'].enable();
       this.lead_form.controls['status'].disable();
       this.lead_form.patchValue({
         status: this.status.find(s => s.name === this.status[1].name),
       });
     } else if (type === 'edit') {
       this.dialogHeader = '編輯線索';
+      this.lead_form.controls['account_name'].disable();
       this.lead_form.controls['status'].enable();
       this.lead_form.patchValue(lead);
       console.log(lead);
       this.lead_form.patchValue({
         status: this.status.find((s: { name: any; }) => s.name === lead.status),
         source: this.source.find((s: { name: any; }) => s.name === lead.source),
-        rating: this.rating.find((s: { name: any; }) => s.name === lead.rating)
+        rating: this.rating.find((s: { name: any; }) => s.name === lead.rating),
+        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === lead.account_name)?.value
       });
-      console.log(this.lead_form.controls['status'].value);
+      // this.lead_form.controls['account_name'].setValue(lead.account_name);
+      // console.log(this.lead_form.controls['account_name'].value);
     }
   }
 
@@ -351,10 +377,10 @@ export class LeadComponent implements OnInit {
     let body = {
       description: this.lead_form.controls['description'].value,
       status: this.status[1].name,
-      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
+      account_id: this.selectedAccountId,
       // source: this.lead_form.value.source,
       source: this.selectedSource.name,
-      account_name: this.selectedAccount.name,
+      account_name: this.selectedAccountName,
       rating: this.selectedRating.name,
       // rating: "Hot",
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
@@ -380,10 +406,10 @@ export class LeadComponent implements OnInit {
     let body = {
       description: this.lead_form.controls['description'].value,
       status: this.selectedStatus?.name,
-      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
+      // account_id: this.selectedAccountId,
       // source: this.lead_form.value.source,
       source: this.selectedSource?.name,
-      account_name: this.selectedAccount?.name,
+      // account_name: this.selectedAccountName,
       rating: this.selectedRating?.name,
       // rating: "Hot",
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
@@ -415,9 +441,54 @@ export class LeadComponent implements OnInit {
     })
   }
 
+  // 新增帳戶
+  postAccount(): Observable<any> {
+    const body = {
+      name: this.account_form.controls['name'].value,
+      phone_number: this.account_form.controls['phone_number'].value,
+      industry_id: '00000000-0000-4000-a000-000000000000',
+      type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
+      parent_account_id: '00000000-0000-4000-a000-000000000000',
+      created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a"
+    };
+
+    return this.HttpApi.postAccountRequest(body).pipe(
+      tap(request => {
+        console.log(request);
+        let event: LazyLoadEvent = {
+          first: 0,
+          rows: 10,
+          sortField: undefined,
+          sortOrder: undefined,
+          multiSortMeta: undefined,
+          filters: undefined,
+          globalFilter: undefined,
+        };
+        this.loadPostsLazy(event);
+      })
+    );
+  }
+
+
+  add_Acount() {
+    // 使用 concatMap 運算符來確保 postAccount() 請求完成後才調用 getAllAccountRequest() 函數
+    this.postAccount().pipe(
+        concatMap(() => {
+          this.getAllAccountRequest();
+          console.log(this.GetAllAccount);
+          return of(null);
+        })
+      )
+      .subscribe(() => {
+        this.addAcount = false;
+        this.edit = true;
+      });
+  }
+
   addAccDialog(): void {
     this.addAcount = true;
     this.edit = false;
+    this.account_form.reset();
   }
 
   selectedStatus: any;
@@ -429,11 +500,18 @@ export class LeadComponent implements OnInit {
     this.lead_form.value.status = this.selectedStatus.name
   }
 
-  selectedAccount: any;
+  selectedAccountName!: string;
+  selectedAccountId!: string;
 
   accountValue(event: any): void {
-    this.selectedAccount = this.account.find((s: { name: any; }) => s.name === event.value.name);
-    this.lead_form.value.account_name = this.selectedAccount.name
+    // this.selectedAccountName = this.account.find((s: { name: any; }) => s.name === event.value.name);
+    this.selectedAccountName = event.value.label
+    this.selectedAccountId = event.value.value
+    console.log(event.value.label)
+    this.lead_form.patchValue({
+      account_name: event.value
+    });
+    console.log(typeof this.lead_form.value.account_name)
   }
 
   selectedSource: any;
