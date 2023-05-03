@@ -184,6 +184,9 @@ export class CampaignComponent {
 
   postCampaignRequest(): void {
     this.editType()//處理type的值，抓取name
+    if (this.campaign_form.controls['name'].hasError('required')) {
+      return;
+    }
     //驗證日期是否有效
     if (this.campaign_form.controls['end_date'].value !== null &&
       this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {
@@ -236,6 +239,7 @@ export class CampaignComponent {
       is_enable: [false],
       status: [''],
       parent_campaign_id: [''],
+      parent_campaign_name: [''],
       type: [''],
       start_date: [''],
       end_date: [''],
@@ -279,6 +283,9 @@ export class CampaignComponent {
   }
 
   patchCampaignRequest(c_id: any): void {
+    if (this.campaign_form.controls['name'].hasError('required')) {
+      return;
+    }
     //驗證日期是否有效
     if (this.campaign_form.controls['end_date'].value !== null &&
       this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {
@@ -295,7 +302,8 @@ export class CampaignComponent {
     }
     this.editStatus()//處理status的值，抓取name
     this.editType()//處理type的值，抓取name
-    if (this.campaign_form.get('parent_campaign_id')?.value === '') {
+    if (this.campaign_form.get('parent_campaign_id')?.value === '' ||
+    this.campaign_form.get('parent_campaign_id')?.value === null) {
       this.campaign_form.patchValue({ parent_campaign_id: "00000000-0000-4000-a000-000000000000" });
     } else {
       this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
