@@ -12,13 +12,12 @@ import {Calendar} from 'primeng/calendar';
   styleUrls: ['./event.component.scss'],
 })
 export class EventComponent {
+  @ViewChild('fullstartDate') fullstartDate!: Calendar;
   @ViewChild('startDate') startDate!: Calendar;
   @ViewChild('endDate') endDate!: Calendar;
   //主辦人dropdown值
   main: any[] = [
-    {
-      "name": "王大天",
-    },
+    {"name": "王大天",},
     {"name": '李小名'},
     {"name": '123456'},
     {"name": 'test1'},
@@ -36,6 +35,10 @@ export class EventComponent {
   ];
   //類型dropdown值
   type: any[] = [
+    {
+      "name": "緊急事件",
+      "code": "urgent"
+    },
     {
       "name": "客戶拜訪",
       "code": "comster visition"
@@ -79,6 +82,7 @@ export class EventComponent {
       account_name: [''],
       contact: [''],
       allday: [false],
+      fullstartDate: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
       end_date: ['', [Validators.required]],
       type: ['', [Validators.required]],
@@ -91,26 +95,26 @@ export class EventComponent {
 
   ngOnInit() {
     // 判斷全天日期是否有被選取
-    const alldayControl = this.event_form.get('allday');
-    if (alldayControl) {
-      alldayControl.valueChanges.subscribe(value => {
-        const startDateControl = this.event_form.get('start_date');
-        const endDateControl = this.event_form.get('end_date');
-        if (startDateControl && endDateControl) {
-          // 轉換為 Calendar 類型
-          const startDateCalendar = startDateControl as unknown as Calendar;
-          const endDateCalendar = endDateControl as unknown as Calendar;
-          if (value) {
-            // 如果 checkbox 被選取，設置日期格式為 yy-mm-dd
-            startDateCalendar.dateFormat = 'yy-mm-dd';
-          } else {
-            // 如果 checkbox 沒有被選取，設置日期格式為 yy-mm-dd hh:mm:ss
-            startDateCalendar.dateFormat = 'yy-mm-dd hh:mm:ss';
-            endDateCalendar.dateFormat = 'yy-mm-dd hh:mm:ss';
-          }
-        }
-      });
-    }
+    // const alldayControl = this.event_form.get('allday');
+    // if (alldayControl) {
+    //   alldayControl.valueChanges.subscribe(value => {
+    //     const startDateControl = this.event_form.get('start_date');
+    //     const endDateControl = this.event_form.get('end_date');
+    //     if (startDateControl && endDateControl) {
+    //       // 轉換為 Calendar 類型
+    //       const startDateCalendar = startDateControl as unknown as Calendar;
+    //       const endDateCalendar = endDateControl as unknown as Calendar;
+    //       if (value) {
+    //         // 如果 checkbox 被選取，設置日期格式為 yy-mm-dd
+    //         startDateCalendar.dateFormat = 'yy-mm-dd';
+    //       } else {
+    //         // 如果 checkbox 沒有被選取，設置日期格式為 yy-mm-dd hh:mm:ss
+    //         startDateCalendar.dateFormat = 'yy-mm-dd hh:mm:ss';
+    //         endDateCalendar.dateFormat = 'yy-mm-dd hh:mm:ss';
+    //       }
+    //     }
+    //   });
+    // }
     //日曆控制選項
     this.options = {
       plugins: [
@@ -135,77 +139,80 @@ export class EventComponent {
       handleWindowResize: true, //隨瀏覽器窗口大小變化
       events: [
         {
-          title: '今日',
-          main: 'test1',
-          member: '1',
-          start: '2023-04-01T06:30:00',
-          end: '2023-04-01T08:30:00',
+          title: '緊急事件',
+          main: [{"name": "test1"},{'name':"test2"}],
+          member: [{"name": "1"},{'name':"3"}],
+          start: '2023-05-01T06:30:00',
+          end: '2023-05-01T08:30:00',
           allDay: false,
           backgroundColor: 'red',
           type: '電話',
         },
         {
-          title: '客戶拜訪', main: 'test2',
-          member: '3', date: '2023-04-03', allDay: true, backgroundColor: 'orange', type: '客戶拜訪',
+          title: '客戶拜訪', main: [{"name": "123456"},{'name':"王大天"}],
+          member:[{"name": "6"},{'name':"4"}], date: '2023-05-03', allDay: true, backgroundColor: 'orange',
+          type: '客戶拜訪', textColor: 'black',
         },
         {
-          title: '電話', main: '王大天',
-          member: '2', date: '2023-04-09', allDay: true, backgroundColor: 'yellow', type: '電話',
+          title: '電話', main: [{"name": "李小名"},{'name':"王大天"}],
+          member:[{"name": "2"}], date: '2023-05-09', allDay: true, backgroundColor: 'burlywood', type: '電話',
+          textColor: 'black'
         },
         {
           title: '會議',
-          main: '李小名',
-          member: '4',
-          start: '2023-04-04T14:30:00',
-          end: '2023-04-04T16:30:00',
+          main: [{"name": "李小名"},{'name':"test"}],
+          member: [{"name": "2"},{'name':"4"}],
+          start: '2023-05-04T14:30:00',
+          end: '2023-05-04T16:30:00',
           allDay: false,
           backgroundColor: 'green',
           type: '會議',
+          textColor: 'black'
         },
         {
           title: '研討會',
-          main: 'test2',
-          member: '5',
-          start: '2023-04-25T19:00:00',
-          end: '2023-04-26T21:30:00',
+          main: [{"name": "123456"},{'name':"test3"}],
+          member: [{"name": "5"},{'name':"4"}],
+          start: '2023-05-25T19:00:00',
+          end: '2023-05-26T21:30:00',
           allDay: false,
-          backgroundColor: 'deepskyblue', type: '研討會',
+          backgroundColor: 'deepskyblue', type: '研討會',textColor: 'black'
         },
         {
           title: '行銷',
-          main: '李小名',
-          member: '6',
-          start: '2023-04-06T13:30:00',
-          end: '2023-04-07T15:10:00',
+          main: [{'name':"李小名"},{'name':"王大天"}],
+          member: [{"name": "6"},{'name':"4"}],
+          start: '2023-05-06T13:30:00',
+          end: '2023-05-07T15:10:00',
           allDay: false,
-          backgroundColor: 'pink', type: '行銷',
+          backgroundColor: 'pink', type: '行銷',textColor: 'black'
         },
         {
           title: '年度拜訪',
-          main: '李小名',
-          member: '6',
-          start: '2023-04-17T09:30:00',
-          end: '2023-04-18T10:30:00',
+          main: [{'name':"test1"},{'name':"王大天"}],
+          member: [{"name": "6"}],
+          start: '2023-05-17T09:30:00',
+          end: '2023-05-18T10:30:00',
           allDay: false,
-          backgroundColor: 'purple', type: '年度拜訪',
+          backgroundColor: 'plum', type: '年度拜訪',textColor: 'black'
         },
         {
           title: '會議',
-          main: 'test1',
-          member: '2',
-          start: '2023-04-08T16:30:00',
-          end: '2023-04-08T17:00:00',
+          main: [{"name": "123456"},{'name':"test1"}],
+          member: [{"name": "1"},{'name':"3"}],
+          start: '2023-05-08T16:30:00',
+          end: '2023-05-08T17:00:00',
           allDay: false,
-          backgroundColor: 'deepblue', type: '會議',
+          backgroundColor: 'deepblue', type: '會議',textColor: 'black'
         },
         {
           title: '客戶拜訪',
-          main: 'test2',
-          member: '3',
-          start: '2023-04-19T10:30:00',
-          end: '2023-04-19T12:00:00',
+          main: [{"name": "test"},{'name':"test1"}],
+          member: [{"name": "6"},{'name':"3"}],
+          start: '2023-05-19T10:30:00',
+          end: '2023-05-19T12:00:00',
           allDay: false,
-          backgroundColor: 'orange', type: '客戶拜訪',
+          backgroundColor: 'orange', type: '客戶拜訪',textColor: 'black'
         },
       ],
       //點選日期開啟新增事件
@@ -221,22 +228,8 @@ export class EventComponent {
       },
     };
   }
-  //回傳主辦人員選項
-  selectedMainNames() {
-    if (this.event_form.value.main && this.main) {
-      const selectedMainNames = this.event_form.value.main.map((main: any) => main.name);
-      return selectedMainNames.join(', ');
-    }
-    return '';
-  }
-  //回傳參與人員選項
-  selectedMemberNames() {
-    if (this.event_form.value.member && this.member) {
-      const selectedMemberNames = this.event_form.value.member.map((member: any) => member.name);
-      return selectedMemberNames.join(', ');
-    }
-    return '';
-  }
+
+
   //時間調整
   localToUtc(date: Date): Date {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
@@ -258,8 +251,8 @@ export class EventComponent {
     if (event) {
       this.event_form.patchValue({
         subject: event.title,
-        main: [event.extendedProps.main],
-        member: [event.extendedProps.member],
+        main: event.extendedProps.main,
+        member: event.extendedProps.member,
         allday: event.allDay,
         start_date: event.start,
         end_date: event.end,
