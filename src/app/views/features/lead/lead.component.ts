@@ -112,20 +112,20 @@ export class LeadComponent implements OnInit {
     }
   ]
 
-  account: any = [
-    {
-      name: "公司A",
-      code: "company_a"
-    },
-    {
-      name: "公司B",
-      code: "company_b"
-    },
-    {
-      name: "公司C",
-      code: "company_c"
-    }
-  ]
+  // account: any = [
+  //   {
+  //     name: "公司A",
+  //     code: "company_a"
+  //   },
+  //   {
+  //     name: "公司B",
+  //     code: "company_b"
+  //   },
+  //   {
+  //     name: "公司C",
+  //     code: "company_c"
+  //   }
+  // ]
 
   industry_id: any = [
     {
@@ -276,6 +276,24 @@ export class LeadComponent implements OnInit {
     });
   }
 
+  GetAllAccount!: any[];
+  getAllAccountRequest() {
+    this.HttpApi.getAllAccountRequest(1).subscribe(
+      (res) => {
+        this.GetAllAccount = res.body.accounts.map((account: any) => {
+          console.log(account)
+          return {
+            label: account.name,
+            value: account.account_id
+          };
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
   getLead(lead: any): void {
     this.leadValue = lead
   }
@@ -303,7 +321,8 @@ export class LeadComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filteredLead = this.getData
+    this.filteredLead = this.getData;
+    this.getAllAccountRequest();
   }
 
   total!: number;
@@ -323,27 +342,31 @@ export class LeadComponent implements OnInit {
     // 將"業務員"設定為不可修改
     // this.lead_form.controls['owner'].disable();
     this.edit = true;
-    // console.log(JSON.stringify(this.lead_form.controls['status'].value))
+    // console.log(lead.account_name)
     if (type === 'add'
     ) {
       this.dialogHeader = '新增線索';
       this.lead_form.reset();
       // 將"線索狀態"設定為不可修改
+      this.lead_form.controls['account_name'].enable();
       this.lead_form.controls['status'].disable();
       this.lead_form.patchValue({
         status: this.status.find(s => s.name === this.status[1].name),
       });
     } else if (type === 'edit') {
       this.dialogHeader = '編輯線索';
+      this.lead_form.controls['account_name'].disable();
       this.lead_form.controls['status'].enable();
       this.lead_form.patchValue(lead);
       console.log(lead);
       this.lead_form.patchValue({
         status: this.status.find((s: { name: any; }) => s.name === lead.status),
         source: this.source.find((s: { name: any; }) => s.name === lead.source),
-        rating: this.rating.find((s: { name: any; }) => s.name === lead.rating)
+        rating: this.rating.find((s: { name: any; }) => s.name === lead.rating),
+        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === lead.account_name)?.value
       });
-      console.log(this.lead_form.controls['status'].value);
+      // this.lead_form.controls['account_name'].setValue(lead.account_name);
+      // console.log(this.lead_form.controls['account_name'].value);
     }
   }
 
@@ -351,10 +374,10 @@ export class LeadComponent implements OnInit {
     let body = {
       description: this.lead_form.controls['description'].value,
       status: this.status[1].name,
-      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
+      account_id: this.selectedAccountId,
       // source: this.lead_form.value.source,
       source: this.selectedSource.name,
-      account_name: this.selectedAccount.name,
+      account_name: this.selectedAccountName,
       rating: this.selectedRating.name,
       // rating: "Hot",
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
@@ -380,10 +403,10 @@ export class LeadComponent implements OnInit {
     let body = {
       description: this.lead_form.controls['description'].value,
       status: this.selectedStatus?.name,
-      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
+      // account_id: this.selectedAccountId,
       // source: this.lead_form.value.source,
       source: this.selectedSource?.name,
-      account_name: this.selectedAccount?.name,
+      // account_name: this.selectedAccountName,
       rating: this.selectedRating?.name,
       // rating: "Hot",
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
@@ -429,11 +452,17 @@ export class LeadComponent implements OnInit {
     this.lead_form.value.status = this.selectedStatus.name
   }
 
-  selectedAccount: any;
+  selectedAccountName!: string;
+  selectedAccountId!: string;
 
   accountValue(event: any): void {
-    this.selectedAccount = this.account.find((s: { name: any; }) => s.name === event.value.name);
-    this.lead_form.value.account_name = this.selectedAccount.name
+    // this.selectedAccountName = this.account.find((s: { name: any; }) => s.name === event.value.name);
+    this.selectedAccountName = event.value.label
+    this.selectedAccountId = event.value.value
+    console.log(event.value.label)
+    this.lead_form.controls['account_name'].setValue(this.selectedAccountName)
+    this.lead_form.controls['account_id'].setValue(this.selectedAccountId)
+    console.log(typeof this.lead_form.value.account_name)
   }
 
   selectedSource: any;
