@@ -25,8 +25,8 @@
             <th pSortableColumn="opportunity_name">商機名稱<p-sortIcon field="opportunity_name"></p-sortIcon></th>
             <th pSortableColumn="is_syncing">正在同步化<p-sortIcon field="is_syncing"></p-sortIcon></th>
             <th pSortableColumn="expiration_date">到期日期<p-sortIcon field="expiration_date"></p-sortIcon></th>
-            <th pSortableColumn="subtotal">小計<p-sortIcon field="subtotal"></p-sortIcon></th>
-            <th pSortableColumn="total_price">總價<p-sortIcon field="total_price"></p-sortIcon></th>
+            <!-- <th pSortableColumn="subtotal">小計<p-sortIcon field="subtotal"></p-sortIcon></th>
+            <th pSortableColumn="total_price">總價<p-sortIcon field="total_price"></p-sortIcon></th> -->
             <th></th>
           </tr>
         </ng-template>
@@ -36,8 +36,8 @@
             <td>{{ quote.opportunity_name }}</td>
             <td>{{ quote.is_syncing }}</td>
             <td>{{ quote.expiration_date }}</td>
-            <td>{{ quote.subtotal }}</td>
-            <td>{{ quote.total_price }}</td>
+            <!-- <td>{{ quote.subtotal }}</td>
+            <td>{{ quote.total_price }}</td> -->
             <td class="icon-align-right"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
@@ -61,6 +61,13 @@
           <label class="mt-2 ml-2 disable">{{(quote_form.controls['code'].value)}}</label>
         </div>
       </div>
+      <div class="col-6" *ngIf="!showedit">
+        <div class="field">
+          <label>狀態</label>
+          <br>
+          <label class="mt-2 ml-2" [textContent]="quote_form.controls['status'].value"></label>
+        </div>
+      </div>
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>名稱</label>
@@ -72,30 +79,8 @@
         <div class="field">
           <label><span class="required-star">*</span>商機</label>
           <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'" [(ngModel)]="selectedOpportunity_id"
-                [filter]="true"  filterBy="label" [showClear]="true"
+                [filter]="true"  filterBy="label" [showClear]="true" (ngModelChange)="selectedOpportunity()"
                       [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError && quote_form.controls['opportunity_id'].touched}"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label><span class="required-star">*</span>帳戶</label>
-          <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'" [(ngModel)]="selectedAccount_id"
-          [filter]="true"  filterBy="label" [showClear]="true"
-                      [ngClass]="{'ng-dirty':quote_form.controls['account_id'].hasError && quote_form.controls['account_id'].touched}"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6" *ngIf="!showedit">
-        <div class="field">
-          <label>狀態</label>
-          <br>
-          <label class="mt-2 ml-2" [textContent]="quote_form.controls['status'].value"></label>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
-          <label>同步到商機</label>
-          <br>
-          <p-checkbox formControlName="is_syncing" value="is_syncing" [binary]="true"></p-checkbox>
         </div>
       </div>
       <div class="col-6" *ngIf="showedit">
@@ -103,6 +88,13 @@
           <label>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
             optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>同步到商機</label>
+          <br>
+          <p-checkbox formControlName="is_syncing" value="is_syncing" [binary]="true"></p-checkbox>
         </div>
       </div>
       <div class="col-12">
@@ -131,7 +123,7 @@
           <label>稅額</label>
           <br>
           <p-inputNumber class="w-full" formControlName="tax" mode="currency" currency="TWD" locale="en-US"
-            [minFractionDigits]="2"> </p-inputNumber>
+            [minFractionDigits]="2" [min]="0"></p-inputNumber>
         </div>
       </div>
       <div class="col-6">
@@ -146,7 +138,7 @@
           <label>運輸處理</label>
           <br>
           <p-inputNumber class="w-full" formControlName="shipping_and_handling" suffix="%"
-            [minFractionDigits]="2"></p-inputNumber>
+            [minFractionDigits]="2" [min]="0" [max]="100"></p-inputNumber>
         </div>
       </div>
       <div class="col-6">

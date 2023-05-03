@@ -106,14 +106,12 @@ export class QuoteComponent {
     }
   ]
   ngOnInit() {
-    this.getAllAccountRequest()
     this.getAllopportunityRequest()
   }
 
   //取得所有訂單資料
   GetAllQuote: HttpApiService[] = [];
   first = 0;
-
   getAllQuoteRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -139,7 +137,7 @@ export class QuoteComponent {
 
   //POST 一筆quote
   postQuoteRequest(): void {
-    if (this.quote_form.controls['name'].hasError('required') || this.quote_form.controls['account_id'].hasError('required')
+    if (this.quote_form.controls['name'].hasError('required')
     || this.quote_form.controls['opportunity_id'].hasError('required') ) {
       return;
     }
@@ -167,7 +165,7 @@ export class QuoteComponent {
 
   patchQuoteRequest(p_id: any): void {
     this.editStatus()//處理status的值，抓取name
-    if (this.quote_form.controls['name'].hasError('required') || this.quote_form.controls['account_id'].hasError('required')
+    if (this.quote_form.controls['name'].hasError('required')
     || this.quote_form.controls['opportunity_id'].hasError('required') ) {
       return;
     }
@@ -247,24 +245,6 @@ export class QuoteComponent {
     }
   }
 
-  // GET全部Account
-  GetAllAccount: any[] = [];
-  selectedAccount_id: string = '';
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(1).subscribe(
-      (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
-          return {
-            label: account.name,
-            value: account.account_id
-          };
-        });
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
 
   // GET全部Account
   GetAllOpportunity: any[] = [];
@@ -275,7 +255,8 @@ export class QuoteComponent {
         this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
           return {
             label: opportunity.name,
-            value: opportunity.opportunity_id
+            value: opportunity.opportunity_id,
+            account_id: opportunity.account_id,
           };
         });
       },
@@ -283,6 +264,13 @@ export class QuoteComponent {
         console.log(error);
       }
     );
+  }
+
+  selectedAccount_id: string = '';
+  //取得選擇的商機帳戶id
+  selectedOpportunity() {
+    const selectedOpportunity = this.GetAllOpportunity.find((opportunity) => opportunity.value === this.selectedOpportunity_id);
+    this.selectedAccount_id = selectedOpportunity?.account_id;
   }
 
   // table lazyload
