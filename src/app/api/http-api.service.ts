@@ -172,6 +172,7 @@ export class HttpApiService {
   contracts: any;
   amount:any;
   contract_id : any;
+  contract_code: any;
   activated_by : any;
   activated_date : any;
   //取得所有訂單 getall
