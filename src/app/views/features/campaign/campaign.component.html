@@ -27,8 +27,8 @@
             <th pSortableColumn="status">狀態<p-sortIcon field="status"></p-sortIcon></th>
             <th pSortableColumn="start_date">開始時間<p-sortIcon field="start_date"></p-sortIcon></th>
             <th pSortableColumn="end_date">結束時間<p-sortIcon field="end_date"></p-sortIcon></th>
-            <th pSortableColumn="owner">業務<p-sortIcon field="owner"></p-sortIcon></th>
-            <th pSortableColumn="sent">成員已回應<p-sortIcon field="sent"></p-sortIcon></th>
+            <!-- <th pSortableColumn="owner">業務<p-sortIcon field="owner"></p-sortIcon></th> -->
+            <th pSortableColumn="member">成員已回應<p-sortIcon field="member"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
@@ -41,7 +41,7 @@
             <td>{{ campaign.start_date }}</td>
             <td>{{ campaign.end_date }}</td>
             <td>{{ campaign.created_by }}</td>
-            <td>{{ campaign.member }}</td>
+            <!-- <td>{{ campaign.member }}</td> -->
             <td class="icon-align-right flex mt-1"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             <p-button (click)="showDialog('edit',campaign)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
@@ -73,14 +73,6 @@
           <label class="mt-2 ml-2 disable">{{(campaign_form.controls['created_by'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
-        <div class="field">
-          <label>啟用</label>
-          <br>
-          <p-checkbox formControlName="is_enable" value="is_enable" [binary]="true"
-                      (onChange)="onIsEnableChange($event)"></p-checkbox>
-        </div>
-      </div>
       <div class="col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
@@ -97,9 +89,16 @@
       </div>
       <div class="col-6">
         <div class="field">
+          <label>啟用</label>
+          <br>
+          <p-checkbox formControlName="is_enable" value="is_enable" [binary]="true"></p-checkbox>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
           <label>父系行銷活動</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllparent_campaign"
-                      [(ngModel)]="selectedParent_id" (ngModelChange)="validateParent_id()"
+                      [(ngModel)]="selectedParent_id" [filter]="true"  filterBy="label" [showClear]="true"
             formControlName="parent_campaign_id"></p-dropdown>
           <div class="required-star" *ngIf="campaign_form.controls['parent_campaign_id'].hasError('Parent_idError')">
             無法選取同樣的行銷活動到父系行銷活動中</div>
@@ -123,8 +122,10 @@
         <div class="field">
           <label>結束日期</label>
           <p-calendar #endDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
-            formControlName="end_date" [minDate]="campaign_form.controls['start_date'].value"
+            formControlName="end_date" [minDate]="startDate.value"
             [readonlyInput]="true"></p-calendar>
+            <div class="required-star" *ngIf="campaign_form.controls['end_date'].hasError('incorrect')">
+              結束日期不可早於開始日期</div>
         </div>
       </div>
       <div class="col-12">
@@ -136,37 +137,38 @@
       <div class="col-6">
         <div class="field">
           <label>已傳送數目</label>
-          <p-inputNumber class="w-full"  formControlName="sent" [minFractionDigits]="0">
+          <p-inputNumber class="w-full" formControlName="sent" [min]="0">
           </p-inputNumber>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>預算成本</label>
-          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="budget_cost" [minFractionDigits]="0">
-          </p-inputNumber>
+          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="budget_cost" [minFractionDigits]="0"
+          [min]="0"></p-inputNumber>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>預期回應 (%)</label>
           <br>
-          <p-inputNumber class="w-full" inputId="percent" formControlName="expected_responses" suffix="%">
+          <p-inputNumber class="w-full" inputId="percent" formControlName="expected_responses" suffix="%"
+          [min]="0" [max]="100">
           </p-inputNumber>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>實際成本</label>
-          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="actual_cost" [minFractionDigits]="0">
-          </p-inputNumber>
+          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="actual_cost" [minFractionDigits]="0"
+          [min]="0"></p-inputNumber>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label>預期收入</label>
-          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="expected_income" [minFractionDigits]="0">
-          </p-inputNumber>
+          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="expected_income" [minFractionDigits]="0"
+          [min]="0"></p-inputNumber>
         </div>
       </div>
       <div class="col-6"></div>
