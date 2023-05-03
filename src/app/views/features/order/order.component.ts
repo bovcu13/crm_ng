@@ -40,21 +40,29 @@ export class OrderComponent {
     }
   ];
 
-  searchTerm: any = '';// 定義一個 searchTerm 變數來儲存搜尋文字
+  filterText: any = '';// 定義一個 searchTerm 變數來儲存搜尋文字
 // 搜尋函數
   filterorders() {
     // 如果沒有輸入搜尋文字，就直接返回原始資料
-    if (this.searchTerm === '') {
+    if (!this.filterText) {
       this.getAllOrderRequest();
       return;
     }
     this.GetAllOrder = this.GetAllOrder.filter(order => {
+            // 將所有要比對的欄位轉成小寫字母
+      const code = order.code?.toString().toLowerCase() || '';
+      const account_name = order.account_name?.toLowerCase() || '';
+      const status = order.status?.toLowerCase() || '';
+      const description = order.description?.toLowerCase() || '';
+      const start_date = order.start_date?.toLowerCase() || '';
+      const contract_code = order.contract_code?.toString().toLowerCase() || '';
       return (
-        order.code.toString().toLowerCase().includes(this.searchTerm.toString().toLowerCase()) ||
-        order.account_name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        order.status.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        order.start_date.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        order.description.toLowerCase().includes(this.searchTerm.toLowerCase())
+        code.includes(this.filterText.toLowerCase()) ||
+        account_name.includes(this.filterText) ||
+        status.includes(this.filterText.toLowerCase()) ||
+        start_date.includes(this.filterText.toLowerCase()) ||
+        description.includes(this.filterText.toLowerCase()) ||
+        contract_code.includes(this.filterText.toLowerCase())
       );
     });
     console.log(this.GetAllOrder)
@@ -103,9 +111,10 @@ export class OrderComponent {
         this.GetAllOrder = res.body.orders
         this.GetAllOrder = res.body.orders.map((order: any) => {
           const start_date = this.formatDate2(order.start_date)
+          const activated_at = this.formatDate(order.activated_at)
           const created_at = this.formatDate(order.created_at);
           const updated_at = this.formatDate(order.updated_at);
-          return {...order, start_date, created_at, updated_at};
+          return {...order, start_date,activated_at, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
         this.loading = false;
@@ -118,9 +127,16 @@ export class OrderComponent {
   }
 
   postOrderRequest(): void {
+    this.orderStartDate = this.order_form.controls['start_date'].value;
+    if (this.orderStartDate < this.MinDate) {
+      this.order_form.controls['start_date'].setErrors({'required-star':true});
+      return
+    } else {
+      this.order_form.controls['start_date'].value;
+    }
     if (this.order_form.controls['account_id'].hasError('required')
     || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
-      return;
+      return ;
     }
     let body = {
       status: this.order_form.value.status,
@@ -140,36 +156,6 @@ export class OrderComponent {
       })
   }
 
-  patchOrderRequest(o_id: any): void {
-    this.editStatus()//處理status的值，抓取name
-    if (this.order_form.controls['account_id'].hasError('required')
-    || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
-      return;
-    }
-    let body = {
-      status: this.order_form.get('status')?.value,
-      start_date: this.order_form.get('start_date')?.value,
-      account_id: this.selectedAccount_id, //帳戶ID
-      description: this.order_form.get('description')?.value,
-      contract_id: this.selectedContract_id, //契約ID
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
-    }
-    console.log(this.selectedContract_id)
-    this.HttpApi.patchOrderRequest(o_id, body).subscribe(
-      Request => {
-        console.log(Request)
-        this.edit = false;
-        this.getAllOrderRequest()
-      })
-  }
-
-  deleteOrderRequest(o_id: any): void {
-    this.HttpApi.deleteOrderRequest(o_id).subscribe(Request => {
-      console.log(Request)
-      this.getAllOrderRequest()
-    })
-  }
-
   //建立formgroup
   order_form: FormGroup;
 
@@ -179,13 +165,13 @@ export class OrderComponent {
       account_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
-      status: ['', [Validators.required]],
+      status: [''],
       contract_id: ['', [Validators.required]],
       contract_code: ['', [Validators.required]],
       amount: [''],
-      describe: [''],
+      description: [''],
       activated_by: [''],
-      activated_date: [''],
+      activated_at: [''],
       created_at: [''],
       updated_at: [''],
       created_by: [''],
@@ -206,7 +192,6 @@ export class OrderComponent {
   o_id: any;
 
   showDialog(type: string, order?: any): void {
-    // 新增與編輯dialog都無法自行編輯訂單號碼、建立者、建立時間、更新者、更新時間
     if (type === 'add') {
       this.dialogHeader = '新增訂單';
       this.order_form.reset();
@@ -222,10 +207,46 @@ export class OrderComponent {
       this.showedit = true; // 不顯示 activated_by 控件
       // 綁定已經選擇的狀態
       this.selectedStatus = this.status.find(s => s.name === order.status);
-      this.editStatus()//處理status的值，抓取name
       this.o_id = order.order_id
     }
     this.edit = true;
+  }
+
+
+  patchOrderRequest(o_id: any): void {
+    this.orderStartDate = this.order_form.controls['start_date'].value;
+    if (this.orderStartDate < this.MinDate) {
+      this.order_form.controls['start_date'].setErrors({'required-star':true});
+      return
+    } else {
+      this.order_form.controls['start_date'].value;
+    }
+    this.editStatus()//處理status的值，抓取name
+    if (this.order_form.controls['account_id'].hasError('required') || this.order_form.controls['contract_id'].hasError('dateError')
+    || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
+      return;
+    }
+    let body = {
+      status: this.order_form.get('status')?.value,
+      start_date: this.order_form.get('start_date')?.value,
+      account_id: this.selectedAccount_id, //帳戶ID
+      description: this.order_form.get('description')?.value,
+      contract_id: this.selectedContract_id, //契約ID
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
+    }
+    this.HttpApi.patchOrderRequest(o_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        this.edit = false;
+        this.getAllOrderRequest()
+      })
+  }
+
+  deleteOrderRequest(o_id: any): void {
+    this.HttpApi.deleteOrderRequest(o_id).subscribe(Request => {
+      console.log(Request)
+      this.getAllOrderRequest()
+    })
   }
 
   // GET全部Account
@@ -251,7 +272,6 @@ export class OrderComponent {
   // GET全部Contract
   GetAllContract: any[] = [];
   selectedContract_id: any;
-
   getAllContractRequest(limit?: number, page?: number) {
     this.HttpApi.getAllContractRequest(limit, page).subscribe(
       (res) => {
@@ -283,25 +303,27 @@ export class OrderComponent {
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
-
   validateStartDate() {
-    const today: Date = new Date(); // 創建一個Date物件
-    let todayDate: string = today.toISOString().substr(0, 10);
+    // const today: Date = new Date(); // 創建一個Date物件
+    // let todayDate: string = today.toISOString().substr(0, 10);
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
     // if (this.order_form.controls['start_date'].value == null) {
     //   this.orderStartDate = todayDate
-    //   this.order_form.patchValue({start_date: todayDate});
+    //   this.order_form.patchValue({start_date: null});
+    //   // this.orderStartDate = todayDate
+    //   // this.order_form.patchValue({start_date: todayDate});
     // } else {
     //   this.orderStartDate = this.order_form.controls['start_date'].value;
     // }
-    this.orderStartDate = this.order_form.controls['start_date'].value;
-    if (this.orderStartDate < this.MinDate) {
-      this.order_form.controls['start_date'].setErrors({dateError: true});
-    } else {
-      this.order_form.controls['start_date'].value;
-    }
+    // this.orderStartDate = this.order_form.controls['start_date'].value;
+    // if (this.orderStartDate < this.MinDate) {
+    //   this.order_form.controls['start_date'].setErrors({'required-star':true});
+    //   return
+    // } else {
+    //   this.order_form.controls['start_date'].value;
+    // }
   }
 
   //日期轉換
@@ -320,5 +342,4 @@ export class OrderComponent {
     const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours() - 16);
     return start_date.toISOString().slice(0, 10);
   }
-
 }

@@ -14,8 +14,8 @@
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" (input)="filterorders()" [(ngModel)]="searchTerm" pInputText
-                         placeholder="輸入關鍵字"></td>
+              <td><input type="text" [(ngModel)]="filterText" (input)="filterorders()" pInputText
+                placeholder="輸入關鍵字"></td>
             </span>
           </div>
         </ng-template>
@@ -74,10 +74,10 @@
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>契約號碼</label>
-          <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_code" appendTo="body" [options]="GetAllContract"
+          <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_id" appendTo="body" [options]="GetAllContract"
                       [(ngModel)]="selectedContract_id" (ngModelChange)="validateStartDate()"
                       [filter]="true"  filterBy="label" [showClear]="true"
-                      [ngClass]="{'ng-dirty': order_form.controls['contract_code'].hasError && order_form.controls['contract_code'].touched}"
+                      [ngClass]="{'ng-dirty': order_form.controls['contract_id'].hasError && order_form.controls['contract_id'].touched}"
           ></p-dropdown>
         </div>
       </div>
@@ -93,9 +93,10 @@
         <div class="field">
           <label><span class="required-star">*</span>訂單開始日期</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="start_date"
-                      (ngModelChange)="validateStartDate()" [minDate]="MinDate"
+                       [minDate]="MinDate"
                       [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
-          <div class="required-star" *ngIf="order_form.controls['start_date'].hasError('dateError')">訂單日期不可早於契約日期</div>
+                      <div class="required-star" *ngIf="order_form.controls['start_date'].hasError('required-star')">
+                        訂單開始日期不可早於契約日期</div>
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">
@@ -107,10 +108,9 @@
       </div>
       <div class="col-6" *ngIf="showedit">
         <div class="field">
-          <label><span class="required-star">*</span>狀態</label>
+          <label>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
-                      optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"
-                      [ngClass]="{'ng-dirty':order_form.controls['status'].hasError && order_form.controls['status'].touched}"></p-dropdown>
+          name="status" optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
       <div class="col-6" *ngIf="showedit">
@@ -124,24 +124,16 @@
       <div class="col-12">
         <div class="field">
           <label>描述</label>
-          <textarea [rows]="5" pInputTextarea formControlName="describe"></textarea>
+          <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
       <ng-container *ngIf="showedit && order_form.get('status')?.value === '啟動中'">
-        <div class="col-6">
+        <div class="col-12">
           <div class="field">
-            <label>啟用者</label>
+            <label>啟用：</label>
             <br>
             <label>{{(order_form.controls['activated_by'].value)}}</label>
-          </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="showedit && order_form.get('status')?.value === '啟動中'">
-        <div class="col-6">
-          <div class="field">
-            <label>啟用日期</label>
-            <br>
-            <label>{{(order_form.controls['activated_date'].value)}}</label>
+            <label>{{(order_form.controls['activated_at'].value)}}</label>
           </div>
         </div>
       </ng-container>
