@@ -10,4 +10,8 @@ export interface Quote {
   expiration_date: any;
   code: any;
   total_price: number;
+  updated_by: any;
+  updated_at: any;
+  created_at: any;
+  created_by: any;
 }

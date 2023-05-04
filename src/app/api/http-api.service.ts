@@ -108,7 +108,7 @@ export class HttpApiService {
   price!: number;
 
   //取得all  商品/服務資料
-  getAllProductRequest(limit=20,page=1): Observable<any> {
+  getAllProductRequest(limit = 20, page = 1): Observable<any> {
     const url = this.BaseUrl + '/products' + '?page=' + page + '&limit=' + limit;
     return this.http.get<any>(url);
   }
