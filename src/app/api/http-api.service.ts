@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http'; //http協定
 import {Product} from "../shared/models/product";
 import {Contract} from "../shared/models/contract";
+import { Quote } from '../shared/models/quote';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -240,6 +241,12 @@ export class HttpApiService {
   getAllQuoteRequest(limit = 20, page = 1): Observable<any> {
     let url = this.BaseUrl + '/quotes' + '?page=' + page + '&limit=' + limit;
     return this.http.get<any>(url);
+  }
+
+  //取得一筆 報價 getone
+  getOneQuotetRequest(id: any): Observable<Quote> {
+    const url = `${this.BaseUrl}/quotes/${id}`;
+    return this.http.get<Quote>(url);
   }
 
   //新增 報價 post
