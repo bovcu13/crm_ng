@@ -20,11 +20,21 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name">姓名<p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="account_name">帳戶<p-sortIcon field="account_name"></p-sortIcon></th>
-            <th pSortableColumn="cell_phone">行動電話<p-sortIcon field="cell_phone"></p-sortIcon></th>
-            <th pSortableColumn="email">電子郵件<p-sortIcon field="email"></p-sortIcon></th>
-            <th pSortableColumn="owner">業務員<p-sortIcon field="owner"></p-sortIcon></th>
+            <th pSortableColumn="name">姓名
+              <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="account_name">帳戶
+              <p-sortIcon field="account_name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="cell_phone">行動電話
+              <p-sortIcon field="cell_phone"></p-sortIcon>
+            </th>
+            <th pSortableColumn="email">電子郵件
+              <p-sortIcon field="email"></p-sortIcon>
+            </th>
+            <th pSortableColumn="created_by">業務員
+              <p-sortIcon field="created_by"></p-sortIcon>
+            </th>
             <th></th>
           </tr>
         </ng-template>
@@ -34,14 +44,15 @@
             <td>{{ contact.account_name }}</td>
             <td>{{ contact.cell_phone }}</td>
             <td>{{ contact.email }}</td>
-            <td>{{ contact.owner }}</td>
+            <td>{{ contact.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
                 <p-button icon="pi pi-eye" routerLink="/main/contact/view" pTooltip="檢視" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',contact)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" (click)="deleteContact(contact.contact_id)" pTooltip="刪除" tooltipPosition="top"
+                <p-button icon="pi pi-trash" (click)="deleteContact(contact.contact_id)" pTooltip="刪除"
+                          tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
@@ -57,20 +68,9 @@
       <div class="col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
-          <p-dropdown
-            [ngClass]="{'ng-dirty':contact_form.controls['account_name'].hasError && contact_form.controls['account_name'].touched}"
-            [options]="account_name" (onChange)="accountValue($event)" optionLabel="name" [filter]="true" formControlName="account_name"
-            filterBy="name" [showClear]="true" placeholder="選擇現有帳戶">
-            <ng-template pTemplate="account">
-              <div class="flex align-items-center gap-2" *ngIf="account_name">
-                <div>{{ account_name.name }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-account pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ account.name }}</div>
-              </div>
-            </ng-template>
+          <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
+                      [filter]="true" optionLabel="label" appendTo="body"
+                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶">
           </p-dropdown>
         </div>
       </div>
@@ -78,13 +78,14 @@
         <div class="field">
           <label>業務員</label>
           <br>
-          <label>{{(contact_form.controls['owner'].value)}}</label>
+          <label>{{(contact_form.controls['created_by'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>姓名</label>
-          <input pInputText formControlName="name" [ngClass]="{'ng-dirty':contact_form.controls['name'].hasError && contact_form.controls['name'].touched}">
+          <input pInputText formControlName="name"
+                 [ngClass]="{'ng-dirty':contact_form.controls['name'].hasError && contact_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-6">
@@ -104,7 +105,9 @@
       <div class="col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>公司電話</label>
-          <input [ngClass]="{'ng-dirty':contact_form.controls['phone_number'].hasError && contact_form.controls['phone_number'].touched}" pInputText formControlName="phone_number">
+          <input
+            [ngClass]="{'ng-dirty':contact_form.controls['phone_number'].hasError && contact_form.controls['phone_number'].touched}"
+            pInputText formControlName="phone_number">
         </div>
       </div>
       <div class="col-12">
@@ -132,36 +135,38 @@
                       formControlName="reports_to" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
-      </div>
-      <div class="col-6">
-        <label>建立者：</label>
-        <br>
-        <div class="mt-3 field">
-          <label>{{(contact_form.controls['created_by'].value)}}</label>
-          <br>
-          <label>{{(contact_form.controls['created_at'].value)}}</label>
-        </div>
-      </div>
-      <div class="col-6">
-        <label>上次修改者：</label>
-        <br>
-        <div class="mt-3 field">
-          <label>{{(contact_form.controls['updated_by'].value)}}</label>
-          <br>
-          <label>{{(contact_form.controls['updated_at'].value)}}</label>
+      <div class="col-6 mt-3">
+        <div class="flex justify-content-end mt-3">
+          <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
+            <p-button label="儲存" (click)="patchContact();edit=false"
+                      styleClass="p-button-outlined p-button-info"></p-button>
+          </ng-container>
+          <ng-container *ngIf="dialogHeader !== '編輯聯絡人'">
+            <p-button label="新增" (click)="postContact();edit=false"
+                      styleClass="p-button-outlined p-button-info"></p-button>
+          </ng-container>
+          <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
         </div>
       </div>
     </div>
-
-    <div class="flex justify-content-end mt-3">
-      <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
-        <p-button label="儲存" (click)="patchContact();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
-      </ng-container>
-      <ng-container *ngIf="dialogHeader !== '編輯聯絡人'">
-        <p-button label="新增" (click)="postContact();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
-      </ng-container>
-      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
-    </div>
+    <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
+      <p-divider></p-divider>
+      <div class="grid">
+        <div class="col-6">
+          <label>建立者： {{(contact_form.controls['created_by'].value)}}</label>
+          <br>
+          <div class="mt-3 field">
+            <label>{{(contact_form.controls['created_at'].value|date:'yyyy-MM-dd h:mm a')}}</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <label>上次修改者： {{(contact_form.controls['updated_by'].value)}}</label>
+          <br>
+          <div class="mt-3 field">
+            <label>{{(contact_form.controls['updated_at'].value|date:'yyyy-MM-dd h:mm a')}}</label>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </p-dialog>
 </form>
