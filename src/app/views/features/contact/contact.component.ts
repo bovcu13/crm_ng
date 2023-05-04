@@ -81,6 +81,7 @@ export class ContactComponent implements OnInit {
     this.contact_form = this.fb.group({
       contact_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
+      account_id: ['', [Validators.required]],
       owner: [''],
       name: ['', [Validators.required]],
       salutation: [''],
@@ -118,6 +119,7 @@ export class ContactComponent implements OnInit {
 
   ngOnInit() {
     this.filteredContacts = this.getData;
+    this.getAllAccountRequest()
   }
 
   total!: number;
@@ -125,17 +127,38 @@ export class ContactComponent implements OnInit {
   // 懶加載
   loadPostsLazy(event: LazyLoadEvent) {
     const page = (event.first! / event.rows!) + 1;
+    // this.HttpApi.getAllContactRequest(page).subscribe(request => {
+    //   this.getData = request.body.contacts;
+    // });
     this.HttpApi.getAllContactRequest(page).subscribe(request => {
       this.getData = request.body.contacts;
-      this.total = request.body.total
-      console.log(this.getData);
-      // console.log(this.total)
+      console.log(this.getData)
     });
   }
 
   //時間調整
   localToUtc(date: Date): Date {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
+  }
+
+  // 取得帳戶 option
+  GetAllAccount!: any[];
+
+  getAllAccountRequest() {
+    this.HttpApi.getAllAccountRequest(1).subscribe(
+      (request) => {
+        this.GetAllAccount = request.body.accounts.map((account: any) => {
+          // console.log(account)
+          return {
+            label: account.name,
+            value: account.account_id
+          };
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   edit: boolean = false;
@@ -147,27 +170,24 @@ export class ContactComponent implements OnInit {
       this.dialogHeader = '新增聯絡人';
       this.contact_form.reset();
     } else if (type === 'edit') {
-      console.log("contact: " + JSON.stringify(contact))
       this.dialogHeader = '編輯聯絡人';
       this.contact_form.patchValue(contact);
       this.contact_form.patchValue({
         salutation: this.salutation.find(s => s.name === contact.salutation),
-      });
-      //更新時間為現在時間
-      const currentDate = new Date()
-      this.contact_form.patchValue({
-        updated_at: currentDate
+        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contact.account_name)?.value
       });
     }
   }
 
+  // 現在時間
+  currentDate = new Date()
+
   postContact(): void {
-    let salutation = this.contact_form.controls['salutation'].value;
     let body = {
       account_name: this.contact_form.controls['account_name'].value,
       owner: this.contact_form.controls['owner'].value,
       name: this.contact_form.controls['name'].value,
-      salutation: this.contact_form.controls['salutation'].value,
+      salutation: this.selectedsalutation?.name,
       cell_phone: this.contact_form.controls['cell_phone'].value,
       phone_number: this.contact_form.controls['phone_number'].value,
       email: this.contact_form.controls['email'].value,
@@ -175,8 +195,9 @@ export class ContactComponent implements OnInit {
       department: this.contact_form.controls['department'].value,
       reports_to: this.contact_form.controls['reports_to'].value,
       supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
-      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61"
+      account_id: this.selectedAccountId,
+      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+      created_at: this.currentDate
     }
     this.HttpApi.postContactRequest(body)
       .subscribe(request => {
@@ -196,12 +217,11 @@ export class ContactComponent implements OnInit {
 
   patchContact(): void {
     let id = this.contact_form.controls['contact_id'].value
-    let salutation = this.contact_form.controls['salutation'].value;
     let body = {
       account_name: this.contact_form.controls['account_name'].value,
       owner: this.contact_form.controls['owner'].value,
       name: this.contact_form.controls['name'].value,
-      salutation: this.contact_form.controls['salutation'].value,
+      salutation: this.selectedsalutation?.name,
       cell_phone: this.contact_form.controls['cell_phone'].value,
       phone_number: this.contact_form.controls['phone_number'].value,
       email: this.contact_form.controls['email'].value,
@@ -209,8 +229,9 @@ export class ContactComponent implements OnInit {
       department: this.contact_form.controls['department'].value,
       reports_to: this.contact_form.controls['reports_to'].value,
       supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
-      account_id: "cf6f654e-fb06-4740-bf03-374f32406d37",
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+      account_id: this.selectedAccountId,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
+      updated_at: this.currentDate
     }
     this.HttpApi.patchContactRequest(id, body)
       .subscribe(request => {
@@ -239,15 +260,26 @@ export class ContactComponent implements OnInit {
     })
   }
 
+  selectedsalutation: any;
+
   salutationValue(event: any): void {
-    const selectedsalutation = this.salutation.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(selectedsalutation);
-    this.contact_form.value.salutation = selectedsalutation.name
-    console.log(this.contact_form.value.salutation)
+    this.selectedsalutation = this.salutation.find((s: { name: any; }) => s.name === event.value.name);
+    this.contact_form.value.salutation = this.selectedsalutation.name
+    console.log(this.selectedsalutation);
+    // console.log(this.contact_form.value.salutation)
   }
 
+  selectedAccountName!: string;
+  selectedAccountId!: string;
+
   accountValue(event: any): void {
-    console.log("code: " + event.value.code);
-    console.log("name: " + event.value.name);
+    // this.selectedAccountName = this.account.find((s: { name: any; }) => s.name === event.value.name);
+    this.selectedAccountName = event.value.label
+    this.selectedAccountId = event.value.value
+    console.log(event.value.label)
+    this.contact_form.patchValue({
+      account_name: event.value.label
+    });
+    console.log(typeof this.contact_form.value.account_name)
   }
 }

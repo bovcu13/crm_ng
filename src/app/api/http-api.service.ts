@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http'; //http協定
 import {Product} from "../shared/models/product";
 import {Contract} from "../shared/models/contract";
-import { Quote } from '../shared/models/quote';
+import {Quote} from '../shared/models/quote';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -19,6 +19,11 @@ export class HttpApiService {
   //--帳戶---------------------------------------------------------------------------------------------------
   getAllAccountRequest(page: number): Observable<any> {
     const url = `${this.BaseUrl}/accounts?page=${page}&limit=10`;
+    return this.http.get<any>(url);
+  }
+
+  getAllAccountDetailRequest(page: number): Observable<any> {
+    const url = `${this.BaseUrl}/accounts/contacts?page=${page}&limit=10`;
     return this.http.get<any>(url);
   }
 
@@ -40,12 +45,6 @@ export class HttpApiService {
   deleteAccountRequest(id: any): Observable<any> {
     const url = `${this.BaseUrl}/accounts/${id}`;
     return this.http.delete<any>(url);
-  }
-
-  //--商機---------------------------------------------------------------------------------------------------
-  getAllopportunityRequest(limit=20,page=1): Observable<any> {
-    const url = this.BaseUrl + '/opportunities' + '?page=' + page + '&limit=' + limit;
-    return this.http.get<any>(url);
   }
 
   //--聯絡人---------------------------------------------------------------------------------------------------
@@ -98,6 +97,12 @@ export class HttpApiService {
   deleteLeadRequest(id: any): Observable<any> {
     const url = `${this.BaseUrl}/leads/${id}`;
     return this.http.delete<any>(url);
+  }
+
+  //--商機---------------------------------------------------------------------------------------------------
+  getAllopportunityRequest(limit = 20, page = 1): Observable<any> {
+    const url = this.BaseUrl + '/opportunities' + '?page=' + page + '&limit=' + limit;
+    return this.http.get<any>(url);
   }
 
   //--商品/服務---------------------------------------------------------------------------------------------------
@@ -171,11 +176,12 @@ export class HttpApiService {
   account_name: any;
   accounts: any;
   contracts: any;
-  amount:any;
-  contract_id : any;
+  amount: any;
+  contract_id: any;
   contract_code: any;
-  activated_by : any;
-  activated_date : any;
+  activated_by: any;
+  activated_date: any;
+
   //取得所有訂單 getall
   getAllOrderRequest(limit = 20, page = 1): Observable<any> {
     // let obj: any = {
@@ -219,7 +225,7 @@ export class HttpApiService {
   }
 
   //修改 訂單 patch
-  patchOrderRequest(sid: string, body: any): Observable<any>{
+  patchOrderRequest(sid: string, body: any): Observable<any> {
     const url = `${this.BaseUrl}/orders/${sid}`;
     return this.http.patch<any>(url, body);
   }
@@ -231,12 +237,13 @@ export class HttpApiService {
   }
 
 //----報價---------------------------------------------------------------------------------------------------
-  opportunity_name:any;
-  is_syncing:any;
-  expiration_date:any;
-  tax:any;
-  shipping_and_handling:any;
-  subtotal:any;
+  opportunity_name: any;
+  is_syncing: any;
+  expiration_date: any;
+  tax: any;
+  shipping_and_handling: any;
+  subtotal: any;
+
   //取得所有報價 getall
   getAllQuoteRequest(limit = 20, page = 1): Observable<any> {
     let url = this.BaseUrl + '/quotes' + '?page=' + page + '&limit=' + limit;
@@ -260,6 +267,7 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/quotes/${sid}`;
     return this.http.patch<any>(url, body);
   }
+
   //刪除 報價 delete
   deleteQuoteRequest(sid: string): Observable<any> {
     const url = `${this.BaseUrl}/quotes/${sid}`;
@@ -271,18 +279,21 @@ export class HttpApiService {
   parent_campaign_id: any;
   type: any;
   owner: any;
+
   //取得所有行銷活動 getall
   getAllCampaignRequest(limit = 20, page = 1): Observable<any> {
     const url = this.BaseUrl + '/campaigns' + '?page=' + page + '&limit=' + limit;
     return this.http.get<any>(url);
   }
+
   //新增 行銷活動 post
-  postCampaignRequest(body: any): Observable<any>{
+  postCampaignRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/campaigns`;
     return this.http.post<any>(url, body);
   }
+
   //修改 行銷活動 patch
-  patchCampaignRequest(sid: string, body: any): Observable<any>{
+  patchCampaignRequest(sid: string, body: any): Observable<any> {
     const url = `${this.BaseUrl}/campaigns/${sid}`;
     return this.http.patch<any>(url, body);
   }
