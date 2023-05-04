@@ -39,6 +39,7 @@
             <!-- <td>{{ quote.subtotal }}</td>
             <td>{{ quote.total_price }}</td> -->
             <td class="icon-align-right"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
+              [routerLink]="['/main/quote/view/', quote.quote_id]"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
