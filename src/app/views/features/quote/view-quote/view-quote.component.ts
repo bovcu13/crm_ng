@@ -149,7 +149,7 @@ status: any[] = [
     GetAllOpportunity: any[] = [];
     selectedOpportunity_id: string = '';
     getAllopportunityRequest() {
-      this.HttpApi.getAllopportunityRequest(1).subscribe(
+      this.HttpApi.getAllOpportunityRequest(1).subscribe(
         (res) => {
           this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
             return {
