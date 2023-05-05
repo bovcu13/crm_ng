@@ -100,9 +100,29 @@ export class HttpApiService {
   }
 
   //--商機---------------------------------------------------------------------------------------------------
-  getAllopportunityRequest(limit = 20, page = 1): Observable<any> {
-    const url = this.BaseUrl + '/opportunities' + '?page=' + page + '&limit=' + limit;
+  getAllOpportunityRequest(page: number): Observable<any> {
+    const url = `${this.BaseUrl}/opportunities?page=${page}&limit=10`;
     return this.http.get<any>(url);
+  }
+
+  getOneOpportunityRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/opportunities/${id}`;
+    return this.http.get<any>(url);
+  }
+
+  postOpportunityRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/opportunities`;
+    return this.http.post<any>(url, body);
+  }
+
+  patchOpportunityRequest(id: any, body: any): Observable<any> {
+    const url = `${this.BaseUrl}/opportunities/${id}`;
+    return this.http.patch<any>(url, body);
+  }
+
+  deleteOpportunityRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/opportunities/${id}`;
+    return this.http.delete<any>(url);
   }
 
   //--商品/服務---------------------------------------------------------------------------------------------------
