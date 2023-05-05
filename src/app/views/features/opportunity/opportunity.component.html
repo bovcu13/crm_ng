@@ -22,7 +22,8 @@
         </span>
         </div>
       </div>
-      <p-table [value]="filteredOpportunity">
+      <p-table [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
+               (onLazyLoad)="loadPostsLazy($event)">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -53,7 +54,7 @@
             </td>
             <td>{{ opportunity.name }}</td>
             <td>{{ opportunity.account_name }}</td>
-            <td>{{ opportunity.close_date }}</td>
+            <td>{{ opportunity.close_date | date:'yyyy-MM-dd' }}</td>
             <td>{{ opportunity.owner }}</td>
             <td>
               <div class="flex justify-content-end">
@@ -62,7 +63,7 @@
                 <p-button (click)="showDialog('edit',opportunity)" icon="pi pi-pencil" pTooltip="編輯"
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                <p-button (click)="deleteOpportunity(opportunity.opportunity_id)" icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
@@ -85,20 +86,9 @@
       <div class="col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
-          <p-dropdown [options]="account" (onChange)="accountValue($event)" optionLabel="name" [filter]="true"
-                      formControlName="account_name"
-                      [ngClass]="{'ng-dirty':opportunity_form.controls['account_name'].hasError && opportunity_form.controls['account_name'].touched}"
-                      filterBy="name" [showClear]="true" placeholder="選擇現有帳戶">
-            <ng-template pTemplate="account">
-              <div class="flex align-items-center gap-2" *ngIf="account">
-                <div>{{ account.name }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-account pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ account.name }}</div>
-              </div>
-            </ng-template>
+          <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
+                      [filter]="true" appendTo="body" optionLabel="label"
+                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶">
           </p-dropdown>
         </div>
       </div>
@@ -122,7 +112,7 @@
       <div class="col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>結束日期</label>
-          <p-calendar formControlName="close_date" appendTo="body"
+          <p-calendar formControlName="close_date" appendTo="body" dateFormat="yy-mm-dd"
                       [ngClass]="{'ng-dirty':opportunity_form.controls['close_date'].hasError && opportunity_form.controls['close_date'].touched}"></p-calendar>
         </div>
       </div>
@@ -141,7 +131,12 @@
       </div>
     </div>
     <div class="flex justify-content-end">
-      <p-button label="儲存" styleClass="p-button-outlined p-button-info"></p-button>
+      <ng-container *ngIf="dialogHeader === '編輯商機'">
+        <p-button label="儲存" (click)="patchOpportunity();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="dialogHeader !== '編輯商機'">
+        <p-button label="新增" (click)="postOpportunity();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
