@@ -8,14 +8,14 @@
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" [showCurrentPageReport]="true"
-               [loading]="loading" [globalFilterFields]="['status','start_date']" (onLazyLoad)="loadTable($event)"
+               (onLazyLoad)="loadTable($event)"
                [value]="GetAllOrder" [paginator]="true" [rows]="5" [lazy]="true" [totalRecords]="totalRecords"
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
               <td><input type="text" [(ngModel)]="filterText" (input)="filterorders()" pInputText
-                placeholder="輸入關鍵字"></td>
+                         placeholder="輸入關鍵字"></td>
             </span>
           </div>
         </ng-template>
@@ -49,7 +49,8 @@
             <td>{{ order.status }}</td>
             <td>{{ order.contract_code}}</td>
             <td class="icon-align-right">
-              <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
+                        [routerLink]="['/main/order/view/', order.order_id]"></p-button>
               <p-button (click)="showDialog('edit',order)" icon="pi pi-pencil"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button icon="pi pi-trash" (click)="deleteOrderRequest(order.order_id)"
@@ -74,29 +75,23 @@
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>契約號碼</label>
-          <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_id" appendTo="body" [options]="GetAllContract"
+          <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_id" appendTo="body"
+                      [options]="GetAllContract"
                       [(ngModel)]="selectedContract_id" (ngModelChange)="validateStartDate()"
-                      [filter]="true"  filterBy="label" [showClear]="true"
+                      [filter]="true" filterBy="label" [showClear]="true"
                       [ngClass]="{'ng-dirty': order_form.controls['contract_id'].hasError && order_form.controls['contract_id'].touched}"
           ></p-dropdown>
         </div>
       </div>
       <div class="col-6">
         <div class="field">
-          <label><span class="required-star">*</span>帳戶</label>
-          <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'" [(ngModel)]="selectedAccount_id"
-          [filter]="true"  filterBy="label" [showClear]="true"
-                      [ngClass]="{'ng-dirty':order_form.controls['account_id'].hasError && order_form.controls['account_id'].touched}"></p-dropdown>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="field">
           <label><span class="required-star">*</span>訂單開始日期</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="start_date"
-                       [minDate]="MinDate"
+                      [minDate]="MinDate"
                       [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
-                      <div class="required-star" *ngIf="order_form.controls['start_date'].hasError('required-star')">
-                        訂單開始日期不可早於契約日期</div>
+          <div class="required-star" *ngIf="order_form.controls['start_date'].hasError('required-star')">
+            訂單開始日期不可早於契約日期
+          </div>
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">
@@ -110,7 +105,8 @@
         <div class="field">
           <label>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
-          name="status" optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
+                      name="status" optionLabel="name" (onChange)="onStatusChange($event)"
+                      [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
       <div class="col-6" *ngIf="showedit">
@@ -120,23 +116,22 @@
           <label class="mt-2 ml-2" [textContent]="order_form.controls['amount'].value"></label>
         </div>
       </div>
-      <div class="col-6"></div>
+      <div class="col-6">
+        <div class="field">
+          <label>啟用：</label>
+          <br>
+          <ng-container *ngIf="showedit && selectedStatusName === '啟動中'">
+            <label>{{(order_form.controls['activated_by'].value)}}</label>
+            <label>{{(order_form.controls['activated_at'].value)}}</label>
+          </ng-container>
+        </div>
+      </div>
       <div class="col-12">
         <div class="field">
           <label>描述</label>
           <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
-      <ng-container *ngIf="showedit && order_form.get('status')?.value === '啟動中'">
-        <div class="col-12">
-          <div class="field">
-            <label>啟用：</label>
-            <br>
-            <label>{{(order_form.controls['activated_by'].value)}}</label>
-            <label>{{(order_form.controls['activated_at'].value)}}</label>
-          </div>
-        </div>
-      </ng-container>
       <div class="col-6">
         <label>建立者：</label>
         <br>
@@ -159,7 +154,8 @@
         <p-button label="新增" (click)="postOrderRequest()" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="showedit">
-        <p-button label="儲存" (click)="patchOrderRequest(o_id)"  styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchOrderRequest(o_id)"
+                  styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
     </div>

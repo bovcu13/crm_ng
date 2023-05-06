@@ -1,0 +1,322 @@
+<div class="grid">
+  <div class="col-3">
+    <div class="mb-3">
+      <p-card>
+        <form [formGroup]="order_form">
+          <h3>{{order_form.controls['code'].value}}</h3>
+          <p-divider></p-divider>
+          <span class="p-buttonset flex justify-content-center">
+            <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
+                      styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+            <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
+                      styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+            <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
+                      styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+            <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync"
+                      styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
+          </span>
+          <div class="grid mt-2">
+            <div class="col-12 flex justify-content-center">
+              <label>帳戶: </label>
+              <label>{{order_form.controls['account_name'].value}}</label>
+            </div>
+            <div class="col-12 flex justify-content-center">
+              <label>契約號碼: </label>
+              <label>{{order_form.controls['contract_code'].value}}</label>
+            </div>
+            <div class="col-12 flex justify-content-center">
+              <label>訂單開始日期: </label>
+              <label>{{order_form.controls['start_date'].value}}</label>
+            </div>
+            <div class="col-12 flex justify-content-center">
+              <label>狀態: </label>
+              <label>{{selectedStatusName}}</label>
+            </div>
+            <div class="col-12 flex justify-content-center">
+              <label>訂單金額: </label>
+              <label></label>
+            </div>
+          </div>
+        </form>
+      </p-card>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="mb-3">
+      <p-card>
+      <span class="flex justify-content-center">
+        <button class="flex justify-content-center" [ngClass]="{
+                'surface-400': selectedStatusName === '草稿',
+                'bg-blue-300': selectedStatusName === '啟動中'
+            }">
+          <span class="span" *ngIf="selectedStatusName==='草稿'">草稿</span>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='啟動中'"></i>
+       </button>
+       <button class="flex justify-content-center" [ngClass]="{
+                'has-check':selectedStatusName === '草稿',
+                'bg-blue-300': selectedStatusName === '啟動中'
+            }" (click)="selectedStatusName === '草稿' ? showAlert() : null">
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='啟動中'">啟動中</span>
+        </button>
+      </span>
+      </p-card>
+    </div>
+    <div>
+      <form [formGroup]="order_form">
+        <p-card>
+          <p-tabView>
+            <p-tabPanel header="相關">
+              <p-table [rowsPerPageOptions]="[5, 10, 15]" [lazy]="true" [value]="order_product">
+                <ng-template pTemplate="caption">
+                  <div class="flex justify-content-between">
+                    <div class="justify-content-start mt-2">
+                      <label>訂單產品</label>
+                    </div>
+                    <div class="justify-content-end">
+                      <ng-container *ngIf="selectedStatusName =='草稿'">
+                        <p-button icon="pi pi-plus" pTooltip="新增產品" (click)="addProduct()" tooltipPosition="top"
+                                  styleClass="p-button-text"></p-button>
+                      </ng-container>
+                      <p-button icon="pi pi-pencil" pTooltip="編輯所有產品" (click)="editProduct()"
+                                tooltipPosition="top"
+                                styleClass="p-button-text"></p-button>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>產品</th>
+                    <th>產品代碼</th>
+                    <th>數量</th>
+                    <th>單價</th>
+                    <th></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-order_product>
+                  <tr>
+                    <td>{{ order_product.name }}</td>
+                    <td>{{ order_product.code }}</td>
+                    <td>{{ order_product.price }}</td>
+                    <td>{{ order_product.quantity }}</td>
+                    <td class="icon-align-right">
+                      <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                      <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
+                                pTooltip="刪除" tooltipPosition="top"></p-button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="mt-2">
+                <p-table [rowsPerPageOptions]="[5, 10, 15]" [lazy]="true" [value]="order_log">
+                  <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between">
+                      <div class="justify-content-start mt-2">
+                        <label>訂單歷程記錄</label>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>日期</th>
+                      <th>欄位</th>
+                      <th>使用者</th>
+                      <th>原始值</th>
+                      <th>新值</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-order_log>
+                    <tr>
+                      <td>{{ order_log.date }}</td>
+                      <td>{{ order_log.field }}</td>
+                      <td>{{ order_log.user }}</td>
+                      <td>{{ order_log.old }}</td>
+                      <td>{{ order_log.new }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </p-tabPanel>
+            <p-tabPanel header="詳細資料">
+              <div class="grid">
+                <div class="col-6">
+                  <div class="field">
+                    <label>訂單號碼</label>
+                    <br>
+                    <label class="mt-2 ml-2 disable">{{(order_form.controls['code'].value)}}</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="required-star">*</span>契約號碼</label>
+                    <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_id" appendTo="body"
+                                [options]="GetAllContract"
+                                [(ngModel)]="selectedContract_id" (ngModelChange)="validateStartDate()"
+                                [filter]="true" filterBy="label" [showClear]="true"
+                                [ngClass]="{'ng-dirty': order_form.controls['contract_id'].hasError && order_form.controls['contract_id'].touched}"
+                    ></p-dropdown>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="required-star">*</span>訂單開始日期</label>
+                    <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+                                formControlName="start_date"
+                                [minDate]="MinDate"
+                                [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
+                    <div class="required-star" *ngIf="order_form.controls['start_date'].hasError('required-star')">
+                      訂單開始日期不可早於契約日期
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label>狀態</label>
+                    <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
+                                formControlName="status"
+                                name="status" optionLabel="name" (onChange)="onStatusChange($event)"
+                                [(ngModel)]="selectedStatus"></p-dropdown>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label>訂單金額</label>
+                    <br>
+                    <label class="mt-2 ml-2" [textContent]="order_form.controls['amount'].value"></label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label>啟用：</label>
+                    <br>
+                    <ng-container *ngIf="selectedStatusName =='啟動中'">
+                      <label>{{ order_form.controls['activated_by'].value }}</label>
+                      <label>{{ order_form.controls['activated_at'].value }}</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-6"></div>
+                <div class="col-12">
+                  <div class="field">
+                    <label>描述</label>
+                    <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label>建立者：</label>
+                  <br>
+                  <div class="mt-3 field">
+                    <label class="disable">{{(order_form.controls['created_by'].value)}}</label>
+                    <label class="ml-2 disable">{{(order_form.controls['created_at'].value)}}</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label>上次修改者：</label>
+                  <br>
+                  <div class="mt-3 field">
+                    <label class="disable">{{(order_form.controls['updated_by'].value)}}</label>
+                    <label class="ml-2 disable">{{(order_form.controls['updated_at'].value)}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-content-end">
+                <p-button label="儲存" (click)="showAlert()"
+                          styleClass="p-button-outlined p-button-info"></p-button>
+                <p-toast></p-toast>
+                <p-button label="取消" styleClass="p-button-secondary ml-2"
+                          (click)="showWarn()"></p-button>
+              </div>
+            </p-tabPanel>
+          </p-tabView>
+        </p-card>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-3">
+    <p-card>
+      <h3>活動</h3>
+      <p-divider></p-divider>
+      <h3>(待完成)</h3>
+    </p-card>
+  </div>
+</div>
+
+<!-- 新增產品dialog -->
+<p-dialog [(visible)]="add" header=新增產品 [modal]="true">
+  <p-table [value]="GetAllProduct">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="name">名稱
+          <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="code">識別碼
+          <p-sortIcon field="code"></p-sortIcon>
+        </th>
+        <th pSortableColumn="price">價格
+          <p-sortIcon field="price"></p-sortIcon>
+        </th>
+        <th pSortableColumn="description">描述
+          <p-sortIcon field="description"></p-sortIcon>
+        </th>
+        <!-- <th>系列</th> -->
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="product"></p-tableCheckbox>
+        </td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.code }}</td>
+        <td>{{ product.price }}</td>
+        <td>{{ product.description }}</td>
+        <!-- <td>{{ product.series }}</td> -->
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="flex justify-content-end">
+        <p-button label="取消" (click)="add=false" styleClass="p-button-secondary"></p-button>
+        <p-button label="下一步" (click)="edit=true;add=false" styleClass="p-button-info ml-1"></p-button>
+      </div>
+    </ng-template>
+  </p-table>
+</p-dialog>
+
+<!-- 編輯產品dialog -->
+<form [formGroup]="edit_product_form">
+  <p-dialog [(visible)]="edit" header=編輯所有產品 [modal]="true">
+    <p-table>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>名稱</th>
+          <th>價目表價格</th>
+          <th><span class="required-star">*</span>數量</th>
+          <th><span class="required-star">*</span>單價</th>
+          <th>描述</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
+          <td><p-inputNumber inputId="integeronly" [min]="0" formControlName="quantity"
+                             [ngClass]="{'ng-dirty':edit_product_form.controls['quantity'].hasError && edit_product_form.controls['quantity'].touched}"></p-inputNumber></td>
+          <td><p-inputNumber inputId="integeronly" [min]="0" formControlName="unit_price"
+                             [ngClass]="{'ng-dirty':edit_product_form.controls['unit_price'].hasError && edit_product_form.controls['unit_price'].touched}"></p-inputNumber></td>
+          <td><input pInputText formControlName="description"></td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+        <div class="flex justify-content-end">
+          <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary"></p-button>
+          <p-button label="儲存" styleClass="p-button-info ml-1"></p-button>
+        </div>
+      </ng-template>
+    </p-table>
+  </p-dialog>
+</form>

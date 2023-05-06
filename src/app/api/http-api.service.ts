@@ -238,6 +238,11 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
+  getOneOrderRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/orders/${id}`;
+    return this.http.get<any>(url);
+  }
+
   //新增 訂單 post
   postOrderRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/orders`;

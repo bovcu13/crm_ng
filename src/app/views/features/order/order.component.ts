@@ -94,14 +94,12 @@ export class OrderComponent {
   }
 
   ngOnInit() {
-    this.getAllAccountRequest()
     this.getAllContractRequest()
   }
 
   //取得所有訂單資料
   GetAllOrder: HttpApiService[] = [];
   first = 0;
-
   getAllOrderRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -190,7 +188,7 @@ export class OrderComponent {
   selectedStatus!: any;
   showedit = true;//判斷是否dialog為新增與編輯
   o_id: any;
-
+  selectedStatusName: any;
   showDialog(type: string, order?: any): void {
     if (type === 'add') {
       this.dialogHeader = '新增訂單';
@@ -207,6 +205,7 @@ export class OrderComponent {
       this.showedit = true; // 不顯示 activated_by 控件
       // 綁定已經選擇的狀態
       this.selectedStatus = this.status.find(s => s.name === order.status);
+      this.selectedStatusName = this.selectedStatus.name
       this.o_id = order.order_id
     }
     this.edit = true;
@@ -249,26 +248,6 @@ export class OrderComponent {
     })
   }
 
-  // GET全部Account
-  GetAllAccount: any[] = [];
-  selectedAccount_id: string = '';
-
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(1).subscribe(
-      (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
-          return {
-            label: account.name,
-            value: account.account_id
-          };
-        });
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
-
   // GET全部Contract
   GetAllContract: any[] = [];
   selectedContract_id: any;
@@ -281,6 +260,7 @@ export class OrderComponent {
             label: contract.code,
             value: contract.contract_id,
             date: contract.start_date,
+            account_id: contract.account_id,
           };
         });
       },
@@ -303,12 +283,14 @@ export class OrderComponent {
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
+  selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
     // const today: Date = new Date(); // 創建一個Date物件
     // let todayDate: string = today.toISOString().substr(0, 10);
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
+    this.selectedAccount_id = selectedContract?.account_id;
     // if (this.order_form.controls['start_date'].value == null) {
     //   this.orderStartDate = todayDate
     //   this.order_form.patchValue({start_date: null});
