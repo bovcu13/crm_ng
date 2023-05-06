@@ -216,8 +216,8 @@ export class EventComponent {
       //點選日期開啟新增事件
       dateClick: () => {
         console.log("DATE CLICKED !!!");
-        this.newDialog();
-        //this.showDialog('add');
+        //this.newDialog();
+        this.showDialog('add');
       },
       //點選事件開啟編輯事件
       eventClick: (info: any) => {
@@ -227,11 +227,7 @@ export class EventComponent {
       },
     };
 }
-//新增日曆或其他頁面dialog控制項
-new: boolean = false;
-newDialog(){
-  this.new = true;
-}
+
 //新增編輯日曆事件dialog控制項
 visible: boolean = false;
 dialogHeader!: string;
@@ -239,7 +235,6 @@ showedit = true;//判斷是否dialog為新增與編輯
   showDialog(type: string, event ?: any) {
   this.dialogHeader = type === 'edit' ? '編輯日曆事件' : '新增日曆事件';
   this.visible = true;
-  this.new = false;
   if (event && event.main) {
     this.event_form.setValue({
       main: event.extendedProps.main.split(',')?.map((name: string) => ({ name })),
