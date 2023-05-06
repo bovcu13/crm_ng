@@ -1,0 +1,165 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1rem;
+  row-gap: 1rem;
+  margin-top: 1.25rem;
+  @media (max-width: 700px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.tile {
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f4f5f7;
+  color: #003C54;
+  box-shadow: 5px 5px 5px #CFCFCF;
+  border: 1px solid #41829B;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: 0.25s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  //
+  //&:nth-child(2) {
+  //  background-color: #a3acaa;
+  //
+  //}
+  //&:nth-child(3) {
+  //  background-color: #bdbbb7;
+  //}
+  //
+  //&:nth-child(4) {
+  //  background-color: #6d5d3d;
+  //}
+
+  a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+
+    .icon-button {
+      color: inherit;
+      border-color: inherit;
+
+      &:hover,
+      &:focus {
+        background-color: transparent;
+
+        i {
+          transform: none;
+        }
+      }
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+}
+
+.tile-header {
+  display: flex;
+  align-items: center;
+
+  i {
+    font-size: 2.5em;
+  }
+
+  h3 {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.375;
+    margin-left: 0.5rem;
+
+    span:first-child {
+      font-weight: 600;
+    }
+
+    span:last-child {
+      font-size: 0.825em;
+      font-weight: 200;
+    }
+  }
+}
+
+.icon-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px solid #969593;
+  color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+  flex-shrink: 0;
+
+  &.large {
+    width: 42px;
+    height: 42px;
+    font-size: 1.25em;
+  }
+
+  i {
+    transition: 0.25s ease;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: #313131;
+    box-shadow: 0 0 0 4px #1f1f1f, 0 0 0 5px #969593;
+  }
+}
+
+button,
+select,
+input,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
