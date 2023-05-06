@@ -8,7 +8,7 @@
         </span>
       </div>
       <p-table  [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
-                [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" [loading]="loading"
+                [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first"
                [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
                 currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
