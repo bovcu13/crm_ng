@@ -21,10 +21,38 @@ a {
     background: #2E5C6E;
     border: none;
     border-radius: 0;
+    transition: all 0.3s ease-in-out;
 
     .p-menubar-root-list .p-menuitem .p-menuitem-link {
+      position: relative;
+      transition: all 0.3s ease-in-out;
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 3px;
+        border-radius: 1.5px;
+        background-color: #FFFFFB;
+        opacity: 0;
+        transform: translateX(-50%);
+        transition: all 0.3s ease-in-out;
+      }
+      /* 鼠标移动到时显示 */
+      &:hover::before {
+        opacity: 0.25;
+        width: 25%;
+      }
       .p-menuitem-active:not(.p-disabled):hover {
-        background: #356d86;
+        background: #2E5C6E;
+      }
+      &:hover {
+        transform: translateY(-3px);
+      }
+
+      &:active {
+        transform: translateY(0);
       }
 
       .p-submenu-icon {
@@ -53,18 +81,18 @@ a {
       &:not(.p-disabled):hover .p-submenu-icon,
       &:not(.p-disabled):hover .p-menuitem-text {
         color: #FFFFFB;
-        background: #356d86;
+        background: #2E5C6E;
       }
     }
 
     .p-float-label input.p-filled ~ label {
-      background: #356d86;
+      background: #2E5C6E;
     }
 
     input {
       border-radius: 20px;
       border: none;
-      background: #356d86;
+      background: #2E5C6E;
       color: #FFFFFB;
 
       &:focus {
@@ -79,7 +107,7 @@ a {
     // 右邊icon點擊無外框
     .p-button.p-button-secondary:enabled {
       &:hover {
-        background: #356d86;
+        background: #2E5C6E;
       }
 
       &:focus {
@@ -90,7 +118,7 @@ a {
 
   .p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link,
   .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link, .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover {
-    background: #356d86;
+    background: #2E5C6E;
   }
 }
 
