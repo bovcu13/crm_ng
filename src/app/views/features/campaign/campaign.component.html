@@ -8,7 +8,7 @@
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" [showCurrentPageReport]="true"
-               [loading]="loading" [globalFilterFields]="['status','start_date']" (onLazyLoad)="loadTable($event)"
+                [globalFilterFields]="['status','start_date']" (onLazyLoad)="loadTable($event)"
                [value]="GetAllCampaign" [paginator]="true" [rows]="5" [lazy]="true" [totalRecords]="totalRecords"
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">

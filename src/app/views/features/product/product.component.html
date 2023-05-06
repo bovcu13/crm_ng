@@ -9,7 +9,7 @@
       </div>
       <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllProduct" [paginator]="true"
                [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
-               [showCurrentPageReport]="true" [(first)]="first" [loading]="loading"
+               [showCurrentPageReport]="true" [(first)]="first"
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
