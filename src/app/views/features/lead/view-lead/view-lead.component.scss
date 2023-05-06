@@ -1,7 +1,16 @@
 @import 'src/app/app.component.scss';
 
+body {
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.span {
+  display: inline-block;
+  transform: skew(21deg);
+}
+
 button {
-  background: #fff;
+  background: #FFFFFF;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
@@ -16,28 +25,20 @@ button {
   margin-left:10px ;
 }
 
-.first-button{
-  transform: skew(-21deg);
-}
-
-.can-check {
+.has-check {
   box-shadow: 6px 6px 12px #c5c5c5,
   -6px -6px 12px #ffffff;
 }
 
-.span {
-  display: inline-block;
-  transform: skew(21deg);
-}
 
-button::before {
+.has-check::before {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
   right: 100%;
   left: 0;
-  background: rgb(20, 20, 20);
+  background: linear-gradient(to right, #0CABA8 0%, #2E5C6E 100%);
   opacity: 0;
   z-index: -1;
   transition: all 0.5s;
@@ -49,12 +50,12 @@ button::before {
   inset -3px -3px 6px #ffffff;
 }
 
-//button:hover {
-//  color: #fff;
-//}
-//
-//button:hover::before {
-//  left: 0;
-//  right: 0;
-//  opacity: 1;
-//}
+.has-check:hover {
+  color: #fff;
+}
+
+.has-check:hover::before {
+  left: 0;
+  right: 0;
+  opacity: 1;
+}
