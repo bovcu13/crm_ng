@@ -24,7 +24,26 @@ a {
     transition: all 0.3s ease-in-out;
 
     .p-menubar-root-list .p-menuitem .p-menuitem-link {
+      position: relative;
       transition: all 0.3s ease-in-out;
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 3px;
+        border-radius: 1.5px;
+        background-color: #FFFFFB;
+        opacity: 0;
+        transform: translateX(-50%);
+        transition: all 0.3s ease-in-out;
+      }
+      /* 鼠标移动到时显示 */
+      &:hover::before {
+        opacity: 0.25;
+        width: 25%;
+      }
       .p-menuitem-active:not(.p-disabled):hover {
         background: #2E5C6E;
       }
