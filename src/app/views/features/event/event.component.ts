@@ -1,10 +1,10 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Calendar} from 'primeng/calendar';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Calendar } from 'primeng/calendar';
 
 @Component({
   selector: 'app-event',
@@ -17,21 +17,21 @@ export class EventComponent {
   @ViewChild('endDate') endDate!: Calendar;
   //主辦人dropdown值
   main: any[] = [
-    {"name": "王大天",},
-    {"name": '李小名'},
-    {"name": '123456'},
-    {"name": 'test1'},
-    {"name": 'test2'},
-    {"name": 'test3'},
+    { "name": "王大天", },
+    { "name": '李小名' },
+    { "name": '123456' },
+    { "name": 'test1' },
+    { "name": 'test2' },
+    { "name": 'test3' },
   ];
   //參加成員dropdown值
   member: any[] = [
-    {"name": '1'},
-    {"name": '2'},
-    {"name": '3'},
-    {"name": '4'},
-    {"name": '5'},
-    {"name": '6'},
+    { "name": '1' },
+    { "name": '2' },
+    { "name": '3' },
+    { "name": '4' },
+    { "name": '5' },
+    { "name": '6' },
   ];
   //類型dropdown值
   type: any[] = [
@@ -72,11 +72,10 @@ export class EventComponent {
   options: any;
   //建立formgroup表單
   event_form: FormGroup;
-
   constructor(private fb: FormBuilder) {
     this.event_form = this.fb.group({
       subject: ['', [Validators.required]],
-      main: [[],[Validators.required]],
+      main: [[], [Validators.required]],
       member: [[]],
       location: [''],
       account_name: [''],
@@ -89,10 +88,9 @@ export class EventComponent {
     });
     //驗證日期是否有效
     if (this.event_form.controls['start_date'].value > this.event_form.controls['end_date'].value) {
-      this.event_form.controls['end_date'].setErrors({'incorrect': true});
+      this.event_form.controls['end_date'].setErrors({ 'incorrect': true });
     }
   }
-
   ngOnInit() {
     // 判斷全天日期是否有被選取
     // const alldayControl = this.event_form.get('allday');
@@ -131,7 +129,7 @@ export class EventComponent {
       headerToolbar: {// 日曆表頭部分
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        right: 'dayGridMonth,timeGridWeek,timeGridDay',
       },
       editable: false,// 是否可以進行拖拽、修改
       selectMirror: true,
@@ -140,8 +138,8 @@ export class EventComponent {
       events: [
         {
           title: '緊急事件',
-          main: [{"name": "test1"},{'name':"test2"}],
-          member: [{"name": "1"},{'name':"3"}],
+          main: [{ "name": "test1" }, { 'name': "test2" }],
+          member: [{ "name": "1" }, { 'name': "3" }],
           start: '2023-05-01T06:30:00',
           end: '2023-05-01T08:30:00',
           allDay: false,
@@ -149,19 +147,19 @@ export class EventComponent {
           type: '電話',
         },
         {
-          title: '客戶拜訪', main: [{"name": "123456"},{'name':"王大天"}],
-          member:[{"name": "6"},{'name':"4"}], date: '2023-05-03', allDay: true, backgroundColor: 'orange',
+          title: '客戶拜訪', main: [{ "name": "123456" }, { 'name': "王大天" }],
+          member: [{ "name": "6" }, { 'name': "4" }], date: '2023-05-03', allDay: true, backgroundColor: 'orange',
           type: '客戶拜訪', textColor: 'black',
         },
         {
-          title: '電話', main: [{"name": "李小名"},{'name':"王大天"}],
-          member:[{"name": "2"}], date: '2023-05-09', allDay: true, backgroundColor: 'burlywood', type: '電話',
+          title: '電話', main: [{ "name": "李小名" }, { 'name': "王大天" }],
+          member: [{ "name": "2" }], date: '2023-05-09', allDay: true, backgroundColor: 'burlywood', type: '電話',
           textColor: 'black'
         },
         {
           title: '會議',
-          main: [{"name": "李小名"},{'name':"test"}],
-          member: [{"name": "2"},{'name':"4"}],
+          main: [{ "name": "李小名" }, { 'name': "test" }],
+          member: [{ "name": "2" }, { 'name': "4" }],
           start: '2023-05-04T14:30:00',
           end: '2023-05-04T16:30:00',
           allDay: false,
@@ -171,54 +169,55 @@ export class EventComponent {
         },
         {
           title: '研討會',
-          main: [{"name": "123456"},{'name':"test3"}],
-          member: [{"name": "5"},{'name':"4"}],
+          main: [{ "name": "123456" }, { 'name': "test3" }],
+          member: [{ "name": "5" }, { 'name': "4" }],
           start: '2023-05-25T19:00:00',
           end: '2023-05-26T21:30:00',
           allDay: false,
-          backgroundColor: 'deepskyblue', type: '研討會',textColor: 'black'
+          backgroundColor: 'deepskyblue', type: '研討會', textColor: 'black'
         },
         {
           title: '行銷',
-          main: [{'name':"李小名"},{'name':"王大天"}],
-          member: [{"name": "6"},{'name':"4"}],
+          main: [{ 'name': "李小名" }, { 'name': "王大天" }],
+          member: [{ "name": "6" }, { 'name': "4" }],
           start: '2023-05-06T13:30:00',
           end: '2023-05-07T15:10:00',
           allDay: false,
-          backgroundColor: 'pink', type: '行銷',textColor: 'black'
+          backgroundColor: 'pink', type: '行銷', textColor: 'black'
         },
         {
           title: '年度拜訪',
-          main: [{'name':"test1"},{'name':"王大天"}],
-          member: [{"name": "6"}],
+          main: [{ 'name': "test1" }, { 'name': "王大天" }],
+          member: [{ "name": "6" }],
           start: '2023-05-17T09:30:00',
           end: '2023-05-18T10:30:00',
           allDay: false,
-          backgroundColor: 'plum', type: '年度拜訪',textColor: 'black'
+          backgroundColor: 'plum', type: '年度拜訪', textColor: 'black'
         },
         {
           title: '會議',
-          main: [{"name": "123456"},{'name':"test1"}],
-          member: [{"name": "1"},{'name':"3"}],
+          main: [{ "name": "123456" }, { 'name': "test1" }],
+          member: [{ "name": "1" }, { 'name': "3" }],
           start: '2023-05-08T16:30:00',
           end: '2023-05-08T17:00:00',
           allDay: false,
-          backgroundColor: 'deepblue', type: '會議',textColor: 'black'
+          backgroundColor: 'deepblue', type: '會議', textColor: 'black'
         },
         {
           title: '客戶拜訪',
-          main: [{"name": "test"},{'name':"test1"}],
-          member: [{"name": "6"},{'name':"3"}],
+          main: [{ "name": "test" }, { 'name': "test1" }],
+          member: [{ "name": "6" }, { 'name': "3" }],
           start: '2023-05-19T10:30:00',
           end: '2023-05-19T12:00:00',
           allDay: false,
-          backgroundColor: 'orange', type: '客戶拜訪',textColor: 'black'
+          backgroundColor: 'orange', type: '客戶拜訪', textColor: 'black'
         },
       ],
       //點選日期開啟新增事件
       dateClick: () => {
         console.log("DATE CLICKED !!!");
-        this.showDialog('add')
+        this.newDialog();
+        //this.showDialog('add');
       },
       //點選事件開啟編輯事件
       eventClick: (info: any) => {
@@ -227,53 +226,48 @@ export class EventComponent {
           + info.event.allDay + "/" + " type: " + info.event.extendedProps.type);
       },
     };
+}
+//新增日曆或其他頁面dialog控制項
+new: boolean = false;
+newDialog(){
+  this.new = true;
+}
+//新增編輯日曆事件dialog控制項
+visible: boolean = false;
+dialogHeader!: string;
+showedit = true;//判斷是否dialog為新增與編輯
+  showDialog(type: string, event ?: any) {
+  this.dialogHeader = type === 'edit' ? '編輯日曆事件' : '新增日曆事件';
+  this.visible = true;
+  this.new = false;
+  if (event && event.main) {
+    this.event_form.setValue({
+      main: event.extendedProps.main.split(',')?.map((name: string) => ({ name })),
+      member: event.extendedProps.member.split(',')?.map((name: string) => ({ name })),
+    });
   }
-
-
-  //時間調整
-  localToUtc(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
+  if (event) {
+    this.event_form.patchValue({
+      subject: event.title,
+      main: event.extendedProps.main,
+      member: event.extendedProps.member,
+      allday: event.allDay,
+      start_date: event.start,
+      end_date: event.end,
+      type: event.extendedProps.type,
+    });
+    this.showedit = true;
+  } else {
+    this.event_form.reset();
+    this.showedit = false;
   }
+}
 
-  //新增編輯日曆事件dialog控制項
-  visible: boolean = false;
-  dialogHeader!: string;
-  showedit = true;//判斷是否dialog為新增與編輯
-  showDialog(type: string, event?: any) {
-    this.dialogHeader = type === 'edit' ? '編輯日曆事件' : '新增日曆事件';
-    this.visible = true;
-    if (event && event.main) {
-      this.event_form.setValue({
-        main: event.extendedProps.main.split(',')?.map((name: string) => ({ name })),
-        member: event.extendedProps.member.split(',')?.map((name: string) => ({ name })),
-      });
-    }
-    if (event) {
-      this.event_form.patchValue({
-        subject: event.title,
-        main: event.extendedProps.main,
-        member: event.extendedProps.member,
-        allday: event.allDay,
-        start_date: event.start,
-        end_date: event.end,
-        type: event.extendedProps.type,
-      });
-      this.showedit = true;
-    } else {
-      this.event_form.reset();
-      this.showedit = false;
-    }
-  }
+//類型選擇變化
+typeValue(event: any): void {
+  const typeValue = this.type.find((s: { code: any; }) => s.code === event.value.code);
+  console.log(event.value.code, typeValue.name);
+}
 
-  //類型選擇變化
-  typeValue(event: any): void {
-    const typeValue = this.type.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code, typeValue.name);
-  }
-
-  //主辦人選擇變化
-  mainValue(event: any): void {
-    console.log(event.value.name);
-  }
 }
 
