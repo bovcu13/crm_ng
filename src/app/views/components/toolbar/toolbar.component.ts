@@ -14,14 +14,11 @@ export class ToolbarComponent implements OnInit {
   ngOnInit() {
     this.items = [
       {
-      },
-      {
         label: '首頁',
         routerLink: ['/main/dashboard'],
       },
       {
         label: '帳戶',
-        // routerLink: ['/main/account'],
         items: [
           {
             label: '帳戶',
