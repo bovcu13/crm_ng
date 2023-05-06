@@ -14,6 +14,8 @@ export class ToolbarComponent implements OnInit {
   ngOnInit() {
     this.items = [
       {
+      },
+      {
         label: '首頁',
         routerLink: ['/main/dashboard'],
       },
