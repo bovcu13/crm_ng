@@ -8,7 +8,7 @@
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" [showCurrentPageReport]="true"
-               [loading]="loading" [globalFilterFields]="['status','start_date']" (onLazyLoad)="loadTable($event)"
+               (onLazyLoad)="loadTable($event)"
                [value]="GetAllOrder" [paginator]="true" [rows]="5" [lazy]="true" [totalRecords]="totalRecords"
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
@@ -49,7 +49,8 @@
             <td>{{ order.status }}</td>
             <td>{{ order.contract_code}}</td>
             <td class="icon-align-right">
-              <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
+                        [routerLink]="['/main/order/view/', order.order_id]"></p-button>
               <p-button (click)="showDialog('edit',order)" icon="pi pi-pencil"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button icon="pi pi-trash" (click)="deleteOrderRequest(order.order_id)"

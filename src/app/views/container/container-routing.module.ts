@@ -20,6 +20,7 @@ import { ProductComponent } from '../features/product/product.component';
 import { OrderComponent } from '../features/order/order.component';
 import { ContractComponent } from '../features/contract/contract.component';
 import { ViewQuoteComponent } from '../features/quote/view-quote/view-quote.component';
+import { ViewOrderComponent } from '../features/order/view-order/view-order.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -41,6 +42,7 @@ const routes: Routes = [
       { path: 'opportunity', component: OpportunityComponent },
       { path: 'opportunity/view', component: ViewOpportunityComponent },
       { path: 'order', component: OrderComponent },
+      { path: 'order/view/:o_id', component: ViewOrderComponent },
       { path: 'quote', component: QuoteComponent },
       { path: 'quote/view/:q_id', component: ViewQuoteComponent },
       { path: 'contract', component: ContractComponent },
