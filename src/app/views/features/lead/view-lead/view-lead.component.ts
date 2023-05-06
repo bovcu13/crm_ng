@@ -150,7 +150,7 @@ export class ViewLeadComponent implements OnInit {
     Swal.fire({
       title: '確認更改為此狀態？',
       icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
+      confirmButtonColor: '#00A263',
       cancelButtonColor: '#FF003A',
       showCancelButton: true,
       confirmButtonText: '確認',
