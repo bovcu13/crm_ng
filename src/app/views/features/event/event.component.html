@@ -1,8 +1,5 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
-    <span>
-      <h2>行事曆</h2>
-    </span>
+  <div class="col-10 mt-2">
     <full-calendar [options]="options"></full-calendar>
     <div class="field mt-2">
       <label><span class="reddot"></span>緊急事件</label>
@@ -16,8 +13,9 @@
     </div>
   </div>
 </div>
+<!--dialog事件-->
 <form [formGroup]="event_form">
-  <p-dialog [(visible)]="visible" header={{dialogHeader}}>
+  <p-dialog [(visible)]="visible" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
@@ -30,7 +28,8 @@
         <div class="field">
           <label><span class="required-star">*</span>主要人員</label>
           <p-multiSelect [options]="main" placeholder="搜尋人員" formControlName="main" appendTo="body"
-                         optionLabel="name" display="chip"
+                         optionLabel="name"
+                         display="chip"
                          [ngClass]="{'ng-dirty':event_form.controls['main'].hasError && event_form.controls['main'].touched}">
 
           </p-multiSelect>
@@ -40,9 +39,8 @@
       <div class="col-6" *ngIf="event_form.get('allday')?.value">
         <div class="field">
           <label><span class="required-star">*</span>開始</label>
-          <p-calendar #fullstartDate [appendTo]="'body'" dateFormat="yy-mm-dd"  [showTime]="true"
-                      [showButtonBar]="true" formControlName="fullstartDate" [readonlyInput]="true"
-                      selectionMode="range"
+          <p-calendar #fullstartDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showTime]="true" [showButtonBar]="true"
+                      formControlName="fullstartDate" [readonlyInput]="true" selectionMode="range"
                       [ngClass]="{'ng-dirty':event_form.controls['fullstartDate'].hasError && event_form.controls['fullstartDate'].touched}"></p-calendar>
         </div>
       </div>
@@ -50,8 +48,8 @@
       <div class="col-6" *ngIf="!event_form.get('allday')?.value">
         <div class="field">
           <label><span class="required-star">*</span>開始</label>
-          <p-calendar [showTime]="true" #startDate [appendTo]="'body'" dateFormat="yy-mm-dd"
-                      [showButtonBar]="true" formControlName="start_date" [readonlyInput]="true"
+          <p-calendar [showTime]="true" #startDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+                      formControlName="start_date" [readonlyInput]="true"
                       [ngClass]="{'ng-dirty':event_form.controls['start_date'].hasError && event_form.controls['start_date'].touched}"></p-calendar>
         </div>
       </div>
@@ -66,9 +64,9 @@
       <div class="col-6" *ngIf="!event_form.get('allday')?.value">
         <div class="field">
           <label><span class="required-star">*</span>結束</label>
-          <p-calendar [showTime]="true" #endDate [appendTo]="'body'" dateFormat="yy-mm-dd"
-                      [showButtonBar]="true" formControlName="end_date"
-                      [minDate]="event_form.controls['start_date'].value" [readonlyInput]="true"
+          <p-calendar [showTime]="true" #endDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+                      formControlName="end_date" [minDate]="event_form.controls['start_date'].value"
+                      [readonlyInput]="true"
                       [ngClass]="{'ng-dirty':event_form.controls['end_date'].hasError && event_form.controls['end_date'].touched}"></p-calendar>
         </div>
       </div>
@@ -84,8 +82,7 @@
         <div class="field">
           <label>參加成員</label>
           <p-multiSelect [options]="member" placeholder="搜尋人員" formControlName="member" appendTo="body"
-                         optionLabel="name"
-                         display="chip"></p-multiSelect>
+                         optionLabel="name" display="chip"></p-multiSelect>
         </div>
       </div>
       <div class="col-6">
@@ -115,3 +112,23 @@
     </ng-template>
   </p-dialog>
 </form>
+
+<!--dialog事件 先前-->
+<p-dialog [(visible)]="new" header=新增類型 [modal]="true">
+  <div class="grid">
+    <div class="flex mt-2">
+      <p-button label="下一步" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="下一步" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="下一步" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="下一步" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="下一步" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="下一步" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="下一步" styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="下一步" styleClass="p-button-outlined p-button-info"></p-button>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="下一步" (click)="showDialog('add')" styleClass="p-button-outlined p-button-info"></p-button>
+    <p-button label="取消" (click)="new= false" styleClass="p-button-secondary ml-1"></p-button>
+  </ng-template>
+</p-dialog>

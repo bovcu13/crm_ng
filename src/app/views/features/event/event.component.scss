@@ -1,4 +1,9 @@
 @import 'src/app/app.component.scss';
+:host ::ng-deep .fc-toolbar-title {
+  font-family: "Verdana", sans-serif;
+  font-size: 24px;
+  color: #444b5b;
+}
 .reddot {
   height: 10px;
   width: 10px;
