@@ -9,6 +9,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class ViewLeadComponent implements OnInit {
   name = "name";
   title = 'title'
+  stage:string='不明確'
   status: any[] = [
     {
       name: "不明確",

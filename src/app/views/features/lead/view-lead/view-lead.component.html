@@ -26,19 +26,55 @@
         </div>
       </p-card>
       <div class="flex justify-content-center mt-3">
-        <p-button pTooltip="新增聯絡人" tooltipPosition="top" icon="pi pi-plus" styleClass="p-button-outlined p-button-secondary"></p-button>
+        <p-button pTooltip="新增聯絡人" tooltipPosition="top" icon="pi pi-plus"
+                  styleClass="p-button-outlined p-button-secondary"></p-button>
       </div>
     </div>
   </div>
   <div class="col-6">
     <div class="mb-3">
       <p-card>
-      <span class="p-buttonset flex justify-content-center">
-        <p-button label="不明確" styleClass="p-button-secondary border-round-left-3xl"></p-button>
-        <p-button label="新線索" styleClass="p-button-secondary"></p-button>
-        <p-button label="評估中" styleClass="p-button-secondary"></p-button>
-        <p-button label="發展中" styleClass="p-button-secondary"></p-button>
-        <p-button label="已轉換" styleClass="p-button-secondary border-round-right-3xl"></p-button>
+      <span class="flex justify-content-center">
+        <button class="flex justify-content-center" [ngClass]="{
+                'can-check':stage === '新線索'||stage === '評估中'||stage === '發展中',
+                'has-check': stage === '新線索'||stage === '評估中'||stage === '發展中',
+                'surface-400': stage === '不明確',
+                'bg-blue-300': stage === '新線索',
+                'bg-yellow-300': stage === '評估中',
+                'bg-orange-300': stage === '發展中',
+                'bg-green-300': stage === '已轉換'
+            }"><ng-container *ngIf="stage==='不明確'" ><span class="span">不明確</span></ng-container>
+        <ng-container *ngIf="stage==='新線索'||stage==='評估中'||stage==='發展中'||stage==='已轉換'"><div class="pi pi-check"></div></ng-container></button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'can-check':stage === '不明確'||stage === '評估中'||stage === '發展中',
+                'has-check':stage === '不明確'||stage === '評估中'||stage === '發展中',
+                'bg-blue-300': stage === '新線索',
+                'bg-yellow-300': stage === '評估中',
+                'bg-orange-300': stage === '發展中',
+                'bg-green-300': stage === '已轉換'
+            }"><ng-container *ngIf="stage==='不明確'||stage==='新線索'" ><span class="span">新線索</span></ng-container>
+        <ng-container *ngIf="stage==='評估中'||stage==='發展中'||stage==='已轉換'"><i class="pi pi-check"></i></ng-container></button>
+        <button class="flex justify-content-center"  [ngClass]="{
+                'can-check':stage === '不明確'||stage === '新線索'||stage === '發展中',
+                'has-check':stage === '不明確'||stage === '新線索'||stage === '發展中',
+                'bg-yellow-300': stage === '評估中',
+                'bg-orange-300': stage === '發展中',
+                'bg-green-300': stage === '已轉換'
+            }"><ng-container *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'" ><span class="span">評估中</span></ng-container>
+        <ng-container *ngIf="stage==='發展中'||stage==='已轉換'"><i class="pi pi-check"></i></ng-container></button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'can-check':stage==='不明確'||stage==='新線索'||stage==='評估中',
+                'has-check':stage === '不明確'||stage === '新線索'||stage === '評估中',
+                'bg-orange-300': stage === '發展中',
+                'bg-green-300': stage === '已轉換'
+            }"><ng-container *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'||stage==='發展中'" ><span class="span">發展中</span></ng-container>
+        <ng-container *ngIf="stage==='已轉換'"><i class="pi pi-check"></i></ng-container></button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'can-check':stage==='不明確'||stage==='新線索'||stage==='評估中'||stage==='發展中',
+                'has-check': stage === '不明確'||stage === '新線索'||stage === '評估中'||stage === '發展中',
+                'bg-green-300': stage === '已轉換'
+            }"><ng-container *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'||stage==='發展中'||stage==='已轉換'" ><span class="span">已轉換</span></ng-container>
+        </button>
       </span>
       </p-card>
     </div>
