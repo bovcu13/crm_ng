@@ -51,7 +51,7 @@
                 'bg-yellow-300': stage === '評估中',
                 'bg-orange-300': stage === '發展中',
                 'bg-green-300': stage === '已轉換'
-            }" (click)="stage === '不明確' ? showAlert() : null">
+            }">
           <span class="span" *ngIf="stage==='不明確'||stage==='新線索'">新線索</span>
           <i class="pi pi-check" *ngIf="stage==='評估中'||stage==='發展中'||stage==='已轉換'"></i>
         </button>
@@ -60,7 +60,7 @@
                 'bg-yellow-300': stage === '評估中',
                 'bg-orange-300': stage === '發展中',
                 'bg-green-300': stage === '已轉換'
-            }" (click)="stage === '不明確'||stage === '新線索' ? showAlert() : null">
+            }">
           <span class="span" *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'">評估中</span>
           <i class="pi pi-check" *ngIf="stage==='發展中'||stage==='已轉換'"></i>
         </button>
@@ -68,14 +68,14 @@
                 'has-check':stage === '不明確'||stage === '新線索'||stage === '評估中',
                 'bg-orange-300': stage === '發展中',
                 'bg-green-300': stage === '已轉換'
-            }" (click)="stage === '不明確'||stage === '新線索'||stage === '評估中' ? showAlert() : null">
+            }" >
           <span class="span" *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'||stage==='發展中'">發展中</span>
           <i class="pi pi-check" *ngIf="stage==='已轉換'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check': stage === '不明確'||stage === '新線索'||stage === '評估中'||stage === '發展中',
                 'bg-green-300': stage === '已轉換'
-            }" (click)="stage === '不明確'||stage === '新線索'||stage === '評估中'||stage === '發展中' ? showAlert() : null">
+            }">
           <span class="span">已轉換</span>
         </button>
       </span>

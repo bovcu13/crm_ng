@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 export class ViewLeadComponent implements OnInit {
   name = "name";
   title = 'title'
-  stage:string='不明確'
+  stage: string = '不明確'
   status: any[] = [
     {
       name: "不明確",
@@ -146,36 +146,6 @@ export class ViewLeadComponent implements OnInit {
     console.log("name: " + event.value.name);
   }
 
-  showAlert() {
-    Swal.fire({
-      title: '確認更改為此狀態？',
-      icon: 'warning',
-      confirmButtonColor: '#00A263',
-      cancelButtonColor: '#FF003A',
-      showCancelButton: true,
-      confirmButtonText: '確認',
-      cancelButtonText: '取消',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer:1500
-        })
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showConfirmButton: false,
-          timer:1500
-        });
-      }
-    });
-  }
 }
 
 
