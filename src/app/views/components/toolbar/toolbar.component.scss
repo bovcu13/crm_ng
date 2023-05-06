@@ -1,15 +1,5 @@
 @import 'src/app/app.component.scss';
 
-//123
-a {
-  text-decoration: none;
-
-  span {
-    color: hsl(0, 0%, 0%);
-    font-size: x-large;
-  }
-}
-
 :host ::ng-deep {
   // 下拉選單
   .p-menubar-root-list .p-menuitem-active p-menubarsub .p-submenu-list {
@@ -26,6 +16,7 @@ a {
     .p-menubar-root-list .p-menuitem .p-menuitem-link {
       position: relative;
       transition: all 0.3s ease-in-out;
+
       &::before {
         content: '';
         position: absolute;
@@ -34,19 +25,22 @@ a {
         width: 0;
         height: 3px;
         border-radius: 1.5px;
-        background-color: #FFFFFB;
+        background: #FFFFFB;
         opacity: 0;
         transform: translateX(-50%);
         transition: all 0.3s ease-in-out;
       }
+
       /* 鼠标移动到时显示 */
       &:hover::before {
         opacity: 0.25;
         width: 25%;
       }
+
       .p-menuitem-active:not(.p-disabled):hover {
         background: #2E5C6E;
       }
+
       &:hover {
         transform: translateY(-3px);
       }
@@ -92,7 +86,8 @@ a {
     input {
       border-radius: 20px;
       border: none;
-      background: #2E5C6E;
+      background: #FFFFFB;
+      opacity: 0.25;
       color: #FFFFFB;
 
       &:focus {
@@ -120,5 +115,107 @@ a {
   .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link, .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover {
     background: #2E5C6E;
   }
+
+  .p-menu {
+    background: #2E5C6E;
+    border: none;
+    border-radius: 6px;
+    margin-top: 15px;
+
+    .p-menuitem .p-menuitem-link {
+      position: relative;
+      transition: all 0.3s ease-in-out;
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 3px;
+        background: #FFFFFB;
+        border-radius: 1.5px;
+        opacity: 0;
+        transform: translateX(-50%);
+        transition: all 0.3s ease-in-out;
+      }
+
+      /* 鼠标移动到时显示 */
+      &:hover::before {
+        opacity: 0.25;
+        width: 25%;
+      }
+
+      .p-menuitem-active:not(.p-disabled):hover {
+        background: #2E5C6E;
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      .p-menuitem-icon {
+        color: #FFFFFB;
+
+        &:hover {
+          color: #FFFFFB;
+        }
+      }
+
+      .p-menuitem-text {
+        color: #FFFFFB;
+        font-size: larger;
+        font-weight: bold;
+
+        &:hover {
+          color: #FFFFFB;
+        }
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      &:hover,
+      &:not(.p-disabled):hover .p-menuitem-icon,
+      &:not(.p-disabled):hover .p-menuitem-text {
+        color: #FFFFFB;
+        background: #2E5C6E;
+      }
+    }
+  }
+
+  .p-menubar input {
+    border-radius: 20px;
+    width: 150px;
+    padding: 10px 0 10px 40px;
+    transition: all .2s ease-in-out;
+    outline: none;
+    opacity: 0.3;
+    color: #2E5C6E;
+    background: #FFFFFB;
+  }
 }
 
+.container-input {
+  position: relative;
+  display: inline-flex;
+  margin-right: 1.5rem;
+}
+
+.container-input i {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translate(0, -50%);
+  color: #2E5C6E;
+}
+
+.input:focus{
+  opacity: 1;
+  width: 250px;
+}
