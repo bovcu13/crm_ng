@@ -217,6 +217,9 @@ export class OpportunityComponent implements OnInit {
     }
   }
 
+  // 現在時間
+  currentDate = new Date()
+
   postOpportunity(): void {
     let body = {
       name: this.opportunity_form.value.name,
@@ -227,6 +230,7 @@ export class OpportunityComponent implements OnInit {
       close_date: new Date(this.opportunity_form.value.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+      created_at: this.currentDate
     }
     this.HttpApi.postOpportunityRequest(body)
       .subscribe(request => {
@@ -254,7 +258,8 @@ export class OpportunityComponent implements OnInit {
       account_name: this.selectedAccountName,
       close_date: new Date(this.opportunity_form.value?.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
+      updated_at: this.currentDate
     }
     this.HttpApi.patchOpportunityRequest(id, body)
       .subscribe(request => {
@@ -301,7 +306,7 @@ export class OpportunityComponent implements OnInit {
   selectedAccountId!: string;
 
   accountValue(event: any): void {
-    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label),
+    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
     this.selectedAccountId = event.value.value
     // console.log(this.selectedAccountId)
   }

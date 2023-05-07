@@ -373,6 +373,9 @@ export class LeadComponent implements OnInit {
     }
   }
 
+  // 現在時間
+  currentDate = new Date()
+
   postLead(): void {
     let body = {
       description: this.lead_form.controls['description'].value,
@@ -384,6 +387,7 @@ export class LeadComponent implements OnInit {
       rating: this.selectedRating.name,
       // rating: "Hot",
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+      created_at: this.currentDate
     }
     this.HttpApi.postLeadRequest(body)
       .subscribe(request => {
@@ -412,7 +416,8 @@ export class LeadComponent implements OnInit {
       // account_name: this.selectedAccountName,
       rating: this.selectedRating?.name,
       // rating: "Hot",
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
+      updated_at: this.currentDate
     }
     this.HttpApi.patchLeadRequest(id, body)
       .subscribe(request => {

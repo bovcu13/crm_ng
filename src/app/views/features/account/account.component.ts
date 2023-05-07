@@ -167,12 +167,9 @@ export class AccountComponent implements OnInit {
       //dropdown
       const selectedIndustry = this.industry_id.find((s) => s.name === account.industry_id);
       // const selectedType = this.type.find((s) => s.name === account.type);
-      //更新時間為現在時間
-      const currentDate = new Date()
       this.account_form.patchValue({
         industry_id: selectedIndustry,
         // type: selectedType,
-        updated_at: currentDate
       });
     }
   }
@@ -203,6 +200,9 @@ export class AccountComponent implements OnInit {
   //   });
   // }
 
+  // 現在時間
+  currentDate = new Date()
+
   postAccount(): void {
     let body = {
       name: this.account_form.controls['name'].value,
@@ -210,7 +210,8 @@ export class AccountComponent implements OnInit {
       industry_id: '00000000-0000-4000-a000-000000000000',
       type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
-      created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a"
+      created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+      created_at: this.currentDate
     }
     this.HttpApi.postAccountRequest(body)
       .subscribe(request => {
@@ -236,7 +237,8 @@ export class AccountComponent implements OnInit {
       industry_id: '00000000-0000-4000-a000-000000000000',
       type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
-      updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a"
+      updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
+      updated_at: this.currentDate
     }
     this.HttpApi.patchAccountRequest(id, body)
       .subscribe(request => {
