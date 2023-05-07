@@ -44,17 +44,64 @@
   <div class="col-6">
     <div class="mb-3">
       <p-card>
-        <span class="p-buttonset flex justify-content-center">
-          <p-button label="草稿" styleClass="p-button-secondary border-round-left-3xl"></p-button>
-          <p-button label="新線索" styleClass="p-button-secondary"></p-button>
-          <p-button label="評估中" styleClass="p-button-secondary"></p-button>
-          <p-button label="發展中" styleClass="p-button-secondary"></p-button>
-          <p-button label="已轉換" styleClass="p-button-secondary border-round-right-3xl"></p-button>
-          <div class="ml-5">
-            <p-button label="變更狀態"
-              styleClass="p-button-secondary p-button-info border-round-left-3xl border-round-right-3xl"></p-button>
-          </div>
-        </span>
+        <span class="flex justify-content-center">
+        <button class="flex justify-content-center" [ngClass]="{
+                'surface-400': selectedStatusName === '草稿',
+                'bg-red-300': selectedStatusName === '需要審查',
+                'bg-blue-300': selectedStatusName === '審查中',
+                'bg-orange-300': selectedStatusName === '已批准',
+                'bg-yellow-300': selectedStatusName === '已呈現',
+                'bg-green-300': selectedStatusName === '已接受'
+            }">
+          <span class="span" *ngIf="selectedStatusName==='草稿'">草稿</span>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='需要審查'||selectedStatusName==='審查中'||selectedStatusName==='已批准'||selectedStatusName==='已呈現'||selectedStatusName==='已接受'"></i>
+       </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check':selectedStatusName === '草稿',
+                'bg-red-300': selectedStatusName === '需要審查',
+                'bg-blue-300': selectedStatusName === '審查中',
+                'bg-orange-300': selectedStatusName === '已批准',
+                'bg-yellow-300': selectedStatusName === '已呈現',
+                'bg-green-300': selectedStatusName === '已接受'
+            }">
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='需要審查'">需要審查</span>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='審查中'||selectedStatusName==='已批准'||selectedStatusName==='已呈現'||selectedStatusName==='已接受'"></i>
+        </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check':selectedStatusName === '草稿'||selectedStatusName === '需要審查',
+                'bg-blue-300': selectedStatusName === '審查中',
+                'bg-orange-300': selectedStatusName === '已批准',
+                'bg-yellow-300': selectedStatusName === '已呈現',
+                'bg-green-300': selectedStatusName === '已接受'
+            }">
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='需要審查'||selectedStatusName==='審查中'">審查中</span>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='已批准'||selectedStatusName==='已呈現'||selectedStatusName==='已接受'"></i>
+        </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check':selectedStatusName === '草稿'||selectedStatusName === '需要審查'||selectedStatusName === '審查中',
+                'bg-orange-300': selectedStatusName === '已批准',
+                'bg-yellow-300': selectedStatusName === '已呈現',
+                'bg-green-300': selectedStatusName === '已接受'
+            }" >
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='需要審查'||selectedStatusName==='審查中'||selectedStatusName==='已批准'">已批准</span>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='已呈現'||selectedStatusName==='已接受'"></i>
+        </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check': selectedStatusName === '草稿'||selectedStatusName === '需要審查'||selectedStatusName === '審查中'||selectedStatusName === '已批准',
+                'bg-yellow-300': selectedStatusName === '已呈現',
+                'bg-green-300': selectedStatusName === '已接受'
+            }">
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='需要審查'||selectedStatusName==='審查中'||selectedStatusName==='已批准'||selectedStatusName==='已呈現'">已呈現</span>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='已接受'"></i>
+
+        </button>
+          <button class="flex justify-content-center" [ngClass]="{
+                'has-check': selectedStatusName === '草稿'||selectedStatusName === '需要審查'||selectedStatusName === '審查中'||selectedStatusName === '已批准',
+                'bg-green-300': selectedStatusName === '已接受'
+            }">
+          <span class="span">已接受</span>
+        </button>
+      </span>
       </p-card>
     </div>
     <div>

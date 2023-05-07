@@ -77,11 +77,13 @@ status: any[] = [
   //取得當筆報價資料
   GetOneQuote: Quote[] = [];
   selectedStatus!: any;
+  selectedStatusName: any;
   getOneQuotetRequest(q_id: any): void {
     this.HttpApi.getOneQuotetRequest(q_id).subscribe( res => {
       this.GetOneQuote = res.body;
       this.editStatus();
       this.selectedStatus = this.status.find(s => s.name === res.body.status);
+        this.selectedStatusName = this.selectedStatus.name
       this.quote_form.patchValue({
         name: res.body.name,
         code: res.body.code,
