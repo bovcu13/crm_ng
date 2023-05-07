@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
+import Swal from "sweetalert2";
 
 //import {Order} from "../../../shared/models/order";
 
@@ -49,7 +50,7 @@ export class OrderComponent {
       return;
     }
     this.GetAllOrder = this.GetAllOrder.filter(order => {
-            // 將所有要比對的欄位轉成小寫字母
+      // 將所有要比對的欄位轉成小寫字母
       const code = order.code?.toString().toLowerCase() || '';
       const account_name = order.account_name?.toLowerCase() || '';
       const status = order.status?.toLowerCase() || '';
@@ -100,6 +101,7 @@ export class OrderComponent {
   //取得所有訂單資料
   GetAllOrder: HttpApiService[] = [];
   first = 0;
+
   getAllOrderRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -112,7 +114,7 @@ export class OrderComponent {
           const activated_at = this.formatDate(order.activated_at)
           const created_at = this.formatDate(order.created_at);
           const updated_at = this.formatDate(order.updated_at);
-          return {...order, start_date,activated_at, created_at, updated_at};
+          return {...order, start_date, activated_at, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
         this.loading = false;
@@ -127,31 +129,58 @@ export class OrderComponent {
   postOrderRequest(): void {
     this.orderStartDate = this.order_form.controls['start_date'].value;
     if (this.orderStartDate < this.MinDate) {
-      this.order_form.controls['start_date'].setErrors({'required-star':true});
+      this.order_form.controls['start_date'].setErrors({'required-star': true});
       return
     } else {
       this.order_form.controls['start_date'].value;
     }
-    if (this.order_form.controls['account_id'].hasError('required')
-    || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
-      return ;
+    if (this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
+      return;
     }
-    let body = {
-      status: this.order_form.value.status,
-      description: this.order_form.value.description,
-      start_date: this.order_form.value.start_date,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      contract_id: this.selectedContract_id, //契約ID
-      account_id: this.selectedAccount_id //帳戶ID
-    }
-    this.HttpApi.postOrderRequest(body).subscribe(Request => {
-        console.log(Request)
-        this.getAllOrderRequest()
-        this.edit = false
-      },
-      error => {
-        console.log(error);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認新增？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      cancelButtonColor: '#FF003A',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        let body = {
+          status: this.order_form.value.status,
+          description: this.order_form.value.description,
+          start_date: this.order_form.value.start_date,
+          created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+          contract_id: this.selectedContract_id, //契約ID
+          account_id: this.selectedAccount_id //帳戶ID
+        }
+        this.HttpApi.postOrderRequest(body).subscribe(Request => {
+            console.log(Request)
+            this.getAllOrderRequest()
+          },
+          error => {
+            console.log(error);
+          })
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 700
+        });
+      }
+    });
   }
 
   //建立formgroup
@@ -189,6 +218,7 @@ export class OrderComponent {
   showedit = true;//判斷是否dialog為新增與編輯
   o_id: any;
   selectedStatusName: any;
+
   showDialog(type: string, order?: any): void {
     if (type === 'add') {
       this.dialogHeader = '新增訂單';
@@ -215,42 +245,99 @@ export class OrderComponent {
   patchOrderRequest(o_id: any): void {
     this.orderStartDate = this.order_form.controls['start_date'].value;
     if (this.orderStartDate < this.MinDate) {
-      this.order_form.controls['start_date'].setErrors({'required-star':true});
+      this.order_form.controls['start_date'].setErrors({'required-star': true});
       return
     } else {
       this.order_form.controls['start_date'].value;
     }
     this.editStatus()//處理status的值，抓取name
     if (this.order_form.controls['account_id'].hasError('required') || this.order_form.controls['contract_id'].hasError('dateError')
-    || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
+      || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
       return;
     }
-    let body = {
-      status: this.order_form.get('status')?.value,
-      start_date: this.order_form.get('start_date')?.value,
-      account_id: this.selectedAccount_id, //帳戶ID
-      description: this.order_form.get('description')?.value,
-      contract_id: this.selectedContract_id, //契約ID
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
-    }
-    this.HttpApi.patchOrderRequest(o_id, body).subscribe(
-      Request => {
-        console.log(Request)
-        this.edit = false;
-        this.getAllOrderRequest()
-      })
+    this.edit = false;
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      cancelButtonColor: '#FF003A',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        let body = {
+          status: this.order_form.get('status')?.value,
+          start_date: this.order_form.get('start_date')?.value,
+          account_id: this.selectedAccount_id, //帳戶ID
+          description: this.order_form.get('description')?.value,
+          contract_id: this.selectedContract_id, //契約ID
+          updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
+        }
+        this.HttpApi.patchOrderRequest(o_id, body).subscribe(
+          Request => {
+            console.log(Request)
+            this.getAllOrderRequest()
+          })
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 700
+        });
+      }
+    });
   }
 
   deleteOrderRequest(o_id: any): void {
-    this.HttpApi.deleteOrderRequest(o_id).subscribe(Request => {
-      console.log(Request)
-      this.getAllOrderRequest()
-    })
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      cancelButtonColor: '#FF003A',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        this.HttpApi.deleteOrderRequest(o_id).subscribe(Request => {
+          console.log(Request)
+          this.getAllOrderRequest()
+        })
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 700
+        });
+      }
+    });
   }
 
   // GET全部Contract
   GetAllContract: any[] = [];
   selectedContract_id: any;
+
   getAllContractRequest(limit?: number, page?: number) {
     this.HttpApi.getAllContractRequest(limit, page).subscribe(
       (res) => {
@@ -323,5 +410,9 @@ export class OrderComponent {
     const date = new Date(dateString2);
     const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours() - 16);
     return start_date.toISOString().slice(0, 10);
+  }
+
+  showAlert() {
+
   }
 }
