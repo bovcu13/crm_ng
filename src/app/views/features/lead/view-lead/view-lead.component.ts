@@ -260,6 +260,13 @@ export class ViewLeadComponent implements OnInit {
     });
   }
 
+  showWarn() {
+    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: '即將重新導向至契約頁面' });
+    setTimeout(() => {
+      window.location.assign('/main/lead');
+    }, 1500); // 延遲3秒後跳轉頁面
+  }
+
   selectedStatus: any;
 
   statusValue(event: any): void {

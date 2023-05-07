@@ -100,7 +100,8 @@
                   </div>
                 </div>
                 <div class="col-6 mt-5">
-                  <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync" styleClass="p-button-rounded p-button-secondary p-button-text p-button-lg "></p-button>
+                  <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync"
+                            styleClass="p-button-rounded p-button-secondary p-button-text p-button-lg "></p-button>
                 </div>
                 <div class="col-6">
                   <div class="field">
@@ -161,7 +162,7 @@
               <div class="flex justify-content-end mt-3">
                 <p-button label="儲存" (click)="showAlert()"
                           styleClass="p-button-outlined p-button-info"></p-button>
-                <p-button label="取消" styleClass="p-button-secondary ml-1"></p-button>
+                <p-button label="取消" (click)="showWarn()" styleClass="p-button-secondary ml-1"></p-button>
               </div>
               <!--              </ng-container>-->
             </p-tabPanel>
