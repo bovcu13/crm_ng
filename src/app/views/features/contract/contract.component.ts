@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
 import {LazyLoadEvent} from 'primeng/api';
-import { Contract} from "../../../shared/models/contract";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-contract',
@@ -67,6 +67,7 @@ export class ContractComponent {
     });
     console.log(this.GetAllContract)
   }
+
   //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -98,33 +99,36 @@ export class ContractComponent {
       code: "expired",
     },
   ]
+
   ngOnInit() {
     this.getAllAccountRequest()
     this.getAllContractRequest()
   }
-    //GET全部contract
-    GetAllContract!: HttpApiService[];
-    first = 0;
-    totalRecords= 0;
-    getAllContractRequest(limit?: number, page?: number){
-      if (!page) {
-        this.first = 0;
-      }
-      this.HttpApi.getAllContractRequest(limit, page).subscribe(res => {
-          this.GetAllContract = res.body.contracts;
-          this.GetAllContract = res.body.contracts.map((contract: any) => {
-            const start_date = this.formatDate2(contract.start_date)
-            const created_at = this.formatDate(contract.created_at);
-            const updated_at = this.formatDate(contract.updated_at);
-            return {...contract,start_date, created_at, updated_at};
-          });
-          this.totalRecords = res.body.total;
-          this.loading = false;
-        },
-        error => {
-          console.log(error);
-        });
+
+  //GET全部contract
+  GetAllContract!: HttpApiService[];
+  first = 0;
+  totalRecords = 0;
+
+  getAllContractRequest(limit?: number, page?: number) {
+    if (!page) {
+      this.first = 0;
     }
+    this.HttpApi.getAllContractRequest(limit, page).subscribe(res => {
+        this.GetAllContract = res.body.contracts;
+        this.GetAllContract = res.body.contracts.map((contract: any) => {
+          const start_date = this.formatDate2(contract.start_date)
+          const created_at = this.formatDate(contract.created_at);
+          const updated_at = this.formatDate(contract.updated_at);
+          return {...contract, start_date, created_at, updated_at};
+        });
+        this.totalRecords = res.body.total;
+        this.loading = false;
+      },
+      error => {
+        console.log(error);
+      });
+  }
 
   // GET全部Account
   GetAllAccount: any[] = [];
@@ -146,38 +150,64 @@ export class ContractComponent {
   }
 
 //POST 一筆contract
-  PostOneContract!: HttpApiService[];
   postContractRequest(): void {
     if (this.contract_form.controls['start_date'].hasError('required') || this.contract_form.controls['account_id'].hasError('required')
-    || this.contract_form.controls['term'].hasError('required') ) {
+      || this.contract_form.controls['term'].hasError('required')) {
       return;
     }
-    let body = {
-      code: this.contract_form.value.code,
-      status: this.contract_form.value.status,
-      description: this.contract_form.value.description,
-      start_date: this.contract_form.value.start_date,
-      term: this.contract_form.value.term,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      account_id:  this.selectedAccount_id, //帳戶ID
-    }
-    this.HttpApi.postContractRequest(body).subscribe(Request => {
-        this.PostOneContract = Request
-      console.log(this.PostOneContract)
-        this.getAllContractRequest()
-        this.edit = false
-      },
-      error => {
-        console.log(error);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      cancelButtonColor: '#FF003A',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        let body = {
+          code: this.contract_form.value.code,
+          status: this.contract_form.value.status,
+          description: this.contract_form.value.description,
+          start_date: this.contract_form.value.start_date,
+          term: this.contract_form.value.term,
+          created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+          account_id: this.selectedAccount_id, //帳戶ID
+        }
+        this.HttpApi.postContractRequest(body).subscribe(Request => {
+            console.log(Request)
+            this.getAllContractRequest()
+          },
+          error => {
+            console.log(error);
+          })
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 700
+        });
+      }
+    });
   }
 
   //建立formgroup
   contract_form: FormGroup;
-  constructor(private HttpApi: HttpApiService,private fb: FormBuilder) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.contract_form = this.fb.group({
       contract_id: [''],
-      owner: [''],
+      salesperson_name: [''],
       code: [''],
       account_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
@@ -197,7 +227,6 @@ export class ContractComponent {
   dialogHeader!: string;
   showedit = true;//判斷是否dialog為新增與編輯
   selectedStatus!: any;
-  PatchContract!: Contract;
   c_id: any;
   showDialog(type: string, contract?: any): void {
     this.edit = true;
@@ -205,62 +234,120 @@ export class ContractComponent {
       this.dialogHeader = '新增契約';
       this.contract_form.reset();
       this.showedit = false;
-      this.contract_form.patchValue({ status: this.status[0].name });
+      this.contract_form.patchValue({status: this.status[0].name});
     } else if (type === 'edit') {
+      console.log("contract: " + JSON.stringify(contract))
       this.dialogHeader = '編輯契約';
       this.contract_form.patchValue(contract);
       this.contract_form.patchValue({
         start_date: new Date(contract.start_date),
       });
       this.showedit = true;
-      this.PatchContract = contract
       this.selectedStatus = this.status.find((s) => s.name === contract.status);// 綁定已經選擇的狀態
-      this.editStatus()//處理status的值，抓取name
-      this.c_id = this.PatchContract.contract_id;
-      console.log(this.c_id)
+      this.c_id = contract.contract_id;
     }
   }
-  patchContractRequest(c_id: any): void{
-    this.editStatus()//處理status的值，抓取name
+
+  patchContractRequest(c_id: any): void {
     if (this.contract_form.controls['start_date'].hasError('required') || this.contract_form.controls['account_id'].hasError('required')
-    || this.contract_form.controls['term'].hasError('required') ) {
+      || this.contract_form.controls['term'].hasError('required')) {
       return;
     }
-    let body = {
-      status: this.contract_form.get('status')?.value,
-      start_date: this.contract_form.get('start_date')?.value,
-      account_id: this.selectedAccount_id, //帳戶ID
-      term: this.contract_form.get('term')?.value,
-      description: this.contract_form.get('description')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
-    }
-    this.HttpApi.patchContractRequest(c_id, body).subscribe(
-      Request => {
-        console.log(Request)
-        this.edit = false;
-        this.getAllContractRequest()
-      })
-    console.log(this.PatchContract)
+    this.edit = false;
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      cancelButtonColor: '#FF003A',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        this.editStatus()//處理status的值，抓取name
+        let start_date = new Date(this.contract_form.get('start_date')?.value);
+        let body = {
+          status: this.contract_form.get('status')?.value,
+          start_date: start_date.toISOString(),
+          account_id: this.selectedAccount_id, //帳戶ID
+          term: this.contract_form.get('term')?.value,
+          description: this.contract_form.get('description')?.value,
+          updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+        }
+        this.HttpApi.patchContractRequest(c_id, body).subscribe(
+          Request => {
+            console.log(Request)
+            this.getAllContractRequest()
+          })
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 700
+        });
+      }
+    });
   }
+
 //處理status的值
   editStatus(): void {
     //判斷selectedStatus是否有值，若有值則取出name屬性
     let statusName = this.selectedStatus ? this.selectedStatus.name : "";
     //將statusName更新到表單中
-    this.contract_form.patchValue({ status: statusName });
-    console.log(statusName)
+    this.contract_form.patchValue({status: statusName});
   }
+
   deleteContractRequest(c_id: any): void {
-    this.HttpApi.deleteContractRequest(c_id).subscribe(Request => {
-      console.log(Request)
-      this.getAllContractRequest()
-    })
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      cancelButtonColor: '#FF003A',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        this.HttpApi.deleteContractRequest(c_id).subscribe(Request => {
+          console.log(Request)
+          this.getAllContractRequest()
+        })
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 700
+        });
+      }
+    });
   }
+
   //懶加載
   loading: boolean = true;
   sortField: any;
   sortOrder: any;
   code: any;
+
   loadPostsLazy(event: LazyLoadEvent) {
     this.loading = true;
     let page = event.first! / event.rows! + 1;
@@ -273,7 +360,7 @@ export class ContractComponent {
             const start_date = this.formatDate2(contract.start_date)
             const created_at = this.formatDate(contract.created_at);
             const updated_at = this.formatDate(contract.updated_at);
-            return {...contract,start_date, created_at, updated_at};
+            return {...contract, start_date, created_at, updated_at};
           });
           this.totalRecords = res.body.total;
           this.loading = false;
@@ -293,16 +380,19 @@ export class ContractComponent {
     const minute = ("0" + date.getMinutes()).slice(-2);
     return `${year}-${month}-${day} ${hour}:${minute}`;
   }
+
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth() , date.getDate()+1 , date.getHours()-16);
+    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours() - 16);
     return start_date.toISOString().slice(0, 10);
   }
+
   calculateEndDate(startDate: string, term: number): string {
     const start = new Date(startDate);
     const end = new Date(start.getFullYear(), start.getMonth() + term, start.getDate());
     return end.toISOString().slice(0, 10);
   }
+
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
