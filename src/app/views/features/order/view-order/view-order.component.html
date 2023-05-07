@@ -119,19 +119,15 @@
                   <ng-template pTemplate="header">
                     <tr>
                       <th>日期</th>
-                      <th>欄位</th>
                       <th>使用者</th>
-                      <th>原始值</th>
-                      <th>新值</th>
+                      <th>描述</th>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-order_log>
                     <tr>
                       <td>{{ order_log.date }}</td>
-                      <td>{{ order_log.field }}</td>
                       <td>{{ order_log.user }}</td>
-                      <td>{{ order_log.old }}</td>
-                      <td>{{ order_log.new }}</td>
+                      <td>{{ order_log.status }}</td>
                     </tr>
                   </ng-template>
                 </p-table>

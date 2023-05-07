@@ -31,17 +31,13 @@ order_product: any[] = [
   order_log: any[] = [
     {
       date: "2023-05-06 08:00",
-      field: "啟用訂單",
       user: "林",
-      old: "false",
-      new: "true",
+      status: "已建立",
     },
     {
       date: "2023-05-07 17:00",
-      field: "狀態",
       user: "林",
-      old: "草稿",
-      new: "啟動中",
+      status: "更改狀態",
     },
   ]
 
