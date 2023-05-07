@@ -92,7 +92,7 @@
             <td>{{ lead.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
-                <p-button icon="pi pi-eye" routerLink="/main/lead/view" pTooltip="檢視" tooltipPosition="top"
+                <p-button icon="pi pi-eye" [routerLink]="['/main/lead/view/', lead.lead_id]" pTooltip="檢視" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
@@ -130,15 +130,6 @@
           <!--          <input pInputText formControlName="created_by">-->
         </div>
       </div>
-      <ng-container *ngIf="dialogHeader === '編輯線索'">
-        <div class="col-6">
-          <div class="field">
-            <label><span class="text-red-600">*</span>帳戶</label>
-            <p-dropdown [options]="GetAllAccount" formControlName="account_name"></p-dropdown>
-          </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="dialogHeader !== '編輯線索'">
         <div class="col-6">
           <div class="field">
             <label><span class="text-red-600">*</span>帳戶</label>
@@ -148,7 +139,6 @@
             </p-dropdown>
           </div>
         </div>
-      </ng-container>
       <ng-container *ngIf="dialogHeader !== '編輯線索'">
         <div class="col-6 flex justify-content-start mt-4">
           <p-button (click)="type.toggle($event)" icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top"

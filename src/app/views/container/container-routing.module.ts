@@ -38,7 +38,7 @@ const routes: Routes = [
       { path: 'event', component: EventComponent },
       { path: 'forecasting', component: ForecastingComponent },
       { path: 'lead', component: LeadComponent },
-      { path: 'lead/view', component: ViewLeadComponent },
+      { path: 'lead/view/:id', component: ViewLeadComponent },
       { path: 'product', component: ProductComponent },
       { path: 'opportunity', component: OpportunityComponent },
       { path: 'opportunity/view', component: ViewOpportunityComponent },

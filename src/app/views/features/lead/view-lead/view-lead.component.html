@@ -10,8 +10,6 @@
         <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
                   styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
         <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
-                  styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
-        <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync"
                   styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
       </span>
         <div class="grid mt-2">
@@ -68,8 +66,9 @@
                 'has-check':stage === '不明確'||stage === '新線索'||stage === '評估中',
                 'bg-orange-300': stage === '發展中',
                 'bg-green-300': stage === '已轉換'
-            }" >
-          <span class="span" *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'||stage==='發展中'">發展中</span>
+            }">
+          <span class="span"
+                *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'||stage==='發展中'">發展中</span>
           <i class="pi pi-check" *ngIf="stage==='已轉換'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
@@ -86,119 +85,86 @@
         <p-card>
           <p-tabView>
             <p-tabPanel header="詳細資料">
-              <ng-container *ngIf="edit==false">
+              <!--              <ng-container *ngIf="edit==false">-->
 
-              </ng-container>
-              <ng-container *ngIf="edit==true">
-                <div class="grid">
-                  <div class="col-6">
-                    <div class="field">
-                      <label><span class="text-red-600">*</span>線索狀態</label>
-                      <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" [options]="status"
-                                  formControlName="status" appendTo="body" (onChange)="statusValue($event)"
-                                  [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError && lead_form.controls['status'].touched}"
-                      ></p-dropdown>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>業務員</label>
-                      <br>
-                      <label class="ml-2">{{(lead_form.controls['owner'].value)}}</label>
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="field">
-                      <label><span class="text-red-600">*</span>公司</label>
-                      <input pInputText formControlName="company_name"
-                             [ngClass]="{'ng-dirty':lead_form.controls['company_name'].hasError && lead_form.controls['company_name'].touched}">
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>姓名</label>
-                      <input pInputText formControlName="name">
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>職稱</label>
-                      <input pInputText formControlName="title">
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>行業</label>
-                      <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry_id" optionLabel="name"
-                                  (onChange)="industry_idValue($event)" formControlName="industry_id"
-                                  appendTo="body"></p-dropdown>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>電話</label>
-                      <input pInputText formControlName="phone_number">
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>行動電話</label>
-                      <input pInputText formControlName="cell_phone">
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>LINE</label>
-                      <input pInputText formControlName="line">
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="field">
-                      <label>電子郵件</label>
-                      <input pInputText formControlName="email">
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>分級</label>
-                      <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
-                                  (onChange)="ratingValue($event)" formControlName="rating"
-                                  appendTo="body"></p-dropdown>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="field">
-                      <label>線索來源</label>
-                      <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source" optionLabel="name"
-                                  (onChange)="leadSourceValue($event)" formControlName="source"
-                                  appendTo="body"></p-dropdown>
-                    </div>
+              <!--              </ng-container>-->
+              <!--              <ng-container *ngIf="edit==true">-->
+              <div class="grid">
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>線索狀態</label>
+                    <p-dropdown placeholder="請選擇" optionLabel="name" [options]="status"
+                                formControlName="status" appendTo="body" (onChange)="statusValue($event)"
+                                [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError && lead_form.controls['status'].touched}"
+                    ></p-dropdown>
                   </div>
                 </div>
-                <p-divider></p-divider>
-                <div class="grid">
-                  <div class="col-6">
-                    <label>建立者：</label>
+                <div class="col-6 mt-5">
+                  <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync"
+                            styleClass="p-button-rounded p-button-secondary p-button-text p-button-lg "></p-button>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>帳戶</label>
+                    <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)"
+                                formControlName="account_name"
+                                [filter]="true" appendTo="body" optionLabel="label"
+                                filterBy="label" [showClear]="true" placeholder="選擇現有帳戶">
+                    </p-dropdown>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label>業務員</label>
                     <br>
-                    <div class="mt-3 field">
-                      <label>{{(lead_form.controls['created_by'].value)}}</label>
-                      <label class="ml-2">{{(lead_form.controls['created_at'].value)}}</label>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <label>上次修改者：</label>
-                    <br>
-                    <div class="mt-3 field">
-                      <label>{{(lead_form.controls['updated_by'].value)}}</label>
-                      <label class="ml-2">{{(lead_form.controls['updated_at'].value)}}</label>
-                    </div>
+                    <label class="ml-2 disable">{{(lead_form.controls['created_by'].value)}}</label>
                   </div>
                 </div>
-                <div class="flex justify-content-end">
-                  <p-button label="儲存" (click)="edit=false" styleClass="p-button-outlined p-button-info"></p-button>
-                  <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
+                <div class="col-12">
+                  <div>
+                    <label><span class="text-red-600">*</span>描述</label>
+                    <textarea class="mt-2" rows="3" pInputTextarea formControlName="description"></textarea>
+                  </div>
                 </div>
-              </ng-container>
+                <div class="col-6">
+                  <div class="field">
+                    <label>分級</label>
+                    <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
+                                (onChange)="ratingValue($event)" formControlName="rating"
+                                appendTo="body"></p-dropdown>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label>線索來源</label>
+                    <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source" optionLabel="name"
+                                (onChange)="sourceValue($event)" formControlName="source"
+                                appendTo="body"></p-dropdown>
+                  </div>
+                </div>
+              </div>
+              <div class="grid">
+                <div class="col-6">
+                  <label>建立者：</label>
+                  <div class="mt-3 field">
+                    <label>{{(lead_form.controls['created_by'].value)}}</label>
+                    <label>{{(lead_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label>上次修改者：</label>
+                  <div class="mt-3 field">
+                    <label>{{(lead_form.controls['updated_by'].value)}}</label>
+                    <label>{{(lead_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-content-end mt-3">
+                <p-button label="儲存" (click)="showAlert()"
+                          styleClass="p-button-outlined p-button-info"></p-button>
+                <p-button label="取消" (click)="showWarn()" styleClass="p-button-secondary ml-1"></p-button>
+              </div>
+              <!--              </ng-container>-->
             </p-tabPanel>
             <p-tabPanel header="活動">
               <h3>(待完成)</h3>
