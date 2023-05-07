@@ -30,8 +30,8 @@
             <th pSortableColumn="type">類型
               <p-sortIcon field="type"></p-sortIcon>
             </th>
-            <th pSortableColumn="owner">業務員
-              <p-sortIcon field="owner"></p-sortIcon>
+            <th pSortableColumn="created_by">業務員
+              <p-sortIcon field="created_by"></p-sortIcon>
             </th>
             <th></th>
           </tr>
@@ -41,7 +41,7 @@
             <td>{{ account.name }}</td>
             <td>{{ account.phone_number }}</td>
             <td>{{ account.type }}</td>
-            <td>{{ account.owner }}</td>
+            <td>{{ account.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
                 <p-button icon="pi pi-eye" routerLink="/main/account/view" pTooltip="檢視" tooltipPosition="top"
@@ -73,7 +73,7 @@
         <div class="field">
           <label>業務員</label>
           <br>
-          <label>{{(account_form.controls['owner'].value)}}</label>
+          <label>{{(account_form.controls['created_by'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -111,25 +111,25 @@
         <!--                      formControlName="type" appendTo="body"></p-dropdown>-->
         <!--        </div>-->
       </div>
-      <div class="col-6">
-        <label>建立者：</label>
-        <br>
-        <div class="mt-3 field">
-          <label>{{(account_form.controls['created_by'].value)}}</label>
-          <br>
-          <label>{{(account_form.controls['created_at'].value)}}</label>
-        </div>
-      </div>
-      <div class="col-6">
-        <label>上次修改者：</label>
-        <br>
-        <div class="mt-3 field">
-          <label>{{(account_form.controls['updated_by'].value)}}</label>
-          <br>
-          <label>{{(account_form.controls['updated_at'].value)}}</label>
-        </div>
-      </div>
     </div>
+    <ng-container *ngIf="dialogHeader === '編輯帳戶'">
+      <div class="grid">
+        <div class="col-6">
+          <label>建立者：</label>
+          <div class="mt-3 field">
+            <label>{{(account_form.controls['created_by'].value)}}</label>
+            <label>{{(account_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <label>上次修改者：</label>
+          <div class="mt-3 field">
+            <label>{{(account_form.controls['updated_by'].value)}}</label>
+            <label>{{(account_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+          </div>
+        </div>
+      </div>
+    </ng-container>
     <div class="flex justify-content-end">
       <ng-container *ngIf="dialogHeader === '編輯帳戶'">
         <p-button label="儲存" (click)="patchAccount();edit=false"
