@@ -49,7 +49,8 @@
             <td>{{ calculateEndDate(contract.start_date, contract.term) }}</td>
             <td>{{ contract.term }}</td>
             <td class="icon-align-right">
-              <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
+                        [routerLink]="['/main/contract/view/', contract.contract_id]"></p-button>
               <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)"

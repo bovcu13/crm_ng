@@ -173,7 +173,10 @@ export class HttpApiService {
     let url = this.BaseUrl + '/contracts' + '?page=' + page + '&limit=' + limit;
     return this.http.get<any>(url);
   }
-
+  getOneContractRequest(sid: any): Observable<any> {
+    const url = `${this.BaseUrl}/contracts/${sid}`;
+    return this.http.get(url);
+  }
   //新增 契約 post
   postContractRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/contracts`;
