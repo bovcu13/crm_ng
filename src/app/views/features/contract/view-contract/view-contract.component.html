@@ -48,78 +48,68 @@
        <button class="flex justify-content-center" [ngClass]="{
                 'surface-400': selectedStatusName === '草稿',
                 'bg-blue-300': selectedStatusName === '審批中',
-                'bg-yellow-300': selectedStatusName === '拒絕',
-                'bg-orange-300': selectedStatusName === '等待簽名',
-                'bg-green-400': selectedStatusName === '已簽署',
-                'bg-green-500': selectedStatusName === '已取消',
-                'bg-green-600': selectedStatusName === '已過期'
+                'bg-red-300': selectedStatusName === '拒絕',
+                'bg-yellow-300': selectedStatusName === '等待簽名',
+                'bg-green-300': selectedStatusName === '已簽署',
+                'bg-orange-300': selectedStatusName === '已取消',
+                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
           <span class="span" *ngIf="selectedStatusName==='草稿'">草稿</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'
-          ||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
        </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '草稿',
                 'bg-blue-300': selectedStatusName === '審批中',
-                'bg-yellow-300': selectedStatusName === '拒絕',
-                'bg-orange-300': selectedStatusName === '等待簽名',
-                'bg-green-400': selectedStatusName === '已簽署',
-                'bg-green-500': selectedStatusName === '已取消',
-                'bg-green-600': selectedStatusName === '已過期'
+                'bg-red-300': selectedStatusName === '拒絕',
+                'bg-yellow-300': selectedStatusName === '等待簽名',
+                'bg-green-300': selectedStatusName === '已簽署',
+                'bg-orange-300': selectedStatusName === '已取消',
+                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
           <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'">審批中</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'
-          ||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '草稿'||selectedStatusName === '審批中',
-                'bg-yellow-300': selectedStatusName === '拒絕',
-                'bg-orange-300': selectedStatusName === '等待簽名',
-                'bg-green-400': selectedStatusName === '已簽署',
-                'bg-green-500': selectedStatusName === '已取消',
-                'bg-green-600': selectedStatusName === '已過期'
+                'bg-red-300': selectedStatusName === '拒絕',
+                'bg-yellow-300': selectedStatusName === '等待簽名',
+                'bg-green-300': selectedStatusName === '已簽署',
+                'bg-orange-300': selectedStatusName === '已取消',
+                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
-          <span class="span"
-                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'">拒絕</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'
-          ||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'">拒絕</span>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕',
-                'bg-orange-300': selectedStatusName === '等待簽名',
-                'bg-green-400': selectedStatusName === '已簽署',
-                'bg-green-500': selectedStatusName === '已取消',
-                'bg-green-600': selectedStatusName === '已過期'
+                'bg-yellow-300': selectedStatusName === '等待簽名',
+                'bg-green-300': selectedStatusName === '已簽署',
+                'bg-orange-300': selectedStatusName === '已取消',
+                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
-          <span class="span"
-                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'">等待簽名</span>
-          <i class="pi pi-check"
-             *ngIf="selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'">等待簽名</span>
+          <i class="pi pi-check" *ngIf="selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名',
-                'bg-green-400': selectedStatusName === '已簽署',
-                'bg-green-500': selectedStatusName === '已取消',
-                'bg-green-600': selectedStatusName === '已過期'
+                'bg-green-300': selectedStatusName === '已簽署',
+                'bg-orange-300': selectedStatusName === '已取消',
+                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'
-            ||selectedStatusName==='已簽署'">已簽署</span>
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'">已簽署</span>
           <i class="pi pi-check" *ngIf="selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
         </button>
            <button class="flex justify-content-center" [ngClass]="{
-                'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名'
-                             ||selectedStatusName === '已簽署',
-                'bg-green-500': selectedStatusName === '已取消',
-                'bg-green-600': selectedStatusName === '已過期'
+                'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名'||selectedStatusName === '已簽署',
+                'bg-orange-300': selectedStatusName === '已取消',
+                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'
-            ||selectedStatusName==='已簽署' ||selectedStatusName==='已取消'">已取消</span>
+          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署' ||selectedStatusName==='已取消'">已取消</span>
           <i class="pi pi-check" *ngIf="selectedStatusName==='已過期'"></i>
         </button>
            <button class="flex justify-content-center" [ngClass]="{
-                'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名'
-                ||selectedStatusName === '已簽署' ||selectedStatusName === '已取消',
-                'bg-green-600': selectedStatusName === '已過期'}">
+                'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名'||selectedStatusName === '已簽署' ||selectedStatusName === '已取消',
+                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'}">
             <span class="span">已過期</span>
         </button>
       </span>
