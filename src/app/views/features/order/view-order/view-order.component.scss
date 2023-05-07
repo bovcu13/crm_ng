@@ -29,10 +29,3 @@ button {
   box-shadow: 6px 6px 12px #c5c5c5,
   -6px -6px 12px #ffffff;
 }
-
-
-.has-check:hover::before {
-  left: 0;
-  right: 0;
-  opacity: 1;
-}
