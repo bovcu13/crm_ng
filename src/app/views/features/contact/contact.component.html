@@ -135,6 +135,27 @@
                       formControlName="reports_to" appendTo="body"></p-dropdown>
         </div>
       </div>
+    </div>
+    <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
+      <div class="grid">
+        <div class="col-6">
+          <label>建立者：</label>
+          <div class="mt-3 field">
+            <label>{{(contact_form.controls['created_by'].value)}}</label>
+            <label>{{(contact_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <label>上次修改者：</label>
+          <div class="mt-3 field">
+            <label>{{(contact_form.controls['updated_by'].value)}}</label>
+            <label>{{(contact_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div class="grid">
+      <div class="col-6"></div>
       <div class="col-6 mt-3">
         <div class="flex justify-content-end mt-3">
           <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
@@ -149,24 +170,5 @@
         </div>
       </div>
     </div>
-    <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
-      <p-divider></p-divider>
-      <div class="grid">
-        <div class="col-6">
-          <label>建立者： {{(contact_form.controls['created_by'].value)}}</label>
-          <br>
-          <div class="mt-3 field">
-            <label>{{(contact_form.controls['created_at'].value|date:'yyyy-MM-dd h:mm a')}}</label>
-          </div>
-        </div>
-        <div class="col-6">
-          <label>上次修改者： {{(contact_form.controls['updated_by'].value)}}</label>
-          <br>
-          <div class="mt-3 field">
-            <label>{{(contact_form.controls['updated_at'].value|date:'yyyy-MM-dd h:mm a')}}</label>
-          </div>
-        </div>
-      </div>
-    </ng-container>
   </p-dialog>
 </form>

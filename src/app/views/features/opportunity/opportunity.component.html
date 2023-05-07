@@ -38,7 +38,7 @@
             <th pSortableColumn="name">商機名稱<p-sortIcon field="name"></p-sortIcon></th>
             <th pSortableColumn="account_name">帳戶<p-sortIcon field="account_name"></p-sortIcon></th>
             <th pSortableColumn="close_date">結束日期<p-sortIcon field="close_date"></p-sortIcon></th>
-            <th pSortableColumn="owner">業務員<p-sortIcon field="owner"></p-sortIcon></th>
+            <th pSortableColumn="created_by">業務員<p-sortIcon field="created_by"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
@@ -55,7 +55,7 @@
             <td>{{ opportunity.name }}</td>
             <td>{{ opportunity.account_name }}</td>
             <td>{{ opportunity.close_date | date:'yyyy-MM-dd' }}</td>
-            <td>{{ opportunity.owner }}</td>
+            <td>{{ opportunity.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
                 <p-button icon="pi pi-eye" routerLink="/main/opportunity/view" pTooltip="檢視" tooltipPosition="top"
@@ -126,10 +126,28 @@
         <div class="field">
           <label>業務員</label>
           <br>
-          <label>{{(opportunity_form.controls['owner'].value)}}</label>
+          <label>{{(opportunity_form.controls['created_by'].value)}}</label>
         </div>
       </div>
     </div>
+    <ng-container *ngIf="dialogHeader === '編輯商機'">
+      <div class="grid">
+        <div class="col-6">
+          <label>建立者：</label>
+          <div class="mt-3 field">
+            <label>{{(opportunity_form.controls['created_by'].value)}}</label>
+            <label>{{(opportunity_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <label>上次修改者：</label>
+          <div class="mt-3 field">
+            <label>{{(opportunity_form.controls['updated_by'].value)}}</label>
+            <label>{{(opportunity_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+          </div>
+        </div>
+      </div>
+    </ng-container>
     <div class="flex justify-content-end">
       <ng-container *ngIf="dialogHeader === '編輯商機'">
         <p-button label="儲存" (click)="patchOpportunity();edit=false" styleClass="p-button-outlined p-button-info"></p-button>

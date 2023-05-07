@@ -132,6 +132,7 @@ export class ContactComponent implements OnInit {
     // });
     this.HttpApi.getAllContactRequest(page).subscribe(request => {
       this.getData = request.body.contacts;
+      this.total = request.body.total
       console.log(this.getData)
     });
   }

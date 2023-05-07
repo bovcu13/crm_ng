@@ -43,7 +43,7 @@
             <th pSortableColumn="name">描述
               <p-sortIcon field="name"></p-sortIcon>
             </th>
-            <th pSortableColumn="account_name">公司
+            <th pSortableColumn="account_name">帳戶
               <p-sortIcon field="account_name"></p-sortIcon>
             </th>
             <th pSortableColumn="account_name">分級
@@ -64,8 +64,8 @@
             <!--            <th pSortableColumn="line">LINE-->
             <!--              <p-sortIcon field="line"></p-sortIcon>-->
             <!--            </th>-->
-            <th pSortableColumn="owner">業務員
-              <p-sortIcon field="owner"></p-sortIcon>
+            <th pSortableColumn="created_by">業務員
+              <p-sortIcon field="created_by"></p-sortIcon>
             </th>
             <th></th>
           </tr>
@@ -89,7 +89,7 @@
             <!--            <td>{{ lead.cell_phone }}</td>-->
             <!--            <td>{{ lead.email }}</td>-->
             <!--            <td>{{ lead.line }}</td>-->
-            <td>{{ lead.owner }}</td>
+            <td>{{ lead.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
                 <p-button icon="pi pi-eye" routerLink="/main/lead/view" pTooltip="檢視" tooltipPosition="top"
@@ -126,8 +126,8 @@
         <div class="field">
           <label>業務員</label>
           <br>
-          <label class="ml-2 disable">{{(lead_form.controls['owner'].value)}}</label>
-          <!--          <input pInputText formControlName="owner">-->
+          <label class="ml-2 disable">{{(lead_form.controls['created_by'].value)}}</label>
+          <!--          <input pInputText formControlName="created_by">-->
         </div>
       </div>
       <ng-container *ngIf="dialogHeader === '編輯線索'">
@@ -177,22 +177,19 @@
       </div>
     </div>
     <ng-container *ngIf="dialogHeader === '編輯線索'">
-      <p-divider></p-divider>
       <div class="grid">
         <div class="col-6">
           <label>建立者：</label>
-          <br>
           <div class="mt-3 field">
             <label>{{(lead_form.controls['created_by'].value)}}</label>
-            <label class="ml-2">{{(lead_form.controls['created_at'].value)}}</label>
+            <label>{{(lead_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
           </div>
         </div>
         <div class="col-6">
           <label>上次修改者：</label>
-          <br>
           <div class="mt-3 field">
             <label>{{(lead_form.controls['updated_by'].value)}}</label>
-            <label class="ml-2">{{(lead_form.controls['updated_at'].value)}}</label>
+            <label>{{(lead_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
           </div>
         </div>
       </div>
@@ -223,7 +220,7 @@
         <div class="field">
           <label>業務員</label>
           <br>
-          <label>{{(account_form.controls['owner'].value)}}</label>
+          <label>{{(account_form.controls['created_by'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -262,24 +259,6 @@
         <!--                      (onChange)="typeValue($event)"-->
         <!--                      formControlName="type" appendTo="body"></p-dropdown>-->
         <!--        </div>-->
-      </div>
-      <div class="col-6">
-        <label>建立者：</label>
-        <br>
-        <div class="mt-3 field">
-          <label>{{(account_form.controls['created_by'].value)}}</label>
-          <br>
-          <label>{{(account_form.controls['created_at'].value)}}</label>
-        </div>
-      </div>
-      <div class="col-6">
-        <label>上次修改者：</label>
-        <br>
-        <div class="mt-3 field">
-          <label>{{(account_form.controls['updated_by'].value)}}</label>
-          <br>
-          <label>{{(account_form.controls['updated_at'].value)}}</label>
-        </div>
       </div>
     </div>
     <div class="flex justify-content-end">
