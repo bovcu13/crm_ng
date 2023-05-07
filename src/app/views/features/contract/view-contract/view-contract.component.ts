@@ -87,6 +87,7 @@ export class ViewContractComponent {
           this.selectedStatusName = this.selectedStatus.name
           this.contract_form.patchValue({
             code: res.body.code,
+            salesperson_name: res.body.salesperson_name,
             start_date: this.formatDate2(res.body.start_date),
             term: res.body.term,
             account_id: res.body.account_id,
@@ -153,7 +154,7 @@ export class ViewContractComponent {
     ,private messageService: MessageService) {
     this.contract_form = this.fb.group({
       contract_id: [''],
-      owner: [''],
+      salesperson_name: [''],
       code: [''],
       account_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],

@@ -67,9 +67,9 @@
     <div class="grid">
       <div class="col-6">
         <div class="field">
-          <label>業務</label>
+          <label>業務員</label>
           <br>
-          <label class="mt-2 ml-2">{{(contract_form.controls['updated_by'].value)}}</label>
+          <label class="mt-2 ml-2">{{(contract_form.controls['salesperson_name'].value)}}</label>
         </div>
       </div>
       <div class="col-6">
@@ -98,8 +98,10 @@
       <div class="col-6" *ngIf="showedit">
         <div class="field">
           <label><span class="required-star">*</span>狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
-            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus" name="status"
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
+                      formControlName="status"
+                      optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"
+                      name="status"
                       [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError && contract_form.controls['status'].touched}"></p-dropdown>
         </div>
       </div>
