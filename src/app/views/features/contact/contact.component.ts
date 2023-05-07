@@ -175,7 +175,7 @@ export class ContactComponent implements OnInit {
       this.contact_form.patchValue(contact);
       this.contact_form.patchValue({
         salutation: this.salutation.find(s => s.name === contact.salutation),
-        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contact.account_name)?.value
+        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contact.account_name),
       });
     }
   }
@@ -274,13 +274,8 @@ export class ContactComponent implements OnInit {
   selectedAccountId!: string;
 
   accountValue(event: any): void {
-    // this.selectedAccountName = this.account.find((s: { name: any; }) => s.name === event.value.name);
-    this.selectedAccountName = event.value.label
+    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
     this.selectedAccountId = event.value.value
-    console.log(event.value.label)
-    this.contact_form.patchValue({
-      account_name: event.value.label
-    });
-    console.log(typeof this.contact_form.value.account_name)
+    // console.log(this.selectedAccountId)
   }
 }
