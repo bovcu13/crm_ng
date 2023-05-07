@@ -1,151 +1,186 @@
-<div class="flex justify-content-center">
+<div class="flex justify-content-center mt-5">
   <div class="col-10">
-    <div class="tiles">
-      <article class="tile" routerLink="/main/account">
-        <div class="tile-header">
-          <h3>
-            <span>帳戶</span>
-            <span>UrkEnergo LTD.</span>
-          </h3>
+    <div class="grid">
+      <!--左-->
+      <div class="col">
+        <!--帳戶-->
+        <article class="tile" routerLink="/main/account">
+          <img class="h-12rem" alt="meow" src="https://i0.wp.com/www.printmag.com/wp-content/uploads/2021/02/4cbe8d_f1ed2800a49649848102c68fc5a66e53mv2.gif?fit=476%2C280&ssl=1"/>
+          <div class="tile-header h-20rem">
+            <h3>
+              <span>帳戶</span>
+              <span>UrkEnergo LTD.</span>
+            </h3>
+          </div>
+          <a>
+            <span>Go to service</span>
+            <span class="pi pi-users"></span>
+          </a>
+        </article>
+      </div>
+      <!--中-->
+      <div class="col">
+        <div class="grid">
+          <div class="col-6">
+            <!--線索-->
+            <article class="tile" routerLink="/main/lead">
+              <div class="tile-header h-4rem">
+                <h3>
+                  <span>線索</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-briefcase"></span>
+              </a>
+            </article>
+          </div>
+          <div class="col-6">
+            <!--商機-->
+            <article class="tile" routerLink="/main/opportunity">
+              <div class="tile-header h-4rem">
+                <h3>
+                  <span>商機</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-dollar"></span>
+              </a>
+            </article>
+          </div>
+          <div class="col-12 mt-1">
+            <!--商品/服務-->
+            <article class="tile" routerLink="/main/product">
+              <div class="tile-header h-8rem">
+                <h3>
+                  <span>商品/服務</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-box"></span>
+              </a>
+            </article>
+          </div>
+          <div class="col-6 mt-1">
+            <!--行事曆-->
+            <article class="tile" routerLink="/main/event">
+              <div class="tile-header h-11rem">
+                <h3>
+                  <span>行事曆</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-calendar"></span>
+              </a>
+            </article>
+          </div>
+          <div class="col-6 mt-1">
+            <!--行銷活動-->
+            <article class="tile" routerLink="/main/campaign">
+              <div class="tile-header h-11rem">
+                <h3>
+                  <span>行銷活動</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-flag"></span>
+              </a>
+            </article>
+          </div>
         </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-users"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/contact">
-        <div class="tile-header">
-          <h3>
-            <span>聯絡人</span>
-            <span>Gazprom UA</span>
-          </h3>
+      </div>
+      <!--右-->
+      <div class="col">
+        <div class="grid">
+          <div class="col-12">
+            <!--報價-->
+            <article class="tile" routerLink="/main/quote">
+              <div class="tile-header h-3rem">
+                <h3>
+                  <span>報價</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-file"></span>
+              </a>
+            </article>
+          </div>
+          <div class="col-12">
+            <!--契約-->
+            <article class="tile" routerLink="/main/contract">
+              <div class="tile-header h-3rem">
+                <h3>
+                  <span>契約</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-file-edit"></span>
+              </a>
+            </article>
+          </div>
+          <div class="col-12">
+            <!--訂單-->
+            <article class="tile" routerLink="/main/order">
+              <div class="tile-header h-3rem">
+                <h3>
+                  <span>訂單</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-shopping-cart"></span>
+              </a>
+            </article>
+          </div>
+          <div class="col-12">
+            <!--預測-->
+            <article class="tile" routerLink="/main/forecasting">
+              <div class="tile-header h-3rem">
+                <h3>
+                  <span>預測</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-chart-line"></span>
+              </a>
+            </article>
+          </div>
+          <div class="col-12">
+            <!--報告-->
+            <article class="tile" routerLink="/main/report">
+              <div class="tile-header h-3rem">
+                <h3>
+                  <span>報告</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+              <a>
+                <span>Go to service</span>
+                <span class="pi pi-chart-bar"></span>
+              </a>
+            </article>
+          </div>
         </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-user"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/lead">
-        <div class="tile-header">
-          <h3>
-            <span>線索</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-briefcase"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/opportunity">
-        <div class="tile-header">
-          <h3>
-            <span>商機</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-dollar"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/product">
-        <div class="tile-header">
-          <h3>
-            <span>商品/服務</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-box"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/quote">
-        <div class="tile-header">
-          <h3>
-            <span>報價</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-file"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/contract">
-        <div class="tile-header">
-          <h3>
-            <span>契約</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-file-edit"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/order">
-        <div class="tile-header">
-          <h3>
-            <span>訂單</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-shopping-cart"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/campaign">
-        <div class="tile-header">
-          <h3>
-            <span>行銷活動</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-flag"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/forecasting">
-        <div class="tile-header">
-          <h3>
-            <span>預測</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-chart-line"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/report">
-        <div class="tile-header">
-          <h3>
-            <span>報告</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-chart-bar"></span>
-        </a>
-      </article>
-      <article class="tile" routerLink="/main/event">
-        <div class="tile-header">
-          <h3>
-            <span>行事曆</span>
-            <span>Kharkov 62 str.</span>
-          </h3>
-        </div>
-        <a>
-          <span>Go to service</span>
-          <span class="pi pi-calendar"></span>
-        </a>
-      </article>
+      </div>
     </div>
   </div>
 </div>
+
+
 
