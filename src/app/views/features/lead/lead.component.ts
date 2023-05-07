@@ -382,9 +382,9 @@ export class LeadComponent implements OnInit {
       status: this.status[1].name,
       account_id: this.selectedAccountId,
       // source: this.lead_form.value.source,
-      source: this.selectedSource.name,
+      source: this.selectedSource?.name,
       account_name: this.selectedAccountName,
-      rating: this.selectedRating.name,
+      rating: this.selectedRating?.name,
       // rating: "Hot",
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       created_at: this.currentDate
