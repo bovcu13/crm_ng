@@ -21,6 +21,7 @@ import { OrderComponent } from '../features/order/order.component';
 import { ContractComponent } from '../features/contract/contract.component';
 import { ViewQuoteComponent } from '../features/quote/view-quote/view-quote.component';
 import { ViewOrderComponent } from '../features/order/view-order/view-order.component';
+import { ViewContractComponent } from '../features/contract/view-contract/view-contract.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -46,6 +47,7 @@ const routes: Routes = [
       { path: 'quote', component: QuoteComponent },
       { path: 'quote/view/:q_id', component: ViewQuoteComponent },
       { path: 'contract', component: ContractComponent },
+      { path: 'contract/view/:c_id', component: ViewContractComponent },
       { path: 'report', component: ReportComponent },
     ],
   },
