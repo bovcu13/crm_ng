@@ -47,16 +47,16 @@
       <span class="flex justify-content-center">
         <button class="flex justify-content-center" [ngClass]="{
                 'surface-400': selectedStatusName === '草稿',
-                'bg-blue-300': selectedStatusName === '啟動中'
+                'bg-green-300': selectedStatusName === '啟動中'
             }">
           <span class="span" *ngIf="selectedStatusName==='草稿'">草稿</span>
           <i class="pi pi-check" *ngIf="selectedStatusName==='啟動中'"></i>
        </button>
        <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '草稿',
-                'bg-blue-300': selectedStatusName === '啟動中'
-            }" (click)="selectedStatusName === '草稿' ? showAlert() : null">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='啟動中'">啟動中</span>
+                'bg-green-300': selectedStatusName === '啟動中'
+            }">
+          <span class="span">啟動中</span>
         </button>
       </span>
       </p-card>
