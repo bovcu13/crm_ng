@@ -150,28 +150,26 @@ export class OrderComponent {
       confirmButtonColor: '#00D963', // 设置为绿色
       showCancelButton: false,
       confirmButtonText: '確認',
-      cancelButtonText: '取消',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         this.HttpApi.postOrderRequest(body).subscribe(Request => {
             console.log(Request)
             this.getAllOrderRequest()
+            this.edit = false;
           },
           error => {
             console.log(error);
           })
         Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showCancelButton: false,
+          title: '成功',
+          text: "已新增您的變更 :)",
+          icon: 'success',
           showConfirmButton: false,
-          reverseButtons: false,
           timer: 1000
         })
       }
-    });
+    })
   }
 
   //建立formgroup
@@ -271,10 +269,10 @@ export class OrderComponent {
           })
         Swal.fire({
           title: '成功',
-          text: "已儲存您的變更 :)",
+          text: "已新增您的變更 :)",
           icon: 'success',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1000
         })
       }
     });
@@ -288,6 +286,7 @@ export class OrderComponent {
       cancelButtonColor: '#d90000',
       showCancelButton: true,
       confirmButtonText: '確認',
+      cancelButtonText: '取消',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -302,12 +301,14 @@ export class OrderComponent {
           console.log(Request)
           this.getAllOrderRequest()
         })
-      } else {
+      } else{
         Swal.fire({
-          title: '成功',
-          text: "已新增您的變更 :)",
-          icon: 'success',
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
           showConfirmButton: false,
+          reverseButtons: false,
           timer: 1000
         })
       }
