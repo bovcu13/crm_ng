@@ -89,7 +89,7 @@ export class CampaignComponent {
 
   }
   //p-dropdown狀態
-  status = [
+  status : any[] = [
     {
       name: "策劃中",
       code: "planned",
