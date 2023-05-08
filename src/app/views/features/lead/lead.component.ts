@@ -5,6 +5,7 @@ import {HttpApiService} from "../../../api/http-api.service";
 import {Lead} from "../../../shared/models/lead";
 import {concatMap, tap} from 'rxjs/operators';
 import {Observable, of} from "rxjs";
+import Swal from "sweetalert2";
 
 
 @Component({
@@ -389,20 +390,39 @@ export class LeadComponent implements OnInit {
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       created_at: this.currentDate
     }
-    this.HttpApi.postLeadRequest(body)
-      .subscribe(request => {
-        console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
-        this.loadPostsLazy(event);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認新增？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.postLeadRequest(body)
+          .subscribe(request => {
+            console.log(request)
+            let event: LazyLoadEvent = {
+              first: 0,
+              rows: 10,
+              sortField: undefined,
+              sortOrder: undefined,
+              multiSortMeta: undefined,
+              filters: undefined,
+              globalFilter: undefined,
+            };
+            Swal.fire({
+              title: '成功',
+              text: "已新增您的變更 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.loadPostsLazy(event);
+          })
+      }
+    })
   }
 
   patchLead(): void {
@@ -419,32 +439,82 @@ export class LeadComponent implements OnInit {
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
       updated_at: this.currentDate
     }
-    this.HttpApi.patchLeadRequest(id, body)
-      .subscribe(request => {
-        console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
-        this.loadPostsLazy(event);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.patchLeadRequest(id, body)
+          .subscribe(request => {
+            console.log(request)
+            let event: LazyLoadEvent = {
+              first: 0,
+              rows: 10,
+              sortField: undefined,
+              sortOrder: undefined,
+              multiSortMeta: undefined,
+              filters: undefined,
+              globalFilter: undefined,
+            };
+            Swal.fire({
+              title: '成功',
+              text: "已新增您的變更 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.loadPostsLazy(event);
+          })
+      }
+    })
   }
 
   deleteLead(id: any): void {
-    this.HttpApi.deleteLeadRequest(id).subscribe(request => {
-      console.log(request)
-      let event: LazyLoadEvent = {
-        first: 0,
-        rows: 10,
-      };
-      this.loadPostsLazy(event);
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963',
+      cancelButtonColor: '#d90000',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        this.HttpApi.deleteLeadRequest(id).subscribe(request => {
+          console.log(request)
+          let event: LazyLoadEvent = {
+            first: 0,
+            rows: 10,
+          };
+          this.loadPostsLazy(event);
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
     })
   }
+
 
   // 新增帳戶
   postAccount(): Observable<any> {
@@ -476,18 +546,37 @@ export class LeadComponent implements OnInit {
 
 
   add_Acount() {
-    // 使用 concatMap 運算符來確保 postAccount() 請求完成後才調用 getAllAccountRequest() 函數
-    this.postAccount().pipe(
-        concatMap(() => {
-          this.getAllAccountRequest();
-          console.log(this.GetAllAccount);
-          return of(null);
+    this.edit = false
+    this.addAcount = false;
+    Swal.fire({
+      title: '確認新增？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 使用 concatMap 運算符來確保 postAccount() 請求完成後才調用 getAllAccountRequest() 函數
+        this.postAccount().pipe(
+          concatMap(() => {
+            this.getAllAccountRequest();
+            console.log(this.GetAllAccount);
+            return of(null);
+          })
+        ).subscribe(() => {
+          this.addAcount = false;
+          this.edit = true;
+        });
+        Swal.fire({
+          title: '成功',
+          text: "已新增您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
         })
-      )
-      .subscribe(() => {
-        this.addAcount = false;
-        this.edit = true;
-      });
+      }
+    })
   }
 
   addAccDialog(): void {
@@ -495,6 +584,37 @@ export class LeadComponent implements OnInit {
     this.edit = false;
     this.account_form.reset();
   }
+
+  addAccshowAlertCancel() {
+    this.addAcount = false;
+    this.edit = false
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    }).then(() => {
+      this.addAcount = false;
+      this.edit = true
+    })
+  }
+
+  showAlertCancel() {
+    this.edit = false
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    })
+  }
+
 
   selectedStatus: any;
 

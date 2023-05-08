@@ -248,42 +248,37 @@ order_product: any[] = [
     return start_date.toISOString().slice(0, 10);
   }
 
-  showAlert() {
+  showAlertComfirm() {
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
       confirmButtonColor: '#00D963', // 设置为绿色
-      cancelButtonColor: '#FF003A',
-      showCancelButton: true,
+      showCancelButton: false,
       confirmButtonText: '確認',
-      cancelButtonText: '取消',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
+        this.patchOrderRequest(this.o_id);
         Swal.fire({
           title: '成功',
           text: "已儲存您的變更 :)",
           icon: 'success',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1000
         })
-        this.patchOrderRequest(this.o_id);
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 700
-        });
       }
     });
   }
 
-  showWarn() {
-    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: '即將重新導向至訂單頁面' });
-    setTimeout(() => {
-      window.location.assign('/main/order');
-    }, 1500); // 延遲3秒後跳轉頁面
+  showAlertCancel() {
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    })
   }
 }

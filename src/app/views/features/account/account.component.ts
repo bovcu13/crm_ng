@@ -4,6 +4,7 @@ import {LazyLoadEvent, MenuItem} from 'primeng/api';
 import {HttpApiService} from "../../../api/http-api.service";
 import {Table} from 'primeng/table';
 import {Account} from "../../../shared/models/account";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-account',
@@ -213,20 +214,38 @@ export class AccountComponent implements OnInit {
       created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
       created_at: this.currentDate
     }
-    this.HttpApi.postAccountRequest(body)
-      .subscribe(request => {
-        console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
-        this.loadPostsLazy(event);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認新增？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.postAccountRequest(body).subscribe(request => {
+          console.log(request)
+          let event: LazyLoadEvent = {
+            first: 0,
+            rows: 10,
+            sortField: undefined,
+            sortOrder: undefined,
+            multiSortMeta: undefined,
+            filters: undefined,
+            globalFilter: undefined,
+          };
+          Swal.fire({
+            title: '成功',
+            text: "已新增您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.loadPostsLazy(event);
+        })
+      }
+    })
   }
 
   patchAccount(): void {
@@ -240,25 +259,87 @@ export class AccountComponent implements OnInit {
       updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
       updated_at: this.currentDate
     }
-    this.HttpApi.patchAccountRequest(id, body)
-      .subscribe(request => {
-        console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-        };
-        this.loadPostsLazy(event);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.patchAccountRequest(id, body)
+          .subscribe(request => {
+            console.log(request)
+            let event: LazyLoadEvent = {
+              first: 0,
+              rows: 10,
+            };
+            Swal.fire({
+              title: '成功',
+              text: "已新增您的變更 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.loadPostsLazy(event);
+          })
+      }
+    })
   }
 
   deleteAccount(id: any): void {
-    this.HttpApi.deleteAccountRequest(id).subscribe(request => {
-      console.log(request)
-      let event: LazyLoadEvent = {
-        first: 0,
-        rows: 10,
-      };
-      this.loadPostsLazy(event);
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963',
+      cancelButtonColor: '#d90000',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        this.HttpApi.deleteAccountRequest(id).subscribe(request => {
+          console.log(request)
+          let event: LazyLoadEvent = {
+            first: 0,
+            rows: 10,
+          };
+          this.loadPostsLazy(event);
+        })
+      }else{
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
+  }
+
+  showAlertCancel() {
+    this.edit = false
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
     })
   }
 
