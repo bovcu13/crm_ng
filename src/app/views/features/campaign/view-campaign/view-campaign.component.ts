@@ -18,7 +18,7 @@ export class ViewCampaignComponent {
   @ViewChild('endDate') endDate: Calendar | undefined;
   @ViewChild('chart') private chartRef!: ElementRef;
   //p-dropdown狀態
-  status = [
+  status: any[] = [
     {
       name: "策劃中",
       code: "planned",
@@ -37,7 +37,7 @@ export class ViewCampaignComponent {
     },
   ];
   //p-dropdown狀態
-  type = [
+  type: any[] = [
     {
       name: "活動",
       code: "event",
@@ -85,7 +85,7 @@ export class ViewCampaignComponent {
     },
   ]
 
-  comfirmstatustable: any[]= [
+  comfirmstatustable: any[] = [
     {
       type: "線索",
       status: "已傳送",
@@ -107,7 +107,7 @@ export class ViewCampaignComponent {
   selectedStatus!: any;
   selectedType!: any;
   selectedStatusName: any;
-  selectedTypeName: any;
+  selectedTypeName!: "123";
 
   getOneCampaignRequest(c_id: any) {
     this.HttpApi.getOneCampaignRequest(c_id).subscribe(res => {
@@ -116,7 +116,11 @@ export class ViewCampaignComponent {
         this.selectedStatus = this.status.find(s => s.name === res.body.status);
         this.selectedType = this.type.find(s => s.name === res.body.type);
         this.selectedStatusName = this.selectedStatus.name
-        this.selectedTypeName = this.selectedType.name
+        if (res.body.type == null) {
+
+        } else {
+          this.selectedTypeName = this.selectedType.name
+        }
         this.campaign_form.patchValue({
           name: res.body.name,
           is_enable: res.body.is_enable,
@@ -272,6 +276,7 @@ export class ViewCampaignComponent {
       }
     });
   }
+
   showAlertCancel() {
     Swal.fire({
       title: '取消',
@@ -283,13 +288,17 @@ export class ViewCampaignComponent {
       timer: 1000
     })
   }
+
   //新增線索dialog
   addlead: boolean = false;
-  addLead(){
+
+  addLead() {
     this.addlead = true;
     this.getAllLeadRequest()
   }
+
   GetAlllead: any[] = [];
+
   getAllLeadRequest() {
     this.HttpApi.getAllLeadRequest(1).subscribe(
       (res) => {
@@ -301,13 +310,17 @@ export class ViewCampaignComponent {
       }
     );
   }
+
   //新增線索dialog
   addcontact: boolean = false;
-  addContact(){
+
+  addContact() {
     this.addcontact = true;
     this.getAllContactRequest()
   }
+
   GetAllContact: any[] = [];
+
   getAllContactRequest() {
     this.HttpApi.getAllContactRequest(1).subscribe(
       (res) => {
@@ -322,11 +335,13 @@ export class ViewCampaignComponent {
 
   //確認新增 險所與聯絡人dialog
   addcomfirm: boolean = false;
-  addComfirm(){
+
+  addComfirm() {
     this.addlead = false;
     this.addcontact = false;
     this.addcomfirm = true;
   }
+
   //p-dropdown狀態
   comfirmstatus = [
     {
@@ -338,6 +353,7 @@ export class ViewCampaignComponent {
       code: "responded",
     }
   ];
+
   //處理status的值
   editStatus(): void {
     //判斷selectedStatus是否有值，若有值則取出name屬性
@@ -394,7 +410,7 @@ export class ViewCampaignComponent {
   }
 
   showWarn() {
-    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: '即將重新導向至行銷活動頁面' });
+    this.messageService.add({severity: 'warn', summary: 'Warn', detail: '即將重新導向至行銷活動頁面'});
     setTimeout(() => {
       window.location.assign('/main/campaign');
     }, 1500); // 延遲3秒後跳轉頁面

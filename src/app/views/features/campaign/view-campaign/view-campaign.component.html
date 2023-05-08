@@ -47,9 +47,9 @@
                 'bg-red-300': selectedStatusName === '已完成',
                 'bg-yellow-300': selectedStatusName === '已中止'
             }">
-          <span class="span" *ngIf="selectedStatus==='策劃中'">策劃中</span>
+          <span class="span" *ngIf="selectedStatusName==='策劃中'">策劃中</span>
           <i class="pi pi-check"
-             *ngIf="selectedStatus==='進行中'||selectedStatus==='已完成'||selectedStatus==='已中止'"></i>
+             *ngIf="selectedStatusName==='進行中'||selectedStatusName==='已完成'||selectedStatusName==='已中止'"></i>
        </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '策劃中',
@@ -185,7 +185,7 @@
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
                                 formControlName="status"
                                 optionLabel="name" (onChange)="onStatusChange($event)"
-                                [(ngModel)]="selectedStatus"></p-dropdown>
+                                [(ngModel)]="selectedStatusName"></p-dropdown>
                   </div>
                 </div>
                 <div class="col-6">
