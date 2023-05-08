@@ -70,7 +70,8 @@
           <label><span class="text-red-600">*</span>帳戶</label>
           <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
                       [filter]="true" optionLabel="label" appendTo="body"
-                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶">
+                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶"
+                      [ngClass]="{'ng-dirty':contact_form.controls['account_name'].hasError('required') && contact_form.controls['account_name'].touched}">
           </p-dropdown>
         </div>
       </div>
@@ -85,7 +86,7 @@
         <div class="field">
           <label><span class="text-red-600">*</span>姓名</label>
           <input pInputText formControlName="name"
-                 [ngClass]="{'ng-dirty':contact_form.controls['name'].hasError && contact_form.controls['name'].touched}">
+                 [ngClass]="{'ng-dirty':contact_form.controls['name'].hasError('required') && contact_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-6">
@@ -106,7 +107,7 @@
         <div class="field">
           <label><span class="text-red-600">*</span>公司電話</label>
           <input
-            [ngClass]="{'ng-dirty':contact_form.controls['phone_number'].hasError && contact_form.controls['phone_number'].touched}"
+            [ngClass]="{'ng-dirty':contact_form.controls['phone_number'].hasError('required') && contact_form.controls['phone_number'].touched}"
             pInputText formControlName="phone_number">
         </div>
       </div>

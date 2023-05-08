@@ -169,7 +169,7 @@
                   <div class="field">
                     <label><span class="required-star">*</span>活動名稱</label>
                     <input type="text" pInputText formControlName="name"
-                           [ngClass]="{'ng-dirty':campaign_form.controls['name'].hasError && campaign_form.controls['name'].touched}">
+                           [ngClass]="{'ng-dirty':campaign_form.controls['name'].hasError('required') && campaign_form.controls['name'].touched}">
                   </div>
                 </div>
                 <div class="col-6">

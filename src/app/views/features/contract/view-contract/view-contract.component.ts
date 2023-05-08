@@ -109,10 +109,34 @@ export class ViewContractComponent {
 
   patchContractRequest() {
     this.editStatus()//處理status的值，抓取name
-    if (this.contract_form.controls['start_date'].hasError('required') || this.contract_form.controls['account_id'].hasError('required')
-      || this.contract_form.controls['term'].hasError('required')) {
+    if (this.contract_form.controls['start_date'].hasError('required') ||
+      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['term'].hasError('required') ||
+      this.contract_form.controls['status'].hasError('required'))
+    {
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if(this.contract_form.controls['start_date'].hasError('required') ){
+          this.contract_form.controls['start_date'].markAsDirty();
+        }
+        if(this.contract_form.controls['account_id'].hasError('required') ){
+          this.contract_form.controls['account_id'].markAsDirty();
+        }
+        if(this.contract_form.controls['term'].hasError('required') ){
+          this.contract_form.controls['term'].markAsDirty();
+        }
+        if(this.contract_form.controls['status'].hasError('required') ){
+          this.contract_form.controls['status'].markAsDirty();
+        }
+      })
       return;
     }
+
     let start_date = new Date(this.contract_form.get('start_date')?.value);
     let body = {
       status: this.contract_form.get('status')?.value,

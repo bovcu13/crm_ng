@@ -162,7 +162,7 @@
                   <div class="field">
                     <label><span class="required-star">*</span>名稱</label>
                     <input pInputText formControlName="name"
-                      [ngClass]="{'ng-dirty':quote_form.controls['name'].hasError && quote_form.controls['name'].touched}">
+                      [ngClass]="{'ng-dirty':quote_form.controls['name'].hasError('required') && quote_form.controls['name'].touched}">
                   </div>
                 </div>
                 <div class="col-6">
@@ -171,7 +171,7 @@
                     <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'"
                       [(ngModel)]="selectedOpportunity_id" [filter]="true" filterBy="label" [showClear]="true"
                       (ngModelChange)="selectedOpportunity()"
-                      [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError && quote_form.controls['opportunity_id'].touched}"></p-dropdown>
+                      [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError('required') && quote_form.controls['opportunity_id'].touched}"></p-dropdown>
                   </div>
                 </div>
                 <div class="col-6">
@@ -341,11 +341,11 @@
           <td>{{ product.name }}</td>
           <td><p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw"
               [min]="0" formControlName="price"
-              [ngClass]="{'ng-dirty':product_form.controls['price'].hasError && product_form.controls['price'].touched}"></p-inputNumber></td>
+              [ngClass]="{'ng-dirty':product_form.controls['price'].hasError('required') && product_form.controls['price'].touched}"></p-inputNumber></td>
           <td><p-inputNumber inputId="integeronly" [min]="0" formControlName="quantity"
-            [ngClass]="{'ng-dirty':product_form.controls['quantity'].hasError && product_form.controls['quantity'].touched}"></p-inputNumber></td>
+            [ngClass]="{'ng-dirty':product_form.controls['quantity'].hasError('required') && product_form.controls['quantity'].touched}"></p-inputNumber></td>
           <td><p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" formControlName="discount"
-            [ngClass]="{'ng-dirty':product_form.controls['discount'].hasError && product_form.controls['discount'].touched}"></p-inputNumber></td>
+            [ngClass]="{'ng-dirty':product_form.controls['discount'].hasError('required') && product_form.controls['discount'].touched}"></p-inputNumber></td>
           <td class="icon-align-right">
             <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
               tooltipPosition="top"></p-button>

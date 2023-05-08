@@ -125,6 +125,28 @@ export class OrderComponent {
   }
 
   postOrderRequest(): void {
+    if (this.order_form.controls['contract_id'].hasError('required') ||
+      this.order_form.controls['start_date'].hasError('required'))
+    {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.order_form.controls['contract_id'].hasError('required')) {
+          this.order_form.controls['contract_id'].markAsDirty();
+        }
+        if (this.order_form.controls['start_date'].hasError('required')) {
+          this.order_form.controls['start_date'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     this.orderStartDate = this.order_form.controls['start_date'].value;
     if (this.orderStartDate < this.MinDate) {
       this.order_form.controls['start_date'].setErrors({'required-star': true});
@@ -244,6 +266,28 @@ export class OrderComponent {
 
 
   patchOrderRequest(o_id: any): void {
+    if (this.order_form.controls['contract_id'].hasError('required') ||
+      this.order_form.controls['start_date'].hasError('required'))
+    {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.order_form.controls['contract_id'].hasError('required')) {
+          this.order_form.controls['contract_id'].markAsDirty();
+        }
+        if (this.order_form.controls['start_date'].hasError('required')) {
+          this.order_form.controls['start_date'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     this.orderStartDate = this.order_form.controls['start_date'].value;
     if (this.orderStartDate < this.MinDate) {
       this.order_form.controls['start_date'].setErrors({'required-star': true});
