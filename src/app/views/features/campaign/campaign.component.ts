@@ -217,7 +217,7 @@ export class CampaignComponent {
       name: this.campaign_form.value.name,
       status: this.status[0].name,
       parent_campaign_id: this.campaign_form.value.parent_campaign_id,
-      type: this.status.find((s: { name: any; }) => s.name === this.campaign_form.value.type),
+      type: this.campaign_form.value.type.name,
       is_enable: this.campaign_form.value.is_enable,
       description: this.campaign_form.value.description,
       start_date: start_date.toISOString(),
@@ -378,10 +378,10 @@ export class CampaignComponent {
     let end_date = new Date(this.campaign_form.get('end_date')?.value);
     let body = {
       name: this.campaign_form.get('name')?.value,
-      status: this.status.find((s: { name: any; }) => s.name === this.campaign_form.get('status')?.value),
+      status: this.campaign_form.get('status')?.value.name,
       is_enable: this.campaign_form.get('is_enable')?.value,
       parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
-      type: this.type.find((s: { name: any; }) => s.name === this.campaign_form.get('type')?.value),
+      type: this.campaign_form.get('type')?.value.name,
       start_date: start_date.toISOString(),
       end_date: end_date.toISOString(),
       description: this.campaign_form.get('description')?.value,

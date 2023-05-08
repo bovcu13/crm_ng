@@ -186,7 +186,7 @@ export class ContractComponent {
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      account_id: this.GetAllAccount.find((a: { label: any; }) => a.label === this.contract_form.value.account_id),
+      account_id: this.contract_form.value.account_id,
     }
 
     this.HttpApi.postContractRequest(body).subscribe(Request => {
