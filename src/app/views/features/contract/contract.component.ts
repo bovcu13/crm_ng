@@ -153,8 +153,7 @@ export class ContractComponent {
     if (this.contract_form.controls['start_date'].hasError('required') ||
       this.contract_form.controls['account_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
-      this.contract_form.controls['status'].hasError('required'))
-    {
+      this.contract_form.controls['status'].hasError('required')) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -163,16 +162,16 @@ export class ContractComponent {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if(this.contract_form.controls['start_date'].hasError('required') ){
+        if (this.contract_form.controls['start_date'].hasError('required')) {
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if(this.contract_form.controls['account_id'].hasError('required') ){
+        if (this.contract_form.controls['account_id'].hasError('required')) {
           this.contract_form.controls['account_id'].markAsDirty();
         }
-        if(this.contract_form.controls['term'].hasError('required') ){
+        if (this.contract_form.controls['term'].hasError('required')) {
           this.contract_form.controls['term'].markAsDirty();
         }
-        if(this.contract_form.controls['status'].hasError('required') ){
+        if (this.contract_form.controls['status'].hasError('required')) {
           this.contract_form.controls['status'].markAsDirty();
         }
         this.edit = true;
@@ -189,44 +188,34 @@ export class ContractComponent {
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       account_id: this.GetAllAccount.find((a: { label: any; }) => a.label === this.contract_form.value.account_id),
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認新增？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.postContractRequest(body).subscribe(Request => {
-            console.log(Request)
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的資料 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllContractRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          },
-          error => {
-            console.log(error);
+
+    this.HttpApi.postContractRequest(body).subscribe(Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    });
+          this.getAllContractRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      },
+      error => {
+        console.log(error);
+      })
   }
 
   //建立formgroup
@@ -290,10 +279,9 @@ export class ContractComponent {
 
   patchContractRequest(c_id: any): void {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-        this.contract_form.controls['account_id'].hasError('required') ||
-        this.contract_form.controls['term'].hasError('required') ||
-        this.contract_form.controls['status'].hasError('required'))
-    {
+      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['term'].hasError('required') ||
+      this.contract_form.controls['status'].hasError('required')) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -327,42 +315,32 @@ export class ContractComponent {
       description: this.contract_form.get('description')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchContractRequest(c_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllContractRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          });
-      }
-    })
+
+    this.HttpApi.patchContractRequest(c_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getAllContractRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      });
   }
 
   deleteContractRequest(c_id: any): void {

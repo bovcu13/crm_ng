@@ -130,8 +130,7 @@ export class ViewQuoteComponent {
 
   patchQuoteRequest(q_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
-      this.quote_form.controls['opportunity_id'].hasError('required'))
-    {
+      this.quote_form.controls['opportunity_id'].hasError('required')) {
       Swal.fire({
         title: '未填寫',
         text: "請填寫必填欄位！",
@@ -163,40 +162,31 @@ export class ViewQuoteComponent {
       tax: this.quote_form.get('tax')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchQuoteRequest(q_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getOneQuotetRequest(q_id)
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              })
-            }
+
+    this.HttpApi.patchQuoteRequest(q_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    });
+          this.getOneQuotetRequest(q_id)
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      })
   }
+
 
   showAlertCancel() {
     Swal.fire({

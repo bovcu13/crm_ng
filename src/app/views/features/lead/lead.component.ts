@@ -462,6 +462,7 @@ export class LeadComponent implements OnInit {
     })
   }
 
+
   patchLead(): void {
     if (this.lead_form.controls['account_name'].hasError('required') ||
       this.lead_form.controls['status'].hasError('required') ||
@@ -547,6 +548,7 @@ export class LeadComponent implements OnInit {
       }
     })
   }
+
 
   deleteLead(id: any): void {
     Swal.fire({
