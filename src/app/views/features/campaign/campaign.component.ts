@@ -57,6 +57,7 @@ export class CampaignComponent {
 
   //搜尋功能
   filterText: any = '';
+
   filterCampaigns() {
     if (!this.filterText) {
       this.getAllCampaignRequest();
@@ -87,11 +88,13 @@ export class CampaignComponent {
     });
     console.log(this.GetAllCampaign)
   }
+
   ngOnInit() {
 
   }
+
   //p-dropdown狀態
-  status : any[] = [
+  status: any[] = [
     {
       name: "策劃中",
       code: "planned",
@@ -152,6 +155,7 @@ export class CampaignComponent {
   first = 0;
   totalRecords = 0;
   loading: boolean = true;
+
   getAllCampaignRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -172,7 +176,7 @@ export class CampaignComponent {
           const end_date = this.formatDate2(order.end_date)
           const created_at = this.formatDate(order.created_at);
           const updated_at = this.formatDate(order.updated_at);
-          return { ...order, parent_campaign_id, start_date, end_date, created_at, updated_at };
+          return {...order, parent_campaign_id, start_date, end_date, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
         this.loading = false;
@@ -192,7 +196,7 @@ export class CampaignComponent {
     //驗證日期是否有效
     if (this.campaign_form.controls['end_date'].value !== null &&
       this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {
-      this.campaign_form.controls['end_date'].setErrors({ 'incorrect': true });
+      this.campaign_form.controls['end_date'].setErrors({'incorrect': true});
       return;
     }
     if (this.campaign_form.value.parent_campaign_id == null) {
@@ -218,14 +222,33 @@ export class CampaignComponent {
       actual_cost: this.campaign_form.value.actual_cost,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.HttpApi.postCampaignRequest(body).subscribe(Request => {
-      console.log(Request)
-      this.getAllCampaignRequest()
-      this.visible = false;
-    },
-      error => {
-        console.log(error);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認新增？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.postCampaignRequest(body).subscribe(Request => {
+            console.log(Request)
+            this.getAllCampaignRequest()
+            this.edit = false;
+          },
+          error => {
+            console.log(error);
+          })
+        Swal.fire({
+          title: '成功',
+          text: "已新增您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      }
+    })
   }
 
 
@@ -233,6 +256,7 @@ export class CampaignComponent {
   campaign_form: FormGroup;
   start_date!: Date;
   end_date!: Date;
+
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.campaign_form = this.fb.group({
       campaign_id: [''],
@@ -260,18 +284,19 @@ export class CampaignComponent {
   }
 
   //dialog方法
-  visible: boolean = false;
+  edit: boolean = false;
   dialogHeader!: string;
   selectedStatus!: any;
   selectedType!: any;
   showedit = true;//判斷是否dialog為新增與編輯
   c_id: any;
+
   showDialog(type: string, campaign?: any): void {
-    this.visible = true;
+    this.edit = true;
     if (type === 'add') {
       this.dialogHeader = '新增行銷活動';
       this.campaign_form.reset()
-      this.campaign_form.patchValue({ status: this.status[0].name });
+      this.campaign_form.patchValue({status: this.status[0].name});
       this.showedit = false;
     } else if (type === 'edit') {
       console.log("campaign: " + JSON.stringify(campaign))
@@ -291,13 +316,13 @@ export class CampaignComponent {
     //驗證日期是否有效
     if (this.campaign_form.controls['end_date'].value !== null &&
       this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {
-      this.campaign_form.controls['end_date'].setErrors({ 'incorrect': true });
+      this.campaign_form.controls['end_date'].setErrors({'incorrect': true});
       return;
     }
     //判斷父系行銷活動是否與行銷活動相同
     if (this.selectedParent_id === this.c_id) {
       this.campaign_form.controls['parent_campaign_id']
-        .setErrors({ Parent_idError: true });
+        .setErrors({Parent_idError: true});
       return
     } else {
       this.campaign_form.controls['parent_campaign_id'].value;
@@ -305,8 +330,8 @@ export class CampaignComponent {
     this.editStatus()//處理status的值，抓取name
     this.editType()//處理type的值，抓取name
     if (this.campaign_form.get('parent_campaign_id')?.value === '' ||
-    this.campaign_form.get('parent_campaign_id')?.value === null) {
-      this.campaign_form.patchValue({ parent_campaign_id: "00000000-0000-4000-a000-000000000000" });
+      this.campaign_form.get('parent_campaign_id')?.value === null) {
+      this.campaign_form.patchValue({parent_campaign_id: "00000000-0000-4000-a000-000000000000"});
     } else {
       this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
     }
@@ -328,28 +353,89 @@ export class CampaignComponent {
       actual_cost: this.campaign_form.get('actual_cost')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
-    this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
-      Request => {
-        console.log(Request)
-        this.visible = false;
-        this.getAllCampaignRequest()
-      })
-  }
-
-  deleteCampaignRequest(c_id: any): void {
-    this.HttpApi.deleteCampaignRequest(c_id).subscribe(Request => {
-      console.log(Request)
-      this.getAllCampaignRequest()
+    this.edit = false
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
+          Request => {
+            console.log(Request)
+            this.edit = false;
+            this.getAllCampaignRequest()
+          });
+        Swal.fire({
+          title: '成功',
+          text: "已新增您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      }
     })
   }
 
+  deleteCampaignRequest(c_id: any): void {
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963',
+      cancelButtonColor: '#d90000',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        this.HttpApi.deleteCampaignRequest(c_id).subscribe(Request => {
+          console.log(Request)
+          this.getAllCampaignRequest()
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
+  }
+
+  showAlertCancel() {
+    this.edit = false
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    })
+  }
 
   //處理status的值
   editStatus(): void {
     //判斷selectedStatus是否有值，若有值則取出name屬性
     let statusName = this.selectedStatus ? this.selectedStatus.name : "";
     //將statusName更新到表單中
-    this.campaign_form.patchValue({ status: statusName });
+    this.campaign_form.patchValue({status: statusName});
   }
 
   //處理type的值
@@ -357,7 +443,7 @@ export class CampaignComponent {
     //判斷selectedStatus是否有值，若有值則取出name屬性
     let TypeName = this.selectedType ? this.selectedType.name : "";
     //將statusName更新到表單中
-    this.campaign_form.patchValue({ type: TypeName });
+    this.campaign_form.patchValue({type: TypeName});
   }
 
   //懶加載
@@ -367,6 +453,7 @@ export class CampaignComponent {
     let page = e.first / e.rows + 1;
     this.getAllCampaignRequest(limit, page);
   }
+
   //如果父系行銷活動沒有被選擇
   parent_campaign_id(parent_campaign_id: string): any {
     if (parent_campaign_id == "00000000-0000-4000-a000-000000000000") {
@@ -400,6 +487,7 @@ export class CampaignComponent {
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
+
   //偵測type變量
   ontypeChange(event: any) {
     console.log("類型選擇type: " + event.value.code + event.value.name);
