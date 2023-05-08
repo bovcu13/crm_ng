@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
 import {Order} from 'src/app/shared/models/order';
-import { MessageService } from 'primeng/api';
+import {MessageService} from 'primeng/api';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
   providers: [MessageService]
 })
 export class ViewOrderComponent {
-order_product: any[] = [
+  order_product: any[] = [
     {
       name: "pen",
       code: "00001",
@@ -56,6 +56,7 @@ order_product: any[] = [
   GetOneOrder: Order[] = [];
   selectedStatus!: any;
   selectedStatusName: any;
+
   getOneOrderRequest(o_id: any): void {
     this.HttpApi.getOneOrderRequest(o_id).subscribe(res => {
         this.GetOneOrder = res.body;
@@ -84,14 +85,16 @@ order_product: any[] = [
       }
     );
   }
+
   //GET全部product
   GetAllProduct: any[] = [];
   first = 0;
-  getAllProductRequest(limit?: number, page?: number){
+
+  getAllProductRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
     }
-    this.HttpApi.getAllProductRequest(limit, ).subscribe(res => {
+    this.HttpApi.getAllProductRequest(limit,).subscribe(res => {
         this.GetAllProduct = res.body.products
         this.GetAllProduct = res.body.products.map((product: any) => {
           const created_at = this.formatDate(product.created_at);
@@ -109,8 +112,9 @@ order_product: any[] = [
   order_form: FormGroup;
   edit_product_form: FormGroup;
   o_id: any;
+
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute
-  ,private messageService: MessageService) {
+    , private messageService: MessageService) {
     this.order_form = this.fb.group({
       code: [''],
       account_id: ['', [Validators.required]],
@@ -144,13 +148,15 @@ order_product: any[] = [
 
   //新增產品dialog
   add: boolean = false;
-  addProduct(){
+
+  addProduct() {
     this.add = true;
   }
 
   //編輯所有產品報價dialog
   edit: boolean = false;
-  editProduct(){
+
+  editProduct() {
     this.edit = true;
   }
 
@@ -179,8 +185,7 @@ order_product: any[] = [
 
   patchOrderRequest() {
     if (this.order_form.controls['contract_id'].hasError('required') ||
-      this.order_form.controls['start_date'].hasError('required'))
-    {
+      this.order_form.controls['start_date'].hasError('required')) {
       Swal.fire({
         title: '未填寫',
         text: "請填寫必填欄位！",
@@ -219,45 +224,35 @@ order_product: any[] = [
       contract_id: this.selectedContract_id, //契約ID
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchOrderRequest(this.o_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getOneOrderRequest(this.o_id)
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              })
-            }
+    this.HttpApi.patchOrderRequest(this.o_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    });
+          this.getOneOrderRequest(this.o_id)
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      })
   }
 
   //設定訂單開始天數不能開始於契約開始日期
   selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   MinDate!: any;//契約日期
   orderStartDate: any;
+
   validateStartDate() {
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
     const contractStartDate = selectedContract?.date.substring(0, 10);
@@ -272,6 +267,7 @@ order_product: any[] = [
 
   //處理status的值
   statusName!: string;
+
   editStatus(): void {
     //判斷selectedStatus是否有值，若有值則取出name屬性
     this.statusName = this.selectedStatus ? this.selectedStatus.name : "";

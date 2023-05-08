@@ -108,7 +108,7 @@ export class ViewOpportunityComponent implements OnInit {
 
   GetAllAccount: any[] = [];
 
-  getAllAccountRequest(){
+  getAllAccountRequest() {
     this.HttpApi.getAllAccountRequest(1).subscribe(
       (request) => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
@@ -188,40 +188,30 @@ export class ViewOpportunityComponent implements OnInit {
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
       updated_at: this.currentDate
     }
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchOpportunityRequest(id, body)
-          .subscribe(request => {
-            console.log(request)
-            if (request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getOneOpportunity(this.id)
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              })
-            }
-          });
-      }
-    });
+    this.HttpApi.patchOpportunityRequest(id, body)
+      .subscribe(request => {
+        console.log(request)
+        if (request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getOneOpportunity(this.id)
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      });
   }
+
 
   showAlertCancel() {
     Swal.fire({

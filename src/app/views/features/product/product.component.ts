@@ -118,49 +118,39 @@ export class ProductComponent {
       price: this.product_form.value.price,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認新增？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.postProductRequest(body).subscribe(Request => {
-            this.Repeated = Request
-            console.log(Request)
-            if (this.Repeated.code === 400) {
-              this.BadRequest = "識別碼不可重複!!!";
-              this.edit = true;
-            } else if (this.Repeated.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的資料 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllProductRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          },
-          error => {
-            console.log(error);
+    this.HttpApi.postProductRequest(body).subscribe(Request => {
+        this.Repeated = Request
+        console.log(Request)
+        if (this.Repeated.code === 400) {
+          this.BadRequest = "識別碼不可重複!!!";
+          this.edit = true;
+        } else if (this.Repeated.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    });
+          this.getAllProductRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      },
+      error => {
+        console.log(error);
+      })
   }
+
 
 //建立formgroup
   product_form: FormGroup;
@@ -233,48 +223,38 @@ export class ProductComponent {
       code: this.product_form.get('code')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchProductRequest(p_id, body).subscribe(
-          Request => {
-            this.Repeated = Request
-            console.log(Request)
-            if (this.Repeated.code === 400) {
-              this.BadRequest = "識別碼不可重複!!!";
-              this.edit = true;
-            } else if (this.Repeated.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllProductRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          }
-        )
+    this.HttpApi.patchProductRequest(p_id, body).subscribe(
+      Request => {
+        this.Repeated = Request
+        console.log(Request)
+        if (this.Repeated.code === 400) {
+          this.BadRequest = "識別碼不可重複!!!";
+          this.edit = true;
+        } else if (this.Repeated.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getAllProductRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
       }
-    });
+    )
   }
+
 
   deleteProductRequest(p_id: any): void {
     Swal.fire({

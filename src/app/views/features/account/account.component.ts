@@ -229,47 +229,36 @@ export class AccountComponent implements OnInit {
       created_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
       created_at: this.currentDate
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認新增？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.postAccountRequest(body).subscribe(request => {
-          console.log(request)
-          let event: LazyLoadEvent = {
-            first: 0,
-            rows: 10,
-            sortField: undefined,
-            sortOrder: undefined,
-            multiSortMeta: undefined,
-            filters: undefined,
-            globalFilter: undefined,
-          };
-          if (request.code === 200) {
-            Swal.fire({
-              title: '成功',
-              text: "已儲存您的資料 :)",
-              icon: 'success',
-              showConfirmButton: false,
-              timer: 1000
-            })
-            this.loadPostsLazy(event);
-          } else {
-            Swal.fire({
-              title: '失敗',
-              text: "請確認資料是否正確 :(",
-              icon: 'error',
-              showConfirmButton: false,
-              timer: 1500
-            }).then(() => {
-              this.edit = true;
-            })
-          }
+    this.HttpApi.postAccountRequest(body).subscribe(request => {
+      console.log(request)
+      let event: LazyLoadEvent = {
+        first: 0,
+        rows: 10,
+        sortField: undefined,
+        sortOrder: undefined,
+        multiSortMeta: undefined,
+        filters: undefined,
+        globalFilter: undefined,
+      };
+      if (request.code === 200) {
+        this.edit = false;
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的資料 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        this.loadPostsLazy(event);
+      } else {
+        Swal.fire({
+          title: '失敗',
+          text: "請確認資料是否正確 :(",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          this.edit = true;
         })
       }
     })
@@ -301,46 +290,35 @@ export class AccountComponent implements OnInit {
       updated_by: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
       updated_at: this.currentDate
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchAccountRequest(id, body)
-          .subscribe(request => {
-            console.log(request)
-            let event: LazyLoadEvent = {
-              first: 0,
-              rows: 10,
-            };
-            if (request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.loadPostsLazy(event);
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
+    this.HttpApi.patchAccountRequest(id, body)
+      .subscribe(request => {
+        console.log(request)
+        let event: LazyLoadEvent = {
+          first: 0,
+          rows: 10,
+        };
+        if (request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    })
+          this.loadPostsLazy(event);
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      })
   }
 
   deleteAccount(id: any): void {

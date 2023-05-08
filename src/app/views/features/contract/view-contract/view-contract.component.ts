@@ -112,8 +112,7 @@ export class ViewContractComponent {
     if (this.contract_form.controls['start_date'].hasError('required') ||
       this.contract_form.controls['account_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
-      this.contract_form.controls['status'].hasError('required'))
-    {
+      this.contract_form.controls['status'].hasError('required')) {
       Swal.fire({
         title: '未填寫',
         text: "請填寫必填欄位！",
@@ -121,16 +120,16 @@ export class ViewContractComponent {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if(this.contract_form.controls['start_date'].hasError('required') ){
+        if (this.contract_form.controls['start_date'].hasError('required')) {
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if(this.contract_form.controls['account_id'].hasError('required') ){
+        if (this.contract_form.controls['account_id'].hasError('required')) {
           this.contract_form.controls['account_id'].markAsDirty();
         }
-        if(this.contract_form.controls['term'].hasError('required') ){
+        if (this.contract_form.controls['term'].hasError('required')) {
           this.contract_form.controls['term'].markAsDirty();
         }
-        if(this.contract_form.controls['status'].hasError('required') ){
+        if (this.contract_form.controls['status'].hasError('required')) {
           this.contract_form.controls['status'].markAsDirty();
         }
       })
@@ -146,41 +145,31 @@ export class ViewContractComponent {
       description: this.contract_form.get('description')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchContractRequest(this.c_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getOneContractRequest(this.c_id)
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              })
-            }
-          }
-        )
+    this.HttpApi.patchContractRequest(this.c_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getOneContractRequest(this.c_id)
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
       }
-    });
+    )
   }
+
 
   // GET全部Account
   GetAllAccount: any[] = [];
