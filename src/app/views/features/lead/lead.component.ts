@@ -259,7 +259,7 @@ export class LeadComponent implements OnInit {
       industry_id: [''],
       rating: ['',],
       owner: [''],
-      account_name: [''],
+      account_name: ['', [Validators.required]],
       created_by: ['', [Validators.required]],
       created_at: [''],
       updated_by: ['', [Validators.required]],
@@ -378,6 +378,32 @@ export class LeadComponent implements OnInit {
   currentDate = new Date()
 
   postLead(): void {
+    if (this.lead_form.controls['account_name'].hasError('required') ||
+      this.lead_form.controls['status'].hasError('required') ||
+      this.lead_form.controls['description'].hasError('required'))
+    {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.lead_form.controls['account_name'].hasError('required')) {
+          this.lead_form.controls['account_name'].markAsDirty();
+        }
+        if (this.lead_form.controls['status'].hasError('required')) {
+          this.lead_form.controls['status'].markAsDirty();
+        }
+        if (this.lead_form.controls['description'].hasError('required')) {
+          this.lead_form.controls['description'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     let body = {
       description: this.lead_form.controls['description'].value,
       status: this.status[1].name,
@@ -437,6 +463,31 @@ export class LeadComponent implements OnInit {
   }
 
   patchLead(): void {
+    if (this.lead_form.controls['account_name'].hasError('required') ||
+      this.lead_form.controls['status'].hasError('required') ||
+      this.lead_form.controls['description'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.lead_form.controls['account_name'].hasError('required')) {
+          this.lead_form.controls['account_name'].markAsDirty();
+        }
+        if (this.lead_form.controls['status'].hasError('required')) {
+          this.lead_form.controls['status'].markAsDirty();
+        }
+        if (this.lead_form.controls['description'].hasError('required')) {
+          this.lead_form.controls['description'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     let id = this.lead_form.controls['lead_id'].value
     let body = {
       description: this.lead_form.controls['description'].value,
@@ -579,6 +630,24 @@ export class LeadComponent implements OnInit {
 
 
   add_Acount() {
+    if (this.account_form.controls['name'].hasError('required')){
+      this.edit = false
+      this.addAcount = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.account_form.controls['name'].hasError('required')) {
+          this.account_form.controls['name'].markAsDirty();
+        }
+        this.addAcount = true;
+      })
+      return;
+    }
+
     this.edit = false
     this.addAcount = false;
     Swal.fire({

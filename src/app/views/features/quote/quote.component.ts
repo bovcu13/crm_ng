@@ -142,6 +142,28 @@ export class QuoteComponent {
 
   //POST 一筆quote
   postQuoteRequest(): void {
+    if (this.quote_form.controls['name'].hasError('required') ||
+      this.quote_form.controls['opportunity_id'].hasError('required'))
+    {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.quote_form.controls['name'].hasError('required')) {
+          this.quote_form.controls['name'].markAsDirty();
+        }
+        if (this.quote_form.controls['opportunity_id'].hasError('required')) {
+          this.quote_form.controls['opportunity_id'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     if (this.quote_form.controls['name'].hasError('required')
       || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
@@ -200,6 +222,28 @@ export class QuoteComponent {
   }
 
   patchQuoteRequest(p_id: any): void {
+    if (this.quote_form.controls['name'].hasError('required') ||
+      this.quote_form.controls['opportunity_id'].hasError('required'))
+    {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.quote_form.controls['name'].hasError('required')) {
+          this.quote_form.controls['name'].markAsDirty();
+        }
+        if (this.quote_form.controls['opportunity_id'].hasError('required')) {
+          this.quote_form.controls['opportunity_id'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     this.editStatus()//處理status的值，抓取name
     if (this.quote_form.controls['name'].hasError('required')
       || this.quote_form.controls['opportunity_id'].hasError('required')) {

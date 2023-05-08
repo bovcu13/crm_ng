@@ -205,6 +205,21 @@ export class AccountComponent implements OnInit {
   currentDate = new Date()
 
   postAccount(): void {
+    if (this.account_form.controls['name'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        this.account_form.controls['name'].markAsDirty();
+        this.edit = true;
+      })
+      return;
+    }
+
     let body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
@@ -261,6 +276,21 @@ export class AccountComponent implements OnInit {
   }
 
   patchAccount(): void {
+    if (this.account_form.controls['name'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        this.account_form.controls['name'].markAsDirty();
+        this.edit = true;
+      })
+      return;
+    }
+
     let id = this.account_form.controls['account_id'].value
     let body = {
       name: this.account_form.controls['name'].value,

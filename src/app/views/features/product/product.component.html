@@ -64,7 +64,7 @@
         <div class="field">
           <label><span class="required-star">*</span>商品/服務名稱</label>
           <input pInputText formControlName="name"
-                 [ngClass]="{'ng-dirty':product_form.controls['name'].hasError && product_form.controls['name'].touched}">
+                 [ngClass]="{'ng-dirty':product_form.controls['name'].hasError('required') && product_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-6">
@@ -72,7 +72,7 @@
           <label><span class="required-star">*</span>價錢</label>
           <br>
           <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="price" [minFractionDigits]="0"
-                         [ngClass]="{'ng-dirty':product_form.controls['price'].hasError && product_form.controls['price'].touched}">
+                         [ngClass]="{'ng-dirty':product_form.controls['price'].hasError('required') && product_form.controls['price'].touched}">
           </p-inputNumber>
         </div>
       </div>

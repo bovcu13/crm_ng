@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {Calendar} from 'primeng/calendar';
 import {HttpApiService} from "../../../api/http-api.service";
 import Swal from "sweetalert2";
@@ -185,6 +185,22 @@ export class CampaignComponent {
   }
   postCampaignRequest(): void {
     if (this.campaign_form.controls['name'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        this.campaign_form.controls['name'].markAsDirty();
+        this.edit = true;
+      })
+      return;
+    }
+
+    this.editType()//處理type的值，抓取name
+    if (this.campaign_form.controls['name'].hasError('required')) {
       return;
     }
     //驗證日期是否有效
@@ -330,8 +346,25 @@ export class CampaignComponent {
 
   patchCampaignRequest(c_id: any): void {
     if (this.campaign_form.controls['name'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        this.campaign_form.controls['name'].markAsDirty();
+        this.edit = true;
+      })
       return;
     }
+
+    if (this.campaign_form.controls['name'].hasError('required')) {
+      this.campaign_form.controls['name'].markAsDirty();
+      return;
+    }
+
     //驗證日期是否有效
     if (this.campaign_form.controls['end_date'].value !== null &&
       this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {

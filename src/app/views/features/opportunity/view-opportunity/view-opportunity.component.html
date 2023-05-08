@@ -90,7 +90,7 @@
                   <div class="field">
                     <label><span class="text-red-600">*</span>商機名稱</label>
                     <input pInputText formControlName="name"
-                           [ngClass]="{'ng-dirty':opportunity_form.controls['name'].hasError && opportunity_form.controls['name'].touched}">
+                           [ngClass]="{'ng-dirty':opportunity_form.controls['name'].hasError('required') && opportunity_form.controls['name'].touched}">
                   </div>
                 </div>
                 <div class="col-6">
@@ -98,7 +98,8 @@
                     <label><span class="text-red-600">*</span>帳戶</label>
                     <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
                                 [filter]="true" appendTo="body" optionLabel="label"
-                                filterBy="label" [showClear]="true" placeholder="選擇現有帳戶">
+                                filterBy="label" [showClear]="true" placeholder="選擇現有帳戶"
+                                [ngClass]="{'ng-dirty':opportunity_form.controls['account_name'].hasError('required') && opportunity_form.controls['account_name'].touched}">
                     </p-dropdown>
                   </div>
                 </div>
@@ -107,7 +108,7 @@
                     <label><span class="text-red-600">*</span>階段</label>
                     <p-dropdown [disabled]="true" [options]="stage" optionLabel="name"
                                 (onChange)="stageValue($event)" formControlName="stage" appendTo="body"
-                                [ngClass]="{'ng-dirty':opportunity_form.controls['stage'].hasError && opportunity_form.controls['stage'].touched}"></p-dropdown>
+                                [ngClass]="{'ng-dirty':opportunity_form.controls['stage'].hasError('required') && opportunity_form.controls['stage'].touched}"></p-dropdown>
                   </div>
                 </div>
                 <div class="col-6">
@@ -116,14 +117,14 @@
                     <p-dropdown placeholder="請選擇" [disabled]="true" [options]="forecast_category" optionLabel="name"
                                 (onChange)="forecast_categoryValue($event)" formControlName="forecast_category"
                                 appendTo="body"
-                                [ngClass]="{'ng-dirty':opportunity_form.controls['forecast_category'].hasError && opportunity_form.controls['forecast_category'].touched}"></p-dropdown>
+                                [ngClass]="{'ng-dirty':opportunity_form.controls['forecast_category'].hasError('required') && opportunity_form.controls['forecast_category'].touched}"></p-dropdown>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="field">
                     <label><span class="text-red-600">*</span>結束日期</label>
                     <p-calendar formControlName="close_date" appendTo="body" dateFormat="yy-mm-dd"
-                                [ngClass]="{'ng-dirty':opportunity_form.controls['close_date'].hasError && opportunity_form.controls['close_date'].touched}"></p-calendar>
+                                [ngClass]="{'ng-dirty':opportunity_form.controls['close_date'].hasError('required') && opportunity_form.controls['close_date'].touched}"></p-calendar>
                   </div>
                 </div>
                 <div class="col-6">

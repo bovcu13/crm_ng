@@ -213,6 +213,25 @@ export class ViewLeadComponent implements OnInit {
   isActive: boolean = false;
 
   patchLead() {
+    if (this.lead_form.controls['status'].hasError('required') ||
+      this.lead_form.controls['description'].hasError('required')) {
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.lead_form.controls['status'].hasError('required')) {
+          this.lead_form.controls['status'].markAsDirty();
+        }
+        if (this.lead_form.controls['description'].hasError('required')) {
+          this.lead_form.controls['description'].markAsDirty();
+        }
+      })
+      return;
+    }
+
     let body = {
       description: this.lead_form.controls['description'].value,
       status: this.selectedStatus?.name,

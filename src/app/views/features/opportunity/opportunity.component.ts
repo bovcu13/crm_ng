@@ -222,6 +222,39 @@ export class OpportunityComponent implements OnInit {
   currentDate = new Date()
 
   postOpportunity(): void {
+    if (this.opportunity_form.controls['account_name'].hasError('required') ||
+      this.opportunity_form.controls['name'].hasError('required') ||
+      this.opportunity_form.controls['stage'].hasError('required') ||
+      this.opportunity_form.controls['forecast_category'].hasError('required') ||
+      this.opportunity_form.controls['close_date'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.opportunity_form.controls['account_name'].hasError('required')) {
+          this.opportunity_form.controls['account_name'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['name'].hasError('required')) {
+          this.opportunity_form.controls['name'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['stage'].hasError('required')) {
+          this.opportunity_form.controls['stage'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['forecast_category'].hasError('required')) {
+          this.opportunity_form.controls['forecast_category'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['close_date'].hasError('required')) {
+          this.opportunity_form.controls['close_date'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     let body = {
       name: this.opportunity_form.value.name,
       stage: this.stage[1].name,
@@ -282,6 +315,39 @@ export class OpportunityComponent implements OnInit {
 
 
   patchOpportunity(): void {
+    if (this.opportunity_form.controls['account_name'].hasError('required') ||
+      this.opportunity_form.controls['name'].hasError('required') ||
+      this.opportunity_form.controls['stage'].hasError('required') ||
+      this.opportunity_form.controls['forecast_category'].hasError('required') ||
+      this.opportunity_form.controls['close_date'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.opportunity_form.controls['account_name'].hasError('required')) {
+          this.opportunity_form.controls['account_name'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['name'].hasError('required')) {
+          this.opportunity_form.controls['name'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['stage'].hasError('required')) {
+          this.opportunity_form.controls['stage'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['forecast_category'].hasError('required')) {
+          this.opportunity_form.controls['forecast_category'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['close_date'].hasError('required')) {
+          this.opportunity_form.controls['close_date'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     let id = this.opportunity_form.controls['opportunity_id'].value
     let body = {
       name: this.opportunity_form.value?.name,

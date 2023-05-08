@@ -46,11 +46,11 @@
             <th pSortableColumn="account_name">帳戶
               <p-sortIcon field="account_name"></p-sortIcon>
             </th>
-            <th pSortableColumn="account_name">分級
-              <p-sortIcon field="account_name"></p-sortIcon>
+            <th pSortableColumn="rating">分級
+              <p-sortIcon field="rating"></p-sortIcon>
             </th>
-            <th pSortableColumn="account_name">線索來源
-              <p-sortIcon field="account_name"></p-sortIcon>
+            <th pSortableColumn="source">線索來源
+              <p-sortIcon field="source"></p-sortIcon>
             </th>
             <!--            <th pSortableColumn="phone_number">電話-->
             <!--              <p-sortIcon field="phone_number"></p-sortIcon>-->
@@ -118,7 +118,7 @@
           <label><span class="text-red-600">*</span>線索狀態</label>
           <p-dropdown placeholder="請選擇" optionLabel="name" [options]="status"
                       formControlName="status" appendTo="body" (onChange)="statusValue($event)"
-                      [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError && lead_form.controls['status'].touched}"
+                      [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError('required') && lead_form.controls['status'].touched}"
           ></p-dropdown>
         </div>
       </div>
@@ -135,7 +135,8 @@
             <label><span class="text-red-600">*</span>帳戶</label>
             <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
                         [filter]="true" optionLabel="label" appendTo="body"
-                        filterBy="label" [showClear]="true" placeholder="選擇現有帳戶">
+                        filterBy="label" [showClear]="true" placeholder="選擇現有帳戶"
+                        [ngClass]="{'ng-dirty':lead_form.controls['account_name'].hasError('required') && lead_form.controls['account_name'].touched}">
             </p-dropdown>
           </div>
         </div>
@@ -148,7 +149,8 @@
       <div class="col-12">
         <div>
           <label><span class="text-red-600">*</span>描述</label>
-          <textarea class="mt-2" rows="3" pInputTextarea formControlName="description"></textarea>
+          <textarea class="mt-2" rows="3" pInputTextarea formControlName="description"
+                    [ngClass]="{'ng-dirty':lead_form.controls['description'].hasError('required') && lead_form.controls['description'].touched}"></textarea>
         </div>
       </div>
       <div class="col-6">
@@ -203,7 +205,7 @@
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
           <input pInputText formControlName="name"
-                 [ngClass]="{'ng-dirty':account_form.controls['name'].hasError && account_form.controls['name'].touched}">
+                 [ngClass]="{'ng-dirty':account_form.controls['name'].hasError('required') && account_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-6">
