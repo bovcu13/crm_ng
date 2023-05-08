@@ -191,7 +191,7 @@
       <ng-container *ngIf="dialogHeader !== '編輯線索'">
         <p-button label="新增" (click)="postLead();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
   <p-menu #type [model]="account_type" [popup]="true"></p-menu>
@@ -254,7 +254,7 @@
     <div class="flex justify-content-end">
       <p-button label="新增" (click)="add_Acount()"
                 styleClass="p-button-outlined p-button-info"></p-button>
-      <p-button label="取消" (click)="addAcount=false;edit=true" styleClass="p-button-secondary ml-1"></p-button>
+      <p-button label="取消" (click)="addAccshowAlertCancel()" styleClass="p-button-secondary ml-1"></p-button>
     </div>
   </p-dialog>
 </form>

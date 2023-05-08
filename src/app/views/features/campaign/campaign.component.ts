@@ -1,7 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Calendar } from 'primeng/calendar';
-import { HttpApiService } from "../../../api/http-api.service";
+import {Component, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {Calendar} from 'primeng/calendar';
+import {HttpApiService} from "../../../api/http-api.service";
+import Swal from "sweetalert2";
+
 @Component({
   selector: 'app-campaign',
   templateUrl: './campaign.component.html',

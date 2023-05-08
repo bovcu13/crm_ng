@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {HttpApiService} from "../../../api/http-api.service";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LazyLoadEvent} from 'primeng/api';
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-product',
@@ -34,35 +35,37 @@ export class ProductComponent {
   //     updated_by: "林",
   //   }
   // ]
-    //搜尋功能
-    filterText: any;
-    filterProducts(): void {
-      if (!this.filterText) {
-        this.getAllProductRequest();
-        return;
-      }
-      // 使用 Array 的 filter() 方法對 GetAllProduct 進行過濾
-      this.GetAllProduct = this.GetAllProduct.filter((product) => {
-        // 將所有要比對的欄位轉成小寫字母
-        const name = product.name?.toLowerCase() || '';
-        const code = product.code?.toLowerCase() || '';
-        const description = product.description?.toLowerCase() || '';
-        const price = product.price?.toString().toLowerCase() || '';
-        // 比對是否有任何一個欄位包含搜尋文字
-        return (
-          name.includes(this.filterText.toLowerCase()) ||
-          code.includes(this.filterText.toLowerCase()) ||
-          description.includes(this.filterText.toLowerCase()) ||
-          price.includes(this.filterText.toLowerCase()) ||
-          (product.is_enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
-        );
-      });
-      console.log(this.GetAllProduct)
+  //搜尋功能
+  filterText: any;
+
+  filterProducts(): void {
+    if (!this.filterText) {
+      this.getAllProductRequest();
+      return;
     }
+    // 使用 Array 的 filter() 方法對 GetAllProduct 進行過濾
+    this.GetAllProduct = this.GetAllProduct.filter((product) => {
+      // 將所有要比對的欄位轉成小寫字母
+      const name = product.name?.toLowerCase() || '';
+      const code = product.code?.toLowerCase() || '';
+      const description = product.description?.toLowerCase() || '';
+      const price = product.price?.toString().toLowerCase() || '';
+      // 比對是否有任何一個欄位包含搜尋文字
+      return (
+        name.includes(this.filterText.toLowerCase()) ||
+        code.includes(this.filterText.toLowerCase()) ||
+        description.includes(this.filterText.toLowerCase()) ||
+        price.includes(this.filterText.toLowerCase()) ||
+        (product.is_enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
+      );
+    });
+    console.log(this.GetAllProduct)
+  }
 
 //GET全部product
   GetAllProduct!: HttpApiService[];
-  getAllProductRequest(limit?: number, page?: number){
+
+  getAllProductRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
     }
@@ -84,6 +87,7 @@ export class ProductComponent {
 
 //POST 一筆product
   BadRequest: any
+
   postProductRequest(): void {
     if (this.product_form.controls['name'].hasError('required') || this.product_form.controls['price'].hasError('required')) {
       return;
@@ -96,23 +100,43 @@ export class ProductComponent {
       price: this.product_form.value.price,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.HttpApi.postProductRequest(body).subscribe(Request => {
-      console.log(Request)
-      this.getAllProductRequest()
-        if (Request.code === 400){
-          this.BadRequest = "識別碼不可重複!!!";
-          this.edit = true;
-        } else if (Request.code === 200) {
-          this.edit = false;
-        }
-    },
-      error => {
-        console.log(error);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認新增？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.postProductRequest(body).subscribe(Request => {
+            this.Repeated = Request
+            console.log(Request)
+            this.getAllProductRequest()
+            if (this.Repeated.code === 400) {
+              this.BadRequest = "識別碼不可重複!!!";
+              this.edit = true;
+            } else if (this.Repeated.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已新增您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+            }
+          },
+          error => {
+            console.log(error);
+          })
+      }
+    });
   }
 
 //建立formgroup
   product_form: FormGroup;
+
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.product_form = this.fb.group({
       product_id: [''],
@@ -128,6 +152,7 @@ export class ProductComponent {
       updated_by: [''],
     });
   }
+
 //編輯&新增dialog
   edit: boolean = false;
   dialogHeader!: string;
@@ -148,49 +173,114 @@ export class ProductComponent {
       this.p_id = product.product_id;
     }
   }
+
   Repeated: any;//判斷是否重複
-  patchProductRequest(p_id: any): void{
+  patchProductRequest(p_id: any): void {
     if (this.product_form.controls['name'].hasError('required') || this.product_form.controls['price'].hasError('required')) {
       return;
     }
-      let body = {
-        name: this.product_form.get('name')?.value,
-        is_enable: this.product_form.get('is_enable')?.value,
-        description: this.product_form.get('description')?.value,
-        price: this.product_form.get('price')?.value,
-        code: this.product_form.get('code')?.value,
-        updated_by:"b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
+    let body = {
+      name: this.product_form.get('name')?.value,
+      is_enable: this.product_form.get('is_enable')?.value,
+      description: this.product_form.get('description')?.value,
+      price: this.product_form.get('price')?.value,
+      code: this.product_form.get('code')?.value,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
     }
-    this.HttpApi.patchProductRequest(p_id, body).subscribe(
-      Request => {
-        this.Repeated = Request
-        console.log(Request)
-        if (this.Repeated.code === 400){
-          this.BadRequest = "識別碼不可重複!!!";
-          this.edit = true;
-        }else if (this.Repeated.code === 200){
-          this.edit = false
-          this.getAllProductRequest()
-        }
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.patchProductRequest(p_id, body).subscribe(
+          Request => {
+            this.Repeated = Request
+            console.log(Request)
+            if (this.Repeated.code === 400) {
+              this.BadRequest = "識別碼不可重複!!!";
+              this.edit = true;
+            } else if (this.Repeated.code === 200) {
+              this.getAllProductRequest()
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+            }
+          }
+        )
+      }
+    });
   }
+
   deleteProductRequest(p_id: any): void {
-    this.HttpApi.deleteProductRequest(p_id).subscribe(Request => {
-      console.log(Request)
-      this.getAllProductRequest()
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963',
+      cancelButtonColor: '#d90000',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        this.HttpApi.deleteProductRequest(p_id).subscribe(Request => {
+          console.log(Request)
+          this.getAllProductRequest()
+        })
+      }else{
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    });
+  }
+
+  showAlertCancel() {
+    this.edit = false
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
     })
   }
 
-    //懶加載
-    totalRecords= 0;
-    first = 0;
-    loading: boolean = true;
-    loadPostsLazy(e: any) {
-      this.loading = true;
-      let limit = e.rows;
-      let page = e.first / e.rows + 1;
-      this.getAllProductRequest(limit, page);
-    }
+  //懶加載
+  totalRecords = 0;
+  first = 0;
+  loading: boolean = true;
+
+  loadPostsLazy(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.getAllProductRequest(limit, page);
+  }
 
   //日期轉換
   formatDate(dateString: string): string {
