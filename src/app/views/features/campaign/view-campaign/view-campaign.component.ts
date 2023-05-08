@@ -231,10 +231,8 @@ export class ViewCampaignComponent {
       title: '確認更改？',
       icon: 'warning',
       confirmButtonColor: '#00D963', // 设置为绿色
-      cancelButtonColor: '#FF003A',
-      showCancelButton: true,
+      showCancelButton: false,
       confirmButtonText: '確認',
-      cancelButtonText: '取消',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -243,7 +241,7 @@ export class ViewCampaignComponent {
           text: "已儲存您的變更 :)",
           icon: 'success',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1000
         })
         this.editStatus()//處理status的值，抓取name
         this.editType()//處理type的值，抓取name
@@ -271,18 +269,20 @@ export class ViewCampaignComponent {
             this.getOneCampaignRequest(c_id)
           }
         )
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 700
-        });
       }
     });
   }
-
+  showAlertCancel() {
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    })
+  }
   //新增線索dialog
   addlead: boolean = false;
   addLead(){
