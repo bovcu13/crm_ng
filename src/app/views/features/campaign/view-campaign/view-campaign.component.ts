@@ -236,8 +236,8 @@ export class ViewCampaignComponent {
     let end_date = new Date(this.campaign_form.get('end_date')?.value);
     let body = {
       name: this.campaign_form.get('name')?.value,
-      status: this.status.find((s: { name: any; }) => s.name === this.campaign_form.get('status')?.value),
-      type: this.type.find((s: { name: any; }) => s.name === this.campaign_form.get('type')?.value),
+      status: this.campaign_form.get('status')?.value.name,
+      type: this.campaign_form.get('type')?.value.name,
       is_enable: this.campaign_form.get('is_enable')?.value,
       parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
       start_date: start_date.toISOString(),
