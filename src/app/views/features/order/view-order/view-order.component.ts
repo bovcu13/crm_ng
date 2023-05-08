@@ -177,7 +177,7 @@ order_product: any[] = [
     );
   }
 
-  patchOrderRequest(o_id: any): void {
+  patchOrderRequest() {
     this.orderStartDate = this.order_form.controls['start_date'].value;
     if (this.orderStartDate < this.MinDate) {
       this.order_form.controls['start_date'].setErrors({'required-star': true});
@@ -199,11 +199,39 @@ order_product: any[] = [
       contract_id: this.selectedContract_id, //契約ID
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
-    this.HttpApi.patchOrderRequest(o_id, body).subscribe(
-      Request => {
-        console.log(Request)
-        this.getOneOrderRequest(o_id)
-      })
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.patchOrderRequest(this.o_id, body).subscribe(
+          Request => {
+            console.log(Request)
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getOneOrderRequest(this.o_id)
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          })
+      }
+    });
   }
 
   //設定訂單開始天數不能開始於契約開始日期
@@ -248,28 +276,6 @@ order_product: any[] = [
     return start_date.toISOString().slice(0, 10);
   }
 
-  showAlertComfirm() {
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.patchOrderRequest(this.o_id);
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
-      }
-    });
-  }
-
   showAlertCancel() {
     Swal.fire({
       title: '取消',
@@ -280,5 +286,6 @@ order_product: any[] = [
       reverseButtons: false,
       timer: 1000
     })
+    this.getOneOrderRequest(this.o_id)
   }
 }

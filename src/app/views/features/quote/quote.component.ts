@@ -170,19 +170,31 @@ export class QuoteComponent {
       if (result.isConfirmed) {
         this.HttpApi.postQuoteRequest(body).subscribe(Request => {
             console.log(Request)
-            this.getAllQuoteRequest()
             this.edit = false;
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的資料 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllQuoteRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
           },
           error => {
             console.log(error);
           })
-        Swal.fire({
-          title: '成功',
-          text: "已新增您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
       }
     })
   }
@@ -220,15 +232,27 @@ export class QuoteComponent {
           Request => {
             console.log(Request)
             this.edit = false;
-            this.getAllQuoteRequest()
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllQuoteRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
           });
-          Swal.fire({
-          title: '成功',
-          text: "已新增您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
       }
     })
   }
@@ -245,18 +269,28 @@ export class QuoteComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
         this.HttpApi.deleteQuoteRequest(p_id).subscribe(Request => {
           console.log(Request)
-          this.getAllQuoteRequest()
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getAllQuoteRequest()
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
         })
-      }else{
+      } else {
         Swal.fire({
           title: '取消',
           text: "已取消您的變更！",

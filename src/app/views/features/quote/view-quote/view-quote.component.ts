@@ -133,6 +133,20 @@ export class ViewQuoteComponent {
       || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
     }
+    this.editStatus()//處理status的值，抓取name
+    let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
+    let body = {
+      name: this.quote_form.get('name')?.value,
+      status: this.quote_form.get('status')?.value,
+      expiration_date: expiration_date.toISOString(),
+      is_syncing: this.quote_form.get('is_syncing')?.value,
+      account_id: this.selectedAccount_id, //帳戶ID
+      description: this.quote_form.get('description')?.value,
+      opportunity_id: this.selectedOpportunity_id, //商機ID
+      shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
+      tax: this.quote_form.get('tax')?.value,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
+    }
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
@@ -142,32 +156,28 @@ export class ViewQuoteComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.editStatus()//處理status的值，抓取name
-        let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
-        let body = {
-          name: this.quote_form.get('name')?.value,
-          status: this.quote_form.get('status')?.value,
-          expiration_date: expiration_date.toISOString(),
-          is_syncing: this.quote_form.get('is_syncing')?.value,
-          account_id: this.selectedAccount_id, //帳戶ID
-          description: this.quote_form.get('description')?.value,
-          opportunity_id: this.selectedOpportunity_id, //商機ID
-          shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
-          tax: this.quote_form.get('tax')?.value,
-          updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
-        }
         this.HttpApi.patchQuoteRequest(q_id, body).subscribe(
           Request => {
             console.log(Request)
-            this.getOneQuotetRequest(q_id)
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getOneQuotetRequest(q_id)
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
           })
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
       }
     });
   }
@@ -182,6 +192,7 @@ export class ViewQuoteComponent {
       reverseButtons: false,
       timer: 1000
     })
+    this.getOneQuotetRequest(this.q_id)
   }
 
   // GET全部Opportunity

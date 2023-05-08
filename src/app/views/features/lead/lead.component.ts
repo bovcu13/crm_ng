@@ -400,27 +400,38 @@ export class LeadComponent implements OnInit {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.HttpApi.postLeadRequest(body)
-          .subscribe(request => {
-            console.log(request)
-            let event: LazyLoadEvent = {
-              first: 0,
-              rows: 10,
-              sortField: undefined,
-              sortOrder: undefined,
-              multiSortMeta: undefined,
-              filters: undefined,
-              globalFilter: undefined,
-            };
+        this.HttpApi.postLeadRequest(body).subscribe(request => {
+          console.log(request)
+          let event: LazyLoadEvent = {
+            first: 0,
+            rows: 10,
+            sortField: undefined,
+            sortOrder: undefined,
+            multiSortMeta: undefined,
+            filters: undefined,
+            globalFilter: undefined,
+          };
+          if (request.code === 200) {
             Swal.fire({
               title: '成功',
-              text: "已新增您的變更 :)",
+              text: "已儲存您的資料 :)",
               icon: 'success',
               showConfirmButton: false,
               timer: 1000
             })
             this.loadPostsLazy(event);
-          })
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            }).then(() => {
+              this.edit = true;
+            })
+          }
+        })
       }
     })
   }
@@ -461,14 +472,26 @@ export class LeadComponent implements OnInit {
               filters: undefined,
               globalFilter: undefined,
             };
-            Swal.fire({
-              title: '成功',
-              text: "已新增您的變更 :)",
-              icon: 'success',
-              showConfirmButton: false,
-              timer: 1000
-            })
-            this.loadPostsLazy(event);
+            if (request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.loadPostsLazy(event);
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
           })
       }
     })
@@ -486,20 +509,30 @@ export class LeadComponent implements OnInit {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
         this.HttpApi.deleteLeadRequest(id).subscribe(request => {
           console.log(request)
           let event: LazyLoadEvent = {
             first: 0,
             rows: 10,
           };
-          this.loadPostsLazy(event);
+          if (request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.loadPostsLazy(event);
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
         })
       } else {
         Swal.fire({
@@ -570,7 +603,7 @@ export class LeadComponent implements OnInit {
         });
         Swal.fire({
           title: '成功',
-          text: "已新增您的變更 :)",
+          text: "已儲存您的資料 :)",
           icon: 'success',
           showConfirmButton: false,
           timer: 1000
@@ -614,7 +647,6 @@ export class LeadComponent implements OnInit {
       timer: 1000
     })
   }
-
 
   selectedStatus: any;
 

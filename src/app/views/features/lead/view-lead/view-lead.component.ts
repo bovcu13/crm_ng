@@ -212,7 +212,7 @@ export class ViewLeadComponent implements OnInit {
   currentDate = new Date()
   isActive: boolean = false;
 
-  patchLead(id: any): void {
+  patchLead() {
     let body = {
       description: this.lead_form.controls['description'].value,
       status: this.selectedStatus?.name,
@@ -221,14 +221,6 @@ export class ViewLeadComponent implements OnInit {
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
       updated_at: this.currentDate
     }
-    this.HttpApi.patchLeadRequest(id, body)
-      .subscribe(request => {
-        console.log(request)
-        this.getOneLead(this.id)
-      })
-  }
-
-  showAlertComfirm() {
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
@@ -238,14 +230,28 @@ export class ViewLeadComponent implements OnInit {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.patchLead(this.id);
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
+        this.HttpApi.patchLeadRequest(this.id, body)
+          .subscribe(request => {
+            console.log(request)
+            if (request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getOneLead(this.id);
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          });
       }
     });
   }
@@ -261,6 +267,7 @@ export class ViewLeadComponent implements OnInit {
       reverseButtons: false,
       timer: 1000
     })
+    this.getOneLead(this.id);
   }
 
   selectedStatus: any;
