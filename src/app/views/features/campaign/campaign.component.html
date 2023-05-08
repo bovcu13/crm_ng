@@ -13,6 +13,16 @@
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
+            <div class="flex align-items-center ml-2">
+              <span class="text-400 pi pi-circle-fill mr-1"></span>
+              <span>{{status[0].name}}</span>
+              <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span>{{status[1].name}}</span>
+              <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span>{{status[2].name}}</span>
+              <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span>{{status[3].name}}</span>
+            </div>
             <span class="p-input-icon-left ml-auto">
               <td><input type="text" [(ngModel)]="filterText" (input)="filterCampaigns()" pInputText
                   placeholder="關鍵字搜索"></td>
@@ -21,10 +31,12 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
+            <th pSortableColumn="status">狀態
+              <p-sortIcon field="status"></p-sortIcon>
+            </th>
             <th pSortableColumn="name">活動名稱<p-sortIcon field="name"></p-sortIcon></th>
             <th pSortableColumn="patrilineal_name">父系活動<p-sortIcon field="patrilineal_name"></p-sortIcon></th>
             <th pSortableColumn="type">類型<p-sortIcon field="type"></p-sortIcon></th>
-            <th pSortableColumn="status">狀態<p-sortIcon field="status"></p-sortIcon></th>
             <th pSortableColumn="start_date">開始時間<p-sortIcon field="start_date"></p-sortIcon></th>
             <th pSortableColumn="end_date">結束時間<p-sortIcon field="end_date"></p-sortIcon></th>
             <!-- <th pSortableColumn="owner">業務<p-sortIcon field="owner"></p-sortIcon></th> -->
@@ -34,10 +46,16 @@
         </ng-template>
         <ng-template pTemplate="body" let-campaign>
           <tr>
+            <td><span pTooltip={{campaign.status}} tooltipPosition="top" [ngClass]="{
+                'text-400': campaign.status === status[0].name,
+                'text-blue-300': campaign.status === status[1].name,
+                'text-yellow-300': campaign.status === status[2].name,
+                'text-orange-300': campaign.status === status[3].name
+            }" class="pi pi-circle-fill ml-2"></span>
+            </td>
             <td>{{ campaign.name }}</td>
             <td>{{ campaign.parent_campaign_name }}</td>
             <td>{{ campaign.type }}</td>
-            <td>{{ campaign.status }}</td>
             <td>{{ campaign.start_date }}</td>
             <td>{{ campaign.end_date }}</td>
             <td>{{ campaign.created_by }}</td>
