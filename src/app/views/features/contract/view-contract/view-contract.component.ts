@@ -107,7 +107,7 @@ export class ViewContractComponent {
     );
   }
 
-  showAlertComfirm() {
+  patchContractRequest() {
     this.editStatus()//處理status的值，抓取name
     if (this.contract_form.controls['start_date'].hasError('required') || this.contract_form.controls['account_id'].hasError('required')
       || this.contract_form.controls['term'].hasError('required')) {
@@ -125,7 +125,7 @@ export class ViewContractComponent {
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
+      confirmButtonColor: '#6EBE71',
       showCancelButton: false,
       confirmButtonText: '確認',
       reverseButtons: true,

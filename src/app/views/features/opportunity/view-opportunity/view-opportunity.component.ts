@@ -160,7 +160,7 @@ export class ViewOpportunityComponent implements OnInit {
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
+      confirmButtonColor: '#6EBE71',
       showCancelButton: false,
       confirmButtonText: '確認',
       reverseButtons: true,

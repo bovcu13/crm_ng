@@ -127,7 +127,7 @@ export class EventComponent {
       weekends: true, //日曆面板中是否顯示周末,一開始為不顯示
       //initialDate: 2023-03-31 //畫面一開始會顯示的日期
       headerToolbar: {// 日曆表頭部分
-        left: 'prev,next today',
+        left: 'prev next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay',
       },

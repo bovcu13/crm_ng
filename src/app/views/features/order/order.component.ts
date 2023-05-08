@@ -147,7 +147,7 @@ export class OrderComponent {
     Swal.fire({
       title: '確認新增？',
       icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
+      confirmButtonColor: '#6EBE71',
       showCancelButton: false,
       confirmButtonText: '確認',
       reverseButtons: true,
@@ -268,7 +268,7 @@ export class OrderComponent {
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
+      confirmButtonColor: '#6EBE71',
       showCancelButton: false,
       confirmButtonText: '確認',
       reverseButtons: true,
@@ -306,8 +306,8 @@ export class OrderComponent {
     Swal.fire({
       title: '確認刪除？',
       icon: 'warning',
-      confirmButtonColor: '#00D963',
-      cancelButtonColor: '#d90000',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
       showCancelButton: true,
       confirmButtonText: '確認',
       cancelButtonText: '取消',
