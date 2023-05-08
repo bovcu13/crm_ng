@@ -26,6 +26,7 @@ import { ContractComponent } from '../features/contract/contract.component';
 import { ViewQuoteComponent } from '../features/quote/view-quote/view-quote.component';
 import { ViewOrderComponent } from '../features/order/view-order/view-order.component';
 import { ViewContractComponent } from '../features/contract/view-contract/view-contract.component';
+import { ViewCampaignComponent } from '../features/campaign/view-campaign/view-campaign.component';
 @NgModule({
   declarations: [
     ContainerComponent,
@@ -50,7 +51,8 @@ import { ViewContractComponent } from '../features/contract/view-contract/view-c
     ContractComponent,
     ViewQuoteComponent,
     ViewOrderComponent,
-    ViewContractComponent
+    ViewContractComponent,
+    ViewCampaignComponent
   ],
   imports: [
     CommonModule,
