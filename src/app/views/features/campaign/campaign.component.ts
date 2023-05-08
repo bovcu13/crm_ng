@@ -57,7 +57,6 @@ export class CampaignComponent {
 
   //搜尋功能
   filterText: any = '';
-
   filterCampaigns() {
     if (!this.filterText) {
       this.getAllCampaignRequest();
@@ -88,13 +87,11 @@ export class CampaignComponent {
     });
     console.log(this.GetAllCampaign)
   }
-
   ngOnInit() {
 
   }
-
   //p-dropdown狀態
-  status = [
+  status : any[] = [
     {
       name: "策劃中",
       code: "planned",
@@ -155,7 +152,6 @@ export class CampaignComponent {
   first = 0;
   totalRecords = 0;
   loading: boolean = true;
-
   getAllCampaignRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -222,33 +218,14 @@ export class CampaignComponent {
       actual_cost: this.campaign_form.value.actual_cost,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認新增？',
-      icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.postCampaignRequest(body).subscribe(Request => {
-            console.log(Request)
-            this.getAllCampaignRequest()
-            this.edit = false;
-          },
-          error => {
-            console.log(error);
-          })
-        Swal.fire({
-          title: '成功',
-          text: "已新增您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
-      }
-    })
+    this.HttpApi.postCampaignRequest(body).subscribe(Request => {
+      console.log(Request)
+      this.getAllCampaignRequest()
+      this.visible = false;
+    },
+      error => {
+        console.log(error);
+      })
   }
 
 
@@ -256,7 +233,6 @@ export class CampaignComponent {
   campaign_form: FormGroup;
   start_date!: Date;
   end_date!: Date;
-
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.campaign_form = this.fb.group({
       campaign_id: [''],
@@ -284,19 +260,18 @@ export class CampaignComponent {
   }
 
   //dialog方法
-  edit: boolean = false;
+  visible: boolean = false;
   dialogHeader!: string;
   selectedStatus!: any;
   selectedType!: any;
   showedit = true;//判斷是否dialog為新增與編輯
   c_id: any;
-
   showDialog(type: string, campaign?: any): void {
-    this.edit = true;
+    this.visible = true;
     if (type === 'add') {
       this.dialogHeader = '新增行銷活動';
       this.campaign_form.reset()
-      this.campaign_form.patchValue({status: this.status[0].name});
+      this.campaign_form.patchValue({ status: this.status[0].name });
       this.showedit = false;
     } else if (type === 'edit') {
       console.log("campaign: " + JSON.stringify(campaign))
@@ -316,7 +291,7 @@ export class CampaignComponent {
     //驗證日期是否有效
     if (this.campaign_form.controls['end_date'].value !== null &&
       this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {
-      this.campaign_form.controls['end_date'].setErrors({'incorrect': true});
+      this.campaign_form.controls['end_date'].setErrors({ 'incorrect': true });
       return;
     }
     //判斷父系行銷活動是否與行銷活動相同
@@ -353,82 +328,21 @@ export class CampaignComponent {
       actual_cost: this.campaign_form.get('actual_cost')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            this.edit = false;
-            this.getAllCampaignRequest()
-          });
-          Swal.fire({
-          title: '成功',
-          text: "已新增您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
-      }
-    })
+    this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        this.visible = false;
+        this.getAllCampaignRequest()
+      })
   }
 
   deleteCampaignRequest(c_id: any): void {
-    Swal.fire({
-      title: '確認刪除？',
-      icon: 'warning',
-      confirmButtonColor: '#00D963',
-      cancelButtonColor: '#d90000',
-      showCancelButton: true,
-      confirmButtonText: '確認',
-      cancelButtonText: '取消',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
-        this.HttpApi.deleteCampaignRequest(c_id).subscribe(Request => {
-          console.log(Request)
-          this.getAllCampaignRequest()
-        })
-      }else{
-        Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showCancelButton: false,
-          showConfirmButton: false,
-          reverseButtons: false,
-          timer: 1000
-        })
-      }
+    this.HttpApi.deleteCampaignRequest(c_id).subscribe(Request => {
+      console.log(Request)
+      this.getAllCampaignRequest()
     })
   }
 
-  showAlertCancel() {
-    this.edit = false
-    Swal.fire({
-      title: '取消',
-      text: "已取消您的變更！",
-      icon: 'error',
-      showCancelButton: false,
-      showConfirmButton: false,
-      reverseButtons: false,
-      timer: 1000
-    })
-  }
 
   //處理status的值
   editStatus(): void {
@@ -453,7 +367,6 @@ export class CampaignComponent {
     let page = e.first / e.rows + 1;
     this.getAllCampaignRequest(limit, page);
   }
-
   //如果父系行銷活動沒有被選擇
   parent_campaign_id(parent_campaign_id: string): any {
     if (parent_campaign_id == "00000000-0000-4000-a000-000000000000") {
@@ -487,7 +400,6 @@ export class CampaignComponent {
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
-
   //偵測type變量
   ontypeChange(event: any) {
     console.log("類型選擇type: " + event.value.code + event.value.name);
