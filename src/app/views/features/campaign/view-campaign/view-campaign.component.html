@@ -44,8 +44,8 @@
        <button class="flex justify-content-center" [ngClass]="{
                 'surface-400': selectedStatusName === '策劃中',
                 'bg-blue-300': selectedStatusName === '進行中',
-                'bg-red-300': selectedStatusName === '已完成',
-                'bg-yellow-300': selectedStatusName === '已中止'
+                'bg-green-300': selectedStatusName === '已完成',
+                'bg-red-300': selectedStatusName === '已中止'
             }">
           <span class="span" *ngIf="selectedStatusName==='策劃中'">策劃中</span>
           <i class="pi pi-check"
@@ -54,16 +54,16 @@
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '策劃中',
                 'bg-blue-300': selectedStatusName === '進行中',
-                'bg-red-300': selectedStatusName === '已完成',
-                'bg-yellow-300': selectedStatusName === '已中止'
+                'bg-green-300': selectedStatusName === '已完成',
+                'bg-red-300': selectedStatusName === '已中止'
             }">
           <span class="span" *ngIf="selectedStatusName==='策劃中'||selectedStatusName==='進行中'">進行中</span>
           <i class="pi pi-check" *ngIf="selectedStatusName==='已完成'||selectedStatusName==='已中止'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '策劃中'||selectedStatusName === '進行中',
-                'bg-red-300': selectedStatusName === '已完成',
-                'bg-yellow-300': selectedStatusName === '已中止'
+                'bg-green-300': selectedStatusName === '已完成',
+                'bg-red-300': selectedStatusName === '已中止'
             }">
           <span class="span"
                 *ngIf="selectedStatusName==='策劃中'||selectedStatusName==='進行中'||selectedStatusName==='已完成'">已完成</span>
@@ -71,7 +71,7 @@
         </button>
            <button class="flex justify-content-center" [ngClass]="{
                 'has-check': selectedStatusName === '策劃中'||selectedStatusName === '進行中'||selectedStatusName === '已完成',
-                'bg-yellow-300': selectedStatusName === '已中止'}">
+                'bg-red-300': selectedStatusName === '已中止'}">
             <span class="span">已中止</span>
         </button>
       </span>
