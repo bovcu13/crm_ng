@@ -3,18 +3,6 @@
     <p-card>
       <h2>線索</h2>
       <div class="flex flex-row justify-content-start">
-        <div class="flex align-items-center mb-3 ml-4">
-          <span class="text-400 pi pi-circle-fill mr-1"></span>
-          <span>{{status[0].name}}</span>
-          <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
-          <span>{{status[1].name}}</span>
-          <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
-          <span>{{status[2].name}}</span>
-          <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
-          <span>{{status[3].name}}</span>
-          <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
-          <span>{{status[4].name}}</span>
-        </div>
         <div class="flex ml-auto mr-2">
         <span class="p-buttonset">
           <p-button (click)="showDialog('add')" pTooltip="新增線索" tooltipPosition="top" icon="pi pi-plus"
@@ -26,6 +14,18 @@
                (onLazyLoad)="loadPostsLazy($event)">
         <ng-template pTemplate="caption">
           <div class="flex">
+            <div class="flex align-items-center ml-2">
+              <span class="text-400 pi pi-circle-fill mr-1"></span>
+              <span>{{status[0].name}}</span>
+              <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span>{{status[1].name}}</span>
+              <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span>{{status[2].name}}</span>
+              <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span>{{status[3].name}}</span>
+              <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span>{{status[4].name}}</span>
+            </div>
             <span class="p-input-icon-left ml-auto">
               <td><input type="text" [(ngModel)]="filterText" (input)="filtered()" pInputText
                          placeholder="關鍵字搜索"></td>
