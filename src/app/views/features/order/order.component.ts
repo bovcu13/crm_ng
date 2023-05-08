@@ -3,8 +3,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
 import Swal from "sweetalert2";
 
-//import {Order} from "../../../shared/models/order";
-
 @Component({
   selector: 'app-order',
   templateUrl: './order.component.html',
