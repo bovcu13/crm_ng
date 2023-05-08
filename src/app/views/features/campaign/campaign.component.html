@@ -39,7 +39,7 @@
             <th pSortableColumn="type">類型<p-sortIcon field="type"></p-sortIcon></th>
             <th pSortableColumn="start_date">開始時間<p-sortIcon field="start_date"></p-sortIcon></th>
             <th pSortableColumn="end_date">結束時間<p-sortIcon field="end_date"></p-sortIcon></th>
-            <!-- <th pSortableColumn="owner">業務<p-sortIcon field="owner"></p-sortIcon></th> -->
+             <th pSortableColumn="salesperson_name">業務員<p-sortIcon field="salesperson_name"></p-sortIcon></th>
             <th pSortableColumn="member">成員已回應<p-sortIcon field="member"></p-sortIcon></th>
             <th></th>
           </tr>
@@ -86,9 +86,9 @@
       </div>
       <div class="col-6">
         <div class="field">
-          <label>業務</label>
+          <label>業務員</label>
           <br>
-          <label class="mt-2 ml-2 disable">{{(campaign_form.controls['created_by'].value)}}</label>
+          <label class="mt-2 ml-2 disable">{{(campaign_form.controls['salesperson_name'].value)}}</label>
         </div>
       </div>
       <div class="col-6" *ngIf="!showedit">
@@ -102,7 +102,7 @@
         <div class="field">
           <label>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
-            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
+            optionLabel="name" (onChange)="onStatusChange($event)"></p-dropdown>
         </div>
       </div>
       <div class="col-6">
@@ -116,7 +116,7 @@
         <div class="field">
           <label>父系行銷活動</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllparent_campaign"
-                      [(ngModel)]="selectedParent_id" [filter]="true"  filterBy="label" [showClear]="true"
+                      [filter]="true"  filterBy="label" [showClear]="true"
             formControlName="parent_campaign_id"></p-dropdown>
           <div class="required-star" *ngIf="campaign_form.controls['parent_campaign_id'].hasError('Parent_idError')">
             無法選取同樣的行銷活動到父系行銷活動中</div>
@@ -126,7 +126,7 @@
         <div class="field">
           <label>類型</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="type" formControlName="type"
-            optionLabel="name" (onChange)="ontypeChange($event)" [(ngModel)]="selectedType"></p-dropdown>
+            optionLabel="name" (onChange)="ontypeChange($event)"></p-dropdown>
         </div>
       </div>
       <div class="col-6">

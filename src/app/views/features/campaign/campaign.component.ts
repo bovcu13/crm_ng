@@ -108,7 +108,7 @@ export class CampaignComponent {
       code: "completed",
     },
     {
-      name: "已中止",
+      name: "已終止",
       code: "aborted",
     },
   ];
@@ -151,11 +151,8 @@ export class CampaignComponent {
   //取得所有行銷活動資料
   GetAllCampaign: HttpApiService[] = [];
   GetAllparent_campaign: any[] = [];
-  selectedParent_id: any;//儲存行銷活動父系id
   first = 0;
   totalRecords = 0;
-  loading: boolean = true;
-
   getAllCampaignRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -179,7 +176,6 @@ export class CampaignComponent {
           return {...order, parent_campaign_id, start_date, end_date, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
-        this.loading = false;
         console.log(this.GetAllCampaign)
       },
       (error) => {
@@ -187,9 +183,7 @@ export class CampaignComponent {
       }
     );
   }
-
   postCampaignRequest(): void {
-    this.editType()//處理type的值，抓取name
     if (this.campaign_form.controls['name'].hasError('required')) {
       return;
     }
@@ -202,15 +196,15 @@ export class CampaignComponent {
     if (this.campaign_form.value.parent_campaign_id == null) {
       this.campaign_form.value.parent_campaign_id = "00000000-0000-4000-a000-000000000000"
     } else {
-      this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
+
     }
     let start_date = new Date(this.campaign_form.get('start_date')?.value);
     let end_date = new Date(this.campaign_form.get('end_date')?.value);
     let body = {
       name: this.campaign_form.value.name,
-      status: this.campaign_form.value.status,
+      status: this.status[0].name,
       parent_campaign_id: this.campaign_form.value.parent_campaign_id,
-      type: this.campaign_form.value.type,
+      type: this.status.find((s: { name: any; }) => s.name === this.campaign_form.value.type),
       is_enable: this.campaign_form.value.is_enable,
       description: this.campaign_form.value.description,
       start_date: start_date.toISOString(),
@@ -274,7 +268,8 @@ export class CampaignComponent {
     this.campaign_form = this.fb.group({
       campaign_id: [''],
       name: ['', [Validators.required]],
-      owner: [''],
+      salesperson_name: [''],
+      salesperson_id: [''],
       is_enable: [false],
       status: [''],
       parent_campaign_id: [''],
@@ -299,8 +294,6 @@ export class CampaignComponent {
   //dialog方法
   edit: boolean = false;
   dialogHeader!: string;
-  selectedStatus!: any;
-  selectedType!: any;
   showedit = true;//判斷是否dialog為新增與編輯
   c_id: any;
 
@@ -315,8 +308,21 @@ export class CampaignComponent {
       console.log("campaign: " + JSON.stringify(campaign))
       this.dialogHeader = '編輯行銷活動';
       this.campaign_form.patchValue(campaign);
-      this.selectedStatus = this.status.find(s => s.name === campaign.status);//編輯時將狀態傳至dialog中
-      this.selectedType = this.type.find(s => s.name === campaign.type);//編輯時將狀態傳至dialog中
+      this.campaign_form.patchValue({
+        type: this.type.find((s: { name: any; }) => s.name === campaign.type),
+        parent_campaign_name: this.GetAllparent_campaign.find((a: { label: any; }) => a.label === campaign.parent_campaign_name),
+      });
+      if(campaign.status === "已終止"){
+        this.campaign_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === campaign.status),
+        });
+        this.campaign_form.controls['status'].disable();
+      }else {
+        this.campaign_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === campaign.status),
+        });
+        this.campaign_form.controls['status'].enable();
+      }
       this.showedit = true;
       this.c_id = campaign.campaign_id;
     }
@@ -333,29 +339,27 @@ export class CampaignComponent {
       return;
     }
     //判斷父系行銷活動是否與行銷活動相同
-    if (this.selectedParent_id === this.c_id) {
+    if (this.campaign_form.value.parent_campaign_id === this.c_id) {
       this.campaign_form.controls['parent_campaign_id']
         .setErrors({Parent_idError: true});
       return
     } else {
       this.campaign_form.controls['parent_campaign_id'].value;
     }
-    this.editStatus()//處理status的值，抓取name
-    this.editType()//處理type的值，抓取name
     if (this.campaign_form.get('parent_campaign_id')?.value === '' ||
       this.campaign_form.get('parent_campaign_id')?.value === null) {
       this.campaign_form.patchValue({parent_campaign_id: "00000000-0000-4000-a000-000000000000"});
     } else {
-      this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
+
     }
     let start_date = new Date(this.campaign_form.get('start_date')?.value);
     let end_date = new Date(this.campaign_form.get('end_date')?.value);
     let body = {
       name: this.campaign_form.get('name')?.value,
-      status: this.campaign_form.get('status')?.value,
+      status: this.status.find((s: { name: any; }) => s.name === this.campaign_form.get('status')?.value),
       is_enable: this.campaign_form.get('is_enable')?.value,
       parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
-      type: this.campaign_form.get('type')?.value,
+      type: this.type.find((s: { name: any; }) => s.name === this.campaign_form.get('type')?.value),
       start_date: start_date.toISOString(),
       end_date: end_date.toISOString(),
       description: this.campaign_form.get('description')?.value,
@@ -466,25 +470,8 @@ export class CampaignComponent {
     })
   }
 
-  //處理status的值
-  editStatus(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    let statusName = this.selectedStatus ? this.selectedStatus.name : "";
-    //將statusName更新到表單中
-    this.campaign_form.patchValue({status: statusName});
-  }
-
-  //處理type的值
-  editType(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    let TypeName = this.selectedType ? this.selectedType.name : "";
-    //將statusName更新到表單中
-    this.campaign_form.patchValue({type: TypeName});
-  }
-
   //懶加載
   loadTable(e: any) {
-    this.loading = true;
     let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.getAllCampaignRequest(limit, page);

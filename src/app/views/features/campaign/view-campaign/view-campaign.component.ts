@@ -32,7 +32,7 @@ export class ViewCampaignComponent {
       code: "completed",
     },
     {
-      name: "已中止",
+      name: "已終止",
       code: "aborted",
     },
   ];
@@ -103,26 +103,16 @@ export class ViewCampaignComponent {
   ]
 
 //取得當筆行銷活動約資料
-  GetOneCampaign: HttpApiService[] = [];
-  selectedStatus!: any;
-  selectedType!: any;
-  selectedStatusName: any;
-  selectedTypeName!: "123";
-
+  GetOneCampaign:any;
+  stage: any;
   getOneCampaignRequest(c_id: any) {
     this.HttpApi.getOneCampaignRequest(c_id).subscribe(res => {
         this.GetOneCampaign = res.body;
-        this.editStatus();
-        this.selectedStatus = this.status.find(s => s.name === res.body.status);
-        this.selectedType = this.type.find(s => s.name === res.body.type);
-        this.selectedStatusName = this.selectedStatus.name
-        if (res.body.type == null) {
-
-        } else {
-          this.selectedTypeName = this.selectedType.name
-        }
+        this.stage = res.body.status;
         this.campaign_form.patchValue({
           name: res.body.name,
+          status: this.status.find((s: { name: any; }) => s.name === this.GetOneCampaign.status),
+          type: this.type.find((s: { name: any; }) => s.name === this.GetOneCampaign.type),
           is_enable: res.body.is_enable,
           parent_campaign_id: res.body.parent_campaign_id,
           parent_campaign_name: res.body.parent_campaign_name,
@@ -141,6 +131,9 @@ export class ViewCampaignComponent {
           created_at: this.formatDate(res.body.created_at),
           created_by: res.body.created_by,
         });
+        if (this.GetOneCampaign.status === '已終止') {
+          this.campaign_form.controls['status'].disable();
+        }
         console.log(this.GetOneCampaign)
       },
       (error) => {
@@ -152,7 +145,6 @@ export class ViewCampaignComponent {
   // GET全部Account
   GetAllparent_campaign: any[] = [];
   selectedParent_id: string = '';
-
   getAllCampaignRequest(limit?: number, page?: number) {
     this.HttpApi.getAllCampaignRequest(limit, page).subscribe(
       (res) => {
@@ -231,16 +223,14 @@ export class ViewCampaignComponent {
     } else {
       this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
     }
-    this.editStatus()//處理status的值，抓取name
-    this.editType()//處理type的值，抓取name
     let start_date = new Date(this.campaign_form.get('start_date')?.value);
     let end_date = new Date(this.campaign_form.get('end_date')?.value);
     let body = {
       name: this.campaign_form.get('name')?.value,
-      status: this.campaign_form.get('status')?.value,
+      status: this.status.find((s: { name: any; }) => s.name === this.campaign_form.get('status')?.value),
+      type: this.type.find((s: { name: any; }) => s.name === this.campaign_form.get('type')?.value),
       is_enable: this.campaign_form.get('is_enable')?.value,
       parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
-      type: this.campaign_form.get('type')?.value,
       start_date: start_date.toISOString(),
       end_date: end_date.toISOString(),
       description: this.campaign_form.get('description')?.value,
@@ -364,21 +354,6 @@ export class ViewCampaignComponent {
     }
   ];
 
-  //處理status的值
-  editStatus(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    let statusName = this.selectedStatus ? this.selectedStatus.name : "";
-    //將statusName更新到表單中
-    this.campaign_form.patchValue({status: statusName});
-  }
-
-  //處理type的值
-  editType(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    let TypeName = this.selectedType ? this.selectedType.name : "";
-    //將statusName更新到表單中
-    this.campaign_form.patchValue({type: TypeName});
-  }
 
   //如果父系行銷活動沒有被選擇
   parent_campaign_id(parent_campaign_id: string): any {
@@ -419,18 +394,11 @@ export class ViewCampaignComponent {
     console.log("類型選擇type: " + event.value.code + event.value.name);
   }
 
-  showWarn() {
-    this.messageService.add({severity: 'warn', summary: 'Warn', detail: '即將重新導向至行銷活動頁面'});
-    setTimeout(() => {
-      window.location.assign('/main/campaign');
-    }, 1500); // 延遲3秒後跳轉頁面
-  }
-
-
   data: any;
   options: any;
 
   ngOnInit() {
+    this.getOneCampaignRequest(this.c_id)
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
 
