@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Calendar} from 'primeng/calendar';
 import {HttpApiService} from "../../../api/http-api.service";
 import Swal from "sweetalert2";
@@ -196,11 +196,6 @@ export class CampaignComponent {
         this.campaign_form.controls['name'].markAsDirty();
         this.edit = true;
       })
-      return;
-    }
-
-    this.editType()//處理type的值，抓取name
-    if (this.campaign_form.controls['name'].hasError('required')) {
       return;
     }
     //驗證日期是否有效
