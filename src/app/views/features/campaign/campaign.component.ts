@@ -153,6 +153,7 @@ export class CampaignComponent {
   GetAllparent_campaign: any[] = [];
   first = 0;
   totalRecords = 0;
+
   getAllCampaignRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -183,6 +184,7 @@ export class CampaignComponent {
       }
     );
   }
+
   postCampaignRequest(): void {
     if (this.campaign_form.controls['name'].hasError('required')) {
       this.edit = false;
@@ -227,46 +229,34 @@ export class CampaignComponent {
       actual_cost: this.campaign_form.value.actual_cost,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認新增？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.postCampaignRequest(body).subscribe(Request => {
-            console.log(Request)
-            this.edit = false;
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的資料 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllCampaignRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          },
-          error => {
-            console.log(error);
-          }
-        )
+    this.HttpApi.postCampaignRequest(body).subscribe(Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getAllCampaignRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      },
+      error => {
+        console.log(error);
       }
-    })
+    )
   }
 
 
@@ -321,15 +311,17 @@ export class CampaignComponent {
       this.campaign_form.patchValue(campaign);
       this.campaign_form.patchValue({
         type: this.type.find((s: { name: any; }) => s.name === campaign.type),
-        parent_campaign_name: this.GetAllparent_campaign.find((a: { label: any; }) => a.label === campaign.parent_campaign_name),
+        parent_campaign_name: this.GetAllparent_campaign.find((a: {
+          label: any;
+        }) => a.label === campaign.parent_campaign_name),
       });
-      if(campaign.status === "已終止"){
+      if (campaign.status === "已終止") {
         this.campaign_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
         });
         this.campaign_form.controls['status'].disable();
         this.disableSaveButton = true;
-      }else {
+      } else {
         this.campaign_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
         });
@@ -400,45 +392,34 @@ export class CampaignComponent {
       actual_cost: this.campaign_form.get('actual_cost')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            this.edit = false;
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllCampaignRequest();
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          }
-        );
+    this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getAllCampaignRequest();
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
       }
-    })
+    );
   }
+
 
   deleteCampaignRequest(c_id: any): void {
     Swal.fire({

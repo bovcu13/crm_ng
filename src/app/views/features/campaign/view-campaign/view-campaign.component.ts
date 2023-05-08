@@ -101,8 +101,9 @@ export class ViewCampaignComponent {
   ]
 
 //取得當筆行銷活動約資料
-  GetOneCampaign:any;
+  GetOneCampaign: any;
   stage: any;
+
   getOneCampaignRequest(c_id: any) {
     this.HttpApi.getOneCampaignRequest(c_id).subscribe(res => {
         this.GetOneCampaign = res.body;
@@ -143,6 +144,7 @@ export class ViewCampaignComponent {
   // GET全部Account
   GetAllparent_campaign: any[] = [];
   selectedParent_id: string = '';
+
   getAllCampaignRequest(limit?: number, page?: number) {
     this.HttpApi.getAllCampaignRequest(limit, page).subscribe(
       (res) => {
@@ -248,39 +250,29 @@ export class ViewCampaignComponent {
       actual_cost: this.campaign_form.get('actual_cost')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getOneCampaignRequest(c_id);
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              })
-            }
+
+    this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    });
+          this.getOneCampaignRequest(c_id);
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      })
   }
 
   showAlertCancel() {

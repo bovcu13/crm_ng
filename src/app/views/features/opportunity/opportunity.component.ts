@@ -266,51 +266,41 @@ export class OpportunityComponent implements OnInit {
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       created_at: this.currentDate
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認新增？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.postOpportunityRequest(body)
-          .subscribe(request => {
-            console.log(request)
-            let event: LazyLoadEvent = {
-              first: 0,
-              rows: 10,
-              sortField: undefined,
-              sortOrder: undefined,
-              multiSortMeta: undefined,
-              filters: undefined,
-              globalFilter: undefined,
-            };
-            if (request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的資料 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.loadPostsLazy(event);
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
+
+    this.HttpApi.postOpportunityRequest(body)
+      .subscribe(request => {
+        console.log(request)
+        let event: LazyLoadEvent = {
+          first: 0,
+          rows: 10,
+          sortField: undefined,
+          sortOrder: undefined,
+          multiSortMeta: undefined,
+          filters: undefined,
+          globalFilter: undefined,
+        };
+        if (request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    })
+          this.loadPostsLazy(event);
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      })
   }
 
 
@@ -360,52 +350,42 @@ export class OpportunityComponent implements OnInit {
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
       updated_at: this.currentDate
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchOpportunityRequest(id, body)
-          .subscribe(request => {
-            console.log(request)
-            let event: LazyLoadEvent = {
-              first: 0,
-              rows: 10,
-              sortField: undefined,
-              sortOrder: undefined,
-              multiSortMeta: undefined,
-              filters: undefined,
-              globalFilter: undefined,
-            };
-            if (request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.loadPostsLazy(event);
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
+    this.HttpApi.patchOpportunityRequest(id, body)
+      .subscribe(request => {
+        console.log(request)
+        let event: LazyLoadEvent = {
+          first: 0,
+          rows: 10,
+          sortField: undefined,
+          sortOrder: undefined,
+          multiSortMeta: undefined,
+          filters: undefined,
+          globalFilter: undefined,
+        };
+        if (request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    })
+          this.loadPostsLazy(event);
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      })
   }
+
 
   deleteOpportunity(id: any): void {
     Swal.fire({

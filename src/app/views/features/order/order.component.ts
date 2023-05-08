@@ -126,8 +126,7 @@ export class OrderComponent {
 
   postOrderRequest(): void {
     if (this.order_form.controls['contract_id'].hasError('required') ||
-      this.order_form.controls['start_date'].hasError('required'))
-    {
+      this.order_form.controls['start_date'].hasError('required')) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -165,46 +164,35 @@ export class OrderComponent {
       contract_id: this.selectedContract_id, //契約ID
       account_id: this.selectedAccount_id //帳戶ID
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認新增？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.postOrderRequest(body).subscribe(Request => {
-            console.log(Request)
-            this.edit = false;
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的資料 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllOrderRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          },
-          error => {
-            console.log(error);
+    this.HttpApi.postOrderRequest(body).subscribe(Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    })
+          this.getAllOrderRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      },
+      error => {
+        console.log(error);
+      })
   }
+
 
   //建立formgroup
   order_form: FormGroup;
@@ -267,8 +255,7 @@ export class OrderComponent {
 
   patchOrderRequest(o_id: any): void {
     if (this.order_form.controls['contract_id'].hasError('required') ||
-      this.order_form.controls['start_date'].hasError('required'))
-    {
+      this.order_form.controls['start_date'].hasError('required')) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -308,43 +295,33 @@ export class OrderComponent {
       contract_id: this.selectedContract_id, //契約ID
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
-    this.edit = false;
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchOrderRequest(o_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllOrderRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
+    this.HttpApi.patchOrderRequest(o_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        if (Request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    });
+          this.getAllOrderRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      })
   }
+
 
   deleteOrderRequest(o_id: any): void {
     Swal.fire({
@@ -379,7 +356,7 @@ export class OrderComponent {
             })
           }
         })
-      } else{
+      } else {
         Swal.fire({
           title: '取消',
           text: "已取消您的變更！",

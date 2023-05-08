@@ -143,8 +143,7 @@ export class QuoteComponent {
   //POST 一筆quote
   postQuoteRequest(): void {
     if (this.quote_form.controls['name'].hasError('required') ||
-      this.quote_form.controls['opportunity_id'].hasError('required'))
-    {
+      this.quote_form.controls['opportunity_id'].hasError('required')) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -180,51 +179,39 @@ export class QuoteComponent {
       description: this.quote_form.value.description,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認新增？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.postQuoteRequest(body).subscribe(Request => {
-            console.log(Request)
-            this.edit = false;
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的資料 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllQuoteRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          },
-          error => {
-            console.log(error);
+    this.HttpApi.postQuoteRequest(body).subscribe(Request => {
+        console.log(Request)
+        this.edit = false;
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
           })
-      }
-    })
+          this.getAllQuoteRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      },
+      error => {
+        console.log(error);
+      })
   }
+
 
   patchQuoteRequest(p_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
-      this.quote_form.controls['opportunity_id'].hasError('required'))
-    {
+      this.quote_form.controls['opportunity_id'].hasError('required')) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -262,44 +249,34 @@ export class QuoteComponent {
       tax: this.quote_form.get('tax')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
-    this.edit = false
-    Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      showCancelButton: false,
-      confirmButtonText: '確認',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.HttpApi.patchQuoteRequest(p_id, body).subscribe(
-          Request => {
-            console.log(Request)
-            this.edit = false;
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已儲存您的變更 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              })
-              this.getAllQuoteRequest()
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              }).then(() => {
-                this.edit = true;
-              })
-            }
-          });
-      }
-    })
+    this.HttpApi.patchQuoteRequest(p_id, body).subscribe(
+      Request => {
+        console.log(Request)
+        this.edit = false;
+        if (Request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getAllQuoteRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      });
   }
+
 
   deleteQuoteRequest(p_id: any): void {
     Swal.fire({
@@ -316,6 +293,7 @@ export class QuoteComponent {
         this.HttpApi.deleteQuoteRequest(p_id).subscribe(Request => {
           console.log(Request)
           if (Request.code === 200) {
+            this.edit = false;
             Swal.fire({
               title: '成功',
               text: "已刪除您的資料 :)",
