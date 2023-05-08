@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Calendar} from 'primeng/calendar';
 import {HttpApiService} from "../../../../api/http-api.service";
 import {ActivatedRoute} from "@angular/router";
-import {MessageService} from "primeng/api";
 import 'chartjs-plugin-datalabels';
 import Swal from "sweetalert2";
 
@@ -11,7 +10,6 @@ import Swal from "sweetalert2";
   selector: 'app-view-campaign',
   templateUrl: './view-campaign.component.html',
   styleUrls: ['./view-campaign.component.scss'],
-  providers: [MessageService],
 })
 export class ViewCampaignComponent {
   @ViewChild('startDate') startDate: Calendar | undefined;
@@ -167,8 +165,7 @@ export class ViewCampaignComponent {
   end_date!: Date;
   c_id: any;
 
-  constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute
-    , private messageService: MessageService) {
+  constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute) {
     this.campaign_form = this.fb.group({
       campaign_id: [''],
       name: ['', [Validators.required]],
