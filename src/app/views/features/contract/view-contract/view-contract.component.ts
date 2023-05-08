@@ -107,7 +107,7 @@ export class ViewContractComponent {
     );
   }
 
-  showAlertComfirm() {
+  patchContractRequest() {
     this.editStatus()//處理status的值，抓取name
     if (this.contract_form.controls['start_date'].hasError('required') || this.contract_form.controls['account_id'].hasError('required')
       || this.contract_form.controls['term'].hasError('required')) {
