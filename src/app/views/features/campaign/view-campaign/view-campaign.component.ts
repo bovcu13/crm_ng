@@ -18,7 +18,7 @@ export class ViewCampaignComponent {
   @ViewChild('endDate') endDate: Calendar | undefined;
   @ViewChild('chart') private chartRef!: ElementRef;
   //p-dropdown狀態
-  status = [
+  status: any[] = [
     {
       name: "策劃中",
       code: "planned",
@@ -37,7 +37,7 @@ export class ViewCampaignComponent {
     },
   ];
   //p-dropdown狀態
-  type = [
+  type: any[] = [
     {
       name: "活動",
       code: "event",
@@ -85,7 +85,7 @@ export class ViewCampaignComponent {
     },
   ]
 
-  comfirmstatustable: any[]= [
+  comfirmstatustable: any[] = [
     {
       type: "線索",
       status: "已傳送",
@@ -107,7 +107,7 @@ export class ViewCampaignComponent {
   selectedStatus!: any;
   selectedType!: any;
   selectedStatusName: any;
-  selectedTypeName: any;
+  selectedTypeName!: "123";
 
   getOneCampaignRequest(c_id: any) {
     this.HttpApi.getOneCampaignRequest(c_id).subscribe(res => {
@@ -116,7 +116,11 @@ export class ViewCampaignComponent {
         this.selectedStatus = this.status.find(s => s.name === res.body.status);
         this.selectedType = this.type.find(s => s.name === res.body.type);
         this.selectedStatusName = this.selectedStatus.name
-        this.selectedTypeName = this.selectedType.name
+        if (res.body.type == null) {
+
+        } else {
+          this.selectedTypeName = this.selectedType.name
+        }
         this.campaign_form.patchValue({
           name: res.body.name,
           is_enable: res.body.is_enable,
@@ -227,69 +231,84 @@ export class ViewCampaignComponent {
     } else {
       this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
     }
+    this.editStatus()//處理status的值，抓取name
+    this.editType()//處理type的值，抓取name
+    let start_date = new Date(this.campaign_form.get('start_date')?.value);
+    let end_date = new Date(this.campaign_form.get('end_date')?.value);
+    let body = {
+      name: this.campaign_form.get('name')?.value,
+      status: this.campaign_form.get('status')?.value,
+      is_enable: this.campaign_form.get('is_enable')?.value,
+      parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
+      type: this.campaign_form.get('type')?.value,
+      start_date: start_date.toISOString(),
+      end_date: end_date.toISOString(),
+      description: this.campaign_form.get('description')?.value,
+      sent: this.campaign_form.get('sent')?.value,
+      budget_cost: this.campaign_form.get('budget_cost')?.value,
+      expected_responses: this.campaign_form.get('expected_responses')?.value,
+      expected_income: this.campaign_form.get('expected_income')?.value,
+      actual_cost: this.campaign_form.get('actual_cost')?.value,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+    }
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
-      cancelButtonColor: '#FF003A',
-      showCancelButton: true,
+      confirmButtonColor: '#6EBE71',
+      showCancelButton: false,
       confirmButtonText: '確認',
-      cancelButtonText: '取消',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1500
-        })
-        this.editStatus()//處理status的值，抓取name
-        this.editType()//處理type的值，抓取name
-        let start_date = new Date(this.campaign_form.get('start_date')?.value);
-        let end_date = new Date(this.campaign_form.get('end_date')?.value);
-        let body = {
-          name: this.campaign_form.get('name')?.value,
-          status: this.campaign_form.get('status')?.value,
-          is_enable: this.campaign_form.get('is_enable')?.value,
-          parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
-          type: this.campaign_form.get('type')?.value,
-          start_date: start_date.toISOString(),
-          end_date: end_date.toISOString(),
-          description: this.campaign_form.get('description')?.value,
-          sent: this.campaign_form.get('sent')?.value,
-          budget_cost: this.campaign_form.get('budget_cost')?.value,
-          expected_responses: this.campaign_form.get('expected_responses')?.value,
-          expected_income: this.campaign_form.get('expected_income')?.value,
-          actual_cost: this.campaign_form.get('actual_cost')?.value,
-          updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
-        }
         this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
           Request => {
             console.log(Request)
-            this.getOneCampaignRequest(c_id)
-          }
-        )
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 700
-        });
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getOneCampaignRequest(c_id);
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          })
       }
     });
   }
 
+  showAlertCancel() {
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    })
+    this.getOneCampaignRequest(this.c_id);
+  }
+
   //新增線索dialog
   addlead: boolean = false;
-  addLead(){
+
+  addLead() {
     this.addlead = true;
     this.getAllLeadRequest()
   }
+
   GetAlllead: any[] = [];
+
   getAllLeadRequest() {
     this.HttpApi.getAllLeadRequest(1).subscribe(
       (res) => {
@@ -301,13 +320,17 @@ export class ViewCampaignComponent {
       }
     );
   }
+
   //新增線索dialog
   addcontact: boolean = false;
-  addContact(){
+
+  addContact() {
     this.addcontact = true;
     this.getAllContactRequest()
   }
+
   GetAllContact: any[] = [];
+
   getAllContactRequest() {
     this.HttpApi.getAllContactRequest(1).subscribe(
       (res) => {
@@ -322,11 +345,13 @@ export class ViewCampaignComponent {
 
   //確認新增 險所與聯絡人dialog
   addcomfirm: boolean = false;
-  addComfirm(){
+
+  addComfirm() {
     this.addlead = false;
     this.addcontact = false;
     this.addcomfirm = true;
   }
+
   //p-dropdown狀態
   comfirmstatus = [
     {
@@ -338,6 +363,7 @@ export class ViewCampaignComponent {
       code: "responded",
     }
   ];
+
   //處理status的值
   editStatus(): void {
     //判斷selectedStatus是否有值，若有值則取出name屬性
@@ -394,7 +420,7 @@ export class ViewCampaignComponent {
   }
 
   showWarn() {
-    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: '即將重新導向至行銷活動頁面' });
+    this.messageService.add({severity: 'warn', summary: 'Warn', detail: '即將重新導向至行銷活動頁面'});
     setTimeout(() => {
       window.location.assign('/main/campaign');
     }, 1500); // 延遲3秒後跳轉頁面

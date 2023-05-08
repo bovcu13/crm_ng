@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LazyLoadEvent} from 'primeng/api';
 import {HttpApiService} from "../../../api/http-api.service";
 import {Contact} from "../../../shared/models/contact";
+import Swal from "sweetalert2";
 
 
 @Component({
@@ -200,20 +201,51 @@ export class ContactComponent implements OnInit {
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       created_at: this.currentDate
     }
-    this.HttpApi.postContactRequest(body)
-      .subscribe(request => {
-        console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
-        this.loadPostsLazy(event);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認新增？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.postContactRequest(body)
+          .subscribe(request => {
+            console.log(request)
+            let event: LazyLoadEvent = {
+              first: 0,
+              rows: 10,
+              sortField: undefined,
+              sortOrder: undefined,
+              multiSortMeta: undefined,
+              filters: undefined,
+              globalFilter: undefined,
+            };
+            if (request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的資料 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.loadPostsLazy(event);
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
+          })
+      }
+    })
   }
 
   patchContact(): void {
@@ -234,30 +266,114 @@ export class ContactComponent implements OnInit {
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
       updated_at: this.currentDate
     }
-    this.HttpApi.patchContactRequest(id, body)
-      .subscribe(request => {
-        console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
-        this.loadPostsLazy(event);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.patchContactRequest(id, body)
+          .subscribe(request => {
+            console.log(request)
+            let event: LazyLoadEvent = {
+              first: 0,
+              rows: 10,
+              sortField: undefined,
+              sortOrder: undefined,
+              multiSortMeta: undefined,
+              filters: undefined,
+              globalFilter: undefined,
+            };
+            if (request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.loadPostsLazy(event);
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
+          })
+      }
+    })
   }
 
   deleteContact(id: any): void {
-    this.HttpApi.deleteContactRequest(id).subscribe(request => {
-      console.log(request)
-      let event: LazyLoadEvent = {
-        first: 0,
-        rows: 10,
-      };
-      this.loadPostsLazy(event);
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.deleteContactRequest(id).subscribe(request => {
+          console.log(request)
+          let event: LazyLoadEvent = {
+            first: 0,
+            rows: 10,
+          };
+          if (request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.loadPostsLazy(event);
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
+  }
+
+  showAlertCancel() {
+    this.edit = false
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
     })
   }
 

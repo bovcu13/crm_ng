@@ -18,9 +18,9 @@
               <span>{{status[0].name}}</span>
               <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
               <span>{{status[1].name}}</span>
-              <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
               <span>{{status[2].name}}</span>
-              <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span class="text-red-300 pi pi-circle-fill mr-1 ml-2"></span>
               <span>{{status[3].name}}</span>
             </div>
             <span class="p-input-icon-left ml-auto">
@@ -49,8 +49,8 @@
             <td><span pTooltip={{campaign.status}} tooltipPosition="top" [ngClass]="{
                 'text-400': campaign.status === status[0].name,
                 'text-blue-300': campaign.status === status[1].name,
-                'text-yellow-300': campaign.status === status[2].name,
-                'text-orange-300': campaign.status === status[3].name
+                'text-green-300': campaign.status === status[2].name,
+                'text-red-300': campaign.status === status[3].name
             }" class="pi pi-circle-fill ml-2"></span>
             </td>
             <td>{{ campaign.name }}</td>
@@ -75,7 +75,7 @@
   </div>
 </div>
 <form [formGroup]="campaign_form">
-  <p-dialog [(visible)]="visible" header={{dialogHeader}} [modal]="true">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
       <div class="col-6">
         <div class="field">
@@ -214,7 +214,7 @@
       <ng-container *ngIf="showedit">
         <p-button label="儲存" (click)="patchCampaignRequest(c_id)"  styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="visible=false" styleClass="p-button-secondary ml-1"></p-button>
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
 </form>

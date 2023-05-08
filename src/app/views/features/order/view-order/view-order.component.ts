@@ -177,7 +177,7 @@ order_product: any[] = [
     );
   }
 
-  patchOrderRequest(o_id: any): void {
+  patchOrderRequest() {
     this.orderStartDate = this.order_form.controls['start_date'].value;
     if (this.orderStartDate < this.MinDate) {
       this.order_form.controls['start_date'].setErrors({'required-star': true});
@@ -199,11 +199,39 @@ order_product: any[] = [
       contract_id: this.selectedContract_id, //契約ID
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
-    this.HttpApi.patchOrderRequest(o_id, body).subscribe(
-      Request => {
-        console.log(Request)
-        this.getOneOrderRequest(o_id)
-      })
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.patchOrderRequest(this.o_id, body).subscribe(
+          Request => {
+            console.log(Request)
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getOneOrderRequest(this.o_id)
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          })
+      }
+    });
   }
 
   //設定訂單開始天數不能開始於契約開始日期
@@ -248,42 +276,16 @@ order_product: any[] = [
     return start_date.toISOString().slice(0, 10);
   }
 
-  showAlert() {
+  showAlertCancel() {
     Swal.fire({
-      title: '確認更改？',
-      icon: 'warning',
-      confirmButtonColor: '#00D963', // 设置为绿色
-      cancelButtonColor: '#FF003A',
-      showCancelButton: true,
-      confirmButtonText: '確認',
-      cancelButtonText: '取消',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1500
-        })
-        this.patchOrderRequest(this.o_id);
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 700
-        });
-      }
-    });
-  }
-
-  showWarn() {
-    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: '即將重新導向至訂單頁面' });
-    setTimeout(() => {
-      window.location.assign('/main/order');
-    }, 1500); // 延遲3秒後跳轉頁面
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    })
+    this.getOneOrderRequest(this.o_id)
   }
 }

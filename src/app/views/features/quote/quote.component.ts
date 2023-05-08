@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpApiService } from "../../../api/http-api.service";
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HttpApiService} from "../../../api/http-api.service";
+import Swal from "sweetalert2";
+
 @Component({
   selector: 'app-quote',
   templateUrl: './quote.component.html',
@@ -44,6 +46,7 @@ export class QuoteComponent {
     }
   ];
   filterText: any = '';
+
   filterquotes() {
     if (!this.filterText) {
       this.getAllQuoteRequest();
@@ -105,6 +108,7 @@ export class QuoteComponent {
       code: "accepted",
     }
   ]
+
   ngOnInit() {
     this.getAllopportunityRequest()
   }
@@ -112,6 +116,7 @@ export class QuoteComponent {
   //取得所有訂單資料
   GetAllQuote: HttpApiService[] = [];
   first = 0;
+
   getAllQuoteRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -123,7 +128,7 @@ export class QuoteComponent {
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
           const updated_at = this.formatDate(quote.updated_at);
-          return { ...quote, expiration_date, created_at, updated_at };
+          return {...quote, expiration_date, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
         this.loading = false;
@@ -138,7 +143,7 @@ export class QuoteComponent {
   //POST 一筆quote
   postQuoteRequest(): void {
     if (this.quote_form.controls['name'].hasError('required')
-    || this.quote_form.controls['opportunity_id'].hasError('required') ) {
+      || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
     }
     let body = {
@@ -153,20 +158,51 @@ export class QuoteComponent {
       description: this.quote_form.value.description,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.HttpApi.postQuoteRequest(body).subscribe(Request => {
-      console.log(Request)
-      this.getAllQuoteRequest()
-      this.edit = false;
-    },
-      error => {
-        console.log(error);
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認新增？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.postQuoteRequest(body).subscribe(Request => {
+            console.log(Request)
+            this.edit = false;
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的資料 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllQuoteRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
+          },
+          error => {
+            console.log(error);
+          })
+      }
+    })
   }
 
   patchQuoteRequest(p_id: any): void {
     this.editStatus()//處理status的值，抓取name
     if (this.quote_form.controls['name'].hasError('required')
-    || this.quote_form.controls['opportunity_id'].hasError('required') ) {
+      || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
     }
     let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
@@ -182,21 +218,107 @@ export class QuoteComponent {
       tax: this.quote_form.get('tax')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
-    this.HttpApi.patchQuoteRequest(p_id, body).subscribe(
-      Request => {
-        console.log(Request)
-        this.edit = false;
-        this.getAllQuoteRequest()
-      })
+    this.edit = false
+    Swal.fire({
+      title: '確認更改？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      showCancelButton: false,
+      confirmButtonText: '確認',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.patchQuoteRequest(p_id, body).subscribe(
+          Request => {
+            console.log(Request)
+            this.edit = false;
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllQuoteRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
+          });
+      }
+    })
   }
+
   deleteQuoteRequest(p_id: any): void {
-    this.HttpApi.deleteQuoteRequest(p_id).subscribe(Request => {
-      console.log(Request)
-      this.getAllQuoteRequest()
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.deleteQuoteRequest(p_id).subscribe(Request => {
+          console.log(Request)
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getAllQuoteRequest()
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
+  }
+
+  showAlertCancel() {
+    this.edit = false
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
     })
   }
 
   quote_form: FormGroup;
+
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.quote_form = this.fb.group({
       quote_id: [''],
@@ -227,13 +349,14 @@ export class QuoteComponent {
   showedit = true;//判斷是否dialog為新增與編輯
   selectedStatus!: any;
   q_id: any;
+
   showDialog(type: string, quote?: any): void {
     this.edit = true;
     if (type === 'add') {
       this.dialogHeader = '新增報價';
       this.quote_form.reset();
       this.showedit = false;
-      this.quote_form.patchValue({ status: this.status[0].name });
+      this.quote_form.patchValue({status: this.status[0].name});
     } else if (type === 'edit') {
       console.log("quote: " + JSON.stringify(quote))
       this.dialogHeader = '編輯報價';
@@ -249,6 +372,7 @@ export class QuoteComponent {
   // GET全部Account
   GetAllOpportunity: any[] = [];
   selectedOpportunity_id: string = '';
+
   getAllopportunityRequest() {
     this.HttpApi.getAllOpportunityRequest(1).subscribe(
       (res) => {
@@ -267,6 +391,7 @@ export class QuoteComponent {
   }
 
   selectedAccount_id: string = '';
+
   //取得選擇的商機帳戶id
   selectedOpportunity() {
     const selectedOpportunity = this.GetAllOpportunity.find((opportunity) => opportunity.value === this.selectedOpportunity_id);
@@ -278,6 +403,7 @@ export class QuoteComponent {
   //search: string = '';
   loading: boolean = true;
   totalRecords = 0;
+
   loadPostsLazy(e: any) {
     this.loading = true;
     let limit = e.rows;
@@ -289,12 +415,13 @@ export class QuoteComponent {
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
+
   //處理status的值
   editStatus(): void {
     //判斷selectedStatus是否有值，若有值則取出name屬性
     let statusName = this.selectedStatus ? this.selectedStatus.name : "";
     //將statusName更新到表單中
-    this.quote_form.patchValue({ status: statusName });
+    this.quote_form.patchValue({status: statusName});
   }
 
   //日期轉換
@@ -307,14 +434,15 @@ export class QuoteComponent {
     const minute = ("0" + date.getMinutes()).slice(-2);
     return `${year}-${month}-${day} ${hour}:${minute}`;
   }
+
   //拿到到期日期轉格式
   formatDate2(dateString2: string): any {
-    if(dateString2 == "0001-01-01T00:00:00Z" || dateString2 == "1970-01-01T00:00:00Z"){
+    if (dateString2 == "0001-01-01T00:00:00Z" || dateString2 == "1970-01-01T00:00:00Z") {
       return null
-    }else{
-    const date = new Date(dateString2);
-    const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
-    return expiration_date.toISOString().slice(0, 10);
+    } else {
+      const date = new Date(dateString2);
+      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours());
+      return expiration_date.toISOString().slice(0, 10);
     }
   }
 

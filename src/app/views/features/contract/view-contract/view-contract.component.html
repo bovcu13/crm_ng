@@ -55,7 +55,8 @@
                 'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
           <span class="span" *ngIf="selectedStatusName==='草稿'">草稿</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+          <i class="pi pi-check"
+             *ngIf="selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
        </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '草稿',
@@ -67,7 +68,8 @@
                 'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
           <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'">審批中</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+          <i class="pi pi-check"
+             *ngIf="selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '草稿'||selectedStatusName === '審批中',
@@ -77,8 +79,10 @@
                 'bg-orange-300': selectedStatusName === '已取消',
                 'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'">拒絕</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+          <span class="span"
+                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'">拒絕</span>
+          <i class="pi pi-check"
+             *ngIf="selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕',
@@ -87,8 +91,10 @@
                 'bg-orange-300': selectedStatusName === '已取消',
                 'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'">等待簽名</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+          <span class="span"
+                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'">等待簽名</span>
+          <i class="pi pi-check"
+             *ngIf="selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名',
@@ -96,7 +102,8 @@
                 'bg-orange-300': selectedStatusName === '已取消',
                 'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'">已簽署</span>
+          <span class="span"
+                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'">已簽署</span>
           <i class="pi pi-check" *ngIf="selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
         </button>
            <button class="flex justify-content-center" [ngClass]="{
@@ -104,7 +111,8 @@
                 'bg-orange-300': selectedStatusName === '已取消',
                 'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署' ||selectedStatusName==='已取消'">已取消</span>
+          <span class="span"
+                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署' ||selectedStatusName==='已取消'">已取消</span>
           <i class="pi pi-check" *ngIf="selectedStatusName==='已過期'"></i>
         </button>
            <button class="flex justify-content-center" [ngClass]="{
@@ -155,8 +163,8 @@
                         <label>訂單</label>
                       </div>
                       <div class="justify-content-end">
-<!--                          <p-button icon="pi pi-plus" pTooltip="新增" tooltipPosition="top"-->
-<!--                                    styleClass="p-button-text"></p-button>-->
+                        <!--                          <p-button icon="pi pi-plus" pTooltip="新增" tooltipPosition="top"-->
+                        <!--                                    styleClass="p-button-text"></p-button>-->
                       </div>
                     </div>
                   </ng-template>
@@ -261,11 +269,8 @@
                 </div>
               </div>
               <div class="flex justify-content-end">
-                <p-button label="儲存" (click)="showAlert()"
-                          styleClass="p-button-outlined p-button-info"></p-button>
-                <p-toast></p-toast>
-                <p-button label="取消" styleClass="p-button-secondary ml-2"
-                          (click)="showWarn()"></p-button>
+                <p-button label="儲存" (click)="patchContractRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
               </div>
             </p-tabPanel>
           </p-tabView>

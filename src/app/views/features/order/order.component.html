@@ -13,6 +13,12 @@
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
+            <div class="flex align-items-center ml-2">
+              <span class="text-400 pi pi-circle-fill mr-1"></span>
+              <span>{{status[0].name}}</span>
+              <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span>{{status[1].name}}</span>
+            </div>
             <span class="p-input-icon-left ml-auto">
               <td><input type="text" [(ngModel)]="filterText" (input)="filterorders()" pInputText
                          placeholder="關鍵字搜索"></td>
@@ -161,7 +167,7 @@
         <p-button label="儲存" (click)="patchOrderRequest(o_id)"
                   styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary ml-1"></p-button>
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
 </form>

@@ -1,1 +1,180 @@
-<p>view-opportunity works!</p>
+<div class="grid mt-2">
+  <div class="col-3">
+    <div class="mb-3">
+      <p-card>
+        <h3>Gina</h3>
+        <p-divider></p-divider>
+        <span class="p-buttonset flex justify-content-center">
+        <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+        <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+        <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
+      </span>
+        <div class="grid mt-2">
+          <div class="col-12 flex justify-content-center">
+            <label>姓名: </label>
+            {{name}}
+          </div>
+          <div class="col-12 flex justify-content-center">
+            <label>職稱: </label>
+            {{title}}
+          </div>
+        </div>
+      </p-card>
+      <div class="flex justify-content-center mt-3">
+        <p-button pTooltip="新增聯絡人" tooltipPosition="top" icon="pi pi-plus"
+                  styleClass="p-button-outlined p-button-secondary"></p-button>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="mb-3">
+      <p-card>
+      <span class="flex justify-content-center">
+        <button class="flex justify-content-center" [ngClass]="{
+                'surface-400': status === '資格評估',
+                'bg-blue-300': status === '需求分析',
+                'bg-yellow-300': status === '提案',
+                'bg-orange-300': status === '談判',
+                'bg-green-300': status === '已結束'
+            }">
+          <span class="span" *ngIf="status==='資格評估'">資格評估</span>
+          <i class="pi pi-check" *ngIf="status==='需求分析'||status==='提案'||status==='談判'||status==='已結束'"></i>
+       </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check':status === '資格評估',
+                'bg-blue-300': status === '需求分析',
+                'bg-yellow-300': status === '提案',
+                'bg-orange-300': status === '談判',
+                'bg-green-300': status === '已結束'
+            }">
+          <span class="span" *ngIf="status==='資格評估'||status==='需求分析'">需求分析</span>
+          <i class="pi pi-check" *ngIf="status==='提案'||status==='談判'||status==='已結束'"></i>
+        </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check':status === '資格評估'||status === '需求分析',
+                'bg-yellow-300': status === '提案',
+                'bg-orange-300': status === '談判',
+                'bg-green-300': status === '已結束'
+            }">
+          <span class="span" *ngIf="status==='資格評估'||status==='需求分析'||status==='提案'">提案</span>
+          <i class="pi pi-check" *ngIf="status==='談判'||status==='已結束'"></i>
+        </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check':status === '資格評估'||status === '需求分析'||status === '提案',
+                'bg-orange-300': status === '談判',
+                'bg-green-300': status === '已結束'
+            }">
+          <span class="span"
+                *ngIf="status==='資格評估'||status==='需求分析'||status==='提案'||status==='談判'">談判</span>
+          <i class="pi pi-check" *ngIf="status==='已結束'"></i>
+        </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check': status === '資格評估'||status === '需求分析'||status === '提案'||status === '談判',
+                'bg-green-300': status === '已結束'
+            }">
+          <span class="span">已結束</span>
+        </button>
+      </span>
+      </p-card>
+    </div>
+    <div>
+      <form [formGroup]="opportunity_form">
+        <p-card>
+          <p-tabView>
+            <p-tabPanel header="詳細資料">
+              <div class="grid">
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>商機名稱</label>
+                    <input pInputText formControlName="name"
+                           [ngClass]="{'ng-dirty':opportunity_form.controls['name'].hasError && opportunity_form.controls['name'].touched}">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>帳戶</label>
+                    <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
+                                [filter]="true" appendTo="body" optionLabel="label"
+                                filterBy="label" [showClear]="true" placeholder="選擇現有帳戶">
+                    </p-dropdown>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>階段</label>
+                    <p-dropdown [disabled]="true" [options]="stage" optionLabel="name"
+                                (onChange)="stageValue($event)" formControlName="stage" appendTo="body"
+                                [ngClass]="{'ng-dirty':opportunity_form.controls['stage'].hasError && opportunity_form.controls['stage'].touched}"></p-dropdown>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>預測種類</label>
+                    <p-dropdown placeholder="請選擇" [disabled]="true" [options]="forecast_category" optionLabel="name"
+                                (onChange)="forecast_categoryValue($event)" formControlName="forecast_category"
+                                appendTo="body"
+                                [ngClass]="{'ng-dirty':opportunity_form.controls['forecast_category'].hasError && opportunity_form.controls['forecast_category'].touched}"></p-dropdown>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>結束日期</label>
+                    <p-calendar formControlName="close_date" appendTo="body" dateFormat="yy-mm-dd"
+                                [ngClass]="{'ng-dirty':opportunity_form.controls['close_date'].hasError && opportunity_form.controls['close_date'].touched}"></p-calendar>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label>金額</label>
+                    <input pInputText formControlName="amount">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="field">
+                    <label>業務員</label>
+                    <br>
+                    <label>{{(opportunity_form.controls['created_by'].value)}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="grid">
+                <div class="col-6">
+                  <label>建立者：</label>
+                  <div class="mt-3 field">
+                    <label>{{(opportunity_form.controls['created_by'].value)}}</label>
+                    <label>{{(opportunity_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label>上次修改者：</label>
+                  <div class="mt-3 field">
+                    <label>{{(opportunity_form.controls['updated_by'].value)}}</label>
+                    <label>{{(opportunity_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-content-end mt-3">
+                <p-button label="儲存" (click)="patchOpportunity(id)"
+                          styleClass="p-button-outlined p-button-info"></p-button>
+                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
+              </div>
+            </p-tabPanel>
+            <p-tabPanel header="活動">
+              <h3>(待完成)</h3>
+            </p-tabPanel>
+          </p-tabView>
+        </p-card>
+      </form>
+    </div>
+  </div>
+  <div class="col-3">
+    <p-card>
+      <h3>拜訪紀錄</h3>
+      <p-divider></p-divider>
+      <h3>(待完成)</h3>
+    </p-card>
+  </div>
+</div>
