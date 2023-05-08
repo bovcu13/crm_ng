@@ -366,7 +366,7 @@ export class LeadComponent implements OnInit {
         status: this.status.find((s: { name: any; }) => s.name === lead.status),
         source: this.source.find((s: { name: any; }) => s.name === lead.source),
         rating: this.rating.find((s: { name: any; }) => s.name === lead.rating),
-        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === lead.account_name)?.value
+        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === lead.account_name),
       });
       // this.lead_form.controls['account_name'].setValue(lead.account_name);
       // console.log(this.lead_form.controls['account_name'].value);
@@ -509,14 +509,9 @@ export class LeadComponent implements OnInit {
   selectedAccountId!: string;
 
   accountValue(event: any): void {
-    // this.selectedAccountName = this.account.find((s: { name: any; }) => s.name === event.value.name);
-    this.selectedAccountName = event.value.label
+    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
     this.selectedAccountId = event.value.value
-    console.log(event.value.label)
-    this.lead_form.patchValue({
-      account_name: event.value
-    });
-    console.log(typeof this.lead_form.value.account_name)
+    // console.log(this.selectedAccountId)
   }
 
   selectedSource: any;
