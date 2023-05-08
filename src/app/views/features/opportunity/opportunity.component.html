@@ -14,7 +14,7 @@
       <p-table [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
                (onLazyLoad)="loadPostsLazy($event)">
         <ng-template pTemplate="caption">
-          <div class="flex align-items-center justify-content-start mb-3 ml-2">
+          <div class="flex align-items-center ml-2">
             <span class="text-400 pi pi-circle-fill mr-1"></span>
             <span>{{stage[0].name}}</span>
             <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
