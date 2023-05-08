@@ -307,7 +307,7 @@ export class CampaignComponent {
   dialogHeader!: string;
   showedit = true;//判斷是否dialog為新增與編輯
   c_id: any;
-
+  disableSaveButton: boolean = false
   showDialog(type: string, campaign?: any): void {
     this.edit = true;
     if (type === 'add') {
@@ -328,11 +328,13 @@ export class CampaignComponent {
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
         });
         this.campaign_form.controls['status'].disable();
+        this.disableSaveButton = true;
       }else {
         this.campaign_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
         });
         this.campaign_form.controls['status'].enable();
+        this.disableSaveButton = false;
       }
       this.showedit = true;
       this.c_id = campaign.campaign_id;
