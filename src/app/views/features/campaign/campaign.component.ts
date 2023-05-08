@@ -122,7 +122,7 @@ export class CampaignComponent {
       code: "social_media",
     },
     {
-      name: "領袖思維",
+      name: "上級指派",
       code: "thought_leadership",
     },
     {
@@ -389,7 +389,7 @@ export class CampaignComponent {
       return null;
     } else {
       const date = new Date(dateString2);
-      const date1 = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours());
+      const date1 = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
       return date1.toISOString().slice(0, 10);
     }
   }

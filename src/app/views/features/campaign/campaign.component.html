@@ -43,7 +43,7 @@
             <td>{{ campaign.created_by }}</td>
             <!-- <td>{{ campaign.member }}</td> -->
             <td class="icon-align-right flex mt-1"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
-                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                styleClass="p-button-rounded p-button-secondary p-button-text" [routerLink]="['/main/campaign/view/', campaign.campaign_id]"></p-button>
             <p-button (click)="showDialog('edit',campaign)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
             <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"

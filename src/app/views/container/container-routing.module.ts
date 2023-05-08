@@ -22,6 +22,7 @@ import { ContractComponent } from '../features/contract/contract.component';
 import { ViewQuoteComponent } from '../features/quote/view-quote/view-quote.component';
 import { ViewOrderComponent } from '../features/order/view-order/view-order.component';
 import { ViewContractComponent } from '../features/contract/view-contract/view-contract.component';
+import { ViewCampaignComponent } from '../features/campaign/view-campaign/view-campaign.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -32,6 +33,7 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent },
       { path: 'account/view', component: ViewAccountComponent },
       { path: 'campaign', component: CampaignComponent },
+      { path: 'campaign/view/:c_id', component: ViewCampaignComponent },
       { path: 'contact/view', component: ViewContactComponent },
       { path: 'contact', component: ContactComponent },
       { path: 'display', component: DisplayComponent },
