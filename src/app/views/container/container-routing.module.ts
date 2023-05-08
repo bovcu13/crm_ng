@@ -43,7 +43,7 @@ const routes: Routes = [
       { path: 'lead/view/:id', component: ViewLeadComponent },
       { path: 'product', component: ProductComponent },
       { path: 'opportunity', component: OpportunityComponent },
-      { path: 'opportunity/view', component: ViewOpportunityComponent },
+      { path: 'opportunity/view/:id', component: ViewOpportunityComponent },
       { path: 'order', component: OrderComponent },
       { path: 'order/view/:o_id', component: ViewOrderComponent },
       { path: 'quote', component: QuoteComponent },
