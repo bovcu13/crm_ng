@@ -125,6 +125,7 @@ export class ViewQuoteComponent {
   editProduct() {
     this.product_form.reset();
     this.edit = true;
+    this.add = false;
   }
 
   patchQuoteRequest(q_id: any): void {
