@@ -155,19 +155,31 @@ export class OrderComponent {
       if (result.isConfirmed) {
         this.HttpApi.postOrderRequest(body).subscribe(Request => {
             console.log(Request)
-            this.getAllOrderRequest()
             this.edit = false;
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的資料 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllOrderRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
           },
           error => {
             console.log(error);
           })
-        Swal.fire({
-          title: '成功',
-          text: "已新增您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
       }
     })
   }
@@ -265,15 +277,27 @@ export class OrderComponent {
         this.HttpApi.patchOrderRequest(o_id, body).subscribe(
           Request => {
             console.log(Request)
-            this.getAllOrderRequest()
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllOrderRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
+              })
+            }
           })
-        Swal.fire({
-          title: '成功',
-          text: "已新增您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
       }
     });
   }
@@ -290,16 +314,26 @@ export class OrderComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
         this.HttpApi.deleteOrderRequest(o_id).subscribe(Request => {
           console.log(Request)
-          this.getAllOrderRequest()
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getAllOrderRequest()
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
         })
       } else{
         Swal.fire({

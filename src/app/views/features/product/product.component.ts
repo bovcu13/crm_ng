@@ -113,17 +113,27 @@ export class ProductComponent {
         this.HttpApi.postProductRequest(body).subscribe(Request => {
             this.Repeated = Request
             console.log(Request)
-            this.getAllProductRequest()
             if (this.Repeated.code === 400) {
               this.BadRequest = "識別碼不可重複!!!";
               this.edit = true;
             } else if (this.Repeated.code === 200) {
               Swal.fire({
                 title: '成功',
-                text: "已新增您的變更 :)",
+                text: "已儲存您的資料 :)",
                 icon: 'success',
                 showConfirmButton: false,
                 timer: 1000
+              })
+              this.getAllProductRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
               })
             }
           },
@@ -205,13 +215,23 @@ export class ProductComponent {
               this.BadRequest = "識別碼不可重複!!!";
               this.edit = true;
             } else if (this.Repeated.code === 200) {
-              this.getAllProductRequest()
               Swal.fire({
                 title: '成功',
                 text: "已儲存您的變更 :)",
                 icon: 'success',
                 showConfirmButton: false,
                 timer: 1000
+              })
+              this.getAllProductRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                this.edit = true;
               })
             }
           }
@@ -232,18 +252,28 @@ export class ProductComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
         this.HttpApi.deleteProductRequest(p_id).subscribe(Request => {
           console.log(Request)
-          this.getAllProductRequest()
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getAllProductRequest()
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
         })
-      }else{
+      } else {
         Swal.fire({
           title: '取消',
           text: "已取消您的變更！",

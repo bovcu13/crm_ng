@@ -231,6 +231,26 @@ export class ViewCampaignComponent {
     } else {
       this.campaign_form.value.parent_campaign_id = this.selectedParent_id;
     }
+    this.editStatus()//處理status的值，抓取name
+    this.editType()//處理type的值，抓取name
+    let start_date = new Date(this.campaign_form.get('start_date')?.value);
+    let end_date = new Date(this.campaign_form.get('end_date')?.value);
+    let body = {
+      name: this.campaign_form.get('name')?.value,
+      status: this.campaign_form.get('status')?.value,
+      is_enable: this.campaign_form.get('is_enable')?.value,
+      parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
+      type: this.campaign_form.get('type')?.value,
+      start_date: start_date.toISOString(),
+      end_date: end_date.toISOString(),
+      description: this.campaign_form.get('description')?.value,
+      sent: this.campaign_form.get('sent')?.value,
+      budget_cost: this.campaign_form.get('budget_cost')?.value,
+      expected_responses: this.campaign_form.get('expected_responses')?.value,
+      expected_income: this.campaign_form.get('expected_income')?.value,
+      actual_cost: this.campaign_form.get('actual_cost')?.value,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
+    }
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
@@ -240,39 +260,28 @@ export class ViewCampaignComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.editStatus()//處理status的值，抓取name
-        this.editType()//處理type的值，抓取name
-        let start_date = new Date(this.campaign_form.get('start_date')?.value);
-        let end_date = new Date(this.campaign_form.get('end_date')?.value);
-        let body = {
-          name: this.campaign_form.get('name')?.value,
-          status: this.campaign_form.get('status')?.value,
-          is_enable: this.campaign_form.get('is_enable')?.value,
-          parent_campaign_id: this.campaign_form.get('parent_campaign_id')?.value,
-          type: this.campaign_form.get('type')?.value,
-          start_date: start_date.toISOString(),
-          end_date: end_date.toISOString(),
-          description: this.campaign_form.get('description')?.value,
-          sent: this.campaign_form.get('sent')?.value,
-          budget_cost: this.campaign_form.get('budget_cost')?.value,
-          expected_responses: this.campaign_form.get('expected_responses')?.value,
-          expected_income: this.campaign_form.get('expected_income')?.value,
-          actual_cost: this.campaign_form.get('actual_cost')?.value,
-          updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
-        }
         this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
           Request => {
             console.log(Request)
-            this.getOneCampaignRequest(c_id)
-          }
-        )
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已儲存您的變更 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getOneCampaignRequest(c_id);
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          })
       }
     });
   }
@@ -287,6 +296,7 @@ export class ViewCampaignComponent {
       reverseButtons: false,
       timer: 1000
     })
+    this.getOneCampaignRequest(this.c_id);
   }
 
   //新增線索dialog
