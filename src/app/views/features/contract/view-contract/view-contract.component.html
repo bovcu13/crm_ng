@@ -22,7 +22,7 @@
             </div>
             <div class="col-12 flex justify-content-center">
               <label>狀態: </label>
-              <label>{{selectedStatusName}}</label>
+              <label>{{stage}}</label>
             </div>
             <div class="col-12 flex justify-content-center">
               <label>契約開始日期: </label>
@@ -46,78 +46,78 @@
       <p-card>
  <span class="flex justify-content-center">
        <button class="flex justify-content-center" [ngClass]="{
-                'surface-400': selectedStatusName === '草稿',
-                'bg-blue-300': selectedStatusName === '審批中',
-                'bg-red-300': selectedStatusName === '拒絕',
-                'bg-yellow-300': selectedStatusName === '等待簽名',
-                'bg-green-300': selectedStatusName === '已簽署',
-                'bg-orange-300': selectedStatusName === '已取消',
-                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
+                'surface-400': stage === '草稿',
+                'bg-blue-300': stage === '審批中',
+                'bg-red-300': stage === '拒絕',
+                'bg-yellow-300': stage === '等待簽名',
+                'bg-green-300': stage === '已簽署',
+                'bg-orange-300': stage === '已取消',
+                'bg-black-alpha-60 text-white': stage === '已過期'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'">草稿</span>
+          <span class="span" *ngIf="stage==='草稿'">草稿</span>
           <i class="pi pi-check"
-             *ngIf="selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+             *ngIf="stage==='審批中'||stage==='拒絕'||stage==='等待簽名'||stage==='已簽署'||stage==='已取消' ||stage==='已過期'"></i>
        </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check':selectedStatusName === '草稿',
-                'bg-blue-300': selectedStatusName === '審批中',
-                'bg-red-300': selectedStatusName === '拒絕',
-                'bg-yellow-300': selectedStatusName === '等待簽名',
-                'bg-green-300': selectedStatusName === '已簽署',
-                'bg-orange-300': selectedStatusName === '已取消',
-                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
+                'has-check':stage === '草稿',
+                'bg-blue-300': stage === '審批中',
+                'bg-red-300': stage === '拒絕',
+                'bg-yellow-300': stage === '等待簽名',
+                'bg-green-300': stage === '已簽署',
+                'bg-orange-300': stage === '已取消',
+                'bg-black-alpha-60 text-white': stage === '已過期'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'">審批中</span>
+          <span class="span" *ngIf="stage==='草稿'||stage==='審批中'">審批中</span>
           <i class="pi pi-check"
-             *ngIf="selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+             *ngIf="stage==='拒絕'||stage==='等待簽名'||stage==='已簽署'||stage==='已取消' ||stage==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check':selectedStatusName === '草稿'||selectedStatusName === '審批中',
-                'bg-red-300': selectedStatusName === '拒絕',
-                'bg-yellow-300': selectedStatusName === '等待簽名',
-                'bg-green-300': selectedStatusName === '已簽署',
-                'bg-orange-300': selectedStatusName === '已取消',
-                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
+                'has-check':stage === '草稿'||stage === '審批中',
+                'bg-red-300': stage === '拒絕',
+                'bg-yellow-300': stage === '等待簽名',
+                'bg-green-300': stage === '已簽署',
+                'bg-orange-300': stage === '已取消',
+                'bg-black-alpha-60 text-white': stage === '已過期'
             }">
           <span class="span"
-                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'">拒絕</span>
+                *ngIf="stage==='草稿'||stage==='審批中'||stage==='拒絕'">拒絕</span>
           <i class="pi pi-check"
-             *ngIf="selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+             *ngIf="stage==='等待簽名'||stage==='已簽署'||stage==='已取消' ||stage==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check':selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕',
-                'bg-yellow-300': selectedStatusName === '等待簽名',
-                'bg-green-300': selectedStatusName === '已簽署',
-                'bg-orange-300': selectedStatusName === '已取消',
-                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
+                'has-check':stage === '草稿'||stage === '審批中'||stage === '拒絕',
+                'bg-yellow-300': stage === '等待簽名',
+                'bg-green-300': stage === '已簽署',
+                'bg-orange-300': stage === '已取消',
+                'bg-black-alpha-60 text-white': stage === '已過期'
             }">
           <span class="span"
-                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'">等待簽名</span>
+                *ngIf="stage==='草稿'||stage==='審批中'||stage==='拒絕'||stage==='等待簽名'">等待簽名</span>
           <i class="pi pi-check"
-             *ngIf="selectedStatusName==='已簽署'||selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+             *ngIf="stage==='已簽署'||stage==='已取消' ||stage==='已過期'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名',
-                'bg-green-300': selectedStatusName === '已簽署',
-                'bg-orange-300': selectedStatusName === '已取消',
-                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
+                'has-check': stage === '草稿'||stage === '審批中'||stage === '拒絕'||stage === '等待簽名',
+                'bg-green-300': stage === '已簽署',
+                'bg-orange-300': stage === '已取消',
+                'bg-black-alpha-60 text-white': stage === '已過期'
             }">
           <span class="span"
-                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署'">已簽署</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='已取消' ||selectedStatusName==='已過期'"></i>
+                *ngIf="stage==='草稿'||stage==='審批中'||stage==='拒絕'||stage==='等待簽名'||stage==='已簽署'">已簽署</span>
+          <i class="pi pi-check" *ngIf="stage==='已取消' ||stage==='已過期'"></i>
         </button>
            <button class="flex justify-content-center" [ngClass]="{
-                'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名'||selectedStatusName === '已簽署',
-                'bg-orange-300': selectedStatusName === '已取消',
-                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'
+                'has-check': stage === '草稿'||stage === '審批中'||stage === '拒絕'||stage === '等待簽名'||stage === '已簽署',
+                'bg-orange-300': stage === '已取消',
+                'bg-black-alpha-60 text-white': stage === '已過期'
             }">
           <span class="span"
-                *ngIf="selectedStatusName==='草稿'||selectedStatusName==='審批中'||selectedStatusName==='拒絕'||selectedStatusName==='等待簽名'||selectedStatusName==='已簽署' ||selectedStatusName==='已取消'">已取消</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='已過期'"></i>
+                *ngIf="stage==='草稿'||stage==='審批中'||stage==='拒絕'||stage==='等待簽名'||stage==='已簽署' ||stage==='已取消'">已取消</span>
+          <i class="pi pi-check" *ngIf="stage==='已過期'"></i>
         </button>
            <button class="flex justify-content-center" [ngClass]="{
-                'has-check': selectedStatusName === '草稿'||selectedStatusName === '審批中'||selectedStatusName === '拒絕'||selectedStatusName === '等待簽名'||selectedStatusName === '已簽署' ||selectedStatusName === '已取消',
-                'bg-black-alpha-60 text-white': selectedStatusName === '已過期'}">
+                'has-check': stage === '草稿'||stage === '審批中'||stage === '拒絕'||stage === '等待簽名'||stage === '已簽署' ||stage === '已取消',
+                'bg-black-alpha-60 text-white': stage === '已過期'}">
             <span class="span">已過期</span>
         </button>
       </span>
@@ -214,7 +214,6 @@
                   <div class="field">
                     <label><span class="required-star">*</span>帳戶</label>
                     <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'"
-                                [(ngModel)]="selectedAccount_id"
                                 [filter]="true" filterBy="label" [showClear]="true"
                                 [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError('required') && contract_form.controls['account_id'].touched}"></p-dropdown>
 
@@ -225,7 +224,7 @@
                     <label><span class="required-star">*</span>狀態</label>
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
                                 formControlName="status"
-                                optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"
+                                optionLabel="name" (onChange)="onStatusChange($event)"
                                 name="status"
                                 [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError('required') && contract_form.controls['status'].touched}"></p-dropdown>
                   </div>
@@ -268,10 +267,12 @@
                   </div>
                 </div>
               </div>
+              <ng-container *ngIf="stage !=='已取消' && stage !=='已過期'">
               <div class="flex justify-content-end">
                 <p-button label="儲存" (click)="patchContractRequest()" styleClass="p-button-outlined p-button-info"></p-button>
                 <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
               </div>
+              </ng-container>
             </p-tabPanel>
           </p-tabView>
         </form>

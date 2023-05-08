@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpApiService} from "../../../../api/http-api.service";
-import {Contract} from "../../../../shared/models/contract";
 import {ActivatedRoute} from "@angular/router";
 import {MessageService} from "primeng/api";
 import Swal from 'sweetalert2';
@@ -76,18 +75,15 @@ export class ViewContractComponent {
   ]
 
   //取得當筆契約資料
-  GetOneContract!: Contract[];
-  selectedStatus!: any;
-  selectedStatusName: any;
-
+  GetOneContract!: any;
+  stage: any;
   getOneContractRequest(c_id: any) {
     this.HttpApi.getOneContractRequest(c_id).subscribe(res => {
         this.GetOneContract = res.body;
-        this.editStatus();
-        this.selectedStatus = this.status.find(s => s.name === res.body.status);
-        this.selectedStatusName = this.selectedStatus.name
+        this.stage = res.body.status;
         this.contract_form.patchValue({
           code: res.body.code,
+          status: this.status.find((s: { name: any; }) => s.name === this.GetOneContract.status),
           salesperson_name: res.body.salesperson_name,
           start_date: this.formatDate2(res.body.start_date),
           term: res.body.term,
@@ -99,6 +95,9 @@ export class ViewContractComponent {
           created_at: this.formatDate(res.body.created_at),
           created_by: res.body.created_by,
         });
+        if (this.GetOneContract.status === '已取消' || this.GetOneContract.status === '已過期') {
+          this.contract_form.controls['status'].disable();
+        }
         console.log(this.GetOneContract)
       },
       (error) => {
@@ -108,7 +107,6 @@ export class ViewContractComponent {
   }
 
   patchContractRequest() {
-    this.editStatus()//處理status的值，抓取name
     if (this.contract_form.controls['start_date'].hasError('required') ||
       this.contract_form.controls['account_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
@@ -139,9 +137,9 @@ export class ViewContractComponent {
 
     let start_date = new Date(this.contract_form.get('start_date')?.value);
     let body = {
-      status: this.contract_form.get('status')?.value,
+      status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      account_id: this.selectedAccount_id, //帳戶ID
+      account_id: this.contract_form.get('account_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
@@ -184,8 +182,6 @@ export class ViewContractComponent {
 
   // GET全部Account
   GetAllAccount: any[] = [];
-  selectedAccount_id: string = '';
-
   getAllAccountRequest() {
     this.HttpApi.getAllAccountRequest(1).subscribe(
       (res) => {
@@ -206,8 +202,7 @@ export class ViewContractComponent {
   contract_form: FormGroup;
   c_id: any;
 
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute
-    , private messageService: MessageService) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute) {
     this.contract_form = this.fb.group({
       contract_id: [''],
       salesperson_name: [''],
@@ -232,16 +227,6 @@ export class ViewContractComponent {
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
-  }
-
-  //處理status的值
-  statusName!: string;
-
-  editStatus(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    this.statusName = this.selectedStatus ? this.selectedStatus.name : "";
-    //將statusName更新到表單中
-    this.contract_form.patchValue({status: this.statusName});
   }
 
   //日期轉換

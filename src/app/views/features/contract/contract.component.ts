@@ -132,8 +132,6 @@ export class ContractComponent {
 
   // GET全部Account
   GetAllAccount: any[] = [];
-  selectedAccount_id: string = '';
-
   getAllAccountRequest() {
     this.HttpApi.getAllAccountRequest(1).subscribe(
       (res) => {
@@ -189,7 +187,7 @@ export class ContractComponent {
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      account_id: this.selectedAccount_id, //帳戶ID
+      account_id: this.GetAllAccount.find((a: { label: any; }) => a.label === this.contract_form.value.account_id),
     }
     this.edit = false
     Swal.fire({
@@ -233,7 +231,6 @@ export class ContractComponent {
 
   //建立formgroup
   contract_form: FormGroup;
-
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.contract_form = this.fb.group({
       contract_id: [''],
@@ -256,9 +253,8 @@ export class ContractComponent {
   edit: boolean = false;
   dialogHeader!: string;
   showedit = true;//判斷是否dialog為新增與編輯
-  selectedStatus!: any;
   c_id: any;
-
+  disableSaveButton: boolean = false
   showDialog(type: string, contract?: any): void {
     this.edit = true;
     if (type === 'add') {
@@ -272,9 +268,22 @@ export class ContractComponent {
       this.contract_form.patchValue(contract);
       this.contract_form.patchValue({
         start_date: new Date(contract.start_date),
+        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contract.account_name),
       });
       this.showedit = true;
-      this.selectedStatus = this.status.find((s) => s.name === contract.status);// 綁定已經選擇的狀態
+      if(contract.status === "已過期" || contract.status === "已取消"){
+        this.contract_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === contract.status),
+        });
+        this.contract_form.controls['status'].disable();
+        this.disableSaveButton = true;
+      }else {
+        this.contract_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === contract.status),
+        });
+        this.contract_form.controls['status'].enable();
+        this.disableSaveButton = false;
+      }
       this.c_id = contract.contract_id;
     }
   }
@@ -309,13 +318,11 @@ export class ContractComponent {
       })
       return;
     }
-
-    this.editStatus()//處理status的值，抓取name
     let start_date = new Date(this.contract_form.get('start_date')?.value);
     let body = {
-      status: this.contract_form.get('status')?.value,
+      status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      account_id: this.selectedAccount_id, //帳戶ID
+      account_id: this.contract_form.get('account_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
       updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
@@ -356,14 +363,6 @@ export class ContractComponent {
           });
       }
     })
-  }
-
-//處理status的值
-  editStatus(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    let statusName = this.selectedStatus ? this.selectedStatus.name : "";
-    //將statusName更新到表單中
-    this.contract_form.patchValue({status: statusName});
   }
 
   deleteContractRequest(c_id: any): void {

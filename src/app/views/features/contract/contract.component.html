@@ -7,10 +7,10 @@
           <p-button icon="pi pi-plus" (click)="showDialog('add')" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table  [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
-                [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first"
+      <p-table [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
+               [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first"
                [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
-                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
+               currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
             <div class="flex align-items-center ml-2">
@@ -31,7 +31,7 @@
             </div>
             <span class="p-input-icon-left ml-auto">
               <td><input type="text" [(ngModel)]="filterText" (input)="filterContracts()" pInputText
-                  placeholder="關鍵字搜索"></td>
+                         placeholder="關鍵字搜索"></td>
             </span>
           </div>
         </ng-template>
@@ -40,7 +40,9 @@
             <th pSortableColumn="status">狀態
               <p-sortIcon field="status"></p-sortIcon>
             </th>
-            <th pSortableColumn="code">號碼 <p-sortIcon field="code"></p-sortIcon></th>
+            <th pSortableColumn="code">號碼
+              <p-sortIcon field="code"></p-sortIcon>
+            </th>
             <th pSortableColumn="account_id">帳戶
               <p-sortIcon field="account_id"></p-sortIcon>
             </th>
@@ -107,8 +109,8 @@
       <div class="col-6">
         <div class="field">
           <label><span class="required-star">*</span>帳戶</label>
-          <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'" [(ngModel)]="selectedAccount_id"
-          [filter]="true"  filterBy="label" [showClear]="true"
+          <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'"
+                      [filter]="true" filterBy="label" [showClear]="true"
                       [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError('required') && contract_form.controls['account_id'].touched}"></p-dropdown>
 
         </div>
@@ -125,7 +127,7 @@
           <label><span class="required-star">*</span>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
                       formControlName="status"
-                      optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"
+                      optionLabel="name" (onChange)="onStatusChange($event)"
                       name="status"
                       [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError('required') && contract_form.controls['status'].touched}"></p-dropdown>
         </div>
@@ -163,8 +165,8 @@
         <label>上次修改者：</label>
         <br>
         <div class="mt-3 field">
-        <label class="disable">{{(contract_form.controls['updated_by'].value)}}</label>
-        <label class="ml-2 disable">{{(contract_form.controls['updated_at'].value)}}</label>
+          <label class="disable">{{(contract_form.controls['updated_by'].value)}}</label>
+          <label class="ml-2 disable">{{(contract_form.controls['updated_at'].value)}}</label>
         </div>
       </div>
     </div>
@@ -172,10 +174,13 @@
       <ng-container *ngIf="!showedit">
         <p-button label="新增" (click)="postContractRequest()" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
-      <ng-container *ngIf="showedit">
-        <p-button label="儲存" (click)="patchContractRequest(c_id)"  styleClass="p-button-outlined p-button-info"></p-button>
+      <ng-container *ngIf="!disableSaveButton">
+        <ng-container *ngIf="showedit">
+          <p-button label="儲存" (click)="patchContractRequest(c_id)"
+                    styleClass="p-button-outlined p-button-info"></p-button>
+        </ng-container>
+        <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
 </form>
