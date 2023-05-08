@@ -129,10 +129,26 @@ export class ViewQuoteComponent {
   }
 
   patchQuoteRequest(q_id: any): void {
-    if (this.quote_form.controls['name'].hasError('required')
-      || this.quote_form.controls['opportunity_id'].hasError('required')) {
+    if (this.quote_form.controls['name'].hasError('required') ||
+      this.quote_form.controls['opportunity_id'].hasError('required'))
+    {
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.quote_form.controls['name'].hasError('required')) {
+          this.quote_form.controls['name'].markAsDirty();
+        }
+        if (this.quote_form.controls['opportunity_id'].hasError('required')) {
+          this.quote_form.controls['opportunity_id'].markAsDirty();
+        }
+      })
       return;
     }
+
     this.editStatus()//處理status的值，抓取name
     let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
     let body = {

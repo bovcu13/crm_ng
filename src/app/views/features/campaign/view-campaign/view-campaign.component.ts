@@ -198,8 +198,18 @@ export class ViewCampaignComponent {
 
   patchCampaignRequest(c_id: any): void {
     if (this.campaign_form.controls['name'].hasError('required')) {
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        this.campaign_form.controls['name'].markAsDirty();
+      })
       return;
     }
+
     //驗證日期是否有效
     if (this.campaign_form.controls['end_date'].value !== null &&
       this.campaign_form.controls['start_date'].value > this.campaign_form.controls['end_date'].value) {

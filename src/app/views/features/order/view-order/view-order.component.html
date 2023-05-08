@@ -149,7 +149,7 @@
                                 [options]="GetAllContract"
                                 [(ngModel)]="selectedContract_id" (ngModelChange)="validateStartDate()"
                                 [filter]="true" filterBy="label" [showClear]="true"
-                                [ngClass]="{'ng-dirty': order_form.controls['contract_id'].hasError && order_form.controls['contract_id'].touched}"
+                                [ngClass]="{'ng-dirty': order_form.controls['contract_id'].hasError('required') && order_form.controls['contract_id'].touched}"
                     ></p-dropdown>
                   </div>
                 </div>
@@ -159,7 +159,7 @@
                     <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
                                 formControlName="start_date"
                                 [minDate]="MinDate"
-                                [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError && order_form.controls['start_date'].touched}"></p-calendar>
+                                [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError('required') && order_form.controls['start_date'].touched}"></p-calendar>
                     <div class="required-star" *ngIf="order_form.controls['start_date'].hasError('required-star')">
                       訂單開始日期不可早於契約日期
                     </div>
@@ -298,9 +298,9 @@
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
           <td><p-inputNumber inputId="integeronly" [min]="0" formControlName="quantity"
-                             [ngClass]="{'ng-dirty':edit_product_form.controls['quantity'].hasError && edit_product_form.controls['quantity'].touched}"></p-inputNumber></td>
+                             [ngClass]="{'ng-dirty':edit_product_form.controls['quantity'].hasError('required') && edit_product_form.controls['quantity'].touched}"></p-inputNumber></td>
           <td><p-inputNumber inputId="integeronly" [min]="0" formControlName="unit_price"
-                             [ngClass]="{'ng-dirty':edit_product_form.controls['unit_price'].hasError && edit_product_form.controls['unit_price'].touched}"></p-inputNumber></td>
+                             [ngClass]="{'ng-dirty':edit_product_form.controls['unit_price'].hasError('required') && edit_product_form.controls['unit_price'].touched}"></p-inputNumber></td>
           <td><input pInputText formControlName="description"></td>
         </tr>
       </ng-template>

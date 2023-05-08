@@ -95,7 +95,7 @@
                     <label><span class="text-red-600">*</span>線索狀態</label>
                     <p-dropdown placeholder="請選擇" optionLabel="name" [options]="status"
                                 formControlName="status" appendTo="body" (onChange)="statusValue($event)"
-                                [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError && lead_form.controls['status'].touched}"
+                                [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError('required') && lead_form.controls['status'].touched}"
                     ></p-dropdown>
                   </div>
                 </div>
@@ -123,7 +123,8 @@
                 <div class="col-12">
                   <div>
                     <label><span class="text-red-600">*</span>描述</label>
-                    <textarea class="mt-2" rows="3" pInputTextarea formControlName="description"></textarea>
+                    <textarea class="mt-2" rows="3" pInputTextarea formControlName="description"
+                              [ngClass]="{'ng-dirty':lead_form.controls['description'].hasError('required') && lead_form.controls['description'].touched}"></textarea>
                   </div>
                 </div>
                 <div class="col-6">

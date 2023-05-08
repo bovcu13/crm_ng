@@ -216,7 +216,7 @@
                     <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'"
                                 [(ngModel)]="selectedAccount_id"
                                 [filter]="true" filterBy="label" [showClear]="true"
-                                [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError && contract_form.controls['account_id'].touched}"></p-dropdown>
+                                [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError('required') && contract_form.controls['account_id'].touched}"></p-dropdown>
 
                   </div>
                 </div>
@@ -227,7 +227,7 @@
                                 formControlName="status"
                                 optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"
                                 name="status"
-                                [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError && contract_form.controls['status'].touched}"></p-dropdown>
+                                [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError('required') && contract_form.controls['status'].touched}"></p-dropdown>
                   </div>
                 </div>
                 <div class="col-6">
@@ -235,14 +235,14 @@
                     <label><span class="required-star">*</span>開始日期</label>
                     <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
                                 formControlName="start_date" [readonlyInput]="true"
-                                [ngClass]="{'ng-dirty':contract_form.controls['start_date'].hasError && contract_form.controls['start_date'].touched}"></p-calendar>
+                                [ngClass]="{'ng-dirty':contract_form.controls['start_date'].hasError('required') && contract_form.controls['start_date'].touched}"></p-calendar>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="field">
                     <label><span class="required-star">*</span>有效期間(月)</label>
                     <input type="number" pInputText formControlName="term"
-                           [ngClass]="{'ng-dirty':contract_form.controls['term'].hasError && contract_form.controls['term'].touched}">
+                           [ngClass]="{'ng-dirty':contract_form.controls['term'].hasError('required') && contract_form.controls['term'].touched}">
                   </div>
                 </div>
                 <div class="col-12">

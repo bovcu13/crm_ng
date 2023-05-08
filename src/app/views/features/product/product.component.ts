@@ -89,9 +89,27 @@ export class ProductComponent {
   BadRequest: any
 
   postProductRequest(): void {
-    if (this.product_form.controls['name'].hasError('required') || this.product_form.controls['price'].hasError('required')) {
+    if (this.product_form.controls['name'].hasError('required') ||
+      this.product_form.controls['price'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.product_form.controls['name'].hasError('required')) {
+          this.product_form.controls['name'].markAsDirty();
+        }
+        if (this.product_form.controls['price'].hasError('required')) {
+          this.product_form.controls['price'].markAsDirty();
+        }
+        this.edit = true;
+      })
       return;
     }
+
     let body = {
       name: this.product_form.value.name,
       code: this.product_form.value.code,
@@ -186,9 +204,27 @@ export class ProductComponent {
 
   Repeated: any;//判斷是否重複
   patchProductRequest(p_id: any): void {
-    if (this.product_form.controls['name'].hasError('required') || this.product_form.controls['price'].hasError('required')) {
+    if (this.product_form.controls['name'].hasError('required') ||
+      this.product_form.controls['price'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.product_form.controls['name'].hasError('required')) {
+          this.product_form.controls['name'].markAsDirty();
+        }
+        if (this.product_form.controls['price'].hasError('required')) {
+          this.product_form.controls['price'].markAsDirty();
+        }
+        this.edit = true;
+      })
       return;
     }
+
     let body = {
       name: this.product_form.get('name')?.value,
       is_enable: this.product_form.get('is_enable')?.value,

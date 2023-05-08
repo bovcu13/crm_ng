@@ -185,6 +185,32 @@ export class ContactComponent implements OnInit {
   currentDate = new Date()
 
   postContact(): void {
+    if (this.contact_form.controls['account_name'].hasError('required') ||
+        this.contact_form.controls['name'].hasError('required') ||
+        this.contact_form.controls['phone_number'].hasError('required'))
+    {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.contact_form.controls['account_name'].hasError('required')) {
+          this.contact_form.controls['account_name'].markAsDirty();
+        }
+        if (this.contact_form.controls['name'].hasError('required')) {
+          this.contact_form.controls['name'].markAsDirty();
+        }
+        if (this.contact_form.controls['phone_number'].hasError('required')) {
+          this.contact_form.controls['phone_number'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     let body = {
       account_name: this.contact_form.controls['account_name'].value,
       owner: this.contact_form.controls['owner'].value,
@@ -249,6 +275,32 @@ export class ContactComponent implements OnInit {
   }
 
   patchContact(): void {
+    if (this.contact_form.controls['account_name'].hasError('required') ||
+      this.contact_form.controls['name'].hasError('required') ||
+      this.contact_form.controls['phone_number'].hasError('required'))
+    {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.contact_form.controls['account_name'].hasError('required')) {
+          this.contact_form.controls['account_name'].markAsDirty();
+        }
+        if (this.contact_form.controls['name'].hasError('required')) {
+          this.contact_form.controls['name'].markAsDirty();
+        }
+        if (this.contact_form.controls['phone_number'].hasError('required')) {
+          this.contact_form.controls['phone_number'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      return;
+    }
+
     let id = this.contact_form.controls['contact_id'].value
     let body = {
       account_name: this.contact_form.controls['account_name'].value,
