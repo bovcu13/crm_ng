@@ -258,6 +258,7 @@ order_product: any[] = [
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
+        this.patchOrderRequest(this.o_id);
         Swal.fire({
           title: '成功',
           text: "已儲存您的變更 :)",
@@ -265,7 +266,6 @@ order_product: any[] = [
           showConfirmButton: false,
           timer: 1000
         })
-        this.patchOrderRequest(this.o_id);
       }
     });
   }

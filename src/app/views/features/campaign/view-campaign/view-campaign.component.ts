@@ -236,13 +236,6 @@ export class ViewCampaignComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
         this.editStatus()//處理status的值，抓取name
         this.editType()//處理type的值，抓取name
         let start_date = new Date(this.campaign_form.get('start_date')?.value);
@@ -269,6 +262,13 @@ export class ViewCampaignComponent {
             this.getOneCampaignRequest(c_id)
           }
         )
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
       }
     });
   }

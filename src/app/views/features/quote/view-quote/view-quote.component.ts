@@ -141,13 +141,6 @@ export class ViewQuoteComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的變更 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
         this.editStatus()//處理status的值，抓取name
         let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
         let body = {
@@ -167,6 +160,13 @@ export class ViewQuoteComponent {
             console.log(Request)
             this.getOneQuotetRequest(q_id)
           })
+        Swal.fire({
+          title: '成功',
+          text: "已儲存您的變更 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
       }
     });
   }

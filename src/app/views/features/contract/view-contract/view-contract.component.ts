@@ -222,6 +222,7 @@ export class ViewContractComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
+        this.patchContractRequest(this.c_id);
         Swal.fire({
           title: '成功',
           text: "已儲存您的變更 :)",
@@ -229,7 +230,6 @@ export class ViewContractComponent {
           showConfirmButton: false,
           timer: 1000
         })
-        this.patchContractRequest(this.c_id);
       }
     });
   }

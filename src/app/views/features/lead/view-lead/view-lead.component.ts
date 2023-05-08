@@ -228,43 +228,39 @@ export class ViewLeadComponent implements OnInit {
       })
   }
 
-  showAlert() {
+  showAlertComfirm() {
     Swal.fire({
       title: '確認更改？',
       icon: 'warning',
-      confirmButtonColor: '#00D963',
-      cancelButtonColor: '#FF003A',
-      showCancelButton: true,
+      confirmButtonColor: '#00D963', // 设置为绿色
+      showCancelButton: false,
       confirmButtonText: '確認',
-      cancelButtonText: '取消',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
+        this.patchLead(this.id);
         Swal.fire({
           title: '成功',
           text: "已儲存您的變更 :)",
           icon: 'success',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1000
         })
-        this.patchLead(this.id);
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 700
-        });
       }
     });
   }
 
-  showWarn() {
-    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: '即將重新導向至契約頁面' });
-    setTimeout(() => {
-      window.location.assign('/main/lead');
-    }, 1500); // 延遲3秒後跳轉頁面
+  showAlertCancel() {
+    this.edit = false
+    Swal.fire({
+      title: '取消',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    })
   }
 
   selectedStatus: any;
