@@ -21,6 +21,9 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
+            <th pSortableColumn="status">狀態
+              <p-sortIcon field="status"></p-sortIcon>
+            </th>
             <th pSortableColumn="number">號碼
               <p-sortIcon field="number"></p-sortIcon>
             </th>
@@ -31,9 +34,6 @@
             <th pSortableColumn="start_date">訂單開始日期
               <p-sortIcon field="start_date"></p-sortIcon>
             </th>
-            <th pSortableColumn="status">狀態
-              <p-sortIcon field="status"></p-sortIcon>
-            </th>
             <th pSortableColumn="contract_number">契約號碼
               <p-sortIcon field="contract_number"></p-sortIcon>
             </th>
@@ -42,11 +42,15 @@
         </ng-template>
         <ng-template pTemplate="body" let-order>
           <tr>
+            <td><span pTooltip={{order.status}} tooltipPosition="top" [ngClass]="{
+                'text-400': order.status === status[0].name,
+                'text-blue-300': order.status === status[1].name
+            }" class="pi pi-circle-fill ml-2"></span>
+            </td>
             <td>{{ order.code }}</td>
             <td>{{ order.account_name }}</td>
             <!--<td>{{ order.amount }}</td>-->
             <td>{{ order.start_date }}</td>
-            <td>{{ order.status }}</td>
             <td>{{ order.contract_code}}</td>
             <td class="icon-align-right">
               <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
