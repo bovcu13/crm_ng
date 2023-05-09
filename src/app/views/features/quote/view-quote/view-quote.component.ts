@@ -77,19 +77,20 @@ export class ViewQuoteComponent {
   }
 
   //取得當筆報價資料
-  GetOneQuote: Quote[] = [];
-  selectedStatus!: any;
-  selectedStatusName: any;
-
+  GetOneQuote: any;
+  stage: any;
+  name: any;
+  GetOneIsSyncing: any;
   getOneQuotetRequest(q_id: any): void {
     this.HttpApi.getOneQuotetRequest(q_id).subscribe(res => {
         this.GetOneQuote = res.body;
-        this.editStatus();
-        this.selectedStatus = this.status.find(s => s.name === res.body.status);
-        this.selectedStatusName = this.selectedStatus.name
+        this.name = res.body.name;
+        this.stage = res.body.status;
+        this.GetOneIsSyncing = res.body.is_syncing;
         this.quote_form.patchValue({
           name: res.body.name,
           code: res.body.code,
+          status: this.status.find((s: { name: any; }) => s.name === this.GetOneQuote.status),
           opportunity_name: res.body.opportunity_name,
           opportunity_id: res.body.opportunity_id,
           is_syncing: res.body.is_syncing,
@@ -147,12 +148,10 @@ export class ViewQuoteComponent {
       })
       return;
     }
-
-    this.editStatus()//處理status的值，抓取name
     let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
     let body = {
       name: this.quote_form.get('name')?.value,
-      status: this.quote_form.get('status')?.value,
+      status: this.quote_form.get('status')?.value.name,
       expiration_date: expiration_date.toISOString(),
       is_syncing: this.quote_form.get('is_syncing')?.value,
       account_id: this.selectedAccount_id, //帳戶ID
@@ -204,7 +203,6 @@ export class ViewQuoteComponent {
   // GET全部Opportunity
   GetAllOpportunity: any[] = [];
   selectedOpportunity_id: string = '';
-
   getAllopportunityRequest() {
     this.HttpApi.getAllOpportunityRequest(1).subscribe(
       (res) => {
@@ -223,7 +221,6 @@ export class ViewQuoteComponent {
   }
 
   selectedAccount_id: string = '';
-
   //取得選擇的商機帳戶id
   selectedOpportunity() {
     const selectedOpportunity = this.GetAllOpportunity.find((opportunity) => opportunity.value === this.selectedOpportunity_id);
@@ -233,7 +230,6 @@ export class ViewQuoteComponent {
   //GET全部product
   GetAllProduct: any[] = [];
   first = 0;
-
   getAllProductRequest(limit ?: number, page ?: number) {
     if (!page) {
       this.first = 0;
@@ -259,11 +255,7 @@ export class ViewQuoteComponent {
   //search: string = '';
   loading: boolean = true;
   totalRecords = 0;
-
-  loadPostsLazy(e
-                  :
-                  any
-  ) {
+  loadPostsLazy(e: any) {
     this.loading = true;
     let limit = e.rows;
     let page = e.first / e.rows + 1;
@@ -271,29 +263,13 @@ export class ViewQuoteComponent {
   }
 
   //偵測status變量
-  onStatusChange(event
-                   :
-                   any
-  ) {
+  onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
 
-  //處理status的值
-  editStatus()
-    :
-    void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    let statusName = this.selectedStatus ? this.selectedStatus.name : "";
-    //將statusName更新到表單中
-    this.quote_form.patchValue({status: statusName});
-  }
 
   //日期轉換
-  formatDate(dateString
-               :
-               string
-  ):
-    string {
+  formatDate(dateString: string): string {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = ("0" + (date.getMonth() + 1)).slice(-2);
@@ -304,11 +280,7 @@ export class ViewQuoteComponent {
   }
 
   //拿到到期日期轉格式
-  formatDate2(dateString2
-                :
-                string
-  ):
-    any {
+  formatDate2(dateString2: string): any {
     if (dateString2 == "0001-01-01T00:00:00Z" || dateString2 == "1970-01-01T00:00:00Z") {
       return null
     } else {
