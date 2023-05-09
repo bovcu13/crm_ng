@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 export class ViewLeadComponent implements OnInit {
   name: string = "name"
   title: string = "title"
+  edit: boolean = false;
   status: any[] = [
     {
       name: "不明確",
@@ -113,9 +114,55 @@ export class ViewLeadComponent implements OnInit {
     }
   ]
 
+  // 商機選項
+  stage: any[] = [
+    {
+      name: "資格評估",
+      code: "qualification"
+    },
+    {
+      name: "需求分析",
+      code: "needs_analysis "
+    },
+    {
+      name: "提案",
+      code: "potential"
+    },
+    {
+      name: "談判",
+      code: "negotiation"
+    },
+    {
+      name: "已結束",
+      code: "closed"
+    }
+  ]
+  forecast_category: any[] = [
+    {
+      "name": "被遺漏",
+      "code": "omitted"
+    },
+    {
+      "name": "進行中",
+      "code": "pipeline"
+    },
+    {
+      "name": "最佳情況",
+      "code": "best_case"
+    },
+    {
+      "name": "承諾",
+      "code": "commit"
+    },
+    {
+      "name": "結案",
+      "code": "closed"
+    }
+  ]
+
   //表格最後下拉控制選項
   lead_form!: FormGroup;
-  edit: boolean = true;
+  opportunity_form: FormGroup;
   id: any;
 
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute
@@ -142,15 +189,36 @@ export class ViewLeadComponent implements OnInit {
       updated_by: ['', [Validators.required]],
       updated_at: [''],
     });
+    this.opportunity_form = this.fb.group({
+      opportunity_id: ['', [Validators.required]],
+      account_name: ['', [Validators.required]],
+      name: ['', [Validators.required]],
+      close_date: ['', [Validators.required]],
+      stage: ['', [Validators.required]],
+      forecast_category: ['', [Validators.required]],
+      amount: [''],
+      owner: [''],
+      created_by: [''],
+      created_at: [''],
+      updated_by: [''],
+      updated_at: [''],
+    });
   }
+
+  // 放沒有"已結束"階段下拉選單
+  filteredStatus: any[] = [];
+  which: any[] = [];
 
   ngOnInit(): void {
     this.getAllAccountRequest();
-    this.getOneLead(this.id)
+    this.getOneLead(this.id);
+    // 過濾"已結束"
+    this.filteredStatus = this.status.filter(option => option.code !== 'Closed');
+    this.which = this.filteredStatus
   }
 
   getData: any;
-  stage!: string;
+  status_value!: string;
 
   getOneLead(id: any): void {
     this.HttpApi.getOneLeadRequest(id).subscribe(
@@ -158,6 +226,12 @@ export class ViewLeadComponent implements OnInit {
         this.getData = request.body
         console.log(this.getData)
         this.lead_form.controls['account_name'].disable();
+        // 若線索狀態為"已轉換"，不能更改
+        if (this.status.find((s: { name: any; }) => s.name === this.getData.status).name === "已轉換") {
+          // 將下拉選單資料改為有以轉換之資料，修正patchValue status bug
+          this.which = this.status;
+          this.lead_form.controls['status'].disable();
+        }
         this.lead_form.patchValue(this.getData)
         this.lead_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === this.getData.status),
@@ -165,7 +239,7 @@ export class ViewLeadComponent implements OnInit {
           rating: this.rating.find((s: { name: any; }) => s.name === this.getData.rating),
           account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name)
         });
-        this.stage = this.status.find((s: { name: any; }) => s.name === this.getData.status).name
+        this.status_value = this.status.find((s: { name: any; }) => s.name === this.getData.status).name
       }
     )
   }
@@ -206,10 +280,18 @@ export class ViewLeadComponent implements OnInit {
     );
   }
 
+  showDialog(): void {
+    this.edit = true;
+    this.opportunity_form.controls['account_name'].disable();
+    this.opportunity_form.controls['stage'].disable();
+    this.opportunity_form.patchValue({
+      account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name),
+    });
+  }
+
 
   // 現在時間
   currentDate = new Date()
-  isActive: boolean = false;
 
   patchLead() {
     if (this.lead_form.controls['status'].hasError('required') ||
@@ -263,6 +345,113 @@ export class ViewLeadComponent implements OnInit {
       });
   }
 
+  // 轉換成商機
+  postOpportunity(): void {
+    let data = {
+      status: this.status[4].name,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
+      updated_at: this.currentDate
+    }
+    this.HttpApi.patchLeadRequest(this.id, data)
+      .subscribe(request => {
+        console.log(request)
+        if (request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的變更 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getOneLead(this.id);
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      })
+    if (
+      this.opportunity_form.controls['account_name'].hasError('required') ||
+      this.opportunity_form.controls['name'].hasError('required') ||
+      this.opportunity_form.controls['stage'].hasError('required') ||
+      this.opportunity_form.controls['forecast_category'].hasError('required') ||
+      this.opportunity_form.controls['close_date'].hasError('required')) {
+      this.edit = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.opportunity_form.controls['account_name'].hasError('required')) {
+          this.opportunity_form.controls['account_name'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['name'].hasError('required')) {
+          this.opportunity_form.controls['name'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['stage'].hasError('required')) {
+          this.opportunity_form.controls['stage'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['forecast_category'].hasError('required')) {
+          this.opportunity_form.controls['forecast_category'].markAsDirty();
+        }
+        if (this.opportunity_form.controls['close_date'].hasError('required')) {
+          this.opportunity_form.controls['close_date'].markAsDirty();
+        }
+        this.edit = true;
+      })
+      console.log("這")
+      return;
+    }
+
+    let body = {
+      name: this.opportunity_form.value.name,
+      stage: this.stage[1].name,
+      forecast_category: this.selectedForecastCategory.name,
+      // account_name: this.selectedAccountName,s
+      // account_id: this.selectedAccountId,
+      account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name).label,
+      account_id: this.GetAllAccount.find((a: { value: any; }) => a.value === this.getData.account_id).value,
+      close_date: new Date(this.opportunity_form.value.close_date),
+      amount: parseInt(this.opportunity_form.value?.amount),
+      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+      created_at: this.currentDate
+    }
+    console.log(body)
+
+    this.HttpApi.postOpportunityRequest(body)
+      .subscribe(request => {
+        console.log(request)
+        if (request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getOneLead(this.id);
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+            console.log("這")
+          })
+        }
+      })
+  }
+
 
   showAlertCancel() {
     this.edit = false
@@ -305,6 +494,20 @@ export class ViewLeadComponent implements OnInit {
   ratingValue(event: any): void {
     this.selectedRating = this.rating.find((s: { name: any; }) => s.name === event.value.name);
     this.lead_form.value.rating = this.selectedRating.name
+  }
+
+  selectedStage: any;
+
+  stageValue(event: any): void {
+    this.selectedStage = this.stage.find((s) => s.name === event.value.name);
+    this.opportunity_form.value.stage = this.selectedStage.name
+  }
+
+  selectedForecastCategory: any;
+
+  forecast_categoryValue(event: any): void {
+    this.selectedForecastCategory = this.forecast_category.find((s) => s.name === event.value.name);
+    this.opportunity_form.value.forecast_category = this.selectedForecastCategory.name
   }
 
 }
