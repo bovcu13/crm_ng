@@ -34,46 +34,48 @@
       <p-card>
       <span class="flex justify-content-center">
         <button class="flex justify-content-center" [ngClass]="{
-                'surface-400': stage === '不明確',
-                'bg-blue-300': stage === '新線索',
-                'bg-yellow-300': stage === '評估中',
-                'bg-orange-300': stage === '發展中',
-                'bg-green-300': stage === '已轉換'
+                'surface-400': status_value === '不明確',
+                'bg-blue-300': status_value === '新線索',
+                'bg-yellow-300': status_value === '評估中',
+                'bg-orange-300': status_value === '發展中',
+                'bg-green-300': status_value === '已轉換'
             }">
-          <span class="span" *ngIf="stage==='不明確'">不明確</span>
-          <i class="pi pi-check" *ngIf="stage==='新線索'||stage==='評估中'||stage==='發展中'||stage==='已轉換'"></i>
+          <span class="span" *ngIf="status_value==='不明確'">不明確</span>
+          <i class="pi pi-check"
+             *ngIf="status_value==='新線索'||status_value==='評估中'||status_value==='發展中'||status_value==='已轉換'"></i>
        </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check':stage === '不明確',
-                'bg-blue-300': stage === '新線索',
-                'bg-yellow-300': stage === '評估中',
-                'bg-orange-300': stage === '發展中',
-                'bg-green-300': stage === '已轉換'
+                'has-check':status_value === '不明確',
+                'bg-blue-300': status_value === '新線索',
+                'bg-yellow-300': status_value === '評估中',
+                'bg-orange-300': status_value === '發展中',
+                'bg-green-300': status_value === '已轉換'
             }">
-          <span class="span" *ngIf="stage==='不明確'||stage==='新線索'">新線索</span>
-          <i class="pi pi-check" *ngIf="stage==='評估中'||stage==='發展中'||stage==='已轉換'"></i>
+          <span class="span" *ngIf="status_value==='不明確'||status_value==='新線索'">新線索</span>
+          <i class="pi pi-check" *ngIf="status_value==='評估中'||status_value==='發展中'||status_value==='已轉換'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check':stage === '不明確'||stage === '新線索',
-                'bg-yellow-300': stage === '評估中',
-                'bg-orange-300': stage === '發展中',
-                'bg-green-300': stage === '已轉換'
-            }">
-          <span class="span" *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'">評估中</span>
-          <i class="pi pi-check" *ngIf="stage==='發展中'||stage==='已轉換'"></i>
-        </button>
-        <button class="flex justify-content-center" [ngClass]="{
-                'has-check':stage === '不明確'||stage === '新線索'||stage === '評估中',
-                'bg-orange-300': stage === '發展中',
-                'bg-green-300': stage === '已轉換'
+                'has-check':status_value === '不明確'||status_value === '新線索',
+                'bg-yellow-300': status_value === '評估中',
+                'bg-orange-300': status_value === '發展中',
+                'bg-green-300': status_value === '已轉換'
             }">
           <span class="span"
-                *ngIf="stage==='不明確'||stage==='新線索'||stage==='評估中'||stage==='發展中'">發展中</span>
-          <i class="pi pi-check" *ngIf="stage==='已轉換'"></i>
+                *ngIf="status_value==='不明確'||status_value==='新線索'||status_value==='評估中'">評估中</span>
+          <i class="pi pi-check" *ngIf="status_value==='發展中'||status_value==='已轉換'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check': stage === '不明確'||stage === '新線索'||stage === '評估中'||stage === '發展中',
-                'bg-green-300': stage === '已轉換'
+                'has-check':status_value === '不明確'||status_value === '新線索'||status_value === '評估中',
+                'bg-orange-300': status_value === '發展中',
+                'bg-green-300': status_value === '已轉換'
+            }">
+          <span class="span"
+                *ngIf="status_value==='不明確'||status_value==='新線索'||status_value==='評估中'||status_value==='發展中'">發展中</span>
+          <i class="pi pi-check" *ngIf="status_value==='已轉換'"></i>
+        </button>
+        <button class="flex justify-content-center" [ngClass]="{
+                'has-check': status_value === '不明確'||status_value === '新線索'||status_value === '評估中'||status_value === '發展中',
+                'bg-green-300': status_value === '已轉換'
             }">
           <span class="span">已轉換</span>
         </button>
@@ -93,15 +95,17 @@
                 <div class="col-6">
                   <div class="field">
                     <label><span class="text-red-600">*</span>線索狀態</label>
-                    <p-dropdown placeholder="請選擇" optionLabel="name" [options]="status"
+                    <p-dropdown placeholder="請選擇" optionLabel="name" [options]=which
                                 formControlName="status" appendTo="body" (onChange)="statusValue($event)"
                                 [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError('required') && lead_form.controls['status'].touched}"
                     ></p-dropdown>
                   </div>
                 </div>
                 <div class="col-6 mt-5">
-                  <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync"
-                            styleClass="p-button-rounded p-button-secondary p-button-text p-button-lg "></p-button>
+                  <ng-container *ngIf="status_value!=='已轉換'">
+                    <p-button pTooltip="轉換" (click)="showDialog()" tooltipPosition="top" icon="pi pi-sync"
+                              styleClass="p-button-rounded p-button-secondary p-button-text p-button-lg "></p-button>
+                  </ng-container>
                 </div>
                 <div class="col-6">
                   <div class="field">
@@ -183,3 +187,68 @@
     </p-card>
   </div>
 </div>
+<form [formGroup]="opportunity_form">
+  <p-dialog [(visible)]="edit" header="轉換為商機" [modal]="true">
+    <div class="grid">
+      <div class="col-6">
+        <div class="field">
+          <label><span class="text-red-600">*</span>商機名稱</label>
+          <input pInputText formControlName="name"
+                 [ngClass]="{'ng-dirty':opportunity_form.controls['name'].hasError('required')  && opportunity_form.controls['name'].touched}">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label><span class="text-red-600">*</span>帳戶</label>
+          <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
+                      [filter]="true" appendTo="body" optionLabel="label"
+                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶"
+                      [ngClass]="{'ng-dirty':opportunity_form.controls['account_name'].hasError('required') && opportunity_form.controls['account_name'].touched}">
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label><span class="text-red-600">*</span>階段</label>
+          <p-dropdown [disabled]="true" [options]="stage" optionLabel="name"
+                      (onChange)="stageValue($event)" formControlName="stage" appendTo="body"
+                      [ngClass]="{'ng-dirty':opportunity_form.controls['stage'].hasError('required')  && opportunity_form.controls['stage'].touched}"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label><span class="text-red-600">*</span>預測種類</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="forecast_category" optionLabel="name"
+                      (onChange)="forecast_categoryValue($event)" formControlName="forecast_category"
+                      appendTo="body"
+                      [ngClass]="{'ng-dirty':opportunity_form.controls['forecast_category'].hasError('required')  && opportunity_form.controls['forecast_category'].touched}"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label><span class="text-red-600">*</span>結束日期</label>
+          <p-calendar formControlName="close_date" appendTo="body" dateFormat="yy-mm-dd"
+                      [ngClass]="{'ng-dirty':opportunity_form.controls['close_date'].hasError('required')  && opportunity_form.controls['close_date'].touched}"></p-calendar>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>金額</label>
+          <input pInputText formControlName="amount">
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="field">
+          <label>業務員</label>
+          <br>
+          <label>{{(opportunity_form.controls['created_by'].value)}}</label>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-content-end">
+      <p-button label="轉換" (click)="postOpportunity();edit=false"
+                styleClass="p-button-outlined p-button-info"></p-button>
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
+    </div>
+  </p-dialog>
+</form>
