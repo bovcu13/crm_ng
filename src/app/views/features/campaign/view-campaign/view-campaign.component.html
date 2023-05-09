@@ -3,7 +3,7 @@
     <div class="mb-3">
       <p-card>
         <form [formGroup]="campaign_form">
-          <h3>{{campaign_form.controls['name'].value}}</h3>
+          <h3>{{name}}</h3>
           <p-divider></p-divider>
           <span class="p-buttonset flex justify-content-center">
             <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
@@ -26,11 +26,11 @@
             </div>
             <div class="col-12 flex justify-content-center">
               <label>開始日期: </label>
-              <label>{{campaign_form.controls['start_date'].value}}</label>
+              <label>{{GetOneStartDate}}</label>
             </div>
             <div class="col-12 flex justify-content-center">
               <label>結束日期: </label>
-              <label>{{campaign_form.controls['end_date'].value}}</label>
+              <label>{{GetOneEndDate}}</label>
             </div>
           </div>
         </form>

@@ -102,12 +102,17 @@ export class ViewCampaignComponent {
 
 //取得當筆行銷活動約資料
   GetOneCampaign: any;
+  name: any;
   stage: any;
-
+  GetOneStartDate: any;
+  GetOneEndDate: any;
   getOneCampaignRequest(c_id: any) {
     this.HttpApi.getOneCampaignRequest(c_id).subscribe(res => {
         this.GetOneCampaign = res.body;
+        this.name = res.body.name;
         this.stage = res.body.status;
+        this.GetOneStartDate = this.formatDate2(res.body.start_date);
+        this.GetOneEndDate = this.formatDate2(res.body.end_date);
         this.campaign_form.patchValue({
           name: res.body.name,
           status: this.status.find((s: { name: any; }) => s.name === this.GetOneCampaign.status),

@@ -2,15 +2,12 @@ import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
-import {Order} from 'src/app/shared/models/order';
-import {MessageService} from 'primeng/api';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-order',
   templateUrl: './view-order.component.html',
   styleUrls: ['./view-order.component.scss'],
-  providers: [MessageService]
 })
 export class ViewOrderComponent {
   order_product: any[] = [
@@ -53,18 +50,17 @@ export class ViewOrderComponent {
     }
   ]
   //取得當筆報價資料
-  GetOneOrder: Order[] = [];
-  selectedStatus!: any;
-  selectedStatusName: any;
-
+  GetOneOrder: any;
+  stage: any;
+  GetOneStartDate: any;
   getOneOrderRequest(o_id: any): void {
     this.HttpApi.getOneOrderRequest(o_id).subscribe(res => {
-        this.GetOneOrder = res.body;
-        this.editStatus();
-        this.selectedStatus = this.status.find(s => s.name === res.body.status);
-        this.selectedStatusName = this.selectedStatus.name
+        this.GetOneOrder = res.body
+        this.stage = res.body.status;
+        this.GetOneStartDate = this.formatDate2(res.body.start_date);
         this.order_form.patchValue({
           code: res.body.code,
+          status: this.status.find((s: { name: any; }) => s.name === this.GetOneOrder.status),
           start_date: this.formatDate2(res.body.start_date),
           account_id: res.body.account_id,
           account_name: res.body.account_name,
@@ -89,7 +85,6 @@ export class ViewOrderComponent {
   //GET全部product
   GetAllProduct: any[] = [];
   first = 0;
-
   getAllProductRequest(limit?: number, page?: number) {
     if (!page) {
       this.first = 0;
@@ -112,9 +107,7 @@ export class ViewOrderComponent {
   order_form: FormGroup;
   edit_product_form: FormGroup;
   o_id: any;
-
-  constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute
-    , private messageService: MessageService) {
+  constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute) {
     this.order_form = this.fb.group({
       code: [''],
       account_id: ['', [Validators.required]],
@@ -162,8 +155,6 @@ export class ViewOrderComponent {
 
   // GET全部Contract
   GetAllContract: any[] = [];
-  selectedContract_id: any;
-
   getAllContractRequest(limit?: number, page?: number) {
     this.HttpApi.getAllContractRequest(limit, page).subscribe(
       (res) => {
@@ -210,14 +201,13 @@ export class ViewOrderComponent {
     } else {
       this.order_form.controls['start_date'].value;
     }
-    this.editStatus()//處理status的值，抓取name
     if (this.order_form.controls['account_id'].hasError('required') || this.order_form.controls['contract_id'].hasError('dateError')
       || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
       return;
     }
     let start_date = new Date(this.order_form.get('start_date')?.value);
     let body = {
-      status: this.order_form.get('status')?.value,
+      status: this.order_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
       account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
@@ -249,12 +239,12 @@ export class ViewOrderComponent {
   }
 
   //設定訂單開始天數不能開始於契約開始日期
-  selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   MinDate!: any;//契約日期
   orderStartDate: any;
-
+  selectedContract_id: any;
+  selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
-    const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
+    const selectedContract = this.GetAllContract.find((contract) => contract.value === this.order_form.get('contract_id')?.value);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
     this.selectedAccount_id = selectedContract?.account_id;
@@ -263,16 +253,6 @@ export class ViewOrderComponent {
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
-  }
-
-  //處理status的值
-  statusName!: string;
-
-  editStatus(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    this.statusName = this.selectedStatus ? this.selectedStatus.name : "";
-    //將statusName更新到表單中
-    this.order_form.patchValue({status: this.statusName});
   }
 
   //日期轉換

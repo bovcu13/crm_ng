@@ -26,11 +26,11 @@
             </div>
             <div class="col-12 flex justify-content-center">
               <label>訂單開始日期: </label>
-              <label>{{order_form.controls['start_date'].value}}</label>
+              <label>{{GetOneStartDate}}</label>
             </div>
             <div class="col-12 flex justify-content-center">
               <label>狀態: </label>
-              <label>{{selectedStatusName}}</label>
+              <label>{{stage}}</label>
             </div>
             <div class="col-12 flex justify-content-center">
               <label>訂單金額: </label>
@@ -46,15 +46,15 @@
       <p-card>
       <span class="flex justify-content-center">
         <button class="flex justify-content-center" [ngClass]="{
-                'surface-400': selectedStatusName === '草稿',
-                'bg-green-300': selectedStatusName === '啟動中'
+                'surface-400': stage === '草稿',
+                'bg-green-300': stage === '啟動中'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'">草稿</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='啟動中'"></i>
+          <span class="span" *ngIf="stage==='草稿'">草稿</span>
+          <i class="pi pi-check" *ngIf="stage==='啟動中'"></i>
        </button>
        <button class="flex justify-content-center" [ngClass]="{
-                'has-check':selectedStatusName === '草稿',
-                'bg-green-300': selectedStatusName === '啟動中'
+                'has-check':stage === '草稿',
+                'bg-green-300': stage === '啟動中'
             }">
           <span class="span">啟動中</span>
         </button>
@@ -73,7 +73,7 @@
                       <label>訂單產品</label>
                     </div>
                     <div class="justify-content-end">
-                      <ng-container *ngIf="selectedStatusName =='草稿'">
+                      <ng-container *ngIf="stage =='草稿'">
                         <p-button icon="pi pi-plus" pTooltip="新增產品" (click)="addProduct()" tooltipPosition="top"
                                   styleClass="p-button-text"></p-button>
                       </ng-container>
@@ -146,8 +146,8 @@
                   <div class="field">
                     <label><span class="required-star">*</span>契約號碼</label>
                     <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_id" appendTo="body"
-                                [options]="GetAllContract"
-                                [(ngModel)]="selectedContract_id" (ngModelChange)="validateStartDate()"
+                                [options]="GetAllContract" [(ngModel)]="selectedContract_id"
+                                (ngModelChange)="validateStartDate()"
                                 [filter]="true" filterBy="label" [showClear]="true"
                                 [ngClass]="{'ng-dirty': order_form.controls['contract_id'].hasError('required') && order_form.controls['contract_id'].touched}"
                     ></p-dropdown>
@@ -171,7 +171,7 @@
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
                                 formControlName="status"
                                 name="status" optionLabel="name" (onChange)="onStatusChange($event)"
-                                [(ngModel)]="selectedStatus"></p-dropdown>
+                               ></p-dropdown>
                   </div>
                 </div>
                 <div class="col-6">
@@ -185,7 +185,7 @@
                   <div class="field">
                     <label>啟用：</label>
                     <br>
-                    <ng-container *ngIf="selectedStatusName =='啟動中'">
+                    <ng-container *ngIf="stage =='啟動中'">
                       <label>{{ order_form.controls['activated_by'].value }}</label>
                       <label>{{ order_form.controls['activated_at'].value }}</label>
                     </ng-container>

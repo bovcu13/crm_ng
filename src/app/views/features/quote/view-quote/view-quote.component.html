@@ -3,7 +3,7 @@
     <div class="mb-3">
       <p-card>
         <form [formGroup]="quote_form">
-          <h3>{{quote_form.controls['name'].value}}</h3>
+          <h3>{{name}}</h3>
           <p-divider></p-divider>
           <span class="p-buttonset flex justify-content-center">
             <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
@@ -18,23 +18,19 @@
           <div class="grid mt-2">
             <div class="col-12 flex justify-content-center">
               <label>編號: </label>
-              {{quote_form.controls['code'].value}}
+              <label>{{quote_form.controls['code'].value}}</label>
             </div>
             <div class="col-12 flex justify-content-center">
               <label>商機: </label>
-              {{quote_form.controls['opportunity_name'].value}}
-              <!-- <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'"
-          [(ngModel)]="selectedOpportunity_id" [filter]="true" filterBy="label" [showClear]="true"
-          (ngModelChange)="selectedOpportunity()"
-          [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError && quote_form.controls['opportunity_id'].touched}"></p-dropdown> -->
+              <label>{{quote_form.controls['opportunity_name'].value}}</label>
             </div>
             <div class="col-12 flex justify-content-center">
               <label>同步到商機: </label>
-              {{quote_form.controls['is_syncing'].value}}
+              <label>{{GetOneIsSyncing}}</label>
             </div>
             <div class="col-12 flex justify-content-center">
               <label>總計: </label>
-              {{quote_form.controls['total_price'].value}}
+              <label>{{quote_form.controls['total_price'].value}}</label>
             </div>
           </div>
         </form>
@@ -46,58 +42,58 @@
       <p-card>
         <span class="flex justify-content-center">
         <button class="flex justify-content-center" [ngClass]="{
-                'surface-400': selectedStatusName === '草稿',
-                'bg-red-300': selectedStatusName === '需要審查',
-                'bg-blue-300': selectedStatusName === '審查中',
-                'bg-orange-300': selectedStatusName === '已批准',
-                'bg-yellow-300': selectedStatusName === '已呈現',
-                'bg-green-300': selectedStatusName === '已接受'
+                'surface-400': stage === '草稿',
+                'bg-red-300': stage === '需要審查',
+                'bg-blue-300': stage === '審查中',
+                'bg-orange-300': stage === '已批准',
+                'bg-yellow-300': stage === '已呈現',
+                'bg-green-300': stage === '已接受'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'">草稿</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='需要審查'||selectedStatusName==='審查中'||selectedStatusName==='已批准'||selectedStatusName==='已呈現'||selectedStatusName==='已接受'"></i>
+          <span class="span" *ngIf="stage==='草稿'">草稿</span>
+          <i class="pi pi-check" *ngIf="stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
        </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check':selectedStatusName === '草稿',
-                'bg-red-300': selectedStatusName === '需要審查',
-                'bg-blue-300': selectedStatusName === '審查中',
-                'bg-orange-300': selectedStatusName === '已批准',
-                'bg-yellow-300': selectedStatusName === '已呈現',
-                'bg-green-300': selectedStatusName === '已接受'
+                'has-check':stage === '草稿',
+                'bg-red-300': stage === '需要審查',
+                'bg-blue-300': stage === '審查中',
+                'bg-orange-300': stage === '已批准',
+                'bg-yellow-300': stage === '已呈現',
+                'bg-green-300': stage === '已接受'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='需要審查'">需要審查</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='審查中'||selectedStatusName==='已批准'||selectedStatusName==='已呈現'||selectedStatusName==='已接受'"></i>
+          <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'">需要審查</span>
+          <i class="pi pi-check" *ngIf="stage==='審查中'||stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check':selectedStatusName === '草稿'||selectedStatusName === '需要審查',
-                'bg-blue-300': selectedStatusName === '審查中',
-                'bg-orange-300': selectedStatusName === '已批准',
-                'bg-yellow-300': selectedStatusName === '已呈現',
-                'bg-green-300': selectedStatusName === '已接受'
+                'has-check':stage === '草稿'||stage === '需要審查',
+                'bg-blue-300': stage === '審查中',
+                'bg-orange-300': stage === '已批准',
+                'bg-yellow-300': stage === '已呈現',
+                'bg-green-300': stage === '已接受'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='需要審查'||selectedStatusName==='審查中'">審查中</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='已批准'||selectedStatusName==='已呈現'||selectedStatusName==='已接受'"></i>
+          <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'">審查中</span>
+          <i class="pi pi-check" *ngIf="stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check':selectedStatusName === '草稿'||selectedStatusName === '需要審查'||selectedStatusName === '審查中',
-                'bg-orange-300': selectedStatusName === '已批准',
-                'bg-yellow-300': selectedStatusName === '已呈現',
-                'bg-green-300': selectedStatusName === '已接受'
+                'has-check':stage === '草稿'||stage === '需要審查'||stage === '審查中',
+                'bg-orange-300': stage === '已批准',
+                'bg-yellow-300': stage === '已呈現',
+                'bg-green-300': stage === '已接受'
             }" >
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='需要審查'||selectedStatusName==='審查中'||selectedStatusName==='已批准'">已批准</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='已呈現'||selectedStatusName==='已接受'"></i>
+          <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'">已批准</span>
+          <i class="pi pi-check" *ngIf="stage==='已呈現'||stage==='已接受'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
-                'has-check': selectedStatusName === '草稿'||selectedStatusName === '需要審查'||selectedStatusName === '審查中'||selectedStatusName === '已批准',
-                'bg-yellow-300': selectedStatusName === '已呈現',
-                'bg-green-300': selectedStatusName === '已接受'
+                'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
+                'bg-yellow-300': stage === '已呈現',
+                'bg-green-300': stage === '已接受'
             }">
-          <span class="span" *ngIf="selectedStatusName==='草稿'||selectedStatusName==='需要審查'||selectedStatusName==='審查中'||selectedStatusName==='已批准'||selectedStatusName==='已呈現'">已呈現</span>
-          <i class="pi pi-check" *ngIf="selectedStatusName==='已接受'"></i>
+          <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已呈現'">已呈現</span>
+          <i class="pi pi-check" *ngIf="stage==='已接受'"></i>
 
         </button>
           <button class="flex justify-content-center" [ngClass]="{
-                'has-check': selectedStatusName === '草稿'||selectedStatusName === '需要審查'||selectedStatusName === '審查中'||selectedStatusName === '已批准',
-                'bg-green-300': selectedStatusName === '已接受'
+                'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
+                'bg-green-300': stage === '已接受'
             }">
           <span class="span">已接受</span>
         </button>
@@ -178,8 +174,7 @@
                   <div class="field">
                     <label>狀態</label>
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
-                      formControlName="status" optionLabel="name" (onChange)="onStatusChange($event)"
-                      [(ngModel)]="selectedStatus"></p-dropdown>
+                      formControlName="status" optionLabel="name" (onChange)="onStatusChange($event)"></p-dropdown>
                   </div>
                 </div>
                 <div class="col-6">
