@@ -160,15 +160,6 @@ export class ViewLeadComponent implements OnInit {
         this.lead_form.controls['account_name'].disable();
         this.lead_form.patchValue(this.getData)
         this.lead_form.patchValue({
-          lead_id: this.getData.lead_id,
-          name: this.getData.name,
-          industry_id: this.getData.industry_id,
-          owner: this.getData.owner,
-          description: this.getData.description,
-          created_by: this.getData.created_by,
-          created_at: this.getData.created_at,
-          updated_by: this.getData.updated_by,
-          updated_at: this.getData.updated_at,
           status: this.status.find((s: { name: any; }) => s.name === this.getData.status),
           source: this.source.find((s: { name: any; }) => s.name === this.getData.source),
           rating: this.rating.find((s: { name: any; }) => s.name === this.getData.rating),
@@ -200,6 +191,14 @@ export class ViewLeadComponent implements OnInit {
           })
         ];
         console.log(this.GetAllAccount)
+        this.HttpApi.getOneLeadRequest(this.id).subscribe(
+          request => {
+            this.getData = request.body
+            this.lead_form.patchValue({
+              account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name)
+            });
+          }
+        )
       },
       (error) => {
         console.log(error);
