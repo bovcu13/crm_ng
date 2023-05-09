@@ -3,6 +3,7 @@ import {AuthService} from "../../../_services/auth.service";
 import {TokenStorageService} from "../../../_services/token-storage.service";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from "@angular/router";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-login',
@@ -49,6 +50,13 @@ export class LoginComponent implements OnInit {
         // 帳密錯誤
         if (data.code === 403){
           console.log(data)
+          Swal.fire({
+            title: '失敗',
+            text: "請確認帳密是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          })
           return
         }
         this.tokenStorage.saveToken(data.body.access_token);
@@ -58,7 +66,15 @@ export class LoginComponent implements OnInit {
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
         // this.reloadPage();
-        this.router.navigate(['/main']);
+        Swal.fire({
+          title: '登入',
+          text: "歡迎您 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(()=>{
+          this.router.navigate(['/main']);
+        })
       },
       err => {
         console.log(err)

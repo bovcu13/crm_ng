@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MenuItem} from 'primeng/api';
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-toolbar',
@@ -16,7 +17,7 @@ export class ToolbarComponent implements OnInit {
       {
         label: '首頁',
         routerLink: ['/main/dashboard'],
-      },
+        },
       {
         label: '帳戶',
         items: [
@@ -41,31 +42,31 @@ export class ToolbarComponent implements OnInit {
       {
         label: '商品/服務',
         routerLink: ['/main/product'],
-      },
+        },
       {
         label: '報價',
         routerLink: ['/main/quote'],
-      },
+        },
       {
         label: '契約',
         routerLink: ['/main/contract'],
-      },
+        },
       {
         label: '訂單',
         routerLink: ['/main/order'],
-      },
+        },
       {
         label: '行銷活動',
         routerLink: ['/main/campaign'],
-      },
+        },
       {
         label: '預測',
         routerLink: ['/main/forecasting'],
-      },
+        },
       {
         label: '報告',
         routerLink: ['/main/report'],
-      },
+        },
       // {
       //   label: '顯示面板',
       //   routerLink: ['/main/display'],
@@ -86,6 +87,13 @@ export class ToolbarComponent implements OnInit {
         routerLink: ['/login'],
         command: () => {
           sessionStorage.clear();
+          Swal.fire({
+            title: '登出',
+            text: "祝您擁有美好的一天 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500
+          });
         },
       }];
   }
