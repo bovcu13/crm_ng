@@ -324,9 +324,16 @@ export class LeadComponent implements OnInit {
     console.log(this.filteredLead)
   }
 
+  // 放沒有"已轉換"階段下拉選單
+  filteredStatus: any[] = [];
+  which: any[] = [];
+
   ngOnInit(): void {
     this.filteredLead = this.getData;
     this.getAllAccountRequest();
+    // 過濾"已轉換"
+    this.filteredStatus = this.status.filter(option => option.code !== 'Closed');
+    this.which = this.filteredStatus
   }
 
   total!: number;
@@ -359,8 +366,15 @@ export class LeadComponent implements OnInit {
       });
     } else if (type === 'edit') {
       this.dialogHeader = '編輯線索';
-      this.lead_form.controls['account_name'].disable();
       this.lead_form.controls['status'].enable();
+      console.log(this.status.find((s: { name: any; }) => s.name === lead.status).name)
+      // 若線索狀態為"已轉換"，不能更改
+      if (this.status.find((s: { name: any; }) => s.name === lead.status).name === "已轉換") {
+        // 將下拉選單資料改為有以轉換之資料，修正patchValue status bug
+        this.which = this.status;
+        this.lead_form.controls['status'].disable();
+      }
+      this.lead_form.controls['account_name'].disable();
       this.lead_form.patchValue(lead);
       console.log(lead);
       this.lead_form.patchValue({
@@ -703,7 +717,7 @@ export class LeadComponent implements OnInit {
   statusValue(event: any): void {
     this.selectedStatus = this.status.find((s: { name: any; }) => s.name === event.value.name);
     // console.log("code: " + event.value.code);
-    // console.log("name: " + event.value.name);
+    console.log(event.value.name);
     this.lead_form.value.status = this.selectedStatus.name
   }
 
