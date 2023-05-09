@@ -202,12 +202,14 @@ export class OpportunityComponent implements OnInit {
       this.opportunity_form.reset();
       // 將"商機"設定為不可修改
       this.opportunity_form.controls['stage'].disable();
+      this.opportunity_form.controls['account_name'].enable();
       this.opportunity_form.patchValue({
         status: this.stage.find(s => s.name === this.stage[1].name),
       });
     } else if (type === 'edit') {
       this.dialogHeader = '編輯商機';
       this.opportunity_form.controls['stage'].enable();
+      this.opportunity_form.controls['account_name'].disable();
       this.opportunity_form.patchValue(opportunity);
       this.opportunity_form.patchValue({
         stage: this.stage.find(s => s.name === opportunity.stage),
