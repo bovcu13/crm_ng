@@ -8,9 +8,13 @@ p-card {
   .p-card {
     border-radius: 10px; //元素的外邊框圓角 px越大越圓 google
   }
-
-  .p-button {
-    border-radius: 6px;
+  .p-button.p-button-text {
+      background: 0;
+      color: #607D8B;
+  }
+  .p-button.p-button-text:hover {
+    background: rgba(33, 150, 243, 0.04);
+    color: #607D8B;
   }
 
   .p-inputtext,.p-multiselect,.p-inputnumber {
