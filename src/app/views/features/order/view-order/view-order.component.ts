@@ -89,18 +89,18 @@ export class ViewOrderComponent {
     if (!page) {
       this.first = 0;
     }
-    this.HttpApi.getAllProductRequest(limit,).subscribe(res => {
-        this.GetAllProduct = res.body.products
-        this.GetAllProduct = res.body.products.map((product: any) => {
-          const created_at = this.formatDate(product.created_at);
-          const updated_at = this.formatDate(product.updated_at);
-          return {...product, created_at, updated_at};
-        });
-        console.log(this.GetAllProduct)
-      },
-      error => {
-        console.log(error);
-      });
+    // this.HttpApi.getAllProductRequest(limit,).subscribe(res => {
+    //     this.GetAllProduct = res.body.products
+    //     this.GetAllProduct = res.body.products.map((product: any) => {
+    //       const created_at = this.formatDate(product.created_at);
+    //       const updated_at = this.formatDate(product.updated_at);
+    //       return {...product, created_at, updated_at};
+    //     });
+    //     console.log(this.GetAllProduct)
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   });
   }
 
   //建立formgroup
@@ -129,7 +129,7 @@ export class ViewOrderComponent {
     console.log("取到的o_id: " + this.o_id)
     this.getOneOrderRequest(this.o_id)
     this.getAllContractRequest()
-    this.getAllProductRequest()
+    //this.getAllProductRequest()
     this.edit_product_form = this.fb.group({
       name: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
