@@ -1,0 +1,30 @@
+.foot {
+  border-radius: 8px;
+  display: flex;
+  transition: 0.25s ease;
+  justify-content: center;
+  color: #969593;
+
+  &:hover {
+    transform: translateY(-5px);
+    cursor: pointer;
+  }
+}
+
+.page-container {
+  position: relative;
+  min-height: 100vh; // 設定最小高度以讓container至少有頁面的高度
+  box-sizing: border-box; // 確保padding不會增加container的寬度
+  padding-bottom: 80px; // footer的高度加上額外的間距
+}
+
+// 其他元素的樣式
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px; // 設定footer的高度
+  background-color: purple;
+}
