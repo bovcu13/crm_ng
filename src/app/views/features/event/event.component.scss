@@ -1,6 +1,24 @@
 @import 'src/app/app.component.scss';
 
 :host ::ng-deep {
+
+
+  .fc-toolbar-title {
+    font-family: "Verdana", sans-serif;
+    font-size: 24px;
+    color: #104673;
+    position: relative;
+    display: inline-flex;
+  }
+
+
+  .fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 3.5rem;
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+  }
+
   .fc.fc-theme-standard .fc-toolbar .fc-button {
     font-family: "Verdana", sans-serif;
     background: #104673;
@@ -10,23 +28,44 @@
     outline: 0;
   }
 
+  .fc.fc-theme-standard .fc-toolbar .fc-button.fc-dayGridMonth-button.fc-button-active,
+  .fc.fc-theme-standard .fc-toolbar .fc-button.fc-timeGridWeek-button.fc-button-active,
+  .fc.fc-theme-standard .fc-toolbar .fc-button.fc-timeGridDay-button.fc-button-active {
+    background: #104673;
+    opacity: 0.6;
+    border: none;
+    box-shadow: 0 0 0 0;
+  }
+
   .fc.fc-theme-standard .fc-toolbar .fc-button:hover {
     border: 0;
     background: #104673;
     color: #FFFFFB;
   }
 
-  .fc-toolbar-title {
-    font-family: "Verdana", sans-serif;
-    font-size: 24px;
-    color: #104673;
+
+  .fc-toolbar-chunk{
+    div{
+      display: inline-flex;
+      align-items: center;
+      text-align: center;
+    }
   }
 
-  .fc.fc-theme-standard .fc-toolbar .fc-next-button,
+  .fc.fc-theme-standard .fc-toolbar .fc-next-button {
+    background: 0;
+    color: #104673;
+    border: none;
+    position: relative;
+    display: inline-flex;
+  }
+
   .fc.fc-theme-standard .fc-toolbar .fc-prev-button {
     background: 0;
     color: #104673;
     border: none;
+    position: relative;
+    display: inline-flex;
   }
 
   .fc.fc-theme-standard .fc-toolbar .fc-next-button:hover,
@@ -35,10 +74,6 @@
     color: #333;
     border: none;
     box-shadow: none;
-  }
-
-  .fc .fc-toolbar.fc-header-toolbar {
-    margin-bottom: 3.5rem;
   }
 }
 
