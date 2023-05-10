@@ -1,4 +1,5 @@
 export interface Product {
+  body?: any;
   name?: string;
   code?: string;
   is_enable?: boolean;

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http'; //http協定
-import {Product} from "../shared/models/product";
 import {Contract} from "../shared/models/contract";
 import {Quote} from '../shared/models/quote';
 import {Observable} from 'rxjs';
@@ -133,9 +132,43 @@ export class HttpApiService {
   price!: number;
 
   //取得all  商品/服務資料
-  getAllProductRequest(limit = 20, page = 1): Observable<any> {
-    const url = this.BaseUrl + '/products/list' + '?page=' + page + '&limit=' + limit;
-    return this.http.get<any>(url);
+  // getAllProductRequest(limit = 20, page = 1): Observable<any> {
+  //   const url = this.BaseUrl + '/products/list' + '?page=' + page + '&limit=' + limit;
+  //   return this.http.get<any>(url);
+  // }
+
+  getAllProductRequest(search: string,limit = 20, page = 1, event?: any): Observable<any> {
+    let obj: any = {
+      filter: {
+        name: search ? search : null,
+        code: search ? search : null,
+        price: search ? search : null,
+        description: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction = null;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: { field: event.sortField || null, direction: direction },
+        filter: {
+          name: keyword,
+          code: keyword,
+          price: keyword,
+          description: keyword,
+        },
+      };
+    }
+    return this.http.post<any>(`${this.BaseUrl}/products/list`+ '?page=' + page + '&limit=' + limit, obj);
   }
 
   //取得one  商品/服務資料 get one
@@ -151,9 +184,9 @@ export class HttpApiService {
   }
 
   //修改 商品/服務資料 patch
-  patchProductRequest(sid: string, body: any): Observable<Product> {
+  patchProductRequest(sid: string, body: any): Observable<any> {
     const url = `${this.BaseUrl}/products/${sid}`;
-    return this.http.patch<Product>(url, body);
+    return this.http.patch<any>(url, body);
   }
 
   //刪除 商品/服務資料 delete
@@ -173,10 +206,12 @@ export class HttpApiService {
     let url = this.BaseUrl + '/contracts/list' + '?page=' + page + '&limit=' + limit;
     return this.http.get<any>(url);
   }
+
   getOneContractRequest(sid: any): Observable<any> {
     const url = `${this.BaseUrl}/contracts/${sid}`;
     return this.http.get(url);
   }
+
   //新增 契約 post
   postContractRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/contracts`;

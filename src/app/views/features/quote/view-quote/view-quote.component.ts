@@ -234,20 +234,20 @@ export class ViewQuoteComponent {
     if (!page) {
       this.first = 0;
     }
-    this.HttpApi.getAllProductRequest(limit,).subscribe(res => {
-        this.GetAllProduct = res.body.products
-        this.GetAllProduct = res.body.products.map((product: any) => {
-          const created_at = this.formatDate(product.created_at);
-          const updated_at = this.formatDate(product.updated_at);
-          return {...product, created_at, updated_at};
-        });
-        this.totalRecords = res.body.total;
-        this.loading = false;
-        console.log(this.GetAllProduct)
-      },
-      error => {
-        console.log(error);
-      });
+    // this.HttpApi.getAllProductRequest(limit,).subscribe(res => {
+    //     this.GetAllProduct = res.body.products
+    //     this.GetAllProduct = res.body.products.map((product: any) => {
+    //       const created_at = this.formatDate(product.created_at);
+    //       const updated_at = this.formatDate(product.updated_at);
+    //       return {...product, created_at, updated_at};
+    //     });
+    //     this.totalRecords = res.body.total;
+    //     this.loading = false;
+    //     console.log(this.GetAllProduct)
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   });
   }
 
   // table lazyload

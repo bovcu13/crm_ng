@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {HttpApiService} from "../../../api/http-api.service";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LazyLoadEvent} from 'primeng/api';
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-product',
@@ -10,6 +11,7 @@ import Swal from "sweetalert2";
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent {
+  @ViewChild('dt1') dt1!: Table;
 
   // product: any[] = [
   //   {
@@ -36,48 +38,47 @@ export class ProductComponent {
   //   }
   // ]
   //搜尋功能
-  filterText: any;
-
-  filterProducts(): void {
-    if (!this.filterText) {
-      this.getAllProductRequest();
-      return;
-    }
-    // 使用 Array 的 filter() 方法對 GetAllProduct 進行過濾
-    this.GetAllProduct = this.GetAllProduct.filter((product) => {
-      // 將所有要比對的欄位轉成小寫字母
-      const name = product.name?.toLowerCase() || '';
-      const code = product.code?.toLowerCase() || '';
-      const description = product.description?.toLowerCase() || '';
-      const price = product.price?.toString().toLowerCase() || '';
-      // 比對是否有任何一個欄位包含搜尋文字
-      return (
-        name.includes(this.filterText.toLowerCase()) ||
-        code.includes(this.filterText.toLowerCase()) ||
-        description.includes(this.filterText.toLowerCase()) ||
-        price.includes(this.filterText.toLowerCase()) ||
-        (product.is_enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
-      );
-    });
-    console.log(this.GetAllProduct)
-  }
+  // filterText: any;
+  //
+  // filterProducts(): void {
+  //   if (!this.filterText) {
+  //     this.getAllProductRequest();
+  //     return;
+  //   }
+  //   // 使用 Array 的 filter() 方法對 GetAllProduct 進行過濾
+  //   this.GetAllProduct = this.GetAllProduct.filter((product) => {
+  //     // 將所有要比對的欄位轉成小寫字母
+  //     const name = product.name?.toLowerCase() || '';
+  //     const code = product.code?.toLowerCase() || '';
+  //     const description = product.description?.toLowerCase() || '';
+  //     const price = product.price?.toString().toLowerCase() || '';
+  //     // 比對是否有任何一個欄位包含搜尋文字
+  //     return (
+  //       name.includes(this.filterText.toLowerCase()) ||
+  //       code.includes(this.filterText.toLowerCase()) ||
+  //       description.includes(this.filterText.toLowerCase()) ||
+  //       price.includes(this.filterText.toLowerCase()) ||
+  //       (product.is_enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
+  //     );
+  //   });
+  //   console.log(this.GetAllProduct)
+  // }
 
 //GET全部product
-  GetAllProduct!: HttpApiService[];
-
-  getAllProductRequest(limit?: number, page?: number) {
+  GetAllProduct!: any[];
+  search: string = '';  // 搜尋關鍵字
+  getAllProductRequest(search: string, limit?: number, page?: number, event?: any) {
     if (!page) {
       this.first = 0;
     }
-    this.HttpApi.getAllProductRequest(limit, page).subscribe(res => {
-        this.GetAllProduct = res.body.products;
-        this.GetAllProduct = res.body.products.map((product: any) => {
-          const created_at = this.formatDate(product.created_at);
-          const updated_at = this.formatDate(product.updated_at);
-          return {...product, created_at, updated_at};
-        });
-        this.totalRecords = res.body.total;
-        this.loading = false;
+    this.HttpApi.getAllProductRequest(search, limit, page, event).subscribe(res => {
+        this.GetAllProduct = res.body
+        // this.GetAllProduct = res.body.products.map((product: any) => {
+        //   const created_at = this.formatDate(product.created_at);
+        //   const updated_at = this.formatDate(product.updated_at);
+        //   return {...product, created_at, updated_at};
+        // });
+        //this.totalRecords = res.body.total;
         console.log(this.GetAllProduct)
       },
       error => {
@@ -133,7 +134,6 @@ export class ProductComponent {
             showConfirmButton: false,
             timer: 1000
           })
-          this.getAllProductRequest()
         } else {
           Swal.fire({
             title: '失敗',
@@ -239,7 +239,7 @@ export class ProductComponent {
             showConfirmButton: false,
             timer: 1000
           })
-          this.getAllProductRequest()
+          //this.getAllProductRequest()
         } else {
           Swal.fire({
             title: '失敗',
@@ -278,7 +278,7 @@ export class ProductComponent {
               showConfirmButton: false,
               timer: 1000
             })
-            this.getAllProductRequest()
+            //this.getAllProductRequest()
           } else {
             Swal.fire({
               title: '失敗',
@@ -328,6 +328,10 @@ export class ProductComponent {
     this.getAllProductRequest(limit, page);
   }
 
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
   //日期轉換
   formatDate(dateString: string): string {
     const date = new Date(dateString);
