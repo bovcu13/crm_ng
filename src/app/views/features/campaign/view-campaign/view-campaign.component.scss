@@ -30,3 +30,26 @@ button {
   box-shadow: 6px 6px 12px #c5c5c5,
   -6px -6px 12px #ffffff;
 }
+
+.chart-container {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.chart-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+}
+
+.total {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 40%);
+  font-size: 40px;
+  font-family: "Verdana", sans-serif;
+  font-weight: bold;
+}
