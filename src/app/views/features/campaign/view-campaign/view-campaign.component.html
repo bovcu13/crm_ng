@@ -95,7 +95,13 @@
                   </div>
                 </div>
                 <div class="card flex justify-content-center">
-                  <p-chart type="doughnut" [data]="data" [options]="options"></p-chart>
+                  <div class="chart-container">
+                    <p-chart type="doughnut" [data]="data" [options]="options"></p-chart>
+                    <div class="chart-center">
+                      <h2>總數</h2>
+                      <div class="total">{{ getTotal() }}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="mt-2">
@@ -326,10 +332,18 @@
         <th style="width: 4rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="account_name">帳戶<p-sortIcon field="account_name"></p-sortIcon></th>
-        <th pSortableColumn="status">狀態<p-sortIcon field="status"></p-sortIcon></th>
-        <th pSortableColumn="description">描述<p-sortIcon field="description"></p-sortIcon></th>
-        <th pSortableColumn="salesperson_name">業務員<p-sortIcon field="salesperson_name"></p-sortIcon></th>
+        <th pSortableColumn="account_name">帳戶
+          <p-sortIcon field="account_name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="status">狀態
+          <p-sortIcon field="status"></p-sortIcon>
+        </th>
+        <th pSortableColumn="description">描述
+          <p-sortIcon field="description"></p-sortIcon>
+        </th>
+        <th pSortableColumn="salesperson_name">業務員
+          <p-sortIcon field="salesperson_name"></p-sortIcon>
+        </th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-campaign_lead>
@@ -350,7 +364,7 @@
       </div>
     </ng-template>
   </p-table>
-  </p-dialog>
+</p-dialog>
 
 <!--新增聯絡人dialog-->
 <p-dialog [(visible)]="addcontact" header=將聯絡人新增至行銷活動 [modal]="true">
@@ -358,13 +372,23 @@
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem">
-          <p-tableHeaderCheckbox ></p-tableHeaderCheckbox>
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="name">名稱<p-sortIcon field="name"></p-sortIcon></th>
-        <th pSortableColumn="account_name">帳戶<p-sortIcon field="account_name"></p-sortIcon></th>
-        <th pSortableColumn="phone_number">行動電話<p-sortIcon field="phone_number"></p-sortIcon></th>
-        <th pSortableColumn="email">電子郵件<p-sortIcon field="email"></p-sortIcon></th>
-        <th pSortableColumn="salesperson_name">業務員<p-sortIcon field="salesperson_name"></p-sortIcon></th>
+        <th pSortableColumn="name">名稱
+          <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="account_name">帳戶
+          <p-sortIcon field="account_name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="phone_number">行動電話
+          <p-sortIcon field="phone_number"></p-sortIcon>
+        </th>
+        <th pSortableColumn="email">電子郵件
+          <p-sortIcon field="email"></p-sortIcon>
+        </th>
+        <th pSortableColumn="salesperson_name">業務員
+          <p-sortIcon field="salesperson_name"></p-sortIcon>
+        </th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-campaign_contact>
@@ -399,6 +423,6 @@
   </div>
   <div class="flex justify-content-end">
     <p-button label="取消" (click)="addcomfirm=false" styleClass="p-button-secondary"></p-button>
-    <p-button label="確認更改"  styleClass="p-button-info ml-1"></p-button>
+    <p-button label="確認更改" styleClass="p-button-info ml-1"></p-button>
   </div>
 </p-dialog>

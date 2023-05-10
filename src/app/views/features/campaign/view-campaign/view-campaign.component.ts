@@ -402,18 +402,14 @@ export class ViewCampaignComponent {
   options: any;
 
   ngOnInit() {
-    this.getOneCampaignRequest(this.c_id)
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
-
-    const values = [300, 50, 100]; // 实际数据
-    const total = values.reduce((sum, value) => sum + value, 0); // 计算总和
 
     this.data = {
       labels: ['A', 'B', 'C'],
       datasets: [
         {
-          data: values,
+          data: [10, 50, 10],
           backgroundColor: [
             documentStyle.getPropertyValue('--blue-500'),
             documentStyle.getPropertyValue('--yellow-500'),
@@ -425,27 +421,7 @@ export class ViewCampaignComponent {
             documentStyle.getPropertyValue('--green-400')
           ]
         }
-      ],
-      // 添加总和值到数据标签
-      plugins: [{
-        beforeDraw: (chart: any) => {
-          const width = chart.chart.width,
-            height = chart.chart.height,
-            ctx = chart.chart.ctx;
-          ctx.restore();
-
-          const fontSize = (height / 6).toFixed(2);
-          ctx.font = fontSize + 'em sans-serif';
-          ctx.textBaseline = 'middle';
-
-          const text = total.toString(), // 总和值的文本
-            textX = Math.round((width - ctx.measureText(text).width) / 2),
-            textY = height / 2;
-
-          ctx.fillText(text, textX, textY);
-          ctx.save();
-        }
-      }]
+      ]
     };
 
     this.options = {
@@ -458,6 +434,16 @@ export class ViewCampaignComponent {
         }
       }
     };
+  }
+
+  getTotal(): number {
+    let total = 0;
+    for (const dataset of this.data.datasets) {
+      for (const value of dataset.data) {
+        total += value;
+      }
+    }
+    return total;
   }
 
 }
