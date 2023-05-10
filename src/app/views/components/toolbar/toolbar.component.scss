@@ -13,7 +13,7 @@
     border-radius: 0;
     transition: all 0.3s ease-in-out;
     height: 70px;
-    padding-left: 23px;
+    padding-left: 40px;
 
     .p-menubar-root-list .p-menuitem .p-menuitem-link {
       position: relative;
@@ -231,4 +231,8 @@
   left: 0;
   width: 100%;
   z-index: 5;
+}
+
+.img{
+  margin-right: 15px;
 }
