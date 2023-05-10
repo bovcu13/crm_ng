@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LazyLoadEvent, MenuItem} from "primeng/api";
 import {HttpApiService} from "../../../api/http-api.service";
@@ -6,6 +6,7 @@ import {Lead} from "../../../shared/models/lead";
 import {concatMap, tap} from 'rxjs/operators';
 import {Observable, of} from "rxjs";
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 
 @Component({
@@ -15,59 +16,7 @@ import Swal from "sweetalert2";
 })
 export class LeadComponent implements OnInit {
   getData!: Lead[];
-  filteredLead: any[] = [];
-  lead: any[] = [
-    {
-      name: "David",
-      status: "不明確",
-      owner: "林",
-      email: "abc@gmail.com",
-      phone_number: "07-1234567",
-      cell_phone: "0912345678",
-      line: "@11111",
-      company_name: "EIRC"
-    },
-    {
-      name: "David",
-      status: "新線索",
-      owner: "林",
-      email: "abc@gmail.com",
-      phone_number: "07-1234567",
-      cell_phone: "0912345678",
-      line: "@12222",
-      company_name: "EIRC"
-    },
-    {
-      name: "David",
-      status: "評估中",
-      owner: "林",
-      email: "abc@gmail.com",
-      phone_number: "07-1234567",
-      cell_phone: "0912345678",
-      line: "@12333",
-      company_name: "EIRC"
-    },
-    {
-      name: "David",
-      status: "發展中",
-      owner: "林",
-      email: "abc@gmail.com",
-      phone_number: "07-1234567",
-      cell_phone: "0912345678",
-      line: "@12344",
-      company_name: "EIRC"
-    },
-    {
-      name: "David",
-      status: "已轉換",
-      owner: "林",
-      email: "abc@gmail.com",
-      phone_number: "07-1234567",
-      cell_phone: "0912345678",
-      line: "@12345",
-      company_name: "EIRC"
-    },
-  ]
+  @ViewChild('dt') dt!: Table;
 
   status: any[] = [
     {
@@ -114,21 +63,6 @@ export class LeadComponent implements OnInit {
       code: "friend_referral"
     }
   ]
-
-  // account: any = [
-  //   {
-  //     name: "公司A",
-  //     code: "company_a"
-  //   },
-  //   {
-  //     name: "公司B",
-  //     code: "company_b"
-  //   },
-  //   {
-  //     name: "公司C",
-  //     code: "company_c"
-  //   }
-  // ]
 
   industry_id: any = [
     {
@@ -298,58 +232,39 @@ export class LeadComponent implements OnInit {
     );
   }
 
-  getLead(lead: any): void {
-    this.leadValue = lead
-  }
-
-  filterText: any = '';
-
-  filtered() {
-    if (this.filterText === '') {
-      this.filteredLead = this.lead;
-    } else {
-      this.filteredLead = this.lead.filter(lead => {
-        return (
-          lead.status.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          lead.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          lead.company_name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          lead.phone_number.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          lead.cell_phone.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          lead.email.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          lead.line.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          lead.owner.toLowerCase().includes(this.filterText.toLowerCase())
-        );
-      });
-    }
-    console.log(this.filteredLead)
-  }
-
   // 放沒有"已轉換"階段下拉選單
   filteredStatus: any[] = [];
   which: any[] = [];
 
   ngOnInit(): void {
-    this.filteredLead = this.getData;
     this.getAllAccountRequest();
     // 過濾"已轉換"
     this.filteredStatus = this.status.filter(option => option.code !== 'Closed');
     this.which = this.filteredStatus
   }
 
-  total!: number;
-
-  // 懶加載
-  loadPostsLazy(event: LazyLoadEvent) {
-    const page = (event.first! / event.rows!) + 1;
-    this.HttpApi.getAllLeadRequest(page).subscribe(request => {
-      this.getData = request.body.leads;
-      this.total = request.body.total
-      console.log(this.getData);
-      // console.log(this.total)
-    });
+  // 搜尋關鍵字
+  search: string = '';
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
-  showDialog(type: string, lead?: any): void {
+  total!: number;
+  // 懶加載
+  loadTable(e: any) {
+    // this.loading = true;
+    // let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllLeadRequest(this.search, 1, page, e).subscribe(
+      request => {
+        this.getData = request.body.leads;
+        this.total = request.body.total;
+      });
+  }
+
+  showDialog(type:string, lead ?: any
+  ):void {
     // 將"業務員"設定為不可修改
     // this.lead_form.controls['owner'].disable();
     this.edit = true;
@@ -388,13 +303,14 @@ export class LeadComponent implements OnInit {
     }
   }
 
-  // 現在時間
+// 現在時間
   currentDate = new Date()
 
-  postLead(): void {
+  postLead():void {
     if (this.lead_form.controls['account_name'].hasError('required') ||
       this.lead_form.controls['status'].hasError('required') ||
-      this.lead_form.controls['description'].hasError('required')) {
+      this.lead_form.controls['description'].hasError('required')
+    ) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -416,7 +332,6 @@ export class LeadComponent implements OnInit {
       })
       return;
     }
-
     let body = {
       description: this.lead_form.controls['description'].value,
       status: this.status[1].name,
@@ -429,7 +344,6 @@ export class LeadComponent implements OnInit {
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       created_at: this.currentDate
     }
-
     this.HttpApi.postLeadRequest(body).subscribe(request => {
       console.log(request)
       let event: LazyLoadEvent = {
@@ -450,7 +364,7 @@ export class LeadComponent implements OnInit {
           showConfirmButton: false,
           timer: 1000
         })
-        this.loadPostsLazy(event);
+        // this.loadPostsLazy(event);
       } else {
         Swal.fire({
           title: '失敗',
@@ -466,10 +380,11 @@ export class LeadComponent implements OnInit {
   }
 
 
-  patchLead(): void {
+  patchLead():void {
     if (this.lead_form.controls['account_name'].hasError('required') ||
       this.lead_form.controls['status'].hasError('required') ||
-      this.lead_form.controls['description'].hasError('required')) {
+      this.lead_form.controls['description'].hasError('required')
+    ) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -527,7 +442,7 @@ export class LeadComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          this.loadPostsLazy(event);
+          // this.loadPostsLazy(event);
         } else {
           Swal.fire({
             title: '失敗',
@@ -543,7 +458,8 @@ export class LeadComponent implements OnInit {
   }
 
 
-  deleteLead(id: any): void {
+  deleteLead(id:any
+  ):void {
     Swal.fire({
       title: '確認刪除？',
       icon: 'warning',
@@ -569,7 +485,7 @@ export class LeadComponent implements OnInit {
               showConfirmButton: false,
               timer: 1000
             })
-            this.loadPostsLazy(event);
+            // this.loadPostsLazy(event);
           } else {
             Swal.fire({
               title: '失敗',
@@ -595,8 +511,8 @@ export class LeadComponent implements OnInit {
   }
 
 
-  // 新增帳戶
-  postAccount(): Observable<any> {
+// 新增帳戶
+  postAccount():Observable<any> {
     const body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
@@ -605,7 +521,6 @@ export class LeadComponent implements OnInit {
       parent_account_id: '00000000-0000-4000-a000-000000000000',
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61"
     };
-
     return this.HttpApi.postAccountRequest(body).pipe(
       tap(request => {
         console.log(request);
@@ -618,7 +533,7 @@ export class LeadComponent implements OnInit {
           filters: undefined,
           globalFilter: undefined,
         };
-        this.loadPostsLazy(event);
+        // this.loadPostsLazy(event);
       })
     );
   }
@@ -676,7 +591,7 @@ export class LeadComponent implements OnInit {
     })
   }
 
-  addAccDialog(): void {
+  addAccDialog():void {
     this.addAcount = true;
     this.edit = false;
     this.account_form.reset();
@@ -714,17 +629,18 @@ export class LeadComponent implements OnInit {
 
   selectedStatus: any;
 
-  statusValue(event: any): void {
+  statusValue(event:any
+  ):void {
     this.selectedStatus = this.status.find((s: { name: any; }) => s.name === event.value.name);
     // console.log("code: " + event.value.code);
     console.log(event.value.name);
     this.lead_form.value.status = this.selectedStatus.name
   }
 
-  selectedAccountName!: string;
-  selectedAccountId!: string;
+  selectedAccountName!:string;
+  selectedAccountId!:string;
 
-  accountValue(event: any): void {
+  accountValue(event:any):void {
     this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
     this.selectedAccountId = event.value.value
     // console.log(this.selectedAccountId)
@@ -732,28 +648,28 @@ export class LeadComponent implements OnInit {
 
   selectedSource: any;
 
-  sourceValue(event: any): void {
+  sourceValue(event:any):void {
     this.selectedSource = this.source.find((s: { name: any; }) => s.name === event.value.name);
     this.lead_form.value.source = this.selectedSource.name
   }
 
   selectedRating: any;
 
-  ratingValue(event: any): void {
+  ratingValue(event:any):void {
     this.selectedRating = this.rating.find((s: { name: any; }) => s.name === event.value.name);
     this.lead_form.value.rating = this.selectedRating.name
     // console.log(typeof this.selectedRating.name)
     // console.log(this.selectedRating.name)
   }
 
-  industry_idValue(event: any): void {
+  industry_idValue(event:any):void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }
 
   selectedIndustry: any;
 
-  industryValue(event: any): void {
+  industryValue(event:any):void {
     this.selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
     this.lead_form.value.industry = this.selectedIndustry.name
   }
