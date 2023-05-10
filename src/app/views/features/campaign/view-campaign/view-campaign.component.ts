@@ -298,22 +298,22 @@ export class ViewCampaignComponent {
 
   addLead() {
     this.addlead = true;
-    this.getAllLeadRequest()
+    // this.getAllLeadRequest()
   }
 
   GetAlllead: any[] = [];
 
-  getAllLeadRequest() {
-    this.HttpApi.getAllLeadRequest(1).subscribe(
-      (res) => {
-        this.GetAlllead = res.body.leads
-        console.log(this.GetAlllead)
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
+  // getAllLeadRequest() {
+  //   this.HttpApi.getAllLeadRequest(1).subscribe(
+  //     (res) => {
+  //       this.GetAlllead = res.body.leads
+  //       console.log(this.GetAlllead)
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }
 
   //新增線索dialog
   addcontact: boolean = false;
