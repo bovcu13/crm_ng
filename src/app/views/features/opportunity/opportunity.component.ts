@@ -79,9 +79,10 @@ export class OpportunityComponent implements OnInit {
   }
 
   GetAllAccount!: any[];
+  accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(1).subscribe(
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
       (res) => {
         this.GetAllAccount = res.body.accounts.map((account: any) => {
           // console.log(account)
@@ -104,12 +105,14 @@ export class OpportunityComponent implements OnInit {
 
   // 搜尋關鍵字
   search: string = '';
+
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
   total!: number;
+
   // 懶加載
   loadTable(e: any) {
     // this.loading = true;
@@ -151,7 +154,7 @@ export class OpportunityComponent implements OnInit {
     }
   }
 
-  getAllOpportunity(): void{
+  getAllOpportunity(): void {
     this.HttpApi.getAllOpportunityRequest(this.search, 1).subscribe(
       request => {
         this.getData = request.body.opportunities;

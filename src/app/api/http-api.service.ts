@@ -16,10 +16,45 @@ export class HttpApiService {
   }
 
   //--帳戶---------------------------------------------------------------------------------------------------
-  getAllAccountRequest(page: number): Observable<any> {
+
+  getAllAccountRequest(search: string, status = 1, page = 1, event?: any): Observable<any> {
+    let obj: any = {
+      field: status,
+      filter: {
+        name: search ? search : null,
+        phone_number: search ? search : null,
+        type: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction = null;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: { field: event.sortField || null, direction: direction },
+        field: status,
+        filter: {
+          name: keyword,
+          phone_number: keyword,
+          type: keyword,
+        },
+      };
+    }
     const url = `${this.BaseUrl}/accounts/list?page=${page}&limit=10`;
-    return this.http.get<any>(url);
+    return this.http.post<any>(url, obj);
   }
+  // getAllAccountRequest(page: number): Observable<any> {
+  //   const url = `${this.BaseUrl}/accounts/list?page=${page}&limit=10`;
+  //   return this.http.get<any>(url);
+  // }
 
   getAllAccountDetailRequest(page: number): Observable<any> {
     const url = `${this.BaseUrl}/accounts/contacts?page=${page}&limit=10`;
