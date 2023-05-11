@@ -147,6 +147,7 @@ a {
 }
 
 .count {
+  padding-left: 15px;
   width: 19px;
   text-align: center;
   border-radius: 50px;
@@ -156,9 +157,10 @@ a {
   align-items: center;
   margin-top: 0 !important;
   color: #B88932;
+  opacity: 0.9;
   font-weight: 700;
+  font-size: larger !important;
   font-family: "Arial Black";
-  text-decoration-line: underline;
 }
 
 /******************************************************* chart 1 ****************************************************/
