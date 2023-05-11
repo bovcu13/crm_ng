@@ -18,10 +18,10 @@ export class DashboardComponent {
     const documentStyle1 = getComputedStyle(document.documentElement);
     const textColor1 = documentStyle1.getPropertyValue('--text-color');
     this.data1 = {
-      labels: ['A', 'B', 'C'],
+      labels: ['新業務', '舊業務'],
       datasets: [
         {
-          data: [300, 50, 100],
+          data: [5200, 3400],
           backgroundColor: [documentStyle1.getPropertyValue('--blue-500'), documentStyle1.getPropertyValue('--yellow-500'), documentStyle1.getPropertyValue('--green-500')],
           hoverBackgroundColor: [documentStyle1.getPropertyValue('--blue-400'), documentStyle1.getPropertyValue('--yellow-400'), documentStyle1.getPropertyValue('--green-400')]
         }
@@ -45,17 +45,17 @@ export class DashboardComponent {
     const surfaceBorder = documentStyle2.getPropertyValue('--surface-border');
 
     this.data2 = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
       datasets: [
         {
-          label: 'First Dataset',
+          label: '2022',
           data: [65, 59, 80, 81, 56, 55, 40],
           fill: false,
           tension: 0.4,
           borderColor: documentStyle2.getPropertyValue('--blue-500')
         },
         {
-          label: 'Second Dataset',
+          label: '2021',
           data: [28, 48, 40, 19, 86, 27, 90],
           fill: false,
           borderDash: [5, 5],
@@ -63,7 +63,7 @@ export class DashboardComponent {
           borderColor: documentStyle2.getPropertyValue('--teal-500')
         },
         {
-          label: 'Third Dataset',
+          label: '2023',
           data: [12, 51, 62, 33, 21, 62, 45],
           fill: true,
           borderColor: documentStyle2.getPropertyValue('--orange-500'),

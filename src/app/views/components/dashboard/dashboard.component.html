@@ -6,15 +6,25 @@
         <div class="grid">
           <div class="col-12">
             <!--帳戶-->
+              <img class="h-7rem w-22rem mb-7" src="./assets/img/logo/user.png"/>
             <article class="tile" routerLink="/main/account">
               <!--          <img class="h-12rem" alt="meow" src="https://i0.wp.com/www.printmag.com/wp-content/uploads/2021/02/4cbe8d_f1ed2800a49649848102c68fc5a66e53mv2.gif?fit=476%2C280&ssl=1"/>-->
-              <img class="h-13rem" src="./assets/img/logo/user.png"/>
-              <div class="tile-header h-4rem">
+<!--              <img class="h-13rem" src="./assets/img/logo/user.png"/>-->
+<!--                <div class="flex">-->
+<!--                  <p-button icon="pi pi-eye" routerLink="/main/account/view" pTooltip="檢視" tooltipPosition="top"-->
+<!--                            styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
+<!--                  <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"-->
+<!--                            styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
+<!--                  <p-button icon="pi pi-trash" pTooltip="刪除"-->
+<!--                            tooltipPosition="top"-->
+<!--                            styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
+<!--              </div>-->
+              <div class="tile-header h-6rem">
                 <h3>
                   <div><span class="pi pi-users" style="font-size: 1.3rem">
                   </span>
                     帳戶/聯絡人
-                    <span class="count">5</span>
+                    <span class="count best">5</span>
                   </div>
                   <span>管理您的帳戶及聯絡人</span>
                 </h3>
@@ -27,7 +37,7 @@
               <div class="chart1-container">
                 <p-chart type="doughnut" [data]="data1" [options]="options1" [style]="{width: '250px'}"></p-chart>
                 <div class="chart1-center">
-                  <h2>業績</h2>
+                  <h2>本日業績</h2>
                   <div class="total">{{ getTotal() }}</div>
                 </div>
               </div>
@@ -35,7 +45,7 @@
                 <h3>
                   <div><span class="pi pi-chart-pie" style="font-size: 1.3rem"></span>
                     報告
-                    <span class="count">3</span>
+                    <span class="count best">3</span>
                   </div>
                   <span>使用圖表呈現業務及銷售數據</span>
                 </h3>
@@ -57,7 +67,7 @@
                 <h3>
                   <div><span class="pi pi-chart-line" style="font-size: 1.3rem"></span>
                     預測
-                    <span class="count">2</span>
+                    <span class="count best">2</span>
                   </div>
                   <span>使用數據預測銷售表現</span>
                 </h3>
@@ -71,7 +81,7 @@
                 <h3>
                   <div><span class="pi pi-briefcase" style="font-size: 1.3rem"></span>
                     線索
-                    <span class="count">16</span>
+                    <span class="count best">16</span>
                   </div>
                   <span>可能成為潛在客戶的人或公司資訊</span>
                 </h3>
@@ -85,7 +95,7 @@
                 <h3>
                   <div><span class="pi pi-dollar" style="font-size: 1.3rem"></span>
                     商機
-                    <span class="count">10</span>
+                    <span class="count best">10</span>
                   </div>
                   <span>已經成為銷售機會的線索</span>
                 </h3>
@@ -112,7 +122,7 @@
                 <h3>
                   <div><span class="pi pi-flag" style="font-size: 1.3rem"></span>
                     報價
-                    <span class="count">13</span>
+                    <span class="count best">13</span>
                   </div>
                   <span>發送給商機的報價</span>
                 </h3>
@@ -126,7 +136,7 @@
                 <h3>
                   <div><span class="pi pi-file-edit" style="font-size: 1.3rem"></span>
                     契約
-                    <span class="count">8</span>
+                    <span class="count worst">8</span>
                   </div>
                   <span>管理您的商業契約</span>
                 </h3>
@@ -140,7 +150,7 @@
                 <h3>
                   <div><span class="pi pi-shopping-cart" style="font-size: 1.3rem"></span>
                     訂單
-                    <span class="count">7</span>
+                    <span class="count worst">7</span>
                   </div>
                   <span>管理您已成立的訂單</span>
                 </h3>
