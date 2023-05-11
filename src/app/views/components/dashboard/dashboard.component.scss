@@ -1,9 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-.custom-margin {
-  margin-right: -10px;
-  margin-left: -10px;
-}
+/******************************************************* all ****************************************************/
 
 .tiles {
   display: grid;
@@ -39,7 +36,7 @@
     background-color: #EBEFF7;
   }
 
-  &.tile-header{
+  &.tile-header {
     justify-content: space-between;
     align-items: center;
   }
@@ -95,17 +92,14 @@
     flex-direction: column;
     line-height: 1.375;
     margin-left: 0.5rem;
-    font-family: "Arial";
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif;
     justify-content: space-between;
     align-items: center;
 
-    span:first-child {
-      font-weight: 600;
-    }
-
-    span:last-child {
-      font-size: 0.825em;
+    span {
+      font-size: small;
       font-weight: 200;
+      margin-top: 10px;
     }
   }
 }
@@ -152,6 +146,23 @@ a {
   color: inherit;
 }
 
+.count {
+  padding-left: 15px;
+  width: 19px;
+  text-align: center;
+  border-radius: 50px;
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0 !important;
+  color: #B88932;
+  opacity: 0.9;
+  font-weight: 700;
+  font-size: larger !important;
+  font-family: "Arial Black";
+}
+
 /******************************************************* chart 1 ****************************************************/
 .chart1-container {
   position: relative;
@@ -165,7 +176,7 @@ a {
   left: 50%;
   transform: translate(-50%, -70%);
 
-  h2{
+  h2 {
     color: #212121;
   }
 
@@ -186,11 +197,13 @@ a {
   display: inline-flex;
   justify-content: center;
 }
+
 :host ::ng-deep {
-  .chart2{
+  .chart2 {
     width: 600px;
   }
 }
+
 /******************************************************* 待辦事項 ****************************************************/
 
 body {
@@ -258,7 +271,8 @@ h1, h2, p {
 }
 
 .menu-box .titular {
-  background: rgba(68, 136, 164, 0.93);
+  background: #2E5C6E;
+  opacity: 0.85;
 }
 
 .menu-box-menu .icon {
@@ -312,10 +326,86 @@ h1, h2, p {
   background: #FF0020;
   color: #FFFFFB;
 }
-/******************************************************* 待辦事項 ****************************************************/
+
+/******************************************************* calendar ****************************************************/
+
+:host ::ng-deep {
+  .p-calendar {
+    position: relative;
+    display: flex;
+    transform: scale(0.7) translate(21%, 0%);
+    transform-origin: top left;
+  }
+}
+
+.calendar-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 200px;
+  height: 330px;
+}
+
+.calendar-tile {
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f4f5f7;
+  color: #003C54;
+  box-shadow: 3px 3px 3px #CFCFCF;
+  display: flex;
+  flex-direction: column;
+  //justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: 0.25s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    cursor: pointer;
+    background-color: #EBEFF7;
+  }
+
+  &.tile-header {
+    justify-content: space-between;
+    align-items: center;
+  }
 
 
+  a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
 
+    .icon-button {
+      color: inherit;
+      border-color: inherit;
+
+      &:hover,
+      &:focus {
+        background-color: transparent;
+
+        i {
+          transform: none;
+        }
+      }
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:after {
+      content: "";
+      display: block;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+}
 
 
 
