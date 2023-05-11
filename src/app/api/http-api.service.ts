@@ -172,7 +172,7 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  getAllProductRequest(search: string,status=1, page = 1, event?: any): Observable<any> {
+  getAllProductRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -203,7 +203,7 @@ export class HttpApiService {
         },
       };
     }
-    const url = `${this.BaseUrl}/products/list?page=${page}&limit=20`;
+    const url = `${this.BaseUrl}/products/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
 

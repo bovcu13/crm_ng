@@ -12,82 +12,19 @@ import {Table} from "primeng/table";
 export class ProductComponent {
   @ViewChild('dt1') dt1!: Table;
 
-  // product: any[] = [
-  //   {
-  //     name: "pen",
-  //     enable: true,
-  //     code: "00001",
-  //     price: 100,
-  //     description: "這是筆",
-  //     series: "none",
-  //     created_at: "2023-04-15",
-  //     created_by: "林",
-  //     updated_by: "林",
-  //   },
-  //   {
-  //     name: "grava",
-  //     enable: false,
-  //     code: "00002",
-  //     price: 200,
-  //     description: "這是芭樂",
-  //     series: "none",
-  //     created_at: "2023-04-15",
-  //     created_by: "林",
-  //     updated_by: "林",
-  //   }
-  // ]
-  //搜尋功能
-  // filterText: any;
-  //
-  // filterProducts(): void {
-  //   if (!this.filterText) {
-  //     this.getAllProductRequest();
-  //     return;
-  //   }
-  //   // 使用 Array 的 filter() 方法對 GetAllProduct 進行過濾
-  //   this.GetAllProduct = this.GetAllProduct.filter((product) => {
-  //     // 將所有要比對的欄位轉成小寫字母
-  //     const name = product.name?.toLowerCase() || '';
-  //     const code = product.code?.toLowerCase() || '';
-  //     const description = product.description?.toLowerCase() || '';
-  //     const price = product.price?.toString().toLowerCase() || '';
-  //     // 比對是否有任何一個欄位包含搜尋文字
-  //     return (
-  //       name.includes(this.filterText.toLowerCase()) ||
-  //       code.includes(this.filterText.toLowerCase()) ||
-  //       description.includes(this.filterText.toLowerCase()) ||
-  //       price.includes(this.filterText.toLowerCase()) ||
-  //       (product.is_enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase())
-  //     );
-  //   });
-  //   console.log(this.GetAllProduct)
-  // }
-
-//GET全部product
-  GetAllProduct!: any[];
-  search: string = '';  // 搜尋關鍵字
-  // getAllProductRequest(search: string, status: any, limit?: number, page?: number, event?: any) {
-  //   if (!page) {
-  //     this.first = 0;
-  //   }
-  //   this.HttpApi.getAllProductRequest(search, status, limit, page, event).subscribe(res => {
-  //       this.GetAllProduct = res.body.prodcuts
-  //       // this.GetAllProduct = res.body.products.map((product: any) => {
-  //       //   const created_at = this.formatDate(product.created_at);
-  //       //   const updated_at = this.formatDate(product.updated_at);
-  //       //   return {...product, created_at, updated_at};
-  //       // });
-  //       //this.totalRecords = res.body.total;
-  //       console.log(this.GetAllProduct)
-  //     },
-  //     error => {
-  //       console.log(error);
-  //     });
-  // }
-
+  getAllProductRequest(): void{
+  this.HttpApi.getAllProductRequest(this.search,1).subscribe(
+    res =>{
+      this.GetAllProduct  = res.body.products;
+      this.GetAllProduct = res.body.products.map((product: any) => {
+        const created_at = this.formatDate(product.created_at);
+        const updated_at = this.formatDate(product.updated_at);
+        return {...product, created_at, updated_at};
+      });
+    })
+  }
 //POST 一筆product
   BadRequest: any
-
   postProductRequest(): void {
     if (this.product_form.controls['name'].hasError('required') ||
       this.product_form.controls['price'].hasError('required')) {
@@ -133,6 +70,7 @@ export class ProductComponent {
             showConfirmButton: false,
             timer: 1000
           })
+          this.getAllProductRequest()
         } else {
           Swal.fire({
             title: '失敗',
@@ -238,7 +176,7 @@ export class ProductComponent {
             showConfirmButton: false,
             timer: 1000
           })
-          //this.getAllProductRequest()
+          this.getAllProductRequest()
         } else {
           Swal.fire({
             title: '失敗',
@@ -277,7 +215,7 @@ export class ProductComponent {
               showConfirmButton: false,
               timer: 1000
             })
-            //this.getAllProductRequest()
+            this.getAllProductRequest()
           } else {
             Swal.fire({
               title: '失敗',
@@ -318,16 +256,25 @@ export class ProductComponent {
   //懶加載
   totalRecords = 0;
   first = 0;
+  //GET全部product
+  GetAllProduct!: any[];
+  search: string = '';  // 搜尋關鍵字
   loadTable(e: any) {
     let page = e.first / e.rows + 1;
-    this.HttpApi.getAllProductRequest(this.search, 1, page, e).subscribe(
+    let limit = e.rows;
+    this.HttpApi.getAllProductRequest(this.search, 1,limit, page, e).subscribe(
       request => {
         this.GetAllProduct = request.body.products;
+        this.GetAllProduct = request.body.products.map((product: any) => {
+          const created_at = this.formatDate(product.created_at);
+          const updated_at = this.formatDate(product.updated_at);
+          return {...product, created_at, updated_at};
+        });
         this.totalRecords = request.body.total;
+        console.log(this.GetAllProduct)
       });
-    console.log(this.GetAllProduct)
   }
-
+//
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
