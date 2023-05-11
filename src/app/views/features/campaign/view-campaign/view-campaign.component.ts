@@ -408,10 +408,10 @@ export class ViewCampaignComponent {
     const textColor = documentStyle.getPropertyValue('--text-color');
 
     this.data = {
-      labels: ['A', 'B', 'C'],
+      labels: ['已回應', '已傳送'],
       datasets: [
         {
-          data: [10, 50, 10],
+          data: [12, 45],
           backgroundColor: [
             documentStyle.getPropertyValue('--blue-500'),
             documentStyle.getPropertyValue('--yellow-500'),

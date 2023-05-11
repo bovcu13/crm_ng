@@ -156,11 +156,18 @@ a {
   justify-content: center;
   align-items: center;
   margin-top: 0 !important;
-  color: #B88932;
   opacity: 0.9;
   font-weight: 700;
   font-size: larger !important;
   font-family: "Arial Black";
+
+  &.best {
+    color: #B88932;
+  }
+
+  &.worst {
+    color: red;
+  }
 }
 
 /******************************************************* chart 1 ****************************************************/
