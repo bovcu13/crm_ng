@@ -34,7 +34,7 @@
             </div>
             <div class="col-12 flex justify-content-center">
               <label>訂單金額: </label>
-              <label></label>
+              <label>NT$ 11,900</label>
             </div>
           </div>
         </form>
@@ -87,8 +87,10 @@
                   <tr>
                     <th>產品</th>
                     <th>產品代碼</th>
+                    <th>產品價格</th>
+                    <th>報價價格</th>
                     <th>數量</th>
-                    <th>單價</th>
+                    <th>訂單價格</th>
                     <th></th>
                   </tr>
                 </ng-template>
@@ -97,7 +99,9 @@
                     <td>{{ order_product.name }}</td>
                     <td>{{ order_product.code }}</td>
                     <td>{{ order_product.price }}</td>
+                    <td>{{ order_product.quote_price }}</td>
                     <td>{{ order_product.quantity }}</td>
+                    <td>{{ order_product.order_price }}</td>
                     <td class="icon-align-right">
                       <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>

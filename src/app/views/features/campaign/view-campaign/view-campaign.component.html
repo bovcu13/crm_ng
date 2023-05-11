@@ -45,34 +45,34 @@
                 'surface-400': stage === '策劃中',
                 'bg-blue-300': stage === '進行中',
                 'bg-green-300': stage === '已完成',
-                'bg-red-300': stage === '已終止'
+                'bg-red-300': stage === '已中止'
             }">
           <span class="span" *ngIf="stage==='策劃中'">策劃中</span>
           <i class="pi pi-check"
-             *ngIf="stage==='進行中'||stage==='已完成'||stage==='已終止'"></i>
+             *ngIf="stage==='進行中'||stage==='已完成'||stage==='已中止'"></i>
        </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '策劃中',
                 'bg-blue-300': stage === '進行中',
                 'bg-green-300': stage === '已完成',
-                'bg-red-300': stage === '已終止'
+                'bg-red-300': stage === '已中止'
             }">
           <span class="span" *ngIf="stage==='策劃中'||stage==='進行中'">進行中</span>
-          <i class="pi pi-check" *ngIf="stage==='已完成'||stage==='已終止'"></i>
+          <i class="pi pi-check" *ngIf="stage==='已完成'||stage==='已中止'"></i>
         </button>
         <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '策劃中'||stage === '進行中',
                 'bg-green-300': stage === '已完成',
-                'bg-red-300': stage === '已終止'
+                'bg-red-300': stage === '已中止'
             }">
           <span class="span"
                 *ngIf="stage==='策劃中'||stage==='進行中'||stage==='已完成'">已完成</span>
-          <i class="pi pi-check" *ngIf="stage==='已終止'"></i>
+          <i class="pi pi-check" *ngIf="stage==='已中止'"></i>
         </button>
            <button class="flex justify-content-center" [ngClass]="{
                 'has-check': stage === '策劃中'||stage === '進行中'||stage === '已完成',
-                'bg-red-300': stage === '已終止'}">
-            <span class="span">已終止</span>
+                'bg-red-300': stage === '已中止'}">
+            <span class="span">已中止</span>
         </button>
       </span>
       </p-card>
@@ -109,13 +109,13 @@
                   <ng-template pTemplate="caption">
                     <div class="flex justify-content-between">
                       <div class="justify-content-start mt-2">
-                        <label>受影響的機會</label>
+                        <label>受影響的商機</label>
                       </div>
                     </div>
                   </ng-template>
                   <ng-template pTemplate="header">
                     <tr>
-                      <th>機會名稱</th>
+                      <th>商機名稱</th>
                       <th>帳戶</th>
                       <th>金額</th>
                     </tr>
@@ -302,7 +302,7 @@
                   </div>
                 </div>
               </div>
-              <div class="flex justify-content-end" *ngIf="stage!=='已終止'">
+              <div class="flex justify-content-end" *ngIf="stage!=='已中止'">
                 <p-button label="儲存" (click)="patchCampaignRequest(c_id)"
                           styleClass="p-button-outlined p-button-info"></p-button>
                 <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>

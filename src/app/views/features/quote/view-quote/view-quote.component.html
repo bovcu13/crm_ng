@@ -30,7 +30,7 @@
             </div>
             <div class="col-12 flex justify-content-center">
               <label>總計: </label>
-              <label>{{quote_form.controls['total_price'].value}}</label>
+              <label>NT$ 11,210</label>
             </div>
           </div>
         </form>
@@ -105,12 +105,12 @@
         <form [formGroup]="quote_form">
           <p-tabView>
             <p-tabPanel header="相關">
-              <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllProduct" [lazy]="true"
+              <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="quote_product" [lazy]="true"
                 (onLazyLoad)="loadPostsLazy($event)" >
                 <ng-template pTemplate="caption">
                   <div class="flex justify-content-between">
                     <div class="justify-content-start mt-2">
-                      <label>報價條列項目 {{GetAllProduct.length}}</label>
+                      <label>報價條列項目 {{quote_product.length}}</label>
                     </div>
                     <div class="justify-content-end">
                       <p-button icon="pi pi-plus" pTooltip="新增產品" (click)="addProduct()" tooltipPosition="top"
@@ -123,7 +123,8 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th>名稱</th>
-                    <th>銷售價格</th>
+                    <th>商品價格</th>
+                    <th>報價價格</th>
                     <th>數量</th>
                     <th>小計</th>
                     <th></th>
@@ -133,6 +134,7 @@
                   <tr>
                     <td>{{ product.name }}</td>
                     <td>{{ product.price }}</td>
+                    <td>{{ product.quote_price }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.subtotal }}</td>
                     <td class="icon-align-right">
@@ -311,8 +313,8 @@
     </ng-template>
     <ng-template pTemplate="summary">
       <div class="flex justify-content-end">
-        <p-button label="取消" (click)="add=false" styleClass="p-button-secondary"></p-button>
-        <p-button label="下一步" (click)="edit=true" styleClass="p-button-info ml-1"></p-button>
+        <p-button label="取消" (click)="addProduct()" styleClass="p-button-secondary"></p-button>
+        <p-button label="下一步" (click)="editProduct()" styleClass="p-button-info ml-1"></p-button>
       </div>
     </ng-template>
   </p-table>
@@ -321,11 +323,12 @@
 <!-- 編輯所有報價產品dialog -->
 <form [formGroup]="product_form">
   <p-dialog [(visible)]="edit" header=編輯所有報價產品 [modal]="true">
-    <p-table [value]="GetAllProduct" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)" >
+    <p-table [value]="edit_quote_product" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)" >
       <ng-template pTemplate="header">
         <tr>
           <th>名稱</th>
-          <th><span class="required-star">*</span>價格</th>
+          <th>產品價格</th>
+          <th><span class="required-star">*</span>報價價格</th>
           <th><span class="required-star">*</span>數量</th>
           <th><span class="required-star">*</span>折扣</th>
           <th></th>
@@ -334,6 +337,7 @@
       <ng-template pTemplate="body" let-product>
         <tr>
           <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
           <td><p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw"
               [min]="0" formControlName="price"
               [ngClass]="{'ng-dirty':product_form.controls['price'].hasError('required') && product_form.controls['price'].touched}"></p-inputNumber></td>

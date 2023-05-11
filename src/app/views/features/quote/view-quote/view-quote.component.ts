@@ -11,6 +11,38 @@ import Swal from "sweetalert2";
   styleUrls: ['./view-quote.component.scss']
 })
 export class ViewQuoteComponent {
+  quote_product: any[] = [
+    {
+      name: "螢幕",
+      quote_price: 1800,
+      price: 2000,
+      quantity: 5,
+      subtotal: 9000,
+    },
+    {
+      name: "滑鼠",
+      quote_price: 280,
+      price: 300,
+      quantity: 10,
+      subtotal: 2800,
+    },
+  ]
+  edit_quote_product: any[] = [
+    {
+      name: "螢幕",
+      quote_price: 1800,
+      price: 2000,
+      quantity: 5,
+      discount: 5,
+    },
+    {
+      name: "滑鼠",
+      quote_price: 280,
+      price: 300,
+      quantity: 10,
+      discount: 5,
+    },
+  ]
 //p-dropdown status的下拉值
   status: any[] = [
     {

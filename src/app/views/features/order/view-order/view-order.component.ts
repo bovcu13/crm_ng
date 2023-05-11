@@ -12,17 +12,21 @@ import Swal from 'sweetalert2';
 export class ViewOrderComponent {
   order_product: any[] = [
     {
-      name: "pen",
-      code: "00001",
-      price: 100,
-      quantity: 20,
+      name: "螢幕",
+      code: "screen",
+      price: 20000,
+      quote_price: 1800,
+      order_price: 1800,
+      quantity: 5,
     },
     {
-      name: "grava",
-      code: "00002",
-      price: 200,
-      quantity: 5,
-    }
+      name: "滑鼠",
+      code: "mouse",
+      price: 300,
+      quote_price: 	280,
+      order_price: 290,
+      quantity: 10,
+    },
   ]
 
   order_log: any[] = [

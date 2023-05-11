@@ -76,7 +76,7 @@ export class CampaignComponent {
       code: "completed",
     },
     {
-      name: "已終止",
+      name: "已中止",
       code: "aborted",
     },
   ];
