@@ -61,16 +61,16 @@ export class ViewContractComponent {
 
   contract_order: any[] = [
     {
-      order_code: "31",
+      order_code: "O2305003",
       status: "草稿",
       start_date: "2023-05-07",
-      contract_code: "26",
+      contract_code: "C2305002",
     },
     {
-      order_code: "30",
+      order_code: "O2305002",
       status: "啟動中",
       start_date: "2023-02-11",
-      contract_code: "26",
+      contract_code: "C2305002",
     },
   ]
 

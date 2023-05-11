@@ -30,7 +30,7 @@ export class ViewCampaignComponent {
       code: "completed",
     },
     {
-      name: "已終止",
+      name: "已中止",
       code: "aborted",
     },
   ];
@@ -72,13 +72,13 @@ export class ViewCampaignComponent {
 
   campaign_opportunity: any[] = [
     {
-      name: "abc",
-      account_name: "林姿穎",
+      name: "資管電腦教室C220汰舊換新",
+      account_name: "國立高雄科技大學",
       amount: 15200,
     },
     {
-      name: "test",
-      account_name: "林姿穎",
+      name: "高效能電腦",
+      account_name: "富豪",
       amount: 60000,
     },
   ]
@@ -89,14 +89,14 @@ export class ViewCampaignComponent {
       status: "已傳送",
       name: "Gina",
       title: "主管",
-      account_name: "abc公司",
+      account_name: "國立高雄科技大學",
     },
     {
       type: "聯絡人",
       status: "已回應",
       name: "Tina",
       title: "經理",
-      account_name: "def公司",
+      account_name: "富豪",
     },
   ]
 
