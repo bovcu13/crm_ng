@@ -10,8 +10,8 @@
         </span>
         </div>
       </div>
-      <p-table [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
-               (onLazyLoad)="loadPostsLazy($event)">
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
+               (onLazyLoad)="loadTable($event)">
         <ng-template pTemplate="caption">
           <div class="flex">
             <div class="flex align-items-center ml-2">
@@ -27,7 +27,7 @@
               <span>{{status[4].name}}</span>
             </div>
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" [(ngModel)]="filterText" (input)="filtered()" pInputText
+              <td><input type="text" [(ngModel)]="search" (input)="applyFilterGlobal($event, 'contains')" pInputText
                          placeholder="關鍵字搜索"></td>
             </span>
           </div>

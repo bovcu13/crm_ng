@@ -73,10 +73,45 @@ export class HttpApiService {
   }
 
   //--線索---------------------------------------------------------------------------------------------------
-  getAllLeadRequest(page: number): Observable<any> {
+
+  getAllLeadRequest(search: string, status = 1, page = 1, event?: any): Observable<any> {
+    let obj: any = {
+      field: status,
+      filter: {
+        description: search ? search : null,
+        rating: search ? search : null,
+        source: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction = null;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: { field: event.sortField || null, direction: direction },
+        field: status,
+        filter: {
+          description: keyword,
+          rating: keyword,
+          source: keyword,
+        },
+      };
+    }
     const url = `${this.BaseUrl}/leads/list?page=${page}&limit=10`;
-    return this.http.get<any>(url);
+    return this.http.post<any>(url, obj);
   }
+  // getAllLeadRequest(page: number): Observable<any> {
+  //   const url = `${this.BaseUrl}/leads/list?page=${page}&limit=10`;
+  //   return this.http.get<any>(url);
+  // }
 
   getOneLeadRequest(id: any): Observable<any> {
     const url = `${this.BaseUrl}/leads/${id}`;

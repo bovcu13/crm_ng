@@ -1,28 +1,62 @@
 <div class="flex justify-content-center pt-3">
-  <div class="col-10">
-    <div class="grid">
+  <div class="col-11">
+    <div class="grid justify-content-center">
       <!--左-->
-      <div class="col flex justify-content-center">
-        <!--帳戶-->
-        <article class="tile" routerLink="/main/account">
-<!--          <img class="h-12rem" alt="meow" src="https://i0.wp.com/www.printmag.com/wp-content/uploads/2021/02/4cbe8d_f1ed2800a49649848102c68fc5a66e53mv2.gif?fit=476%2C280&ssl=1"/>-->
-          <img class="h-18rem" src="./assets/img/logo/user.png"/>
-          <div class="tile-header h-4rem">
-            <h3>
-              <span>帳戶</span>
-              <span>UrkEnergo LTD.</span>
-            </h3>
+      <div class="col-3 flex justify-content-center inline-flex custom-margin">
+        <div class="grid inline-block">
+          <div class="col-12">
+            <!--帳戶-->
+            <article class="tile" routerLink="/main/account">
+              <!--          <img class="h-12rem" alt="meow" src="https://i0.wp.com/www.printmag.com/wp-content/uploads/2021/02/4cbe8d_f1ed2800a49649848102c68fc5a66e53mv2.gif?fit=476%2C280&ssl=1"/>-->
+              <img class="h-12rem" src="./assets/img/logo/user.png"/>
+              <div class="tile-header h-4rem">
+                <h3>
+                  <div><span class="pi pi-users" style="font-size: 1.3rem"></span>
+                    Sam
+                  </div>
+                  <span>0900-000-000</span>
+                </h3>
+              </div>
+            </article>
           </div>
-          <a>
-            <span>Go to service</span>
-            <span class="pi pi-users"></span>
-          </a>
-        </article>
+          <div class="col-12">
+            <!--chart1-->
+            <article class="tile" routerLink="/main/report">
+              <div class="chart1-container">
+                <p-chart type="doughnut" [data]="data1" [options]="options1" [style]="{width: '250px'}"></p-chart>
+                <div class="chart1-center">
+                  <h2>業績</h2>
+                  <div class="total">{{ getTotal() }}</div>
+                </div>
+              </div>
+              <div class="tile-header h-4rem">
+                <h3>
+                  <span>chart1</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+            </article>
+          </div>
+        </div>
       </div>
       <!--中-->
-      <div class="col flex justify-content-center">
-        <div class="grid">
-          <div class="col-6">
+      <div class="col-6 flex justify-content-center inline-flex custom-margin">
+        <div class="grid inline-block">
+          <div class="col-12">
+            <!--chart2-->
+            <article class="tile" routerLink="">
+              <div class="chart2-container">
+                <p-chart type="line" [data]="data2" [options]="options2" class="chart2"></p-chart>
+              </div>
+              <div class="tile-header h-4rem">
+                <h3>
+                  <span>chart2</span>
+                  <span>Kharkov 62 str.</span>
+                </h3>
+              </div>
+            </article>
+          </div>
+          <div class="col-12">
             <!--線索-->
             <article class="tile" routerLink="/main/lead">
               <div class="tile-header h-4rem">
@@ -37,7 +71,7 @@
               </a>
             </article>
           </div>
-          <div class="col">
+          <div class="col-12">
             <!--商機-->
             <article class="tile" routerLink="/main/opportunity">
               <div class="tile-header h-4rem">
@@ -52,7 +86,7 @@
               </a>
             </article>
           </div>
-          <div class="col-12 mt-2">
+          <div class="col-12">
             <!--商品/服務-->
             <article class="tile" routerLink="/main/product">
               <div class="tile-header h-8rem">
@@ -67,7 +101,7 @@
               </a>
             </article>
           </div>
-          <div class="col-6 mt-3">
+          <div class="col-12">
             <!--行事曆-->
             <article class="tile" routerLink="/main/event">
               <div class="tile-header h-11rem">
@@ -82,7 +116,7 @@
               </a>
             </article>
           </div>
-          <div class="col-6 mt-3">
+          <div class="col-12">
             <!--行銷活動-->
             <article class="tile" routerLink="/main/campaign">
               <div class="tile-header h-11rem">
@@ -97,11 +131,6 @@
               </a>
             </article>
           </div>
-        </div>
-      </div>
-      <!--右-->
-      <div class="col flex justify-content-center">
-        <div class="grid">
           <div class="col-12">
             <!--報價-->
             <article class="tile" routerLink="/main/quote">
@@ -111,10 +140,6 @@
                   <span>Kharkov 62 str.</span>
                 </h3>
               </div>
-              <a>
-                <span>Go to service</span>
-                <span class="pi pi-file"></span>
-              </a>
             </article>
           </div>
           <div class="col-12">
@@ -179,42 +204,51 @@
           </div>
         </div>
       </div>
-      <div class="col">
-        <!--待辦事項-->
-        <div class="container">
-          <div class="menu-box block">
-            <h2 class="titular">待辦事項</h2>
-            <ul class="menu-box-menu">
-              <li>
-                <a class="menu-box-tab" href="#6"><i class="icon mt-3 fas fa-handshake scnd-font-color"></i>早上9:00拜訪xx公司
-                </a>
-              </li>
-              <li>
-                <a class="menu-box-tab" href="#8"><i class="icon mt-3 fas fa-comments scnd-font-color"></i>下午3:00A001會議室
-                </a>
-              </li>
-              <li>
-                <a class="menu-box-tab" href="#10"><i class="icon mt-3 fas fa-tasks scnd-font-color"></i>主管交辦事項
-                  <div class="menu-box-number">5</div>
-                </a>
-              </li>
-              <li>
-                <a class="menu-box-tab" href="#12"><i class="icon mt-3 fas fa-calendar scnd-font-color"></i>即將到來
-                  <div class="menu-box-number">3</div>
-                </a>
-              </li>
-              <li>
-                <a class="menu-box-tab" href="#13">
-                  <i class="icon mt-3 fas fa-chart-line scnd-font-color"></i>
-                  上週分析報告</a>
-              </li>
-            </ul>
+      <!--右-->
+      <div class="col-3 flex justify-content-center inline-flex custom-margin">
+        <div class="grid inline-block">
+          <div class="col-12">
+            <!--待辦事項-->
+            <div class="container">
+              <div class="menu-box block">
+                <h2 class="titular">待辦事項</h2>
+                <ul class="menu-box-menu">
+                  <li>
+                    <a class="menu-box-tab">
+                      <i class="icon mt-3 fas fa-handshake scnd-font-color"></i>
+                      早上9:00拜訪xx公司</a>
+                  </li>
+                  <li>
+                    <a class="menu-box-tab">
+                      <i class="icon mt-3 fas fa-comments scnd-font-color"></i>
+                      下午3:00A001會議室</a>
+                  </li>
+                  <li>
+                    <a class="menu-box-tab">
+                      <i class="icon mt-3 fas fa-tasks scnd-font-color"></i>
+                      主管交辦事項
+                      <div class="menu-box-number">5</div>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="menu-box-tab">
+                      <i class="icon mt-3 fas fa-calendar scnd-font-color"></i>
+                      即將到來
+                      <div class="menu-box-number">3</div>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="menu-box-tab-last">
+                      <i class="icon mt-3 fas fa-chart-line scnd-font-color"></i>
+                      上週分析報告</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
 
