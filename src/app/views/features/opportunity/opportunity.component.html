@@ -11,8 +11,8 @@
         </span>
         </div>
       </div>
-      <p-table [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
-               (onLazyLoad)="loadPostsLazy($event)">
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
+               (onLazyLoad)="loadTable($event)">
         <ng-template pTemplate="caption">
           <div class="flex align-items-center ml-2">
             <span class="text-400 pi pi-circle-fill mr-1"></span>
@@ -27,7 +27,7 @@
             <span>{{stage[4].name}}</span>
             <div class="flex ml-auto mr-2">
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" [(ngModel)]="filterText" (input)="filtered()" pInputText
+              <td><input type="text" [(ngModel)]="search" (input)="applyFilterGlobal($event, 'contains')" pInputText
                          placeholder="關鍵字搜索"></td>
             </span>
             </div>
@@ -41,9 +41,7 @@
             <th pSortableColumn="name">商機名稱
               <p-sortIcon field="name"></p-sortIcon>
             </th>
-            <th pSortableColumn="account_name">帳戶
-              <p-sortIcon field="account_name"></p-sortIcon>
-            </th>
+            <th>帳戶</th>
             <th pSortableColumn="close_date">結束日期
               <p-sortIcon field="close_date"></p-sortIcon>
             </th>

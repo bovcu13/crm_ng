@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {LazyLoadEvent} from "primeng/api";
 import {HttpApiService} from "../../../api/http-api.service";
 import {Opportunity} from "../../../shared/models/opportunity";
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 
 @Component({
@@ -12,50 +12,8 @@ import Swal from "sweetalert2";
   styleUrls: ['./opportunity.component.scss']
 })
 export class OpportunityComponent implements OnInit {
-  filteredOpportunity: any[] = [];
   getData!: Opportunity[];
-  opportunity: any[] = [
-    {
-      "account_name": "David",
-      "name": "David - Acme",
-      "close_date": "2023-05-12",
-      "stage": "已結束",
-      "forecast_category": "預期銷售",
-      "owner": "林"
-    },
-    {
-      "account_name": "David",
-      "name": "David - Acme",
-      "close_date": "2023-05-12",
-      "stage": "談判",
-      "forecast_category": "預期銷售",
-      "owner": "林"
-    },
-    {
-      "account_name": "David",
-      "name": "David - Acme",
-      "close_date": "2023-05-12",
-      "stage": "提案",
-      "forecast_category": "預期銷售",
-      "owner": "林"
-    },
-    {
-      "account_name": "David",
-      "name": "David - Acme",
-      "close_date": "2023-05-12",
-      "stage": "需求分析",
-      "forecast_category": "預期銷售",
-      "owner": "林"
-    },
-    {
-      "account_name": "David",
-      "name": "David - Acme",
-      "close_date": "2023-05-11",
-      "stage": "資格評估",
-      "forecast_category": "預期銷售",
-      "owner": "林"
-    },
-  ];
+  @ViewChild('dt') dt!: Table;
   stage: any[] = [
     {
       name: "資格評估",
@@ -101,21 +59,6 @@ export class OpportunityComponent implements OnInit {
     }
   ]
 
-  account: any = [
-    {
-      name: "公司A",
-      code: "company_a"
-    },
-    {
-      name: "公司B",
-      code: "company_b"
-    },
-    {
-      name: "公司C",
-      code: "company_c"
-    }
-  ]
-
   opportunity_form: FormGroup;
 
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
@@ -155,41 +98,29 @@ export class OpportunityComponent implements OnInit {
     );
   }
 
-  filterText: any = '';
-
-  filtered() {
-    if (this.filterText === '') {
-      this.filteredOpportunity = this.opportunity;
-    } else {
-      this.filteredOpportunity = this.opportunity.filter(opportunity => {
-        return (
-          opportunity.stage.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          opportunity.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          opportunity.account_name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          opportunity.close_date.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          opportunity.owner.toLowerCase().includes(this.filterText.toLowerCase())
-        );
-      });
-    }
-    console.log(this.filteredOpportunity)
-  }
-
   ngOnInit() {
-    this.filteredOpportunity = this.opportunity;
     this.getAllAccountRequest();
   }
 
-  total!: number;
+  // 搜尋關鍵字
+  search: string = '';
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
 
+  total!: number;
   // 懶加載
-  loadPostsLazy(event: LazyLoadEvent) {
-    const page = (event.first! / event.rows!) + 1;
-    this.HttpApi.getAllOpportunityRequest(page).subscribe(request => {
-      this.getData = request.body.opportunities;
-      this.total = request.body.total
-      console.log(this.getData);
-      // console.log(this.total)
-    });
+  loadTable(e: any) {
+    // this.loading = true;
+    // let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllOpportunityRequest(this.search, 1, page, e).subscribe(
+      request => {
+        this.getData = request.body.opportunities;
+        console.log(this.getData)
+        this.total = request.body.total;
+      });
   }
 
   edit: boolean = false;
@@ -218,6 +149,14 @@ export class OpportunityComponent implements OnInit {
         close_date: new Date(this.opportunity_form.value.close_date),
       });
     }
+  }
+
+  getAllOpportunity(): void{
+    this.HttpApi.getAllOpportunityRequest(this.search, 1).subscribe(
+      request => {
+        this.getData = request.body.opportunities;
+        this.total = request.body.total;
+      });
   }
 
   // 現在時間
@@ -272,15 +211,6 @@ export class OpportunityComponent implements OnInit {
     this.HttpApi.postOpportunityRequest(body)
       .subscribe(request => {
         console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
         if (request.code === 200) {
           this.edit = false;
           Swal.fire({
@@ -290,7 +220,7 @@ export class OpportunityComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          this.loadPostsLazy(event);
+          this.getAllOpportunity()
         } else {
           Swal.fire({
             title: '失敗',
@@ -355,15 +285,6 @@ export class OpportunityComponent implements OnInit {
     this.HttpApi.patchOpportunityRequest(id, body)
       .subscribe(request => {
         console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
         if (request.code === 200) {
           this.edit = false;
           Swal.fire({
@@ -373,7 +294,7 @@ export class OpportunityComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          this.loadPostsLazy(event);
+          this.getAllOpportunity()
         } else {
           Swal.fire({
             title: '失敗',
@@ -403,10 +324,6 @@ export class OpportunityComponent implements OnInit {
       if (result.isConfirmed) {
         this.HttpApi.deleteOpportunityRequest(id).subscribe(request => {
           console.log(request)
-          let event: LazyLoadEvent = {
-            first: 0,
-            rows: 10,
-          };
           if (request.code === 200) {
             Swal.fire({
               title: '成功',
@@ -415,7 +332,7 @@ export class OpportunityComponent implements OnInit {
               showConfirmButton: false,
               timer: 1000
             })
-            this.loadPostsLazy(event);
+            this.getAllOpportunity()
           } else {
             Swal.fire({
               title: '失敗',
