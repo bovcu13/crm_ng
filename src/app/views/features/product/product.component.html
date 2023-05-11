@@ -8,15 +8,14 @@
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllProduct" [paginator]="true" #dt1
-               sortField="updated_at" [sortOrder]="-1" [globalFilterFields]="['name','code','price','description']"
-               [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
+               [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTable($event)"
                [showCurrentPageReport]="true" [(first)]="first"
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
-<!--              <td><input type="text" [(ngModel)]="filterText" (input)="filterProducts()" pInputText-->
-<!--                         placeholder="關鍵字搜索"></td>-->
+            <td><input [(ngModel)]="search" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+           placeholder="關鍵字搜索"></td>
             </span>
           </div>
         </ng-template>
@@ -126,7 +125,8 @@
         <p-button label="新增" (click)="postProductRequest()" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="showedit">
-        <p-button label="儲存" (click)="patchProductRequest(p_id)" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchProductRequest(p_id)"
+                  styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
