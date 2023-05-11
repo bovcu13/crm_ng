@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-order',
@@ -9,6 +10,7 @@ import Swal from "sweetalert2";
   styleUrls: ['./order.component.scss']
 })
 export class OrderComponent {
+  @ViewChild('dt1') dt1!: Table;
   //table的死值
   order: any[] = [
     {
@@ -39,34 +41,6 @@ export class OrderComponent {
     }
   ];
 
-  filterText: any = '';// 定義一個 searchTerm 變數來儲存搜尋文字
-// 搜尋函數
-  filterorders() {
-    // 如果沒有輸入搜尋文字，就直接返回原始資料
-    if (!this.filterText) {
-      this.getAllOrderRequest();
-      return;
-    }
-    this.GetAllOrder = this.GetAllOrder.filter(order => {
-      // 將所有要比對的欄位轉成小寫字母
-      const code = order.code?.toString().toLowerCase() || '';
-      const account_name = order.account_name?.toLowerCase() || '';
-      const status = order.status?.toLowerCase() || '';
-      const description = order.description?.toLowerCase() || '';
-      const start_date = order.start_date?.toLowerCase() || '';
-      const contract_code = order.contract_code?.toString().toLowerCase() || '';
-      return (
-        code.includes(this.filterText.toLowerCase()) ||
-        account_name.includes(this.filterText) ||
-        status.includes(this.filterText.toLowerCase()) ||
-        start_date.includes(this.filterText.toLowerCase()) ||
-        description.includes(this.filterText.toLowerCase()) ||
-        contract_code.includes(this.filterText.toLowerCase())
-      );
-    });
-    console.log(this.GetAllOrder)
-  }
-
   //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -79,32 +53,12 @@ export class OrderComponent {
     }
   ]
 
-  // table lazyload
-  // 搜尋關鍵字
-  //search: string = '';
-  loading: boolean = true;
-  totalRecords = 0;
-
-  loadTable(e: any) {
-    this.loading = true;
-    let limit = e.rows;
-    let page = e.first / e.rows + 1;
-    this.getAllOrderRequest(limit, page);
-  }
-
   ngOnInit() {
     this.getAllContractRequest()
   }
 
-  //取得所有訂單資料
-  GetAllOrder: HttpApiService[] = [];
-  first = 0;
-
-  getAllOrderRequest(limit?: number, page?: number) {
-    if (!page) {
-      this.first = 0;
-    }
-    this.HttpApi.getAllOrderRequest(limit, page).subscribe(
+  getAllOrderRequest() {
+    this.HttpApi.getAllOrderRequest(this.search,1).subscribe(
       (res) => {
         this.GetAllOrder = res.body.orders
         this.GetAllOrder = res.body.orders.map((order: any) => {
@@ -115,13 +69,40 @@ export class OrderComponent {
           return {...order, start_date, activated_at, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
-        this.loading = false;
         console.log(this.GetAllOrder)
       },
       (error) => {
         console.log(error);
       }
     );
+  }
+  // table lazyload
+  totalRecords = 0;
+  //取得所有訂單資料
+  GetAllOrder: HttpApiService[] = [];
+  first = 0;
+  search: string = '';  // 搜尋關鍵字
+
+  loadPostsLazy(e: any) {
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllOrderRequest(this.search, 1,limit, page, e).subscribe(
+      request => {
+        this.GetAllOrder = request.body.orders;
+        this.GetAllOrder = request.body.orders.map((order: any) => {
+          const start_date = this.formatDate2(order.start_date)
+          const activated_at = this.formatDate(order.activated_at)
+          const created_at = this.formatDate(order.created_at);
+          const updated_at = this.formatDate(order.updated_at);
+          return {...order,start_date,activated_at, created_at, updated_at};
+        });
+        this.totalRecords = request.body.total;
+        console.log(this.GetAllOrder)
+      });
+  }
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
   postOrderRequest(): void {
@@ -461,7 +442,4 @@ export class OrderComponent {
     return start_date.toISOString().slice(0, 10);
   }
 
-  showAlert() {
-
-  }
 }
