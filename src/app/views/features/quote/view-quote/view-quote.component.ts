@@ -14,17 +14,17 @@ export class ViewQuoteComponent {
   quote_product: any[] = [
     {
       name: "螢幕",
-      quote_price: 1800,
+      quote_price: 2500,
       price: 2000,
       quantity: 5,
-      subtotal: 9000,
+      subtotal: 12500,
     },
     {
       name: "滑鼠",
-      quote_price: 280,
+      quote_price: 340,
       price: 300,
       quantity: 10,
-      subtotal: 2800,
+      subtotal: 3400,
     },
   ]
   edit_quote_product: any[] = [

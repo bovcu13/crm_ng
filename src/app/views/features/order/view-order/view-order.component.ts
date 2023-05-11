@@ -15,7 +15,7 @@ export class ViewOrderComponent {
       name: "螢幕",
       code: "screen",
       price: 20000,
-      quote_price: 1800,
+      quote_price: 2500,
       order_price: 1800,
       quantity: 5,
     },
@@ -23,7 +23,7 @@ export class ViewOrderComponent {
       name: "滑鼠",
       code: "mouse",
       price: 300,
-      quote_price: 	280,
+      quote_price: 	340,
       order_price: 290,
       quantity: 10,
     },
@@ -131,7 +131,7 @@ export class ViewOrderComponent {
     console.log("取到的o_id: " + this.o_id)
     this.getOneOrderRequest(this.o_id)
     this.getAllContractRequest()
-    //this.getAllProductRequest()
+    this.getAllProductRequest()
     this.edit_product_form = this.fb.group({
       name: ['', [Validators.required]],
       quantity: ['', [Validators.required]],

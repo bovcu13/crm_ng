@@ -70,14 +70,14 @@
                 <ng-template pTemplate="caption">
                   <div class="flex justify-content-between">
                     <div class="justify-content-start mt-2">
-                      <label>訂單產品</label>
+                      <label>訂單商品</label>
                     </div>
                     <div class="justify-content-end">
                       <ng-container *ngIf="stage =='草稿'">
-                        <p-button icon="pi pi-plus" pTooltip="新增產品" (click)="addProduct()" tooltipPosition="top"
+                        <p-button icon="pi pi-plus" pTooltip="新增商品" (click)="addProduct()" tooltipPosition="top"
                                   styleClass="p-button-text"></p-button>
                       </ng-container>
-                      <p-button icon="pi pi-pencil" pTooltip="編輯所有產品" (click)="editProduct()"
+                      <p-button icon="pi pi-pencil" pTooltip="編輯所有訂單商品" (click)="editProduct()"
                                 tooltipPosition="top"
                                 styleClass="p-button-text"></p-button>
                     </div>
@@ -85,9 +85,9 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                   <tr>
-                    <th>產品</th>
-                    <th>產品代碼</th>
-                    <th>產品價格</th>
+                    <th>名稱</th>
+                    <th>識別碼</th>
+                    <th>商品價格</th>
                     <th>報價價格</th>
                     <th>數量</th>
                     <th>訂單價格</th>
@@ -239,8 +239,8 @@
   </div>
 </div>
 
-<!-- 新增產品dialog -->
-<p-dialog [(visible)]="add" header=新增產品 [modal]="true">
+<!-- 新增商品dialog -->
+<p-dialog [(visible)]="add" header=新增商品 [modal]="true">
   <p-table [value]="GetAllProduct">
     <ng-template pTemplate="header">
       <tr>
@@ -286,32 +286,32 @@
 
 <!-- 編輯產品dialog -->
 <form [formGroup]="edit_product_form">
-  <p-dialog [(visible)]="edit" header=編輯所有產品 [modal]="true">
-    <p-table>
+  <p-dialog [(visible)]="edit" header=編輯所有商品 [modal]="true">
+    <p-table [value]="order_product">
       <ng-template pTemplate="header">
         <tr>
           <th>名稱</th>
           <th>價目表價格</th>
+          <th>報價價格</th>
           <th><span class="required-star">*</span>數量</th>
-          <th><span class="required-star">*</span>單價</th>
-          <th>描述</th>
+          <th><span class="required-star">*</span>訂單價格</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-product>
         <tr>
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
+          <td>{{ product.quote_price }}</td>
           <td><p-inputNumber inputId="integeronly" [min]="0" formControlName="quantity"
                              [ngClass]="{'ng-dirty':edit_product_form.controls['quantity'].hasError('required') && edit_product_form.controls['quantity'].touched}"></p-inputNumber></td>
           <td><p-inputNumber inputId="integeronly" [min]="0" formControlName="unit_price"
                              [ngClass]="{'ng-dirty':edit_product_form.controls['unit_price'].hasError('required') && edit_product_form.controls['unit_price'].touched}"></p-inputNumber></td>
-          <td><input pInputText formControlName="description"></td>
         </tr>
       </ng-template>
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
           <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary"></p-button>
-          <p-button label="儲存" styleClass="p-button-info ml-1"></p-button>
+          <p-button label="儲存" (click)="edit=false" styleClass="p-button-info ml-1"></p-button>
         </div>
       </ng-template>
     </p-table>
