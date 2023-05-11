@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-quote',
@@ -9,6 +10,7 @@ import Swal from "sweetalert2";
   styleUrls: ['./quote.component.scss']
 })
 export class QuoteComponent {
+  @ViewChild('dt1') dt1!: Table;
   quote: any[] = [
     {
       "quote_id": 1,
@@ -45,41 +47,6 @@ export class QuoteComponent {
       "updated_by": "林",
     }
   ];
-  filterText: any = '';
-
-  filterquotes() {
-    if (!this.filterText) {
-      this.getAllQuoteRequest();
-      return;
-    }
-    this.GetAllQuote = this.GetAllQuote.filter((quote) => {
-      // 將所有要比對的欄位轉成小寫字母
-      const name = quote.name?.toLowerCase() || '';
-      const code = quote.code?.toString().toLowerCase() || '';
-      const opportunity_name = quote.opportunity_name?.toLowerCase() || '';
-      const account_name = quote.account_name?.toLowerCase() || '';
-      const status = quote.status?.toLowerCase() || '';
-      const description = quote.description?.toLowerCase() || '';
-      const expiration_date = quote.expiration_date?.toLowerCase() || '';
-      const tax = quote.tax?.toString().toLowerCase() || '';
-      const shipping_and_handling = quote.shipping_and_handling?.toString().toLowerCase() || '';
-      const subtotal = quote.subtotal?.toString().toLowerCase() || '';
-      return (
-        code.includes(this.filterText.toLowerCase()) ||
-        name.includes(this.filterText.toLowerCase()) ||
-        opportunity_name.includes(this.filterText) ||
-        account_name.includes(this.filterText) ||
-        (quote.is_syncing ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase()) ||
-        status.includes(this.filterText.toLowerCase()) ||
-        description.includes(this.filterText.toLowerCase()) ||
-        expiration_date.includes(this.filterText.toLowerCase()) ||
-        tax.includes(this.filterText.toLowerCase().toLowerCase()) ||
-        shipping_and_handling.includes(this.filterText.toLowerCase()) ||
-        subtotal.includes(this.filterText.toLowerCase())
-      );
-    });
-    console.log(this.GetAllQuote)
-  }
 
   //p-dropdown status的下拉值
   status: any[] = [
@@ -109,19 +76,8 @@ export class QuoteComponent {
     }
   ]
 
-  ngOnInit() {
-    this.getAllopportunityRequest()
-  }
-
-  //取得所有訂單資料
-  GetAllQuote: HttpApiService[] = [];
-  first = 0;
-
-  getAllQuoteRequest(limit?: number, page?: number) {
-    if (!page) {
-      this.first = 0;
-    }
-    this.HttpApi.getAllQuoteRequest(limit, page).subscribe(
+  getAllQuoteRequest() {
+    this.HttpApi.getAllQuoteRequest(this.search,1).subscribe(
       (res) => {
         this.GetAllQuote = res.body.quotes
         this.GetAllQuote = res.body.quotes.map((quote: any) => {
@@ -130,9 +86,6 @@ export class QuoteComponent {
           const updated_at = this.formatDate(quote.updated_at);
           return {...quote, expiration_date, created_at, updated_at};
         });
-        this.totalRecords = res.body.total;
-        this.loading = false;
-        console.log(this.GetAllQuote)
       },
       (error) => {
         console.log(error);
@@ -207,7 +160,6 @@ export class QuoteComponent {
         console.log(error);
       })
   }
-
 
   patchQuoteRequest(p_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
@@ -390,13 +342,15 @@ export class QuoteComponent {
     }
   }
 
-
+  ngOnInit() {
+    this.getAllopportunityRequest()
+  }
   // GET全部Account
   GetAllOpportunity: any[] = [];
   selectedOpportunity_id: string = '';
-
+  opportunitysearch: any;
   getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(1).subscribe(
+    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch,1).subscribe(
       (res) => {
         this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
           return {
@@ -421,16 +375,32 @@ export class QuoteComponent {
   }
 
   // table lazyload
-  // 搜尋關鍵字
-  //search: string = '';
-  loading: boolean = true;
   totalRecords = 0;
+  //取得所有訂單資料
+  GetAllQuote: HttpApiService[] = [];
+  first = 0;
+  search: string = '';  // 搜尋關鍵字
 
   loadPostsLazy(e: any) {
-    this.loading = true;
     let limit = e.rows;
     let page = e.first / e.rows + 1;
-    this.getAllQuoteRequest(limit, page);
+    this.HttpApi.getAllQuoteRequest(this.search, 1,limit, page, e).subscribe(
+      request => {
+        this.GetAllQuote = request.body.quotes;
+        this.GetAllQuote = request.body.quotes.map((quote: any) => {
+          const expiration_date = this.formatDate2(quote.expiration_date)
+          const created_at = this.formatDate(quote.created_at);
+          const updated_at = this.formatDate(quote.updated_at);
+          return {...quote,expiration_date, created_at, updated_at};
+        });
+        this.totalRecords = request.body.total;
+        console.log(this.GetAllQuote)
+      });
+  }
+
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
   //偵測status變量

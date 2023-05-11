@@ -9,7 +9,7 @@
       </div>
       <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllQuote" [paginator]="true"
       [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
-      [showCurrentPageReport]="true" [(first)]="first"
+      [showCurrentPageReport]="true" [(first)]="first"  #dt1
       currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
@@ -28,8 +28,8 @@
               <span>{{status[5].name}}</span>
             </div>
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" [(ngModel)]="filterText" (input)="filterquotes()" pInputText
-                  placeholder="關鍵字搜索"></td>
+               <td><input [(ngModel)]="search" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+                   placeholder="關鍵字搜索"></td>
             </span>
           </div>
         </ng-template>
