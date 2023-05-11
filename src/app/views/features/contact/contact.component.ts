@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {LazyLoadEvent} from 'primeng/api';
 import {HttpApiService} from "../../../api/http-api.service";
 import {Contact} from "../../../shared/models/contact";
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 
 @Component({
@@ -13,39 +13,7 @@ import Swal from "sweetalert2";
 })
 export class ContactComponent implements OnInit {
   getData!: Contact[];
-  filteredContacts: any[] = [];
-  contact: any[] = [
-    {
-      "account_name": "NKUST",
-      "owner": "林",
-      "name": "David",
-      "salutation": "先生",
-      "cell_phone": "0916548964",
-      "phone_number": "0224675656",
-      "email": "abc@gmail.com",
-      "title": "經理",
-      "department": "星球科技有限公司",
-      "reports_to": "王小名總經理",
-      "created_by": "林",
-      "updated_by": "林",
-      "created_at": "2023-04-10  in the evening11:35", //建立日期
-    },
-    {
-      "account_name": "NKUST",
-      "owner": "林",
-      "name": "Alice",
-      "salutation": "小姐",
-      "cell_phone": "0916978346",
-      "phone_number": "0216879345",
-      "email": "def@gmail.com",
-      "title": "主管",
-      "department": "EIRC科技有限公司",
-      "reports_to": "林總經理",
-      "created_by": "林",
-      "updated_by": "林",
-      "created_at": "2023-04-03  in the morning10:00:00", //建立日期
-    }
-  ];
+  @ViewChild('dt') dt!: Table;
   salutation: any[] = [
     {
       "name": "先生",
@@ -99,48 +67,31 @@ export class ContactComponent implements OnInit {
     });
   }
 
-  filterText: any = '';
-
-  filtercontacts() {
-    if (this.filterText === '') {
-      this.filteredContacts;
-    } else {
-      this.filteredContacts = this.contact.filter(contact => {
-        return (
-          contact.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contact.account_name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contact.cell_phone.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contact.email.toLowerCase().includes(this.filterText.toLowerCase()) ||
-          contact.owner.toLowerCase().includes(this.filterText.toLowerCase())
-        );
-      });
-    }
-    console.log(this.filteredContacts)
+  ngOnInit() {
+    this.getAllAccountRequest()
   }
 
-  ngOnInit() {
-    this.filteredContacts = this.getData;
-    this.getAllAccountRequest()
+  // 搜尋關鍵字
+  search: string = '';
+
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
   total!: number;
 
   // 懶加載
-  loadPostsLazy(event: LazyLoadEvent) {
-    const page = (event.first! / event.rows!) + 1;
-    // this.HttpApi.getAllContactRequest(page).subscribe(request => {
-    //   this.getData = request.body.contacts;
-    // });
-    this.HttpApi.getAllContactRequest(page).subscribe(request => {
-      this.getData = request.body.contacts;
-      this.total = request.body.total
-      console.log(this.getData)
-    });
-  }
-
-  //時間調整
-  localToUtc(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
+  loadTable(e: any) {
+    // this.loading = true;
+    // let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllContactRequest(this.search, 1, page, e).subscribe(
+      request => {
+        this.getData = request.body.contacts;
+        console.log(this.getData)
+        this.total = request.body.total;
+      });
   }
 
   // 取得帳戶 option
@@ -180,6 +131,14 @@ export class ContactComponent implements OnInit {
         account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contact.account_name),
       });
     }
+  }
+
+  getAllContact():void{
+    this.HttpApi.getAllContactRequest(this.search, 1).subscribe(
+      request => {
+        this.getData = request.body.contacts;
+        this.total = request.body.total;
+      });
   }
 
   // 現在時間
@@ -230,15 +189,6 @@ export class ContactComponent implements OnInit {
     this.HttpApi.postContactRequest(body)
       .subscribe(request => {
         console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
         if (request.code === 200) {
           this.edit = false;
           Swal.fire({
@@ -248,7 +198,7 @@ export class ContactComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          this.loadPostsLazy(event);
+          this.getAllContact();
         } else {
           Swal.fire({
             title: '失敗',
@@ -310,15 +260,6 @@ export class ContactComponent implements OnInit {
     this.HttpApi.patchContactRequest(id, body)
       .subscribe(request => {
         console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
         if (request.code === 200) {
           this.edit = false;
           Swal.fire({
@@ -328,7 +269,7 @@ export class ContactComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          this.loadPostsLazy(event);
+          this.getAllContact();
         } else {
           Swal.fire({
             title: '失敗',
@@ -358,10 +299,6 @@ export class ContactComponent implements OnInit {
       if (result.isConfirmed) {
         this.HttpApi.deleteContactRequest(id).subscribe(request => {
           console.log(request)
-          let event: LazyLoadEvent = {
-            first: 0,
-            rows: 10,
-          };
           if (request.code === 200) {
             Swal.fire({
               title: '成功',
@@ -370,7 +307,7 @@ export class ContactComponent implements OnInit {
               showConfirmButton: false,
               timer: 1000
             })
-            this.loadPostsLazy(event);
+            this.getAllContact();
           } else {
             Swal.fire({
               title: '失敗',
