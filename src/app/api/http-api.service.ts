@@ -409,40 +409,36 @@ export class HttpApiService {
   name: any;
 
   //取得所有訂單 getall
-  getAllOrderRequest(limit = 20, page = 1): Observable<any> {
-    // let obj: any = {
-    //   filter: {
-    //     code:search ? search : null,
-    //     status: search ? search : null,
-    //     start_date: search ? search : null,
-    //     //accounts: search ? search : null,
-    //     contracts: search ? search : null,
-    //   },
-    // };
-    // if (event) {
-    //   // 判斷是否有用全域搜尋欄
-    //   let keyword = event.globalFilter;
-    //   if (!event.globalFilter) {
-    //     keyword = event.data
-    //   }
-    //   obj = {
-    //     filter: {
-    //       code: keyword,
-    //       status: keyword,
-    //       start_date: keyword,
-    //       //accounts: keyword,
-    //       contracts: keyword,
-    //     },
-    //   };
-    // }
-    const url = this.BaseUrl + '/orders/list' + '?page=' + page + '&limit=' + limit;
-    return this.http.get<any>(url);
+  getAllOrderRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
+    let obj: any = {
+      field: status,
+      filter: {
+        code: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction : any;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: { field: event.sortField || null, direction: direction },
+        field: status,
+        filter: {
+          code: keyword,
+        },
+      };
+    }
+    const url = `${this.BaseUrl}/orders/list?page=${page}&limit=${limit}`;
+    return this.http.post<any>(url, obj);
   }
-
-  // getAllOrderRequest(page : number): Observable<any> {
-  //   const url = this.BaseUrl + '/orders' + '?page=' + page + '&limit=20';
-  //   return this.http.get<any>(url);
-  // }
 
   getOneOrderRequest(id: any): Observable<any> {
     const url = `${this.BaseUrl}/orders/${id}`;
