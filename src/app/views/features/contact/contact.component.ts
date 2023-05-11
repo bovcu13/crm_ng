@@ -145,9 +145,10 @@ export class ContactComponent implements OnInit {
 
   // 取得帳戶 option
   GetAllAccount!: any[];
+  accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(1).subscribe(
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
       (request) => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
           // console.log(account)

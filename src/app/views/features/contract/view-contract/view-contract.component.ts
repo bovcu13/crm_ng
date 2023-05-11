@@ -171,8 +171,9 @@ export class ViewContractComponent {
 
   // GET全部Account
   GetAllAccount: any[] = [];
+  accountSearch!: string;
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(1).subscribe(
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
       (res) => {
         this.GetAllAccount = res.body.accounts.map((account: any) => {
           return {
