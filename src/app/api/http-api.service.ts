@@ -137,12 +137,12 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  getAllProductRequest(search: string,limit = 20, page = 1, event?: any): Observable<any> {
+  getAllProductRequest(search: string,status=1, page = 1, event?: any): Observable<any> {
     let obj: any = {
+      field: status,
       filter: {
         name: search ? search : null,
         code: search ? search : null,
-        price: search ? search : null,
         description: search ? search : null,
       },
     };
@@ -160,15 +160,16 @@ export class HttpApiService {
       }
       obj = {
         sort: { field: event.sortField || null, direction: direction },
+        field: status,
         filter: {
           name: keyword,
           code: keyword,
-          price: keyword,
           description: keyword,
         },
       };
     }
-    return this.http.post<any>(`${this.BaseUrl}/products/list`+ '?page=' + page + '&limit=' + limit, obj);
+    const url = `${this.BaseUrl}/products/list?page=${page}&limit=20`;
+    return this.http.post<any>(url, obj);
   }
 
   //取得one  商品/服務資料 get one

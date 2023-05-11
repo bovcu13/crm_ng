@@ -1,7 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {HttpApiService} from "../../../api/http-api.service";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {LazyLoadEvent} from 'primeng/api';
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
 
@@ -67,24 +66,24 @@ export class ProductComponent {
 //GET全部product
   GetAllProduct!: any[];
   search: string = '';  // 搜尋關鍵字
-  getAllProductRequest(search: string, limit?: number, page?: number, event?: any) {
-    if (!page) {
-      this.first = 0;
-    }
-    this.HttpApi.getAllProductRequest(search, limit, page, event).subscribe(res => {
-        this.GetAllProduct = res.body
-        // this.GetAllProduct = res.body.products.map((product: any) => {
-        //   const created_at = this.formatDate(product.created_at);
-        //   const updated_at = this.formatDate(product.updated_at);
-        //   return {...product, created_at, updated_at};
-        // });
-        //this.totalRecords = res.body.total;
-        console.log(this.GetAllProduct)
-      },
-      error => {
-        console.log(error);
-      });
-  }
+  // getAllProductRequest(search: string, status: any, limit?: number, page?: number, event?: any) {
+  //   if (!page) {
+  //     this.first = 0;
+  //   }
+  //   this.HttpApi.getAllProductRequest(search, status, limit, page, event).subscribe(res => {
+  //       this.GetAllProduct = res.body.prodcuts
+  //       // this.GetAllProduct = res.body.products.map((product: any) => {
+  //       //   const created_at = this.formatDate(product.created_at);
+  //       //   const updated_at = this.formatDate(product.updated_at);
+  //       //   return {...product, created_at, updated_at};
+  //       // });
+  //       //this.totalRecords = res.body.total;
+  //       console.log(this.GetAllProduct)
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     });
+  // }
 
 //POST 一筆product
   BadRequest: any
@@ -319,19 +318,21 @@ export class ProductComponent {
   //懶加載
   totalRecords = 0;
   first = 0;
-  loading: boolean = true;
-
-  loadPostsLazy(e: any) {
-    this.loading = true;
-    let limit = e.rows;
+  loadTable(e: any) {
     let page = e.first / e.rows + 1;
-    this.getAllProductRequest(limit, page);
+    this.HttpApi.getAllProductRequest(this.search, 1, page, e).subscribe(
+      request => {
+        this.GetAllProduct = request.body.products;
+        this.totalRecords = request.body.total;
+      });
+    console.log(this.GetAllProduct)
   }
 
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
+
   //日期轉換
   formatDate(dateString: string): string {
     const date = new Date(dateString);
