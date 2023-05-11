@@ -84,7 +84,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction = null;
+      let direction : any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -143,7 +143,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction = null;
+      let direction : any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -208,7 +208,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction = null;
+      let direction : any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -405,7 +405,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction = null;
+      let direction : any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
