@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
 import {LazyLoadEvent} from 'primeng/api';
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-contract',
@@ -10,6 +11,7 @@ import Swal from "sweetalert2";
   styleUrls: ['./contract.component.scss']
 })
 export class ContractComponent {
+  @ViewChild('dt1') dt1!: Table;
   // contract: any[] = [
   //   {
   //     "owner": "林",
@@ -34,39 +36,6 @@ export class ContractComponent {
   //     "updated_by": "林",
   //   }
   // ];
-  //搜尋功能
-
-  filterText!: string;  // 定義一個 filterText 變數來儲存搜尋文字
-// 定義一個方法來過濾資料
-  filterContracts(): void {
-    // 如果沒有輸入搜尋文字，就直接返回原始資料
-    if (!this.filterText) {
-      this.getAllContractRequest();
-      return;
-    }
-    // 使用 Array 的 filter() 方法對 GetAllContract 進行過濾
-    this.GetAllContract = this.GetAllContract.filter((contract) => {
-      // 將所有要比對的欄位轉成小寫字母
-      const code = contract.code.toString().toLowerCase() || '';
-      const description = contract.description.toLowerCase() || '';
-      const status = contract.status.toLowerCase() || '';
-      const start_date = contract.start_date.toLowerCase() || '';
-      const term = contract.term.toString().toLowerCase() || '';
-
-      // 比對是否有任何一個欄位包含搜尋文字
-      return (
-        code.includes(this.filterText.toString().toLowerCase()) ||
-        description.includes(this.filterText.toLowerCase()) ||
-        status.includes(this.filterText.toLowerCase()) ||
-        start_date.includes(this.filterText.toLowerCase()) ||
-        this.calculateEndDate(contract.start_date, contract.term)
-          .toLowerCase()
-          .includes(this.filterText.toLowerCase()) ||
-        term.includes(this.filterText.toString().toLowerCase())
-      );
-    });
-    console.log(this.GetAllContract)
-  }
 
   //p-dropdown status的下拉值
   status: any[] = [
@@ -102,7 +71,6 @@ export class ContractComponent {
 
   ngOnInit() {
     this.getAllAccountRequest()
-    this.getAllContractRequest()
   }
 
   //GET全部contract
@@ -110,11 +78,8 @@ export class ContractComponent {
   first = 0;
   totalRecords = 0;
 
-  getAllContractRequest(limit?: number, page?: number) {
-    if (!page) {
-      this.first = 0;
-    }
-    this.HttpApi.getAllContractRequest(limit, page).subscribe(res => {
+  getAllContractRequest() {
+    this.HttpApi.getAllContractRequest(this.search,1).subscribe(res => {
         this.GetAllContract = res.body.contracts;
         this.GetAllContract = res.body.contracts.map((contract: any) => {
           const start_date = this.formatDate2(contract.start_date)
@@ -123,7 +88,6 @@ export class ContractComponent {
           return {...contract, start_date, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
-        this.loading = false;
       },
       error => {
         console.log(error);
@@ -406,18 +370,11 @@ export class ContractComponent {
   }
 
   //懶加載
-  loading: boolean = true;
-  sortField: any;
-  sortOrder: any;
-  code: any;
-
-  loadPostsLazy(event: LazyLoadEvent) {
-    this.loading = true;
-    let page = event.first! / event.rows! + 1;
-    let limit = event.rows;
-    // this.sortField = event.sortField || 'code';
-    // this.sortOrder = event.sortOrder || -1;
-    this.HttpApi.getAllContractRequest(limit, page)
+  search: string = '';  // 搜尋關鍵字
+  loadPostsLazy(e: LazyLoadEvent) {
+    let page = e.first! / e.rows! + 1;
+    let limit = e.rows;
+    this.HttpApi.getAllContractRequest(this.search, 1,limit, page, e)
       .subscribe(res => {
           this.GetAllContract = res.body.contracts.map((contract: any) => {
             const start_date = this.formatDate2(contract.start_date)
@@ -426,11 +383,14 @@ export class ContractComponent {
             return {...contract, start_date, created_at, updated_at};
           });
           this.totalRecords = res.body.total;
-          this.loading = false;
         },
         error => {
           console.log(error);
         });
+  }
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
 //日期轉換
