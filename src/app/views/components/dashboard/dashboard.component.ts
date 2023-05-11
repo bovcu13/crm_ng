@@ -6,6 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
+  date: Date[] =[];
+
   data1: any;
   options1: any;
 
