@@ -106,6 +106,7 @@ export class ViewCampaignComponent {
   stage: any;
   GetOneStartDate: any;
   GetOneEndDate: any;
+
   getOneCampaignRequest(c_id: any) {
     this.HttpApi.getOneCampaignRequest(c_id).subscribe(res => {
         this.GetOneCampaign = res.body;
@@ -324,9 +325,10 @@ export class ViewCampaignComponent {
   }
 
   GetAllContact: any[] = [];
+  contactSearch!: string;
 
   getAllContactRequest() {
-    this.HttpApi.getAllContactRequest(1).subscribe(
+    this.HttpApi.getAllContactRequest(this.contactSearch, 1).subscribe(
       (res) => {
         this.GetAllContact = res.body.contacts
         console.log(this.GetAllContact)

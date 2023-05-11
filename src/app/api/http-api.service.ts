@@ -39,7 +39,7 @@ export class HttpApiService {
         keyword = event.data
       }
       obj = {
-        sort: { field: event.sortField || null, direction: direction },
+        sort: {field: event.sortField || null, direction: direction},
         field: status,
         filter: {
           name: keyword,
@@ -51,6 +51,7 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/accounts/list?page=${page}&limit=10`;
     return this.http.post<any>(url, obj);
   }
+
   // getAllAccountRequest(page: number): Observable<any> {
   //   const url = `${this.BaseUrl}/accounts/list?page=${page}&limit=10`;
   //   return this.http.get<any>(url);
@@ -82,10 +83,45 @@ export class HttpApiService {
   }
 
   //--聯絡人---------------------------------------------------------------------------------------------------
-  getAllContactRequest(page: number): Observable<any> {
+  getAllContactRequest(search: string, status = 1, page = 1, event?: any): Observable<any> {
+    let obj: any = {
+      field: status,
+      filter: {
+        cell_phone: search ? search : null,
+        email: search ? search : null,
+        name: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction = null;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: {field: event.sortField || null, direction: direction},
+        field: status,
+        filter: {
+          cell_phone: keyword,
+          email: keyword,
+          name: keyword,
+        },
+      };
+    }
     const url = `${this.BaseUrl}/contacts/list?page=${page}&limit=10`;
-    return this.http.get<any>(url);
+    return this.http.post<any>(url, obj);
   }
+
+  // getAllContactRequest(page: number): Observable<any> {
+  //   const url = `${this.BaseUrl}/contacts/list?page=${page}&limit=10`;
+  //   return this.http.get<any>(url);
+  // }
 
   getOneContactRequest(id: any): Observable<any> {
     const url = `${this.BaseUrl}/contacts/${id}`;
@@ -131,7 +167,7 @@ export class HttpApiService {
         keyword = event.data
       }
       obj = {
-        sort: { field: event.sortField || null, direction: direction },
+        sort: {field: event.sortField || null, direction: direction},
         field: status,
         filter: {
           description: keyword,
@@ -143,6 +179,7 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/leads/list?page=${page}&limit=10`;
     return this.http.post<any>(url, obj);
   }
+
   // getAllLeadRequest(page: number): Observable<any> {
   //   const url = `${this.BaseUrl}/leads/list?page=${page}&limit=10`;
   //   return this.http.get<any>(url);
@@ -190,7 +227,7 @@ export class HttpApiService {
         keyword = event.data
       }
       obj = {
-        sort: { field: event.sortField || null, direction: direction },
+        sort: {field: event.sortField || null, direction: direction},
         field: status,
         filter: {
           name: keyword,
@@ -200,6 +237,7 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/opportunities/list?page=${page}&limit=10`;
     return this.http.post<any>(url, obj);
   }
+
   // getAllOpportunityRequest(page: number): Observable<any> {
   //   const url = `${this.BaseUrl}/opportunities/list?page=${page}&limit=10`;
   //   return this.http.get<any>(url);
@@ -233,7 +271,7 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  getAllProductRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
+  getAllProductRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -255,7 +293,7 @@ export class HttpApiService {
         keyword = event.data
       }
       obj = {
-        sort: { field: event.sortField || null, direction: direction },
+        sort: {field: event.sortField || null, direction: direction},
         field: status,
         filter: {
           name: keyword,
@@ -428,7 +466,7 @@ export class HttpApiService {
 //----報價---------------------------------------------------------------------------------------------------
 
   //取得所有報價 getall
-  getAllQuoteRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
+  getAllQuoteRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -448,7 +486,7 @@ export class HttpApiService {
         keyword = event.data
       }
       obj = {
-        sort: { field: event.sortField || null, direction: direction },
+        sort: {field: event.sortField || null, direction: direction},
         field: status,
         filter: {
           name: keyword,
@@ -458,6 +496,7 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/quotes/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
+
   // getAllQuoteRequest(limit = 20, page = 1): Observable<any> {
   //   let url = this.BaseUrl + '/quotes/list' + '?page=' + page + '&limit=' + limit;
   //   return this.http.get<any>(url);
