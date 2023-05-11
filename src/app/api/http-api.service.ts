@@ -264,10 +264,40 @@ export class HttpApiService {
   term: any;
 
 //取得所有契約
-  getAllContractRequest(limit = 20, page = 1): Observable<any> {
-    let url = this.BaseUrl + '/contracts/list' + '?page=' + page + '&limit=' + limit;
-    return this.http.get<any>(url);
+  getAllContractRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
+    let obj: any = {
+      field: status,
+      filter: {
+        code: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction: any;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: { field: event.sortField || null, direction: direction },
+        field: status,
+        filter: {
+          code: keyword,
+        },
+      };
+    }
+    const url = `${this.BaseUrl}/contracts/list?page=${page}&limit=${limit}`;
+    return this.http.post<any>(url, obj);
   }
+  // getAllContractRequest(limit = 20, page = 1): Observable<any> {
+  //   let url = this.BaseUrl + '/contracts/list' + '?page=' + page + '&limit=' + limit;
+  //   return this.http.get<any>(url);
+  // }
 
   getOneContractRequest(sid: any): Observable<any> {
     const url = `${this.BaseUrl}/contracts/${sid}`;

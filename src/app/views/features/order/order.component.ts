@@ -373,9 +373,10 @@ export class OrderComponent {
   // GET全部Contract
   GetAllContract: any[] = [];
   selectedContract_id: any;
+  contractsearch: any;
 
-  getAllContractRequest(limit?: number, page?: number) {
-    this.HttpApi.getAllContractRequest(limit, page).subscribe(
+  getAllContractRequest() {
+    this.HttpApi.getAllContractRequest(this.contractsearch,1).subscribe(
       (res) => {
         const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
         this.GetAllContract = contracts.map((contract: any) => {

@@ -85,22 +85,20 @@ export class ViewOrderComponent {
   //GET全部product
   GetAllProduct: any[] = [];
   first = 0;
-  getAllProductRequest(limit?: number, page?: number) {
-    if (!page) {
-      this.first = 0;
-    }
-    // this.HttpApi.getAllProductRequest(limit,).subscribe(res => {
-    //     this.GetAllProduct = res.body.products
-    //     this.GetAllProduct = res.body.products.map((product: any) => {
-    //       const created_at = this.formatDate(product.created_at);
-    //       const updated_at = this.formatDate(product.updated_at);
-    //       return {...product, created_at, updated_at};
-    //     });
-    //     console.log(this.GetAllProduct)
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   });
+  productsearch: any;
+  getAllProductRequest() {
+    this.HttpApi.getAllProductRequest(this.productsearch,1).subscribe(res => {
+        this.GetAllProduct = res.body.products
+        this.GetAllProduct = res.body.products.map((product: any) => {
+          const created_at = this.formatDate(product.created_at);
+          const updated_at = this.formatDate(product.updated_at);
+          return {...product, created_at, updated_at};
+        });
+        console.log(this.GetAllProduct)
+      },
+      error => {
+        console.log(error);
+      });
   }
 
   //建立formgroup
@@ -155,8 +153,9 @@ export class ViewOrderComponent {
 
   // GET全部Contract
   GetAllContract: any[] = [];
-  getAllContractRequest(limit?: number, page?: number) {
-    this.HttpApi.getAllContractRequest(limit, page).subscribe(
+  search: string = '';
+  getAllContractRequest() {
+    this.HttpApi.getAllContractRequest(this.search,1).subscribe(
       (res) => {
         const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
         this.GetAllContract = contracts.map((contract: any) => {

@@ -8,7 +8,7 @@
         </span>
       </div>
       <p-table [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
-               [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first"
+               [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" #dt1
                [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
@@ -30,8 +30,8 @@
               <span>{{status[6].name}}</span>
             </div>
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" [(ngModel)]="filterText" (input)="filterContracts()" pInputText
-                         placeholder="關鍵字搜索"></td>
+               <td><input [(ngModel)]="search" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+                          placeholder="關鍵字搜索"></td>
             </span>
           </div>
         </ng-template>
@@ -49,9 +49,10 @@
             <th pSortableColumn="start_date">開始日期
               <p-sortIcon field="start_date"></p-sortIcon>
             </th>
-            <th pSortableColumn="end_date">到期日期
-              <p-sortIcon field="end_date"></p-sortIcon>
-            </th>
+<!--            <th pSortableColumn="end_date">到期日期-->
+<!--              <p-sortIcon field="end_date"></p-sortIcon>-->
+<!--            </th>-->
+            <th>到期日期</th>
             <th pSortableColumn="term">有效期間(月)
               <p-sortIcon field="term"></p-sortIcon>
             </th>
