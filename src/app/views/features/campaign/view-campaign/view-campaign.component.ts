@@ -150,9 +150,9 @@ export class ViewCampaignComponent {
   // GET全部Account
   GetAllparent_campaign: any[] = [];
   selectedParent_id: string = '';
-
-  getAllCampaignRequest(limit?: number, page?: number) {
-    this.HttpApi.getAllCampaignRequest(limit, page).subscribe(
+  search: any;
+  getAllCampaignRequest() {
+    this.HttpApi.getAllCampaignRequest(this.search,1).subscribe(
       (res) => {
         this.GetAllparent_campaign = res.body.campaigns.map((campaign: any) => {
           return {

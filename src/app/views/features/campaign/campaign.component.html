@@ -8,7 +8,7 @@
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" [showCurrentPageReport]="true"
-                [globalFilterFields]="['status','start_date']" (onLazyLoad)="loadTable($event)"
+                [globalFilterFields]="['status','start_date']" (onLazyLoad)="loadTable($event)" #dt1
                [value]="GetAllCampaign" [paginator]="true" [rows]="5" [lazy]="true" [totalRecords]="totalRecords"
                currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
@@ -24,8 +24,8 @@
               <span>{{status[3].name}}</span>
             </div>
             <span class="p-input-icon-left ml-auto">
-              <td><input type="text" [(ngModel)]="filterText" (input)="filterCampaigns()" pInputText
-                  placeholder="關鍵字搜索"></td>
+               <td><input [(ngModel)]="search" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+                          placeholder="關鍵字搜索"></td>
             </span>
           </div>
         </ng-template>
@@ -35,11 +35,13 @@
               <p-sortIcon field="status"></p-sortIcon>
             </th>
             <th pSortableColumn="name">活動名稱<p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="patrilineal_name">父系活動<p-sortIcon field="patrilineal_name"></p-sortIcon></th>
+            <th>父系活動</th>
+<!--            <th pSortableColumn="patrilineal_name">父系活動<p-sortIcon field="patrilineal_name"></p-sortIcon></th>-->
             <th pSortableColumn="type">類型<p-sortIcon field="type"></p-sortIcon></th>
             <th pSortableColumn="start_date">開始時間<p-sortIcon field="start_date"></p-sortIcon></th>
             <th pSortableColumn="end_date">結束時間<p-sortIcon field="end_date"></p-sortIcon></th>
-             <th pSortableColumn="salesperson_name">業務員<p-sortIcon field="salesperson_name"></p-sortIcon></th>
+            <th>業務員</th>
+<!--             <th pSortableColumn="salesperson_name">業務員<p-sortIcon field="salesperson_name"></p-sortIcon></th>-->
 <!--            <th pSortableColumn="member">成員已回應<p-sortIcon field="member"></p-sortIcon></th>-->
             <th></th>
           </tr>

@@ -27,7 +27,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction = null;
+      let direction : any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -57,15 +57,15 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  getAllAccountDetailRequest(page: number): Observable<any> {
-    const url = `${this.BaseUrl}/accounts/contacts?page=${page}&limit=10`;
-    return this.http.get<any>(url);
-  }
+  // getAllAccountDetailRequest(page: number): Observable<any> {
+  //   const url = `${this.BaseUrl}/accounts/contacts?page=${page}&limit=10`;
+  //   return this.http.get<any>(url);
+  // }
 
-  getOneAccountRequest(id: any): Observable<any> {
-    const url = `${this.BaseUrl}/accounts/${id}`;
-    return this.http.get<any>(url);
-  }
+  // getOneAccountRequest(id: any): Observable<any> {
+  //   const url = `${this.BaseUrl}/accounts/${id}`;
+  //   return this.http.get<any>(url);
+  // }
 
   postAccountRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/accounts`;
@@ -93,7 +93,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction = null;
+      let direction : any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -123,10 +123,10 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  getOneContactRequest(id: any): Observable<any> {
-    const url = `${this.BaseUrl}/contacts/${id}`;
-    return this.http.get<any>(url);
-  }
+  // getOneContactRequest(id: any): Observable<any> {
+  //   const url = `${this.BaseUrl}/contacts/${id}`;
+  //   return this.http.get<any>(url);
+  // }
 
   postContactRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/contacts`;
@@ -307,10 +307,10 @@ export class HttpApiService {
   }
 
   //取得one  商品/服務資料 get one
-  getOneProductRequest(sid: any): Observable<any> {
-    const url = `${this.BaseUrl}/products/${sid}`;
-    return this.http.get(url);
-  }
+  // getOneProductRequest(sid: any): Observable<any> {
+  //   const url = `${this.BaseUrl}/products/${sid}`;
+  //   return this.http.get(url);
+  // }
 
   //新增 商品/服務資料 post
   postProductRequest(body: any): Observable<any> {
@@ -331,10 +331,6 @@ export class HttpApiService {
   }
 
   //--契約---------------------------------------------------------------------------------------------------
-  status: any;
-  start_date: any;
-  end_date: any;
-  term: any;
 
 //取得所有契約
   getAllContractRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
@@ -395,19 +391,6 @@ export class HttpApiService {
   }
 
   //--訂單---------------------------------------------------------------------------------------------------
-  account_id: any;
-  account_name: any;
-  accounts: any;
-  contracts: any;
-  amount: any;
-  contract_id: any;
-  contract_code: any;
-  activated_by: any;
-  activated_date: any;
-  description: any;
-  code: any;
-  name: any;
-
   //取得所有訂單 getall
   getAllOrderRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
     let obj: any = {
@@ -527,16 +510,43 @@ export class HttpApiService {
   }
 
   //----------行銷活動------------------------------------------------------------------------------------------------
-  is_enable: any;
-  parent_campaign_id: any;
-  type: any;
-  owner: any;
-
   //取得所有行銷活動 getall
-  getAllCampaignRequest(limit = 20, page = 1): Observable<any> {
-    const url = this.BaseUrl + '/campaigns/list' + '?page=' + page + '&limit=' + limit;
-    return this.http.get<any>(url);
+  getAllCampaignRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
+    let obj: any = {
+      field: status,
+      filter: {
+        name: search ? search : null,
+        type: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction : any;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: {field: event.sortField || null, direction: direction},
+        field: status,
+        filter: {
+          name: keyword,
+          type: keyword,
+        },
+      };
+    }
+    const url = `${this.BaseUrl}/campaigns/list?page=${page}&limit=${limit}`;
+    return this.http.post<any>(url, obj);
   }
+  // getAllCampaignRequest(limit = 20, page = 1): Observable<any> {
+  //   const url = this.BaseUrl + '/campaigns/list' + '?page=' + page + '&limit=' + limit;
+  //   return this.http.get<any>(url);
+  // }
 
   getOneCampaignRequest(id: any): Observable<any> {
     const url = `${this.BaseUrl}/campaigns/${id}`;

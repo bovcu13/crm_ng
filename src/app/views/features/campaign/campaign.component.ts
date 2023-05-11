@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Calendar} from 'primeng/calendar';
 import {HttpApiService} from "../../../api/http-api.service";
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-campaign',
@@ -13,6 +14,7 @@ import Swal from "sweetalert2";
 export class CampaignComponent {
   @ViewChild('startDate') startDate: Calendar | undefined;
   @ViewChild('endDate') endDate: Calendar | undefined;
+  @ViewChild('dt1') dt1!: Table;
   //table內容
   campaign: any[] = [
     {
@@ -54,40 +56,6 @@ export class CampaignComponent {
       updated_by: "林",
     },
   ];
-
-  //搜尋功能
-  filterText: any = '';
-
-  filterCampaigns() {
-    if (!this.filterText) {
-      this.getAllCampaignRequest();
-      return;
-    }
-    this.GetAllCampaign = this.GetAllCampaign.filter(campaign => {
-      // 將所有要比對的欄位轉成小寫字母
-      const name = campaign.name?.toLowerCase() || '';
-      const status = campaign.status?.toLowerCase() || '';
-      //const parent_campaign_id = campaign.status?.toLowerCase() || '';
-      const type = campaign.type?.toLowerCase() || '';
-      const start_date = campaign.start_date?.toLowerCase() || '';
-      const end_date = campaign.end_date?.toLowerCase() || '';
-      const description = campaign.description?.toLowerCase() || '';
-      const owner = campaign.owner?.toLowerCase() || '';
-      return (
-        name.toLowerCase().includes(this.filterText) ||
-        status.toLowerCase().includes(this.filterText) ||
-        (campaign.is_enable ? 'true' : 'false').toLowerCase().includes(this.filterText.toLowerCase()) ||
-        //campaign.parent_campaign_id.toLowerCase().includes(this.filterText) ||
-        type.toLowerCase().includes(this.filterText) ||
-        status.toLowerCase().includes(this.filterText) ||
-        start_date.toLowerCase().includes(this.filterText) ||
-        end_date.toLowerCase().includes(this.filterText) ||
-        description.toLowerCase().includes(this.filterText) ||
-        owner.toLowerCase().includes(this.filterText)
-      );
-    });
-    console.log(this.GetAllCampaign)
-  }
 
   ngOnInit() {
 
@@ -147,37 +115,56 @@ export class CampaignComponent {
       code: "Other",
     },
   ];
-
   //取得所有行銷活動資料
   GetAllCampaign: HttpApiService[] = [];
   GetAllparent_campaign: any[] = [];
   first = 0;
   totalRecords = 0;
+  search: any;
+  //懶加載
+  loadTable(e: any) {
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllCampaignRequest(this.search, 1,limit, page, e).subscribe(
+      request => {
+        this.GetAllCampaign = request.body.campaigns;
+        this.GetAllCampaign = request.body.campaigns.map((campaign: any) => {
+          const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)
+          const start_date = this.formatDate2(campaign.start_date)
+          const end_date = this.formatDate2(campaign.end_date)
+          const created_at = this.formatDate(campaign.created_at);
+          const updated_at = this.formatDate(campaign.updated_at);
+          return {...campaign,parent_campaign_id,start_date,end_date, created_at, updated_at};
+        });
+        this.totalRecords = request.body.total;
+        console.log(this.GetAllCampaign)
+      });
+  }
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
 
-  getAllCampaignRequest(limit?: number, page?: number) {
-    if (!page) {
-      this.first = 0;
-    }
-    this.HttpApi.getAllCampaignRequest(limit, page).subscribe(
+
+  getAllCampaignRequest() {
+    this.HttpApi.getAllCampaignRequest(this.search,1).subscribe(
       (res) => {
         const campaigns = res.body.campaigns
-        this.GetAllparent_campaign = campaigns.map((order: any) => {
+        this.GetAllparent_campaign = campaigns.map((campaign: any) => {
           return {
-            label: order.name,
-            value: order.campaign_id,
+            label: campaign.name,
+            value: campaign.campaign_id,
           };
         });
         this.GetAllCampaign = res.body.campaigns
-        this.GetAllCampaign = res.body.campaigns.map((order: any) => {
-          const parent_campaign_id = this.parent_campaign_id(order.parent_campaign_id)
-          const start_date = this.formatDate2(order.start_date)
-          const end_date = this.formatDate2(order.end_date)
-          const created_at = this.formatDate(order.created_at);
-          const updated_at = this.formatDate(order.updated_at);
-          return {...order, parent_campaign_id, start_date, end_date, created_at, updated_at};
+        this.GetAllCampaign = res.body.campaigns.map((campaign: any) => {
+          const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)
+          const start_date = this.formatDate2(campaign.start_date)
+          const end_date = this.formatDate2(campaign.end_date)
+          const created_at = this.formatDate(campaign.created_at);
+          const updated_at = this.formatDate(campaign.updated_at);
+          return {...campaign, parent_campaign_id, start_date, end_date, created_at, updated_at};
         });
-        this.totalRecords = res.body.total;
-        console.log(this.GetAllCampaign)
       },
       (error) => {
         console.log(error);
@@ -480,14 +467,6 @@ export class CampaignComponent {
       timer: 1000
     })
   }
-
-  //懶加載
-  loadTable(e: any) {
-    let limit = e.rows;
-    let page = e.first / e.rows + 1;
-    this.getAllCampaignRequest(limit, page);
-  }
-
   //如果父系行銷活動沒有被選擇
   parent_campaign_id(parent_campaign_id: string): any {
     if (parent_campaign_id == "00000000-0000-4000-a000-000000000000") {
