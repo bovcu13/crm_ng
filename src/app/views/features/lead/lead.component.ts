@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {LazyLoadEvent, MenuItem} from "primeng/api";
+import {MenuItem} from "primeng/api";
 import {HttpApiService} from "../../../api/http-api.service";
 import {Lead} from "../../../shared/models/lead";
 import {concatMap, tap} from 'rxjs/operators';
@@ -259,6 +259,7 @@ export class LeadComponent implements OnInit {
     this.HttpApi.getAllLeadRequest(this.search, 1, page, e).subscribe(
       request => {
         this.getData = request.body.leads;
+        console.log(this.getData)
         this.total = request.body.total;
       });
   }
@@ -301,6 +302,13 @@ export class LeadComponent implements OnInit {
       // this.lead_form.controls['account_name'].setValue(lead.account_name);
       // console.log(this.lead_form.controls['account_name'].value);
     }
+  }
+
+  getAllLead():void{
+    this.HttpApi.getAllLeadRequest(this.search, 1).subscribe(
+      request => {
+        this.getData = request.body.leads;
+      });
   }
 
 // 現在時間
@@ -346,15 +354,6 @@ export class LeadComponent implements OnInit {
     }
     this.HttpApi.postLeadRequest(body).subscribe(request => {
       console.log(request)
-      let event: LazyLoadEvent = {
-        first: 0,
-        rows: 10,
-        sortField: undefined,
-        sortOrder: undefined,
-        multiSortMeta: undefined,
-        filters: undefined,
-        globalFilter: undefined,
-      };
       if (request.code === 200) {
         this.edit = false;
         Swal.fire({
@@ -364,7 +363,7 @@ export class LeadComponent implements OnInit {
           showConfirmButton: false,
           timer: 1000
         })
-        // this.loadPostsLazy(event);
+        this.getAllLead()
       } else {
         Swal.fire({
           title: '失敗',
@@ -424,15 +423,6 @@ export class LeadComponent implements OnInit {
     this.HttpApi.patchLeadRequest(id, body)
       .subscribe(request => {
         console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
         if (request.code === 200) {
           this.edit = false;
           Swal.fire({
@@ -442,7 +432,7 @@ export class LeadComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          // this.loadPostsLazy(event);
+          this.getAllLead()
         } else {
           Swal.fire({
             title: '失敗',
@@ -473,10 +463,6 @@ export class LeadComponent implements OnInit {
       if (result.isConfirmed) {
         this.HttpApi.deleteLeadRequest(id).subscribe(request => {
           console.log(request)
-          let event: LazyLoadEvent = {
-            first: 0,
-            rows: 10,
-          };
           if (request.code === 200) {
             Swal.fire({
               title: '成功',
@@ -485,7 +471,7 @@ export class LeadComponent implements OnInit {
               showConfirmButton: false,
               timer: 1000
             })
-            // this.loadPostsLazy(event);
+            this.getAllLead()
           } else {
             Swal.fire({
               title: '失敗',
@@ -524,16 +510,7 @@ export class LeadComponent implements OnInit {
     return this.HttpApi.postAccountRequest(body).pipe(
       tap(request => {
         console.log(request);
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-          sortField: undefined,
-          sortOrder: undefined,
-          multiSortMeta: undefined,
-          filters: undefined,
-          globalFilter: undefined,
-        };
-        // this.loadPostsLazy(event);
+        this.getAllLead()
       })
     );
   }
