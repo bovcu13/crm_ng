@@ -160,11 +160,6 @@ export class HttpApiService {
   }
 
   //--商品/服務---------------------------------------------------------------------------------------------------
-  name: any;
-  code: any;
-  description: any;
-  enable!: boolean;
-  price!: number;
 
   //取得all  商品/服務資料
   // getAllProductRequest(limit = 20, page = 1): Observable<any> {
@@ -275,6 +270,9 @@ export class HttpApiService {
   contract_code: any;
   activated_by: any;
   activated_date: any;
+  description: any;
+  code: any;
+  name: any;
 
   //取得所有訂單 getall
   getAllOrderRequest(limit = 20, page = 1): Observable<any> {
@@ -336,18 +334,42 @@ export class HttpApiService {
   }
 
 //----報價---------------------------------------------------------------------------------------------------
-  opportunity_name: any;
-  is_syncing: any;
-  expiration_date: any;
-  tax: any;
-  shipping_and_handling: any;
-  subtotal: any;
 
   //取得所有報價 getall
-  getAllQuoteRequest(limit = 20, page = 1): Observable<any> {
-    let url = this.BaseUrl + '/quotes/list' + '?page=' + page + '&limit=' + limit;
-    return this.http.get<any>(url);
+  getAllQuoteRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
+    let obj: any = {
+      field: status,
+      filter: {
+        name: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction = null;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: { field: event.sortField || null, direction: direction },
+        field: status,
+        filter: {
+          name: keyword,
+        },
+      };
+    }
+    const url = `${this.BaseUrl}/quotes/list?page=${page}&limit=${limit}`;
+    return this.http.post<any>(url, obj);
   }
+  // getAllQuoteRequest(limit = 20, page = 1): Observable<any> {
+  //   let url = this.BaseUrl + '/quotes/list' + '?page=' + page + '&limit=' + limit;
+  //   return this.http.get<any>(url);
+  // }
 
   //取得一筆 報價 getone
   getOneQuotetRequest(id: any): Observable<Quote> {
