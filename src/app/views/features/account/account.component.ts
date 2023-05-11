@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {LazyLoadEvent, MenuItem} from 'primeng/api';
+import {MenuItem} from 'primeng/api';
 import {HttpApiService} from "../../../api/http-api.service";
 import {Table} from 'primeng/table';
 import {Account} from "../../../shared/models/account";
@@ -12,33 +12,7 @@ import Swal from "sweetalert2";
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
-  // filteredAccount: any[] = [];
   @ViewChild('dt') dt!: Table;
-  // loading: boolean = true;
-  account: any[] = [
-    {
-      "name": "David",
-      "owner": "林",
-      "phone_number": "0912345678",
-      "industry_id": "金融服務",
-      "type": "個人客戶",
-      "parent_account_id": "NKUST",
-      "created_by": "林",
-      "updated_by": "林",
-      "created_at": "2023-04-10  in the evening11:35", //建立日期
-    },
-    {
-      "name": "Mars",
-      "owner": "林",
-      "phone_number": "0987654321",
-      "industry_id": "零售業",
-      "type": "法人客戶",
-      "parent_account_id": "NKUST",
-      "created_by": "林",
-      "updated_by": "林",
-      "created_at": "2023-04-09  in the evening17:55", //建立日期
-    }
-  ];
   industry_id: any[] = [
     {
       "name": "零售業",
@@ -125,32 +99,10 @@ export class AccountComponent implements OnInit {
   }
 
   getData!: Account[];
-  // getData!: HttpApiService[];
-  filterText: string = '';
 
-  // filter() {
-  //   if (this.filterText === '') {
-  //     this.getData;
-  //   } else {
-  //     this.getData.filter(account => {
-  //       return (
-  //         account.name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-  //         account.phone_number.toLowerCase().includes(this.filterText.toLowerCase()) ||
-  //         account.type.toLowerCase().includes(this.filterText.toLowerCase()) ||
-  //         account.owner.toLowerCase().includes(this.filterText.toLowerCase())
-  //       );
-  //     });
-  //   }
-  //   console.log(this.getData)
-  // }
 
   ngOnInit() {
 
-  }
-
-  //時間調整
-  localToUtc(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 8, date.getMinutes(), date.getSeconds()));
   }
 
   edit: boolean = false;
@@ -175,31 +127,34 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  total!: number;
-
-  // 懶加載
-  loadPostsLazy(e: any) {
-    // this.loading = true;
-    let page = e.first / e.rows + 1;
-    // let limit = e.rows;
-    this.HttpApi.getAllAccountRequest(page).subscribe(request => {
-      this.getData = request.body.accounts;
-      this.total = request.body.total
-      // this.loading = false;
-      console.log(this.getData);
-    });
+  // 搜尋關鍵字
+  search: string = '';
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.search = ($event.target as HTMLInputElement).value
+    this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
+  total!: number;
   // 懶加載
-  // loadPostsLazy(event: LazyLoadEvent) {
-  //   const page = (event.first! / event.rows!) + 1;
-  //   this.HttpApi.getAllAccountRequest(page).subscribe(request => {
-  //     this.getData = request.body.accounts;
-  //     this.total = request.body.total
-  //     console.log(this.getData);
-  //     // console.log(this.total)
-  //   });
-  // }
+  loadTable(e: any) {
+    // this.loading = true;
+    // let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllAccountRequest(this.search, 1, page, e).subscribe(
+      request => {
+        this.getData = request.body.accounts;
+        console.log(this.getData)
+        this.total = request.body.total;
+      });
+  }
+
+  getAllAccount():void{
+    this.HttpApi.getAllAccountRequest(this.search, 1).subscribe(
+      request => {
+        this.getData = request.body.accounts;
+        this.total = request.body.total;
+      });
+  }
 
   // 現在時間
   currentDate = new Date()
@@ -231,15 +186,6 @@ export class AccountComponent implements OnInit {
     }
     this.HttpApi.postAccountRequest(body).subscribe(request => {
       console.log(request)
-      let event: LazyLoadEvent = {
-        first: 0,
-        rows: 10,
-        sortField: undefined,
-        sortOrder: undefined,
-        multiSortMeta: undefined,
-        filters: undefined,
-        globalFilter: undefined,
-      };
       if (request.code === 200) {
         this.edit = false;
         Swal.fire({
@@ -249,7 +195,7 @@ export class AccountComponent implements OnInit {
           showConfirmButton: false,
           timer: 1000
         })
-        this.loadPostsLazy(event);
+        this.getAllAccount();
       } else {
         Swal.fire({
           title: '失敗',
@@ -293,10 +239,6 @@ export class AccountComponent implements OnInit {
     this.HttpApi.patchAccountRequest(id, body)
       .subscribe(request => {
         console.log(request)
-        let event: LazyLoadEvent = {
-          first: 0,
-          rows: 10,
-        };
         if (request.code === 200) {
           this.edit = false;
           Swal.fire({
@@ -306,7 +248,7 @@ export class AccountComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          this.loadPostsLazy(event);
+          this.getAllAccount();
         } else {
           Swal.fire({
             title: '失敗',
@@ -335,10 +277,6 @@ export class AccountComponent implements OnInit {
       if (result.isConfirmed) {
         this.HttpApi.deleteAccountRequest(id).subscribe(request => {
           console.log(request)
-          let event: LazyLoadEvent = {
-            first: 0,
-            rows: 10,
-          };
           if (request.code === 200) {
             Swal.fire({
               title: '成功',
@@ -347,7 +285,7 @@ export class AccountComponent implements OnInit {
               showConfirmButton: false,
               timer: 1000
             })
-            this.loadPostsLazy(event);
+            this.getAllAccount();
           } else {
             Swal.fire({
               title: '失敗',
@@ -391,14 +329,4 @@ export class AccountComponent implements OnInit {
     console.log(selectedIndustry.name);
   }
 
-  // typeValue(event: any): void {
-  //   const selectedType = this.type.find((s: { code: any; }) => s.code === event.value.code);
-  //   console.log(event.value.code);
-  //   console.log(selectedType.name);
-  // }
-
-  applyFilterGlobal($event: any, stringVal: any) {
-    this.filterText = ($event.target as HTMLInputElement).value
-    this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
-  }
 }
