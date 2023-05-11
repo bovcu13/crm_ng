@@ -203,8 +203,9 @@ export class ViewQuoteComponent {
   // GET全部Opportunity
   GetAllOpportunity: any[] = [];
   selectedOpportunity_id: string = '';
+  opportunitysearch: any;
   getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(1).subscribe(
+    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch,1).subscribe(
       (res) => {
         this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
           return {
@@ -229,37 +230,17 @@ export class ViewQuoteComponent {
 
   //GET全部product
   GetAllProduct: any[] = [];
-  first = 0;
-  getAllProductRequest(limit ?: number, page ?: number) {
-    if (!page) {
-      this.first = 0;
-    }
-    // this.HttpApi.getAllProductRequest(limit,).subscribe(res => {
-    //     this.GetAllProduct = res.body.products
-    //     this.GetAllProduct = res.body.products.map((product: any) => {
-    //       const created_at = this.formatDate(product.created_at);
-    //       const updated_at = this.formatDate(product.updated_at);
-    //       return {...product, created_at, updated_at};
-    //     });
-    //     this.totalRecords = res.body.total;
-    //     this.loading = false;
-    //     console.log(this.GetAllProduct)
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   });
-  }
-
+  productsearch: any;
   // table lazyload
   // 搜尋關鍵字
-  //search: string = '';
-  loading: boolean = true;
-  totalRecords = 0;
   loadPostsLazy(e: any) {
-    this.loading = true;
-    let limit = e.rows;
-    let page = e.first / e.rows + 1;
-    this.getAllProductRequest(limit, page);
+    this.HttpApi.getAllProductRequest(this.productsearch,1).subscribe(res => {
+        this.GetAllProduct = res.body.products
+        console.log(this.GetAllProduct)
+      },
+      error => {
+        console.log(error);
+      });
   }
 
   //偵測status變量

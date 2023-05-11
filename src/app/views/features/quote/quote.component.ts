@@ -348,22 +348,22 @@ export class QuoteComponent {
   // GET全部Account
   GetAllOpportunity: any[] = [];
   selectedOpportunity_id: string = '';
-
+  opportunitysearch: any;
   getAllopportunityRequest() {
-    // this.HttpApi.getAllOpportunityRequest(1).subscribe(
-    //   (res) => {
-    //     this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
-    //       return {
-    //         label: opportunity.name,
-    //         value: opportunity.opportunity_id,
-    //         account_id: opportunity.account_id,
-    //       };
-    //     });
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //   }
-    // );
+    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch,1).subscribe(
+      (res) => {
+        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
+          return {
+            label: opportunity.name,
+            value: opportunity.opportunity_id,
+            account_id: opportunity.account_id,
+          };
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   selectedAccount_id: string = '';
@@ -375,7 +375,6 @@ export class QuoteComponent {
   }
 
   // table lazyload
-  loading: boolean = true;
   totalRecords = 0;
   //取得所有訂單資料
   GetAllQuote: HttpApiService[] = [];
@@ -383,7 +382,6 @@ export class QuoteComponent {
   search: string = '';  // 搜尋關鍵字
 
   loadPostsLazy(e: any) {
-    this.loading = true;
     let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.HttpApi.getAllQuoteRequest(this.search, 1,limit, page, e).subscribe(
