@@ -371,9 +371,11 @@ export class ContractComponent {
 
   //懶加載
   search: string = '';  // 搜尋關鍵字
+  loading: boolean = false;
   loadPostsLazy(e: LazyLoadEvent) {
     let page = e.first! / e.rows! + 1;
     let limit = e.rows;
+    this.loading = true;
     this.HttpApi.getAllContractRequest(this.search, 1,limit, page, e)
       .subscribe(res => {
           this.GetAllContract = res.body.contracts.map((contract: any) => {
@@ -383,6 +385,7 @@ export class ContractComponent {
             return {...contract, start_date, created_at, updated_at};
           });
           this.totalRecords = res.body.total;
+          this.loading = false;
         },
         error => {
           console.log(error);

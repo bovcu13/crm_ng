@@ -121,12 +121,15 @@ export class CampaignComponent {
   first = 0;
   totalRecords = 0;
   search: any;
+  loading: boolean = false;
   //懶加載
   loadTable(e: any) {
     let limit = e.rows;
+    this.loading = true;
     let page = e.first / e.rows + 1;
     this.HttpApi.getAllCampaignRequest(this.search, 1,limit, page, e).subscribe(
       request => {
+        this.loading = false;
         this.GetAllCampaign = request.body.campaigns;
         this.GetAllCampaign = request.body.campaigns.map((campaign: any) => {
           const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)

@@ -8,9 +8,9 @@
         </span>
       </div>
       <p-table [value]="GetAllContract" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
-               [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" #dt1
+               [rowsPerPageOptions]="[10, 15]" [(first)]="first" #dt1 [loading]="loading"
                [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
-               currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
+               currentPageReportTemplate="共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
             <div class="flex align-items-center ml-2">

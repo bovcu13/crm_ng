@@ -80,15 +80,16 @@ export class ContactComponent implements OnInit {
   }
 
   total!: number;
-
+  loading: boolean = false;
   // 懶加載
   loadTable(e: any) {
-    // this.loading = true;
+     this.loading = true;
     // let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.HttpApi.getAllContactRequest(this.search, 1, page, e).subscribe(
       request => {
         this.getData = request.body.contacts;
+        this.loading = false;
         console.log(this.getData)
         this.total = request.body.total;
       });

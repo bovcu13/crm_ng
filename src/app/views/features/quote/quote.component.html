@@ -7,10 +7,10 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetAllQuote" [paginator]="true"
+      <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllQuote" [paginator]="true"
       [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
-      [showCurrentPageReport]="true" [(first)]="first"  #dt1
-      currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
+      [showCurrentPageReport]="true" [(first)]="first"  #dt1 [loading]="loading"
+      currentPageReportTemplate="共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
             <div class="flex align-items-center ml-2">

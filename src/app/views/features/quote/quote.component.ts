@@ -380,10 +380,12 @@ export class QuoteComponent {
   GetAllQuote: HttpApiService[] = [];
   first = 0;
   search: string = '';  // 搜尋關鍵字
+  loading: boolean = false;
 
   loadPostsLazy(e: any) {
     let limit = e.rows;
     let page = e.first / e.rows + 1;
+    this.loading = true;
     this.HttpApi.getAllQuoteRequest(this.search, 1,limit, page, e).subscribe(
       request => {
         this.GetAllQuote = request.body.quotes;
@@ -394,6 +396,7 @@ export class QuoteComponent {
           return {...quote,expiration_date, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
+        this.loading = false;
         console.log(this.GetAllQuote)
       });
   }
