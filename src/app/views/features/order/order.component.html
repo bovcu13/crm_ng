@@ -7,10 +7,10 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" [showCurrentPageReport]="true"
+      <p-table [rowsPerPageOptions]="[10, 20]" [(first)]="first" [showCurrentPageReport]="true"
                (onLazyLoad)="loadPostsLazy($event)" #dt1
                [value]="GetAllOrder" [paginator]="true" [rows]="5" [lazy]="true" [totalRecords]="totalRecords"
-               currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
+               currentPageReportTemplate="共 {totalRecords} 筆" [loading]="loading">
         <ng-template pTemplate="caption">
           <div class="flex">
             <div class="flex align-items-center ml-2">
@@ -20,6 +20,7 @@
               <span>{{status[1].name}}</span>
             </div>
             <span class="p-input-icon-left ml-auto">
+
                <td><input [(ngModel)]="search" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
                           placeholder="關鍵字搜索"></td>
             </span>
@@ -31,9 +32,9 @@
               <p-sortIcon field="status"></p-sortIcon>
             </th>
             <th>號碼</th>
-<!--            <th pSortableColumn="number">號碼-->
-<!--              <p-sortIcon field="number"></p-sortIcon>-->
-<!--            </th>-->
+            <!--            <th pSortableColumn="number">號碼-->
+            <!--              <p-sortIcon field="number"></p-sortIcon>-->
+            <!--            </th>-->
             <th pSortableColumn="account_id">帳戶
               <p-sortIcon field="account_id"></p-sortIcon>
             </th>
@@ -42,9 +43,9 @@
               <p-sortIcon field="start_date"></p-sortIcon>
             </th>
             <th>契約號碼</th>
-<!--            <th pSortableColumn="contract_number">契約號碼-->
-<!--              <p-sortIcon field="contract_number"></p-sortIcon>-->
-<!--            </th>-->
+            <!--            <th pSortableColumn="contract_number">契約號碼-->
+            <!--              <p-sortIcon field="contract_number"></p-sortIcon>-->
+            <!--            </th>-->
             <th></th>
           </tr>
         </ng-template>

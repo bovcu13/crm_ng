@@ -82,10 +82,12 @@ export class OrderComponent {
   GetAllOrder: HttpApiService[] = [];
   first = 0;
   search: string = '';  // 搜尋關鍵字
+  loading: boolean = false;
 
   loadPostsLazy(e: any) {
     let limit = e.rows;
     let page = e.first / e.rows + 1;
+    this.loading = true;
     this.HttpApi.getAllOrderRequest(this.search, 1,limit, page, e).subscribe(
       request => {
         this.GetAllOrder = request.body.orders;
@@ -97,6 +99,7 @@ export class OrderComponent {
           return {...order,start_date,activated_at, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
+        this.loading = false;
         console.log(this.GetAllOrder)
       });
   }

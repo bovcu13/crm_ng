@@ -259,9 +259,11 @@ export class ProductComponent {
   //GET全部product
   GetAllProduct!: any[];
   search: string = '';  // 搜尋關鍵字
+  loading: boolean = false;
   loadTable(e: any) {
     let page = e.first / e.rows + 1;
     let limit = e.rows;
+    this.loading = true;
     this.HttpApi.getAllProductRequest(this.search, 1,limit, page, e).subscribe(
       request => {
         this.GetAllProduct = request.body.products;
@@ -271,6 +273,7 @@ export class ProductComponent {
           return {...product, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
+        this.loading = false;
         console.log(this.GetAllProduct)
       });
   }

@@ -135,16 +135,18 @@ export class AccountComponent implements OnInit {
   }
 
   total!: number;
+  loading: boolean = false;
   // 懶加載
   loadTable(e: any) {
-    // this.loading = true;
+    this.loading = true;
     // let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.HttpApi.getAllAccountRequest(this.search, 1, page, e).subscribe(
       request => {
         this.getData = request.body.accounts;
-        console.log(this.getData)
+        this.loading = false;
         this.total = request.body.total;
+        console.log(this.total)
       });
   }
 

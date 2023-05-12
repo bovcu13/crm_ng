@@ -7,10 +7,10 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[5, 10, 15]" [(first)]="first" [showCurrentPageReport]="true"
-                [globalFilterFields]="['status','start_date']" (onLazyLoad)="loadTable($event)" #dt1
+      <p-table [rowsPerPageOptions]="[10, 15]" [(first)]="first" [showCurrentPageReport]="true"
+                [globalFilterFields]="['status','start_date']" (onLazyLoad)="loadTable($event)" #dt1 [loading]="loading"
                [value]="GetAllCampaign" [paginator]="true" [rows]="5" [lazy]="true" [totalRecords]="totalRecords"
-               currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆">
+               currentPageReportTemplate="共 {totalRecords} 筆" >
         <ng-template pTemplate="caption">
           <div class="flex">
             <div class="flex align-items-center ml-2">
