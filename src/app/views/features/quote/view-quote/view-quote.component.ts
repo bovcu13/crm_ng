@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
-import {Quote} from 'src/app/shared/models/quote';
 import Swal from "sweetalert2";
 
 @Component({
@@ -73,7 +72,8 @@ export class ViewQuoteComponent {
   q_id: any;
   quote_form: FormGroup;
   product_form: FormGroup;
-
+  selectAll = this.fb.control(false);
+  SelectProduct: any[] = [];
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute) {
     this.quote_form = this.fb.group({
       quote_id: [''],
@@ -102,11 +102,15 @@ export class ViewQuoteComponent {
     this.getOneQuotetRequest(this.q_id)
     this.getAllopportunityRequest()
     this.product_form = this.fb.group({
+      selectedItems: [[]],
       price: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
       discount: ['', [Validators.required]],
-    })
+    });
+
   }
+
+
 
   //取得當筆報價資料
   GetOneQuote: any;
@@ -263,12 +267,14 @@ export class ViewQuoteComponent {
   //GET全部product
   GetAllProduct: any[] = [];
   productsearch: any;
+  loading: any;
   // table lazyload
   // 搜尋關鍵字
   loadPostsLazy(e: any) {
+    this.loading = true;
     this.HttpApi.getAllProductRequest(this.productsearch,1).subscribe(res => {
         this.GetAllProduct = res.body.products
-        console.log(this.GetAllProduct)
+      this.loading = false;
       },
       error => {
         console.log(error);
