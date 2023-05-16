@@ -1,10 +1,11 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>報價</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"
+                    pTooltip="新增報價" tooltipPosition="top"></p-button>
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllQuote" [paginator]="true"
@@ -81,28 +82,28 @@
 <form [formGroup]="quote_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>編號</label>
           <br>
           <label class="mt-2 ml-2 disable">{{(quote_form.controls['code'].value)}}</label>
         </div>
       </div>
-      <div class="col-6" *ngIf="!showedit">
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
           <br>
           <label class="mt-2 ml-2" [textContent]="quote_form.controls['status'].value"></label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>名稱</label>
           <input pInputText formControlName="name"
             [ngClass]="{'ng-dirty':quote_form.controls['name'].hasError('required') && quote_form.controls['name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>商機</label>
           <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'" [(ngModel)]="selectedOpportunity_id"
@@ -110,34 +111,34 @@
                       [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError('required') && quote_form.controls['opportunity_id'].touched}"></p-dropdown>
         </div>
       </div>
-      <div class="col-6" *ngIf="showedit">
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
         <div class="field">
           <label>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
             optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>同步到商機</label>
           <br>
           <p-checkbox formControlName="is_syncing" value="is_syncing" [binary]="true"></p-checkbox>
         </div>
       </div>
-      <div class="col-12">
+      <div class="col-12 md:col-12 lg:col-12">
         <div class="field">
           <label>描述</label>
           <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>到期日期</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="expiration_date"
             [readonlyInput]="true"></p-calendar>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>小計</label>
           <br>
@@ -145,7 +146,7 @@
           <!--<p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>稅額</label>
           <br>
@@ -153,14 +154,14 @@
             [minFractionDigits]="2" [min]="0"></p-inputNumber>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>折扣</label>
           <br>
           <label class="mt-2 ml-2">{{quote_form.controls['discount'].value}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>運輸處理</label>
           <br>
@@ -168,7 +169,7 @@
             [minFractionDigits]="2" [min]="0" [max]="100"></p-inputNumber>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>總計</label>
           <br>
@@ -176,7 +177,7 @@
           <label class="mt-2 ml-2">{{quote_form.controls['total_price'].value}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <label>建立者：</label>
         <br>
         <div class="mt-3 field">
@@ -184,7 +185,7 @@
           <label class="ml-2 disable">{{(quote_form.controls['created_at'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <label>上次修改者：</label>
         <br>
         <div class="mt-3 field">

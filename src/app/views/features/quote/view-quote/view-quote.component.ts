@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
-import {Quote} from 'src/app/shared/models/quote';
 import Swal from "sweetalert2";
 
 @Component({
@@ -12,37 +11,22 @@ import Swal from "sweetalert2";
 })
 export class ViewQuoteComponent {
   quote_product: any[] = [
-    {
-      name: "螢幕",
-      quote_price: 2500,
-      price: 2000,
-      quantity: 5,
-      subtotal: 12500,
-    },
-    {
-      name: "滑鼠",
-      quote_price: 340,
-      price: 300,
-      quantity: 10,
-      subtotal: 3400,
-    },
+    // {
+    //   name: "螢幕",
+    //   quote_price: 2500,
+    //   price: 2000,
+    //   quantity: 5,
+    //   subtotal: 12500,
+    // },
+    // {
+    //   name: "滑鼠",
+    //   quote_price: 340,
+    //   price: 300,
+    //   quantity: 10,
+    //   subtotal: 3400,
+    // },
   ]
-  edit_quote_product: any[] = [
-    {
-      name: "螢幕",
-      quote_price: 1800,
-      price: 2000,
-      quantity: 5,
-      discount: 5,
-    },
-    {
-      name: "滑鼠",
-      quote_price: 280,
-      price: 300,
-      quantity: 10,
-      discount: 5,
-    },
-  ]
+
 //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -72,7 +56,7 @@ export class ViewQuoteComponent {
   ]
   q_id: any;
   quote_form: FormGroup;
-  product_form: FormGroup;
+  quote_product_form: FormGroup;
 
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute) {
     this.quote_form = this.fb.group({
@@ -101,11 +85,15 @@ export class ViewQuoteComponent {
     console.log("取到的q_id: " + this.q_id)
     this.getOneQuotetRequest(this.q_id)
     this.getAllopportunityRequest()
-    this.product_form = this.fb.group({
-      price: ['', [Validators.required]],
+    this.quote_product_form = this.fb.group({
+      product_id: [''],
+      quote_id: [''],
+      sub_total: [''],
+      unit_price: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
       discount: ['', [Validators.required]],
-    })
+    });
+
   }
 
   //取得當筆報價資料
@@ -113,6 +101,7 @@ export class ViewQuoteComponent {
   stage: any;
   name: any;
   GetOneIsSyncing: any;
+
   getOneQuotetRequest(q_id: any): void {
     this.HttpApi.getOneQuotetRequest(q_id).subscribe(res => {
         this.GetOneQuote = res.body;
@@ -145,20 +134,98 @@ export class ViewQuoteComponent {
     );
   }
 
+  //TODO
+  // postQuoteProductRequest(): void {
+  //   if (this.quote_product_form.controls['unit_price'].hasError('required') ||
+  //     this.quote_product_form.controls['quantity'].hasError('required') ||
+  //     this.quote_product_form.controls['discount'].hasError('required')) {
+  //     this.edit = false;
+  //     Swal.fire({
+  //       title: '未填寫',
+  //       text: "請填寫必填欄位！",
+  //       icon: 'warning',
+  //       showConfirmButton: false,
+  //       timer: 1000
+  //     }).then(() => {
+  //       if (this.quote_product_form.controls['unit_price'].hasError('required')) {
+  //         this.quote_product_form.controls['unit_price'].markAsDirty();
+  //       }
+  //       if (this.quote_product_form.controls['quantity'].hasError('required')) {
+  //         this.quote_product_form.controls['quantity'].markAsDirty();
+  //       }
+  //       if (this.quote_product_form.controls['discount'].hasError('required')) {
+  //         this.quote_product_form.controls['discount'].markAsDirty();
+  //       }
+  //       this.edit = true;
+  //     })
+  //     return;
+  //   }
+  //   if (this.quote_product_form.controls['unit_price'].hasError('required')
+  //     || this.quote_product_form.controls['quantity'].hasError('required') ||
+  //     this.quote_product_form.controls['discount'].hasError('required')) {
+  //     return;
+  //   }
+  //   let body = {
+  //     product_id: this.selectedProducts.map(product => product.product_id),
+  //     quote_id: this.q_id,
+  //     unit_price: this.quote_product_form.value.unit_price,
+  //     quantity: this.quote_form.value.quantity,
+  //     discount: this.quote_form.value.discount,
+  //     sub_total: this.quote_product_form.value.unit_price * this.quote_form.value.quantity,
+  //     created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
+  //   }
+  //   this.HttpApi.postQuoteProductRequest(body).subscribe(Request => {
+  //       console.log(Request)
+  //       this.edit = false;
+  //       if (Request.code === 200) {
+  //         Swal.fire({
+  //           title: '成功',
+  //           text: "已儲存您的資料 :)",
+  //           icon: 'success',
+  //           showConfirmButton: false,
+  //           timer: 1000
+  //         })
+  //         //this.getAllQuoteRequest()
+  //       } else {
+  //         Swal.fire({
+  //           title: '失敗',
+  //           text: "請確認資料是否正確 :(",
+  //           icon: 'error',
+  //           showConfirmButton: false,
+  //           timer: 1500
+  //         }).then(() => {
+  //           this.edit = true;
+  //         })
+  //       }
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     })
+  // }
+
   //新增產品dialog
   add: boolean = false;
 
   addProduct() {
     this.add = true;
+    this.selectedProducts = [];
   }
 
+  selectedProducts: any[] = []//儲存被選的商品
   //編輯所有產品報價dialog
   edit: boolean = false;
+  showErrorMessage = false;
 
   editProduct() {
-    this.product_form.reset();
-    this.edit = true;
-    this.add = false;
+    if (this.selectedProducts.length !== 0) {
+      this.quote_product_form.reset();
+      this.edit = true;
+      this.add = false;
+      console.log(this.selectedProducts)
+    } else {
+      this.showErrorMessage = true;
+      return
+    }
   }
 
   patchQuoteRequest(q_id: any): void {
@@ -236,8 +303,9 @@ export class ViewQuoteComponent {
   GetAllOpportunity: any[] = [];
   selectedOpportunity_id: string = '';
   opportunitysearch: any;
+
   getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch,1).subscribe(
+    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe(
       (res) => {
         this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
           return {
@@ -254,6 +322,7 @@ export class ViewQuoteComponent {
   }
 
   selectedAccount_id: string = '';
+
   //取得選擇的商機帳戶id
   selectedOpportunity() {
     const selectedOpportunity = this.GetAllOpportunity.find((opportunity) => opportunity.value === this.selectedOpportunity_id);
@@ -261,17 +330,23 @@ export class ViewQuoteComponent {
   }
 
   //GET全部product
-  GetAllProduct: any[] = [];
-  productsearch: any;
-  // table lazyload
-  // 搜尋關鍵字
-  loadPostsLazy(e: any) {
-    this.HttpApi.getAllProductRequest(this.productsearch,1).subscribe(res => {
-        this.GetAllProduct = res.body.products
+  //懶加載
+  totalRecords = 0;
+  first = 0;
+  GetAllProduct!: any[];
+  search: string = '';  // 搜尋關鍵字
+  loading: boolean = false;
+
+  loadTable(e: any) {
+    let page = e.first / e.rows + 1;
+    let limit = e.rows;
+    this.loading = true;
+    this.HttpApi.getAllProductRequest(this.search, 1, limit, page, e).subscribe(
+      request => {
+        this.GetAllProduct = request.body.products;
+        this.totalRecords = request.body.total;
+        this.loading = false;
         console.log(this.GetAllProduct)
-      },
-      error => {
-        console.log(error);
       });
   }
 

@@ -509,6 +509,68 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
+  //------------商品報價---------------------------------------------
+  //取得所有商品報價 getall
+  // getAllQuoteProductsRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
+  //   let obj: any = {
+  //     field: status,
+  //     filter: {
+  //       name: search ? search : null,
+  //     },
+  //   };
+  //   if (event) {
+  //     let direction : any;
+  //     if (event.sortOrder === 1) {
+  //       direction = "asc";
+  //     } else {
+  //       direction = "desc";
+  //     }
+  //     // 判斷是否有用全域搜尋欄
+  //     let keyword = event.globalFilter;
+  //     if (!event.globalFilter) {
+  //       keyword = event.data
+  //     }
+  //     obj = {
+  //       sort: {field: event.sortField || null, direction: direction},
+  //       field: status,
+  //       filter: {
+  //         name: keyword,
+  //       },
+  //     };
+  //   }
+  //   const url = `${this.BaseUrl}/quotes/list?page=${page}&limit=${limit}`;
+  //   return this.http.post<any>(url, obj);
+  // }
+
+  getAllQuoteProductsRequest(limit = 20, page = 1): Observable<any> {
+    let url = this.BaseUrl + '/quotes-products/list' + '?page=' + page + '&limit=' + limit;
+    return this.http.get<any>(url);
+  }
+
+  //取得一筆 商品報價 getone
+  getOneQuoteProductRequest(id: any): Observable<Quote> {
+    const url = `${this.BaseUrl}/quotes-products/${id}`;
+    return this.http.get<Quote>(url);
+  }
+
+  //新增 商品報價 post
+  postQuoteProductRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/quotes-products`;
+    return this.http.post<any>(url, body);
+  }
+
+  //修改 商品報價 patch
+  patchQuoteProductRequest(sid: string, body: any): Observable<any> {
+    const url = `${this.BaseUrl}/quotes-products/${sid}`;
+    return this.http.patch<any>(url, body);
+  }
+
+  //刪除 商品報價 delete
+  deleteQuoteProductRequest(sid: string): Observable<any> {
+    const url = `${this.BaseUrl}/quotes-products/${sid}`;
+    return this.http.delete<any>(url);
+  }
+
   //----------行銷活動------------------------------------------------------------------------------------------------
   //取得所有行銷活動 getall
   getAllCampaignRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
