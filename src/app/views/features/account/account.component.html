@@ -1,5 +1,5 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>帳戶</h2>
       <div class="flex justify-content-end mr-2">
@@ -61,34 +61,34 @@
 <form [formGroup]="account_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-12">
+      <div class="col-12 md:col-12 lg:col-12">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
           <input pInputText formControlName="name"
                  [ngClass]="{'ng-dirty':account_form.controls['name'].hasError('required') && account_form.controls['name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>業務員</label>
           <br>
           <label>{{(account_form.controls['created_by'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>帳戶類別</label>
           <br>
           <label>{{(account_form.controls['type'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>電話</label>
           <input pInputText formControlName="phone_number">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>行業</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry_id" optionLabel="name"
@@ -96,13 +96,13 @@
                       formControlName="industry_id" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系帳戶</label>
           <p-dropdown placeholder="請選擇" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <!--        <div class="field">-->
         <!--          <label>類型</label>-->
         <!--          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"-->
@@ -113,14 +113,14 @@
     </div>
     <ng-container *ngIf="dialogHeader === '編輯帳戶'">
       <div class="grid">
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>建立者：</label>
           <div class="mt-3 field">
             <label>{{(account_form.controls['created_by'].value)}}</label>
             <label>{{(account_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>上次修改者：</label>
           <div class="mt-3 field">
             <label>{{(account_form.controls['updated_by'].value)}}</label>

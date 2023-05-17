@@ -9,9 +9,9 @@
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllQuote" [paginator]="true"
-      [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
-      [showCurrentPageReport]="true" [(first)]="first"  #dt1 [loading]="loading"
-      currentPageReportTemplate="共 {totalRecords} 筆">
+               [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
+               [showCurrentPageReport]="true" [(first)]="first" #dt1 [loading]="loading"
+               currentPageReportTemplate="共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
             <div class="flex align-items-center ml-2">
@@ -30,7 +30,7 @@
             </div>
             <span class="p-input-icon-left ml-auto">
                <td><input [(ngModel)]="search" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
-                   placeholder="關鍵字搜索"></td>
+                          placeholder="關鍵字搜索"></td>
             </span>
           </div>
         </ng-template>
@@ -39,10 +39,18 @@
             <th pSortableColumn="status">狀態
               <p-sortIcon field="status"></p-sortIcon>
             </th>
-            <th pSortableColumn="name">名稱<p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="opportunity_name">商機名稱<p-sortIcon field="opportunity_name"></p-sortIcon></th>
-            <th pSortableColumn="is_syncing">正在同步化<p-sortIcon field="is_syncing"></p-sortIcon></th>
-            <th pSortableColumn="expiration_date">到期日期<p-sortIcon field="expiration_date"></p-sortIcon></th>
+            <th pSortableColumn="name">名稱
+              <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="opportunity_name">商機名稱
+              <p-sortIcon field="opportunity_name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="is_syncing">正在同步化
+              <p-sortIcon field="is_syncing"></p-sortIcon>
+            </th>
+            <th pSortableColumn="expiration_date">到期日期
+              <p-sortIcon field="expiration_date"></p-sortIcon>
+            </th>
             <!-- <th pSortableColumn="subtotal">小計<p-sortIcon field="subtotal"></p-sortIcon></th>
             <th pSortableColumn="total_price">總價<p-sortIcon field="total_price"></p-sortIcon></th> -->
             <th></th>
@@ -65,13 +73,17 @@
             <td>{{ quote.expiration_date }}</td>
             <!-- <td>{{ quote.subtotal }}</td>
             <td>{{ quote.total_price }}</td> -->
-            <td class="icon-align-right"><p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
-              [routerLink]="['/main/quote/view/', quote.quote_id]"
-                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
-                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
-                        (click)="deleteQuoteRequest(quote.quote_id)" tooltipPosition="top"></p-button>
+            <td>
+              <div class="flex justify-content-end">
+                <p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
+                          [routerLink]="['/main/quote/view/', quote.quote_id]"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
+                          pTooltip="刪除"
+                          (click)="deleteQuoteRequest(quote.quote_id)" tooltipPosition="top"></p-button>
+              </div>
             </td>
           </tr>
         </ng-template>
@@ -100,14 +112,15 @@
         <div class="field">
           <label><span class="required-star">*</span>名稱</label>
           <input pInputText formControlName="name"
-            [ngClass]="{'ng-dirty':quote_form.controls['name'].hasError('required') && quote_form.controls['name'].touched}">
+                 [ngClass]="{'ng-dirty':quote_form.controls['name'].hasError('required') && quote_form.controls['name'].touched}">
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>商機</label>
-          <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'" [(ngModel)]="selectedOpportunity_id"
-                [filter]="true"  filterBy="label" [showClear]="true" (ngModelChange)="selectedOpportunity()"
+          <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'"
+                      [(ngModel)]="selectedOpportunity_id"
+                      [filter]="true" filterBy="label" [showClear]="true" (ngModelChange)="selectedOpportunity()"
                       [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError('required') && quote_form.controls['opportunity_id'].touched}"></p-dropdown>
         </div>
       </div>
@@ -115,7 +128,7 @@
         <div class="field">
           <label>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
-            optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
+                      optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -135,7 +148,7 @@
         <div class="field">
           <label>到期日期</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="expiration_date"
-            [readonlyInput]="true"></p-calendar>
+                      [readonlyInput]="true"></p-calendar>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -151,7 +164,7 @@
           <label>稅額</label>
           <br>
           <p-inputNumber class="w-full" formControlName="tax" mode="currency" currency="TWD" locale="en-US"
-            [minFractionDigits]="2" [min]="0"></p-inputNumber>
+                         [minFractionDigits]="2" [min]="0"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -166,7 +179,7 @@
           <label>運輸處理</label>
           <br>
           <p-inputNumber class="w-full" formControlName="shipping_and_handling" suffix="%"
-            [minFractionDigits]="2" [min]="0" [max]="100"></p-inputNumber>
+                         [minFractionDigits]="2" [min]="0" [max]="100"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -199,7 +212,8 @@
         <p-button label="新增" (click)="postQuoteRequest()" styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="showedit">
-        <p-button label="儲存" (click)="patchQuoteRequest(q_id)" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchQuoteRequest(q_id)"
+                  styleClass="p-button-outlined p-button-info"></p-button>
       </ng-container>
       <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
