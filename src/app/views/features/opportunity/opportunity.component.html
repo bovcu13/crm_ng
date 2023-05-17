@@ -12,7 +12,7 @@
         </div>
       </div>
       <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
-               (onLazyLoad)="loadTable($event)">
+               (onLazyLoad)="loadTable($event)" [loading]="loading">
         <ng-template pTemplate="caption">
           <div class="flex align-items-center ml-2">
             <span class="text-400 pi pi-circle-fill mr-1"></span>
