@@ -47,18 +47,6 @@ export class LoginComponent implements OnInit {
     }
     this.authService.login(body).subscribe(
       data => {
-        // 帳密錯誤
-        if (data.code === 403){
-          console.log(data)
-          Swal.fire({
-            title: '失敗',
-            text: "請確認帳密是否正確 :(",
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 1500
-          })
-          return
-        }
         this.tokenStorage.saveToken(data.body.access_token);
         this.tokenStorage.saveRefreshToken(data.body.refresh_token);
         this.tokenStorage.saveUser(data);
@@ -77,7 +65,14 @@ export class LoginComponent implements OnInit {
         })
       },
       err => {
-        console.log(err)
+        // 帳密錯誤
+        Swal.fire({
+          title: '失敗',
+          text: "請確認帳密是否正確 :(",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 1500
+        })
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
       }
