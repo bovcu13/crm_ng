@@ -146,3 +146,13 @@
   left: 51%;
   transform: translate(-50%, 40%);
 }
+/* 媒體查詢 */
+@media (max-width: 1200px) {
+  .dot-group {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+    text-align: center;
+  }
+}
