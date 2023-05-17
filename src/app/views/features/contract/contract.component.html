@@ -1,5 +1,5 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>契約</h2>
       <div class="flex justify-content-end">
@@ -49,9 +49,9 @@
             <th pSortableColumn="start_date">開始日期
               <p-sortIcon field="start_date"></p-sortIcon>
             </th>
-<!--            <th pSortableColumn="end_date">到期日期-->
-<!--              <p-sortIcon field="end_date"></p-sortIcon>-->
-<!--            </th>-->
+            <!--            <th pSortableColumn="end_date">到期日期-->
+            <!--              <p-sortIcon field="end_date"></p-sortIcon>-->
+            <!--            </th>-->
             <th>到期日期</th>
             <th pSortableColumn="term">有效期限(月)
               <p-sortIcon field="term"></p-sortIcon>
@@ -76,13 +76,15 @@
             <td>{{ contract.start_date }}</td>
             <td>{{ calculateEndDate(contract.start_date, contract.term) }}</td>
             <td>{{ contract.term }}</td>
-            <td class="icon-align-right">
-              <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
-                        [routerLink]="['/main/contract/view/', contract.contract_id]"></p-button>
-              <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+            <td>
+              <div class="flex justify-content-end">
+                <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
+                          [routerLink]="['/main/contract/view/', contract.contract_id]"></p-button>
+                <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              </div>
             </td>
           </tr>
         </ng-template>
@@ -93,21 +95,21 @@
 <form [formGroup]="contract_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>業務員</label>
           <br>
           <label class="mt-2 ml-2">{{(contract_form.controls['salesperson_name'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>號碼</label>
           <br>
           <label class="mt-2 ml-2 disable">{{(contract_form.controls['code'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>帳戶</label>
           <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'"
@@ -116,14 +118,14 @@
 
         </div>
       </div>
-      <div class="col-6" *ngIf="!showedit">
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
           <br>
           <label class="mt-2 ml-2">{{(contract_form.controls['status'].value)}}</label>
         </div>
       </div>
-      <div class="col-6" *ngIf="showedit">
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
         <div class="field">
           <label><span class="required-star">*</span>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
@@ -133,7 +135,7 @@
                       [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError('required') && contract_form.controls['status'].touched}"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>開始日期</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
@@ -141,7 +143,7 @@
                       [ngClass]="{'ng-dirty':contract_form.controls['start_date'].hasError('required') && contract_form.controls['start_date'].touched}"></p-calendar>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>有效期間(月)</label>
           <input type="number" pInputText formControlName="term"
@@ -154,7 +156,7 @@
           <textarea rows="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <label>建立者：</label>
         <br>
         <div class="mt-3 field">
@@ -162,7 +164,7 @@
           <label class="ml-2 disable">{{(contract_form.controls['created_at'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <label>上次修改者：</label>
         <br>
         <div class="mt-3 field">

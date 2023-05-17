@@ -1,5 +1,5 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>線索</h2>
       <div class="flex flex-row justify-content-start">
@@ -113,7 +113,7 @@
 <form [formGroup]="lead_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>線索狀態</label>
           <p-dropdown placeholder="請選擇" optionLabel="name" [options]=which
@@ -122,7 +122,7 @@
           ></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>業務員</label>
           <br>
@@ -130,7 +130,7 @@
           <!--          <input pInputText formControlName="created_by">-->
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
           <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
@@ -141,7 +141,7 @@
         </div>
       </div>
       <ng-container *ngIf="dialogHeader !== '編輯線索'">
-        <div class="col-6 flex justify-content-start mt-4">
+        <div class="col-12 md:col-6 lg:col-6 flex justify-content-start mt-4">
           <p-button (click)="type.toggle($event)" icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top"
                     styleClass="p-button-raised p-button-text"></p-button>
         </div>
@@ -153,14 +153,14 @@
                     [ngClass]="{'ng-dirty':lead_form.controls['description'].hasError('required') && lead_form.controls['description'].touched}"></textarea>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>分級</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
                       (onChange)="ratingValue($event)" formControlName="rating" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>線索來源</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source" optionLabel="name"
@@ -170,14 +170,14 @@
     </div>
     <ng-container *ngIf="dialogHeader === '編輯線索'">
       <div class="grid">
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>建立者：</label>
           <div class="mt-3 field">
             <label>{{(lead_form.controls['created_by'].value)}}</label>
             <label>{{(lead_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>上次修改者：</label>
           <div class="mt-3 field">
             <label>{{(lead_form.controls['updated_by'].value)}}</label>
@@ -208,27 +208,27 @@
                  [ngClass]="{'ng-dirty':account_form.controls['name'].hasError('required') && account_form.controls['name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>業務員</label>
           <br>
           <label>{{(account_form.controls['created_by'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>帳戶類別</label>
           <br>
           <label>{{(account_form.controls['type'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>電話</label>
           <input pInputText formControlName="phone_number">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>行業</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
@@ -236,7 +236,7 @@
                       formControlName="industry" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系帳戶</label>
           <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" [filter]="true"
@@ -244,7 +244,7 @@
                       formControlName="parent_account_id"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <!--        <div class="field">-->
         <!--          <label>類型</label>-->
         <!--          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"-->

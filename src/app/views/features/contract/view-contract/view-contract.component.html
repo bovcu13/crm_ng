@@ -1,5 +1,5 @@
 <div class="grid mt-2">
-  <div class="col-3">
+  <div class="col-12 md:col-12 lg:col-3">
     <div class="mb-3">
       <p-card>
         <form [formGroup]="contract_form">
@@ -41,7 +41,7 @@
       </p-card>
     </div>
   </div>
-  <div class="col-6">
+  <div class="col-12 md:col-12 lg:col-6">
     <div class="mb-3">
       <p-card>
  <span class="flex justify-content-center">
@@ -183,11 +183,13 @@
                       <td>{{ contract_order.status }}</td>
                       <td>{{ contract_order.start_date }}</td>
                       <td>{{ contract_order.contract_code }}</td>
-                      <td class="icon-align-right">
+                      <td>
+                        <div class="flex justify-content-end">
                         <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                                   styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                         <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
                                   pTooltip="刪除" tooltipPosition="top"></p-button>
+                        </div>
                       </td>
                     </tr>
                   </ng-template>
@@ -196,21 +198,21 @@
             </p-tabPanel>
             <p-tabPanel header="詳細資料">
               <div class="grid">
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>業務員</label>
                     <br>
                     <label class="mt-2 ml-2">{{(contract_form.controls['salesperson_name'].value)}}</label>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>號碼</label>
                     <br>
                     <label class="mt-2 ml-2 disable">{{(contract_form.controls['code'].value)}}</label>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label><span class="required-star">*</span>帳戶</label>
                     <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'"
@@ -219,7 +221,7 @@
 
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label><span class="required-star">*</span>狀態</label>
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
@@ -229,7 +231,7 @@
                                 [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError('required') && contract_form.controls['status'].touched}"></p-dropdown>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label><span class="required-star">*</span>開始日期</label>
                     <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
@@ -237,7 +239,7 @@
                                 [ngClass]="{'ng-dirty':contract_form.controls['start_date'].hasError('required') && contract_form.controls['start_date'].touched}"></p-calendar>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label><span class="required-star">*</span>有效期間(月)</label>
                     <input type="number" pInputText formControlName="term"
@@ -250,7 +252,7 @@
                     <textarea rows="5" pInputTextarea formControlName="description"></textarea>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <label>建立者：</label>
                   <br>
                   <div class="mt-3 field">
@@ -258,7 +260,7 @@
                     <label class="ml-2 disable">{{(contract_form.controls['created_at'].value)}}</label>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <label>上次修改者：</label>
                   <br>
                   <div class="mt-3 field">
@@ -281,7 +283,7 @@
     </div>
   </div>
 
-  <div class="col-3">
+  <div class="col-12 md:col-12 lg:col-3">
     <p-card>
       <h3>活動</h3>
       <p-divider></p-divider>

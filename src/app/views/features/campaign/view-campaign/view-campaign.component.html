@@ -1,5 +1,5 @@
 <div class="grid mt-2">
-  <div class="col-3">
+  <div class="col-12 md:col-12 lg:col-3">
     <div class="mb-3">
       <p-card>
         <form [formGroup]="campaign_form">
@@ -37,7 +37,7 @@
       </p-card>
     </div>
   </div>
-  <div class="col-6">
+  <div class="col-12 md:col-12 lg:col-6">
     <div class="mb-3">
       <p-card>
  <span class="flex justify-content-center">
@@ -171,21 +171,21 @@
             </p-tabPanel>
             <p-tabPanel header="詳細資料">
               <div class="grid">
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label><span class="required-star">*</span>活動名稱</label>
                     <input type="text" pInputText formControlName="name"
                            [ngClass]="{'ng-dirty':campaign_form.controls['name'].hasError('required') && campaign_form.controls['name'].touched}">
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>業務員</label>
                     <br>
                     <label class="mt-2 ml-2 disable">{{(campaign_form.controls['salesperson_name'].value)}}</label>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>狀態</label>
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
@@ -193,14 +193,14 @@
                                 optionLabel="name" (onChange)="onStatusChange($event)"></p-dropdown>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>啟用</label>
                     <br>
                     <p-checkbox formControlName="is_enable" value="is_enable" [binary]="true"></p-checkbox>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>父系行銷活動</label>
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllparent_campaign"
@@ -212,7 +212,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>類型</label>
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="type"
@@ -220,14 +220,14 @@
                                 optionLabel="name" (onChange)="ontypeChange($event)"></p-dropdown>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>開始日期</label>
                     <p-calendar #startDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
                                 formControlName="start_date" [readonlyInput]="true"></p-calendar>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>結束日期</label>
                     <p-calendar #endDate [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
@@ -238,20 +238,20 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12 md:col-12 lg:col-12">
                   <div class="field">
                     <label>描述</label>
                     <textarea rows="5" pInputTextarea formControlName="description"></textarea>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>已傳送數目</label>
                     <p-inputNumber class="w-full" formControlName="sent" [min]="0">
                     </p-inputNumber>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>預算成本</label>
                     <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="budget_cost"
@@ -259,7 +259,7 @@
                                    [min]="0"></p-inputNumber>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>預期回應 (%)</label>
                     <br>
@@ -268,7 +268,7 @@
                     </p-inputNumber>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>實際成本</label>
                     <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="actual_cost"
@@ -276,7 +276,7 @@
                                    [min]="0"></p-inputNumber>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>預期收入</label>
                     <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="expected_income"
@@ -284,8 +284,8 @@
                                    [min]="0"></p-inputNumber>
                   </div>
                 </div>
-                <div class="col-6"></div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6"></div>
+                <div class="col-12 md:col-6 lg:col-6">
                   <label>建立者：</label>
                   <br>
                   <div class="mt-3 field">
@@ -293,7 +293,7 @@
                     <label class="ml-2 disable">{{(campaign_form.controls['created_at'].value)}}</label>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 md:col-6 lg:col-6">
                   <label>上次修改者：</label>
                   <br>
                   <div class="mt-3 field">
@@ -315,7 +315,7 @@
     </div>
   </div>
 
-  <div class="col-3">
+  <div class="col-12 md:col-12 lg:col-3">
     <p-card>
       <h3>活動</h3>
       <p-divider></p-divider>
@@ -415,7 +415,7 @@
 <!--新增確認新增dialog-->
 <p-dialog [(visible)]="addcomfirm" header=新增至行銷活動 [modal]="true">
   <label><span class="required-star">*</span>成員狀態</label>
-  <div class="col-12">
+  <div class="col-12 md:col-12 lg:col-12">
     <div class="field">
       <p-dropdown placeholder="請選擇" appendTo="body" [options]="comfirmstatus" [editable]="true"
                   optionLabel="name"></p-dropdown>

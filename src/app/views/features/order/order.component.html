@@ -1,5 +1,5 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>訂單</h2>
       <div class="flex justify-content-end">
@@ -61,13 +61,15 @@
             <!--<td>{{ order.amount }}</td>-->
             <td>{{ order.start_date }}</td>
             <td>{{ order.contract_code}}</td>
-            <td class="icon-align-right">
+            <td>
+              <div class="flex justify-content-end">
               <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
                         [routerLink]="['/main/order/view/', order.order_id]"></p-button>
               <p-button (click)="showDialog('edit',order)" icon="pi pi-pencil"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               <p-button icon="pi pi-trash" (click)="deleteOrderRequest(order.order_id)"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+              </div>
             </td>
           </tr>
         </ng-template>
@@ -78,14 +80,14 @@
 <form [formGroup]="order_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>訂單號碼</label>
           <br>
           <label class="mt-2 ml-2 disable">{{(order_form.controls['code'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>契約號碼</label>
           <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_id" appendTo="body"
@@ -96,7 +98,7 @@
           ></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>訂單開始日期</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="start_date"
@@ -107,14 +109,14 @@
           </div>
         </div>
       </div>
-      <div class="col-6" *ngIf="!showedit">
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">
         <div class="field">
           <label>狀態</label>
           <br>
           <label class="mt-2 ml-2" [textContent]="order_form.controls['status'].value"></label>
         </div>
       </div>
-      <div class="col-6" *ngIf="showedit">
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
         <div class="field">
           <label>狀態</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
@@ -122,14 +124,14 @@
                       [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
-      <div class="col-6" *ngIf="showedit">
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
         <div class="field">
           <label>訂單金額</label>
           <br>
           <label class="mt-2 ml-2" [textContent]="order_form.controls['amount'].value"></label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>啟用：</label>
           <br>
@@ -145,7 +147,7 @@
           <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <label>建立者：</label>
         <br>
         <div class="mt-3 field">
@@ -153,7 +155,7 @@
           <label class="ml-2 disable">{{(order_form.controls['created_at'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <label>上次修改者：</label>
         <br>
         <div class="mt-3 field">

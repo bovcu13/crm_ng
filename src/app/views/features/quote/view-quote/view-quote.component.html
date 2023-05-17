@@ -140,11 +140,13 @@
                     <td>{{ product.quote_price }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.subtotal }}</td>
-                    <td class="icon-align-right">
+                    <td>
+                      <div class="flex justify-content-end">
                       <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                       <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
                                 pTooltip="刪除" tooltipPosition="top"></p-button>
+                      </div>
                     </td>
                   </tr>
                 </ng-template>
@@ -358,9 +360,11 @@
             <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" formControlName="discount"
                            [ngClass]="{'ng-dirty':quote_product_form.controls['discount'].hasError('required') && quote_product_form.controls['discount'].touched}"></p-inputNumber>
           </td>
-          <td class="icon-align-right">
+          <td>
+            <div class="flex justify-content-end">
             <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
                       tooltipPosition="top"></p-button>
+            </div>
           </td>
         </tr>
       </ng-template>
