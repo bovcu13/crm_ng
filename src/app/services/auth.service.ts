@@ -15,9 +15,15 @@ export class AuthService {
   constructor(private http: HttpClient) {
   }
 
+  // 登入
   login(body: any): Observable<any> {
     const url = `${AUTH_API}/crm/v1.0/login`;
     return this.http.post(url, body, httpOptions);
+  }
+
+  // 登出
+  signOut(): void {
+    window.sessionStorage.clear();
   }
 
   register(username: string, email: string, password: string): Observable<any> {
@@ -30,8 +36,7 @@ export class AuthService {
 
 
   refreshToken(token: string) {
-    return this.http.post(AUTH_API + 'refreshtoken', {
-      refreshToken: token
-    }, httpOptions);
+    const url = `${AUTH_API}/crm/v1.0/refresh`;
+    return this.http.post(url, {refresh_token: token}, httpOptions);
   }
 }
