@@ -108,7 +108,7 @@
         <form [formGroup]="quote_form">
           <p-tabView>
             <p-tabPanel header="相關">
-              <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="quote_product" [lazy]="true">
+              <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllQuoteProduct" [lazy]="true" [loading]="QuoteProductloading">
                 <ng-template pTemplate="caption">
                   <div class="flex justify-content-between">
                     <div class="justify-content-start mt-2">
@@ -135,11 +135,11 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
                   <tr>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.price }}</td>
-                    <td>{{ product.quote_price }}</td>
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.standard_price }}</td>
+                    <td>{{ product.unit_price }}</td>
                     <td>{{ product.quantity }}</td>
-                    <td>{{ product.subtotal }}</td>
+                    <td>{{ product.sub_total }}</td>
                     <td>
                       <div class="flex justify-content-end">
                       <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
@@ -343,27 +343,30 @@
           <th></th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-product>
-        <tr>
+      <ng-template pTemplate="body">
+        <tr *ngFor="let product of selectedProducts; let i = index">
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
           <td>
             <p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw"
-                           [min]="0" formControlName="unit_price"
-                           [ngClass]="{'ng-dirty':quote_product_form.controls['unit_price'].hasError('required') && quote_product_form.controls['unit_price'].touched}"></p-inputNumber>
+                           [min]="0" [formControlName]="'unit_price_' + i"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['unit_price_' + i]?.hasError('required') && quote_product_form.controls['unit_price_' + i]?.touched}">
+            </p-inputNumber>
           </td>
           <td>
-            <p-inputNumber inputId="integeronly" [min]="0" formControlName="quantity"
-                           [ngClass]="{'ng-dirty':quote_product_form.controls['quantity'].hasError('required') && quote_product_form.controls['quantity'].touched}"></p-inputNumber>
+            <p-inputNumber inputId="integeronly" [min]="0" [formControlName]="'quantity_' + i"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['quantity_' + i]?.hasError('required') && quote_product_form.controls['quantity_' + i]?.touched}">
+            </p-inputNumber>
           </td>
           <td>
-            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" formControlName="discount"
-                           [ngClass]="{'ng-dirty':quote_product_form.controls['discount'].hasError('required') && quote_product_form.controls['discount'].touched}"></p-inputNumber>
+            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount_' + i"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['discount_' + i]?.hasError('required') && quote_product_form.controls['discount_' + i]?.touched}">
+            </p-inputNumber>
           </td>
           <td>
             <div class="flex justify-content-end">
-            <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
-                      tooltipPosition="top"></p-button>
+              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
+                        tooltipPosition="top"></p-button>
             </div>
           </td>
         </tr>
@@ -371,7 +374,7 @@
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
           <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary"></p-button>
-          <p-button label="儲存"  styleClass="p-button-info ml-1"></p-button>
+          <p-button label="儲存" (click)="postQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
         </div>
       </ng-template>
     </p-table>

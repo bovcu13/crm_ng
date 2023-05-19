@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
 import Swal from "sweetalert2";
@@ -85,15 +85,45 @@ export class ViewQuoteComponent {
     console.log("取到的q_id: " + this.q_id)
     this.getOneQuotetRequest(this.q_id)
     this.getAllopportunityRequest()
+    this.getQuoteProductRequest()
     this.quote_product_form = this.fb.group({
       product_id: [''],
       quote_id: [''],
       sub_total: [''],
-      unit_price: ['', [Validators.required]],
-      quantity: ['', [Validators.required]],
-      discount: ['', [Validators.required]],
+      unit_price_: [''],
+      quantity_: [''],
+      discount_: [''],
     });
+  }
 
+  //新增產品dialog
+  add: boolean = false;
+
+  addProduct() {
+    this.add = true;
+    this.selectedProducts = [];
+    console.log(this.quote_product_form)
+  }
+
+  selectedProducts: any[] = []//儲存被選的商品
+  //編輯所有產品報價dialog
+  edit: boolean = false;
+  showErrorMessage = false;
+
+  editProduct() {
+    if (this.selectedProducts.length !== 0) {
+      for (let i = 0; i < this.selectedProducts.length; i++) {
+        this.quote_product_form.addControl(`unit_price_${i}`, new FormControl('', Validators.required));
+        this.quote_product_form.addControl(`quantity_${i}`, new FormControl('', Validators.required));
+        this.quote_product_form.addControl(`discount_${i}`, new FormControl('', Validators.required));
+      }
+      this.edit = true;
+      this.add = false;
+      console.log(this.selectedProducts)
+    } else {
+      this.showErrorMessage = true;
+      return
+    }
   }
 
   //取得當筆報價資料
@@ -134,99 +164,100 @@ export class ViewQuoteComponent {
     );
   }
 
-  //TODO
-  // postQuoteProductRequest(): void {
-  //   if (this.quote_product_form.controls['unit_price'].hasError('required') ||
-  //     this.quote_product_form.controls['quantity'].hasError('required') ||
-  //     this.quote_product_form.controls['discount'].hasError('required')) {
-  //     this.edit = false;
-  //     Swal.fire({
-  //       title: '未填寫',
-  //       text: "請填寫必填欄位！",
-  //       icon: 'warning',
-  //       showConfirmButton: false,
-  //       timer: 1000
-  //     }).then(() => {
-  //       if (this.quote_product_form.controls['unit_price'].hasError('required')) {
-  //         this.quote_product_form.controls['unit_price'].markAsDirty();
-  //       }
-  //       if (this.quote_product_form.controls['quantity'].hasError('required')) {
-  //         this.quote_product_form.controls['quantity'].markAsDirty();
-  //       }
-  //       if (this.quote_product_form.controls['discount'].hasError('required')) {
-  //         this.quote_product_form.controls['discount'].markAsDirty();
-  //       }
-  //       this.edit = true;
-  //     })
-  //     return;
-  //   }
-  //   if (this.quote_product_form.controls['unit_price'].hasError('required')
-  //     || this.quote_product_form.controls['quantity'].hasError('required') ||
-  //     this.quote_product_form.controls['discount'].hasError('required')) {
-  //     return;
-  //   }
-  //   let body = {
-  //     product_id: this.selectedProducts.map(product => product.product_id),
-  //     quote_id: this.q_id,
-  //     unit_price: this.quote_product_form.value.unit_price,
-  //     quantity: this.quote_form.value.quantity,
-  //     discount: this.quote_form.value.discount,
-  //     sub_total: this.quote_product_form.value.unit_price * this.quote_form.value.quantity,
-  //     created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-  //   }
-  //   this.HttpApi.postQuoteProductRequest(body).subscribe(Request => {
-  //       console.log(Request)
-  //       this.edit = false;
-  //       if (Request.code === 200) {
-  //         Swal.fire({
-  //           title: '成功',
-  //           text: "已儲存您的資料 :)",
-  //           icon: 'success',
-  //           showConfirmButton: false,
-  //           timer: 1000
-  //         })
-  //         //this.getAllQuoteRequest()
-  //       } else {
-  //         Swal.fire({
-  //           title: '失敗',
-  //           text: "請確認資料是否正確 :(",
-  //           icon: 'error',
-  //           showConfirmButton: false,
-  //           timer: 1500
-  //         }).then(() => {
-  //           this.edit = true;
-  //         })
-  //       }
-  //     },
-  //     error => {
-  //       console.log(error);
-  //     })
-  // }
-
-  //新增產品dialog
-  add: boolean = false;
-
-  addProduct() {
-    this.add = true;
-    this.selectedProducts = [];
-  }
-
-  selectedProducts: any[] = []//儲存被選的商品
-  //編輯所有產品報價dialog
-  edit: boolean = false;
-  showErrorMessage = false;
-
-  editProduct() {
-    if (this.selectedProducts.length !== 0) {
-      this.quote_product_form.reset();
-      this.edit = true;
-      this.add = false;
-      console.log(this.selectedProducts)
-    } else {
-      this.showErrorMessage = true;
-      return
+   postQuoteProductRequest(): void {
+    for (let i = 0; i < this.selectedProducts.length; i++){
+      if (this.quote_product_form.controls['unit_price_' + i].hasError('required') ||
+        this.quote_product_form.controls['quantity_' + i].hasError('required') ||
+        this.quote_product_form.controls['discount_' + i].hasError('required')) {
+        this.edit = false;
+        Swal.fire({
+          title: '未填寫',
+          text: "請填寫必填欄位！",
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 1000
+        }).then(() => {
+          if (this.quote_product_form.controls['unit_price_' + i].hasError('required')) {
+            this.quote_product_form.controls['unit_price_' + i].markAsDirty();
+          }
+          if (this.quote_product_form.controls['quantity_' + i].hasError('required')) {
+            this.quote_product_form.controls['quantity_' + i].markAsDirty();
+          }
+          if (this.quote_product_form.controls['discount_' + i].hasError('required')) {
+            this.quote_product_form.controls['discount_' + i].markAsDirty();
+          }
+          this.edit = true;
+        })
+        return;
+      }
+      if (this.quote_product_form.controls['unit_price_' + i].hasError('required')
+        || this.quote_product_form.controls['quantity_' + i].hasError('required') ||
+        this.quote_product_form.controls['discount_' + i].hasError('required')) {
+        return;
+      }
     }
+     const quoteProducts = [];
+     for (let i = 0; i < this.selectedProducts.length; i++) {
+       const product = this.selectedProducts[i];
+       const unit_price = this.quote_product_form.get('unit_price_' + i)?.value;
+       const quantity = this.quote_product_form.get('quantity_' + i)?.value;
+       const discount = this.quote_product_form.get('discount_' + i)?.value;
+
+       const quoteProduct = {
+         quote_id: this.q_id,
+         product_id: product.product_id,
+         unit_price: unit_price,
+         quantity: quantity,
+         discount: discount,
+         sub_total:unit_price * quantity,
+         created_by: "7f5443f8-e607-4793-8370-560b8b688a61"
+       };
+       quoteProducts.push(quoteProduct);
+     }
+     console.log(quoteProducts)
+    this.HttpApi.postQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
+        console.log(Request)
+        this.edit = false;
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          //this.getAllQuoteRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.edit = true;
+          })
+        }
+      },
+      error => {
+        console.log(error);
+      })
   }
+
+  GetAllQuoteProduct: any[] = [];
+  QuoteProductloading: boolean = false;
+  getQuoteProductRequest() {
+    this.QuoteProductloading = true;
+    this.HttpApi.getQuoteProductRequest(this.q_id).subscribe(
+      request => {
+        this.GetAllQuoteProduct = request.body.products;
+        this.QuoteProductloading = false;
+        console.log(this.GetAllQuoteProduct)
+      });
+  }
+
+
+
 
   patchQuoteRequest(q_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
@@ -322,7 +353,6 @@ export class ViewQuoteComponent {
   }
 
   selectedAccount_id: string = '';
-
   //取得選擇的商機帳戶id
   selectedOpportunity() {
     const selectedOpportunity = this.GetAllOpportunity.find((opportunity) => opportunity.value === this.selectedOpportunity_id);
