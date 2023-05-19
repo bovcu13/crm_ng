@@ -165,6 +165,7 @@ export class ViewQuoteComponent {
   }
 
    postQuoteProductRequest(): void {
+    console.log(this.selectedProducts)
     for (let i = 0; i < this.selectedProducts.length; i++){
       if (this.quote_product_form.controls['unit_price_' + i].hasError('required') ||
         this.quote_product_form.controls['quantity_' + i].hasError('required') ||

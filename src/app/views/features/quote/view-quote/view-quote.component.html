@@ -331,7 +331,7 @@
 
 <!-- 編輯所有報價產品dialog -->
 <form [formGroup]="quote_product_form">
-  <p-dialog [(visible)]="edit" header=編輯所有報價商品 [modal]="true">
+  <p-dialog *ngIf="edit" [(visible)]="edit" header=編輯所有報價商品 [modal]="true">
     <p-table [value]="selectedProducts">
       <ng-template pTemplate="header">
         <tr>
@@ -343,7 +343,7 @@
           <th></th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body">
+      <ng-template pTemplate="body" >
         <tr *ngFor="let product of selectedProducts; let i = index">
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
