@@ -282,6 +282,7 @@
     </p-card>
   </div>
 </div>
+
 <!-- 新增產品dialog -->
   <p-dialog [(visible)]="add" header=新增商品 [modal]="true">
     <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllProduct" [(selection)]="selectedProducts"
@@ -329,6 +330,7 @@
     </p-table>
   </p-dialog>
 
+
 <!-- 編輯所有報價產品dialog -->
 <form [formGroup]="quote_product_form">
   <p-dialog *ngIf="edit" [(visible)]="edit" header=編輯所有報價商品 [modal]="true">
@@ -343,24 +345,76 @@
           <th></th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" >
-        <tr *ngFor="let product of selectedProducts; let i = index">
+      <ng-template pTemplate="body" let-product let-i="rowIndex">
+        <tr>
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
           <td>
             <p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw"
-                           [min]="0" [formControlName]="'unit_price_' + i"
-                           [ngClass]="{'ng-dirty': quote_product_form.controls['unit_price_' + i]?.hasError('required') && quote_product_form.controls['unit_price_' + i]?.touched}">
+                           [min]="0" [formControlName]="'unit_price_' + product.product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['unit_price_' + product.product_id]?.hasError('required') && quote_product_form.controls['unit_price_' +  product.product_id]?.touched}">
             </p-inputNumber>
           </td>
           <td>
-            <p-inputNumber inputId="integeronly" [min]="0" [formControlName]="'quantity_' + i"
-                           [ngClass]="{'ng-dirty': quote_product_form.controls['quantity_' + i]?.hasError('required') && quote_product_form.controls['quantity_' + i]?.touched}">
+            <p-inputNumber inputId="integeronly" [min]="0" [formControlName]="'quantity_' + product.product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['quantity_' +  product.product_id]?.hasError('required') && quote_product_form.controls['quantity_' +  product.product_id]?.touched}">
             </p-inputNumber>
           </td>
           <td>
-            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount_' + i"
-                           [ngClass]="{'ng-dirty': quote_product_form.controls['discount_' + i]?.hasError('required') && quote_product_form.controls['discount_' + i]?.touched}">
+            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount_' + product.product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['discount_' +  product.product_id]?.hasError('required') && quote_product_form.controls['discount_' +  product.product_id]?.touched}">
+            </p-inputNumber>
+          </td>
+          <td>
+            <div class="flex justify-content-end">
+              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
+                        tooltipPosition="top"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+        <div class="flex justify-content-end">
+          <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary"></p-button>
+          <p-button label="儲存" (click)="postQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
+        </div>
+      </ng-template>
+    </p-table>
+  </p-dialog>
+</form>
+
+<!-- 編輯table所有報價產品dialog -->
+<form [formGroup]="quote_product_form">
+  <p-dialog  *ngIf="edit" [(visible)]="edit" header=編輯所有報價商品 [modal]="true">
+    <p-table [value]="GetAllQuoteProduct">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>名稱</th>
+          <th>商品價格</th>
+          <th><span class="required-star">*</span>報價價格</th>
+          <th><span class="required-star">*</span>數量</th>
+          <th><span class="required-star">*</span>折扣</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product let-i="rowIndex">
+        <tr>
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.standard_price }}</td>
+          <td>
+            <p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw"
+                           [min]="0" [formControlName]="'unit_price_' + product.product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['unit_price_' + product.product_id]?.hasError('required') && quote_product_form.controls['unit_price_' +  product.product_id]?.touched}">
+            </p-inputNumber>
+          </td>
+          <td>
+            <p-inputNumber inputId="integeronly" [min]="0" [formControlName]="'quantity_' + product.product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['quantity_' +  product.product_id]?.hasError('required') && quote_product_form.controls['quantity_' +  product.product_id]?.touched}">
+            </p-inputNumber>
+          </td>
+          <td>
+            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount_' + product.product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['discount_' +  product.product_id]?.hasError('required') && quote_product_form.controls['discount_' +  product.product_id]?.touched}">
             </p-inputNumber>
           </td>
           <td>

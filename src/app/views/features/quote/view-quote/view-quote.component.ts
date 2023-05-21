@@ -57,7 +57,6 @@ export class ViewQuoteComponent {
   q_id: any;
   quote_form: FormGroup;
   quote_product_form: FormGroup;
-
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute) {
     this.quote_form = this.fb.group({
       quote_id: [''],
@@ -98,11 +97,9 @@ export class ViewQuoteComponent {
 
   //新增產品dialog
   add: boolean = false;
-
   addProduct() {
     this.add = true;
     this.selectedProducts = [];
-    console.log(this.quote_product_form)
   }
 
   selectedProducts: any[] = []//儲存被選的商品
@@ -112,14 +109,19 @@ export class ViewQuoteComponent {
 
   editProduct() {
     if (this.selectedProducts.length !== 0) {
-      for (let i = 0; i < this.selectedProducts.length; i++) {
-        this.quote_product_form.addControl(`unit_price_${i}`, new FormControl('', Validators.required));
-        this.quote_product_form.addControl(`quantity_${i}`, new FormControl('', Validators.required));
-        this.quote_product_form.addControl(`discount_${i}`, new FormControl('', Validators.required));
-      }
+      this.selectedProducts.forEach((product, product_id) => {
+        this.quote_product_form.addControl(`unit_price_${product.product_id}`, new FormControl('', Validators.required));
+        this.quote_product_form.addControl(`quantity_${product.product_id}`, new FormControl('', Validators.required));
+        this.quote_product_form.addControl(`discount_${product.product_id}`, new FormControl('', Validators.required));
+      });
       this.edit = true;
       this.add = false;
       console.log(this.selectedProducts)
+    }else if(this.GetAllQuoteProduct.length !== 0){
+      this.GetAllQuoteProduct.forEach((product, product_id) => {
+
+      });
+      this.edit = true;
     } else {
       this.showErrorMessage = true;
       return
@@ -164,12 +166,11 @@ export class ViewQuoteComponent {
     );
   }
 
-   postQuoteProductRequest(): void {
-    console.log(this.selectedProducts)
-    for (let i = 0; i < this.selectedProducts.length; i++){
-      if (this.quote_product_form.controls['unit_price_' + i].hasError('required') ||
-        this.quote_product_form.controls['quantity_' + i].hasError('required') ||
-        this.quote_product_form.controls['discount_' + i].hasError('required')) {
+  postQuoteProductRequest(): void {
+    this.selectedProducts.forEach((product, product_id) => {
+      if (this.quote_product_form.controls[`unit_price_${product.product_id}`].hasError('required') ||
+        this.quote_product_form.controls[`quantity_${product.product_id}`].hasError('required') ||
+        this.quote_product_form.controls[`discount_${product.product_id}`].hasError('required')) {
         this.edit = false;
         Swal.fire({
           title: '未填寫',
@@ -178,75 +179,73 @@ export class ViewQuoteComponent {
           showConfirmButton: false,
           timer: 1000
         }).then(() => {
-          if (this.quote_product_form.controls['unit_price_' + i].hasError('required')) {
-            this.quote_product_form.controls['unit_price_' + i].markAsDirty();
+          if (this.quote_product_form.controls[`unit_price_${product.product_id}`].hasError('required')) {
+            this.quote_product_form.controls[`unit_price_${product.product_id}`].markAsDirty();
           }
-          if (this.quote_product_form.controls['quantity_' + i].hasError('required')) {
-            this.quote_product_form.controls['quantity_' + i].markAsDirty();
+          if (this.quote_product_form.controls[`quantity_${product.product_id}`].hasError('required')) {
+            this.quote_product_form.controls[`quantity_${product.product_id}`].markAsDirty();
           }
-          if (this.quote_product_form.controls['discount_' + i].hasError('required')) {
-            this.quote_product_form.controls['discount_' + i].markAsDirty();
+          if (this.quote_product_form.controls[`discount_${product.product_id}`].hasError('required')) {
+            this.quote_product_form.controls[`discount_${product.product_id}`].markAsDirty();
           }
           this.edit = true;
         })
         return;
       }
-      if (this.quote_product_form.controls['unit_price_' + i].hasError('required')
-        || this.quote_product_form.controls['quantity_' + i].hasError('required') ||
-        this.quote_product_form.controls['discount_' + i].hasError('required')) {
+
+      if (this.quote_product_form.controls[`unit_price_${product.product_id}`].hasError('required')
+        || this.quote_product_form.controls[`quantity_${product.product_id}`].hasError('required') ||
+        this.quote_product_form.controls[`discount_${product.product_id}`].hasError('required')) {
         return;
       }
-    }
-     const quoteProducts = [];
-     for (let i = 0; i < this.selectedProducts.length; i++) {
-       const product = this.selectedProducts[i];
-       const unit_price = this.quote_product_form.get('unit_price_' + i)?.value;
-       const quantity = this.quote_product_form.get('quantity_' + i)?.value;
-       const discount = this.quote_product_form.get('discount_' + i)?.value;
-
-       const quoteProduct = {
-         quote_id: this.q_id,
-         product_id: product.product_id,
-         unit_price: unit_price,
-         quantity: quantity,
-         discount: discount,
-         sub_total:unit_price * quantity,
-         created_by: "7f5443f8-e607-4793-8370-560b8b688a61"
-       };
-       quoteProducts.push(quoteProduct);
-     }
-     console.log(quoteProducts)
-    this.HttpApi.postQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
-        console.log(Request)
-        this.edit = false;
-        if (Request.code === 200) {
-          Swal.fire({
-            title: '成功',
-            text: "已儲存您的資料 :)",
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1000
-          })
-          //this.getAllQuoteRequest()
-        } else {
-          Swal.fire({
-            title: '失敗',
-            text: "請確認資料是否正確 :(",
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 1500
-          }).then(() => {
-            this.edit = true;
-          })
-        }
-      },
-      error => {
-        console.log(error);
-      })
+      const quoteProducts = [];
+        const unit_price = this.quote_product_form.get(`unit_price_${product.product_id}`)?.value;
+        const quantity = this.quote_product_form.get(`quantity_${product.product_id}`)?.value;
+        const discount = this.quote_product_form.get(`discount_${product.product_id}`)?.value;
+        const quoteProduct = {
+          quote_id: this.q_id,
+          product_id: product.product_id,
+          unit_price: unit_price,
+          quantity: quantity,
+          discount: discount,
+          sub_total: unit_price * quantity,
+          created_by: "7f5443f8-e607-4793-8370-560b8b688a61"
+        };
+        quoteProducts.push(quoteProduct);
+      console.log(quoteProducts)
+      this.HttpApi.postQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
+          console.log(Request)
+          this.edit = false;
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已儲存您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getOneQuotetRequest(this.q_id)
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            }).then(() => {
+              this.edit = true;
+            })
+          }
+        },
+        error => {
+          console.log(error);
+        })
+    })
   }
 
   GetAllQuoteProduct: any[] = [];
   QuoteProductloading: boolean = false;
+
   getQuoteProductRequest() {
     this.QuoteProductloading = true;
     this.HttpApi.getQuoteProductRequest(this.q_id).subscribe(
@@ -256,8 +255,6 @@ export class ViewQuoteComponent {
         console.log(this.GetAllQuoteProduct)
       });
   }
-
-
 
 
   patchQuoteRequest(q_id: any): void {
@@ -354,6 +351,7 @@ export class ViewQuoteComponent {
   }
 
   selectedAccount_id: string = '';
+
   //取得選擇的商機帳戶id
   selectedOpportunity() {
     const selectedOpportunity = this.GetAllOpportunity.find((opportunity) => opportunity.value === this.selectedOpportunity_id);
