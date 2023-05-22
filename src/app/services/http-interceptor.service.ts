@@ -51,7 +51,9 @@ export class HttpInterceptorService implements HttpInterceptor {
               //   this.authServ.saveUnaccessCount(res.body.unaccess_count);
               // }
             }
-          )).pipe(
+          )).pipe(tap(res=>{
+            console.log(res)
+            }),
             switchMap((token: any) => {
               this.isRefreshing = false;
               this.storageServ.saveToken(token.body.access_token);

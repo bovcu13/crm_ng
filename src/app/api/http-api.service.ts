@@ -15,6 +15,13 @@ export class HttpApiService {
   ) {
   }
 
+  //--使用者-------------------------------------------------------------------------------------------------
+
+  getAllUserRequest(page: number): Observable<any> {
+      const url = `${this.BaseUrl}/users?page=${page}&limit=10`;
+      return this.http.get<any>(url);
+    }
+
   //--帳戶---------------------------------------------------------------------------------------------------
 
   getAllAccountRequest(search: string, status = 1, page = 1, event?: any): Observable<any> {
