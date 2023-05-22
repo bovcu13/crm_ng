@@ -1,14 +1,13 @@
-
-import { NgModule,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { SharedModule } from './shared/shared.module';
-import { LoginComponent } from './views/components/login/login.component';
-import { SignupComponent } from './views/components/signup/signup.component';
-import { HttpInterceptorService } from './services/http-interceptor.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {SharedModule} from './shared/shared.module';
+import {LoginComponent} from './views/components/login/login.component';
+import {SignupComponent} from './views/components/signup/signup.component';
+import {HttpInterceptorService} from './services/http-interceptor.service';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,7 +21,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     BrowserAnimationsModule,
     SharedModule,
   ],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -32,4 +31,5 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

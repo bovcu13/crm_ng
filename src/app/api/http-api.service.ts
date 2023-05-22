@@ -516,6 +516,11 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
+  //取得一筆 報價 getone
+  getQuoteProductRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/quotes/products/${id}`;
+    return this.http.get<any>(url);
+  }
   //------------商品報價---------------------------------------------
   //取得所有商品報價 getall
   // getAllQuoteProductsRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
@@ -550,7 +555,7 @@ export class HttpApiService {
   // }
 
   getAllQuoteProductsRequest(limit = 20, page = 1): Observable<any> {
-    let url = this.BaseUrl + '/quotes-products/list' + '?page=' + page + '&limit=' + limit;
+    let url = this.BaseUrl + '/quotes-products' + '?page=' + page + '&limit=' + limit;
     return this.http.get<any>(url);
   }
 
