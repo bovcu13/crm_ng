@@ -159,7 +159,7 @@ export class AccountComponent implements OnInit {
   }
 
   // 現在時間
-  currentDate = new Date()
+  // currentDate = new Date()
 
   postAccount(): void {
     if (this.account_form.controls['name'].hasError('required')) {
@@ -183,8 +183,6 @@ export class AccountComponent implements OnInit {
       industry_id: '00000000-0000-4000-a000-000000000000',
       type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      created_at: this.currentDate
     }
     this.HttpApi.postAccountRequest(body).subscribe(request => {
       console.log(request)
@@ -235,8 +233,6 @@ export class AccountComponent implements OnInit {
       industry_id: '00000000-0000-4000-a000-000000000000',
       type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
     this.HttpApi.patchAccountRequest(id, body)
       .subscribe(request => {

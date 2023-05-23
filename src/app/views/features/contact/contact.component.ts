@@ -184,8 +184,6 @@ export class ContactComponent implements OnInit {
       reports_to: this.contact_form.controls['reports_to'].value,
       supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
       account_id: this.selectedAccountId,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      created_at: this.currentDate
     }
     this.HttpApi.postContactRequest(body)
       .subscribe(request => {
@@ -254,9 +252,7 @@ export class ContactComponent implements OnInit {
       department: this.contact_form.controls['department'].value,
       reports_to: this.contact_form.controls['reports_to'].value,
       supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
-      account_id: this.selectedAccountId,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
+      account_id: this.selectedAccountId
     }
     this.HttpApi.patchContactRequest(id, body)
       .subscribe(request => {
