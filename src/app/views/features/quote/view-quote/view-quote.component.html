@@ -333,7 +333,7 @@
 
 <!-- 編輯所有報價產品dialog -->
 <form [formGroup]="quote_product_form">
-  <p-dialog *ngIf="edit" [(visible)]="edit" header=編輯所有報價商品 [modal]="true">
+  <p-dialog *ngIf="editselectedProducts" [(visible)]="editselectedProducts" header=編輯選擇報價商品 [modal]="true">
     <p-table [value]="selectedProducts">
       <ng-template pTemplate="header">
         <tr>
@@ -375,7 +375,7 @@
       </ng-template>
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
-          <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary"></p-button>
+          <p-button label="取消" (click)="editselectedProducts=false" styleClass="p-button-secondary"></p-button>
           <p-button label="儲存" (click)="postQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
         </div>
       </ng-template>
@@ -385,7 +385,7 @@
 
 <!-- 編輯table所有報價產品dialog -->
 <form [formGroup]="quote_product_form">
-  <p-dialog  *ngIf="edit" [(visible)]="edit" header=編輯所有報價商品 [modal]="true">
+  <p-dialog  *ngIf="editGetAllQuoteProduct" [(visible)]="editGetAllQuoteProduct" header=編輯所有報價商品 [modal]="true">
     <p-table [value]="GetAllQuoteProduct">
       <ng-template pTemplate="header">
         <tr>
@@ -397,24 +397,24 @@
           <th></th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-product let-i="rowIndex">
+      <ng-template pTemplate="body" let-product>
         <tr>
           <td>{{ product.product_name }}</td>
           <td>{{ product.standard_price }}</td>
           <td>
             <p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw"
-                           [min]="0" [formControlName]="'unit_price_' + product.product_id"
-                           [ngClass]="{'ng-dirty': quote_product_form.controls['unit_price_' + product.product_id]?.hasError('required') && quote_product_form.controls['unit_price_' +  product.product_id]?.touched}">
+                           [min]="0" [formControlName]="'unit_price_' + product.quote_product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['unit_price_' + product.quote_product_id]?.hasError('required') && quote_product_form.controls['unit_price_' +  product.quote_product_id]?.touched}">
             </p-inputNumber>
           </td>
           <td>
-            <p-inputNumber inputId="integeronly" [min]="0" [formControlName]="'quantity_' + product.product_id"
-                           [ngClass]="{'ng-dirty': quote_product_form.controls['quantity_' +  product.product_id]?.hasError('required') && quote_product_form.controls['quantity_' +  product.product_id]?.touched}">
+            <p-inputNumber inputId="integeronly" [min]="1" [formControlName]="'quantity_' + product.quote_product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['quantity_' +  product.quote_product_id]?.hasError('required') && quote_product_form.controls['quantity_' +  product.quote_product_id]?.touched}">
             </p-inputNumber>
           </td>
           <td>
-            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount_' + product.product_id"
-                           [ngClass]="{'ng-dirty': quote_product_form.controls['discount_' +  product.product_id]?.hasError('required') && quote_product_form.controls['discount_' +  product.product_id]?.touched}">
+            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount_' + product.quote_product_id"
+                           [ngClass]="{'ng-dirty': quote_product_form.controls['discount_' +  product.quote_product_id]?.hasError('required') && quote_product_form.controls['discount_' +  product.quote_product_id]?.touched}">
             </p-inputNumber>
           </td>
           <td>
@@ -427,8 +427,8 @@
       </ng-template>
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
-          <p-button label="取消" (click)="edit=false" styleClass="p-button-secondary"></p-button>
-          <p-button label="儲存"  styleClass="p-button-info ml-1"></p-button>
+          <p-button label="取消" (click)="editGetAllQuoteProduct=false" styleClass="p-button-secondary"></p-button>
+          <p-button label="儲存" (click)="patchQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
         </div>
       </ng-template>
     </p-table>
