@@ -572,8 +572,8 @@ export class HttpApiService {
   }
 
   //修改 商品報價 patch
-  patchQuoteProductRequest(sid: string, body: any): Observable<any> {
-    const url = `${this.BaseUrl}/quotes-products/${sid}`;
+  patchQuoteProductRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/quotes-products`;
     return this.http.patch<any>(url, body);
   }
 
