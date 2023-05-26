@@ -141,7 +141,6 @@ export class ViewContractComponent {
       account_id: this.contract_form.get('account_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
     this.HttpApi.patchContractRequest(this.c_id, body).subscribe(
       Request => {
@@ -203,10 +202,6 @@ export class ViewContractComponent {
       start_date: [new Date(), [Validators.required]],
       term: ['', [Validators.required]],
       description: [''],
-      created_at: [''],
-      updated_at: [''],
-      created_by: [''],
-      updated_by: [''],
     });
     this.c_id = this.route.snapshot.paramMap.get('c_id')
     console.log("取到的o_id: " + this.c_id)

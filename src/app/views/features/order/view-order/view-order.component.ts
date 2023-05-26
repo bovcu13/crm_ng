@@ -120,12 +120,6 @@ export class ViewOrderComponent {
       contract_code: ['', [Validators.required]],
       amount: [''],
       description: [''],
-      activated_by: [''],
-      activated_at: [''],
-      created_at: [''],
-      updated_at: [''],
-      created_by: [''],
-      updated_by: [''],
     });
     this.o_id = this.route.snapshot.paramMap.get('o_id')
     console.log("取到的o_id: " + this.o_id)
@@ -215,7 +209,6 @@ export class ViewOrderComponent {
       account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
       contract_id: this.selectedContract_id, //契約ID
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
     this.HttpApi.patchOrderRequest(this.o_id, body).subscribe(
       Request => {

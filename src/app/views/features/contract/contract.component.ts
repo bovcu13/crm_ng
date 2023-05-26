@@ -151,7 +151,6 @@ export class ContractComponent {
       description: this.contract_form.value.description,
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       account_id: this.contract_form.value.account_id,
     }
 
@@ -197,10 +196,6 @@ export class ContractComponent {
       start_date: ['', [Validators.required]],
       term: ['', [Validators.required]],
       description: [''],
-      created_at: [''],
-      updated_at: [''],
-      created_by: [''],
-      updated_by: [''],
     });
   }
 
@@ -279,7 +274,6 @@ export class ContractComponent {
       account_id: this.contract_form.get('account_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
 
     this.HttpApi.patchContractRequest(c_id, body).subscribe(

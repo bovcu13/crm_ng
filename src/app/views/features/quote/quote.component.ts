@@ -130,7 +130,6 @@ export class QuoteComponent {
       status: this.quote_form.value.status,
       tax: this.quote_form.value.tax,
       description: this.quote_form.value.description,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
     this.HttpApi.postQuoteRequest(body).subscribe(Request => {
         console.log(Request)
@@ -199,7 +198,6 @@ export class QuoteComponent {
       opportunity_id: this.selectedOpportunity_id, //商機ID
       shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
       tax: this.quote_form.get('tax')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
     this.HttpApi.patchQuoteRequest(p_id, body).subscribe(
       Request => {
@@ -311,10 +309,6 @@ export class QuoteComponent {
       total_price: [''],
       shipping_and_handling: [''],
       subtotal: [''],
-      created_at: [''],
-      updated_at: [''],
-      created_by: [''],
-      updated_by: [''],
     });
   }
 
