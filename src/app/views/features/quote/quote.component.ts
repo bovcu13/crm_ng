@@ -309,6 +309,10 @@ export class QuoteComponent {
       total_price: [''],
       shipping_and_handling: [''],
       subtotal: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
   }
 

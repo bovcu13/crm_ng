@@ -120,6 +120,10 @@ export class ViewOrderComponent {
       contract_code: ['', [Validators.required]],
       amount: [''],
       description: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
     this.o_id = this.route.snapshot.paramMap.get('o_id')
     console.log("取到的o_id: " + this.o_id)

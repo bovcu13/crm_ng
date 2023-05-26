@@ -193,6 +193,10 @@ export class ViewCampaignComponent {
       expected_responses: [0],
       actual_cost: [0],
       expected_income: [0],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
     this.c_id = this.route.snapshot.paramMap.get('c_id')
     console.log("取到的o_id: " + this.c_id)
