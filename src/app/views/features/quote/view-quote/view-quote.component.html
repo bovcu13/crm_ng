@@ -130,6 +130,7 @@
                     <th>報價價格</th>
                     <th>數量</th>
                     <th>小計</th>
+                    <th>總計</th>
                     <th></th>
                   </tr>
                 </ng-template>
@@ -140,12 +141,13 @@
                     <td>{{ product.unit_price }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.sub_total }}</td>
+                    <td>{{ product.total }}</td>
                     <td>
                       <div class="flex justify-content-end">
                       <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                                 styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                       <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
-                                pTooltip="刪除" tooltipPosition="top"></p-button>
+                                pTooltip="刪除" tooltipPosition="top" (click)="deleteQuoteProductRequest(product.quote_product_id)"></p-button>
                       </div>
                     </td>
                   </tr>
@@ -420,7 +422,7 @@
           <td>
             <div class="flex justify-content-end">
               <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
-                        tooltipPosition="top"></p-button>
+                        tooltipPosition="top" (click)="deleteQuoteProductRequest(product.quote_product_id)"></p-button>
             </div>
           </td>
         </tr>

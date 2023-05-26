@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http'; //http協定
 import {Contract} from "../shared/models/contract";
 import {Quote} from '../shared/models/quote';
 import {Observable} from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -578,9 +579,12 @@ export class HttpApiService {
   }
 
   //刪除 商品報價 delete
-  deleteQuoteProductRequest(sid: string): Observable<any> {
-    const url = `${this.BaseUrl}/quotes-products/${sid}`;
-    return this.http.delete<any>(url);
+  deleteQuoteProductRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/quotes-products`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const options = { headers: headers, body: body };
+
+    return this.http.delete<any>(url, options);
   }
 
   //----------行銷活動------------------------------------------------------------------------------------------------
