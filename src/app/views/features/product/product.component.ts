@@ -101,6 +101,10 @@ export class ProductComponent {
       is_enable: [false],
       price: ['', [Validators.required]],
       description: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
   }
 

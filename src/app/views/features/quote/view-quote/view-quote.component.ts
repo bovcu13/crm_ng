@@ -72,7 +72,14 @@ export class ViewQuoteComponent {
       description: [''],
       expiration_date: [''],
       tax: [''],
+      discount: [''],
+      total_price: [''],
       shipping_and_handling: [''],
+      subtotal: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
     this.q_id = this.route.snapshot.paramMap.get('q_id')
     console.log("取到的q_id: " + this.q_id)
@@ -87,6 +94,7 @@ export class ViewQuoteComponent {
       unit_price_: [0],
       quantity_: [''],
       discount_: [0],
+      subtotal: [''],
     });
   }
 

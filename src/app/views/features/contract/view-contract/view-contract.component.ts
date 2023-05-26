@@ -202,6 +202,10 @@ export class ViewContractComponent {
       start_date: [new Date(), [Validators.required]],
       term: ['', [Validators.required]],
       description: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
     this.c_id = this.route.snapshot.paramMap.get('c_id')
     console.log("取到的o_id: " + this.c_id)

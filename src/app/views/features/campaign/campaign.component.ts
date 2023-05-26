@@ -217,6 +217,7 @@ export class CampaignComponent {
       expected_responses: this.campaign_form.value.expected_responses,
       expected_income: this.campaign_form.value.expected_income,
       actual_cost: this.campaign_form.value.actual_cost,
+      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
     this.HttpApi.postCampaignRequest(body).subscribe(Request => {
         console.log(Request)
@@ -274,6 +275,10 @@ export class CampaignComponent {
       expected_responses: [0],
       actual_cost: [0],
       expected_income: [0],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
   }
 
@@ -375,6 +380,7 @@ export class CampaignComponent {
       expected_responses: this.campaign_form.get('expected_responses')?.value,
       expected_income: this.campaign_form.get('expected_income')?.value,
       actual_cost: this.campaign_form.get('actual_cost')?.value,
+      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
     this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
       Request => {
@@ -403,7 +409,6 @@ export class CampaignComponent {
       }
     );
   }
-
 
   deleteCampaignRequest(c_id: any): void {
     Swal.fire({

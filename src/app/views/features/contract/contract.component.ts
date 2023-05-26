@@ -196,6 +196,10 @@ export class ContractComponent {
       start_date: ['', [Validators.required]],
       term: ['', [Validators.required]],
       description: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
   }
 
@@ -379,6 +383,7 @@ export class ContractComponent {
             return {...contract, start_date, created_at, updated_at};
           });
           this.totalRecords = res.body.total;
+          console.log(this.GetAllContract)
           this.loading = false;
         },
         error => {
