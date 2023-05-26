@@ -144,7 +144,6 @@ export class OrderComponent {
       status: this.order_form.value.status,
       description: this.order_form.value.description,
       start_date: this.order_form.value.start_date,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       contract_id: this.selectedContract_id, //契約ID
       account_id: this.selectedAccount_id //帳戶ID
     }
@@ -192,12 +191,6 @@ export class OrderComponent {
       contract_code: ['', [Validators.required]],
       amount: [''],
       description: [''],
-      activated_by: [''],
-      activated_at: [''],
-      created_at: [''],
-      updated_at: [''],
-      created_by: [''],
-      updated_by: [''],
     });
   }
 
@@ -277,7 +270,6 @@ export class OrderComponent {
       account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
       contract_id: this.selectedContract_id, //契約ID
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
     this.HttpApi.patchOrderRequest(o_id, body).subscribe(
       Request => {

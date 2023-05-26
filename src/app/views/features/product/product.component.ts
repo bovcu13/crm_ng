@@ -55,7 +55,6 @@ export class ProductComponent {
       is_enable: this.product_form.value.is_enable,
       description: this.product_form.value.description,
       price: this.product_form.value.price,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
     this.HttpApi.postProductRequest(body).subscribe(Request => {
         console.log(Request)
@@ -102,10 +101,6 @@ export class ProductComponent {
       is_enable: [false],
       price: ['', [Validators.required]],
       description: [''],
-      created_at: [''],
-      created_by: [''],
-      updated_at: [''],
-      updated_by: [''],
     });
   }
 
@@ -158,7 +153,6 @@ export class ProductComponent {
       description: this.product_form.get('description')?.value,
       price: this.product_form.get('price')?.value,
       code: this.product_form.get('code')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
     }
     this.HttpApi.patchProductRequest(p_id, body).subscribe(
       Request => {

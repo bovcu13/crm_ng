@@ -193,10 +193,6 @@ export class ViewCampaignComponent {
       expected_responses: [0],
       actual_cost: [0],
       expected_income: [0],
-      created_at: [''],
-      updated_at: [''],
-      created_by: [''],
-      updated_by: [''],
     });
     this.c_id = this.route.snapshot.paramMap.get('c_id')
     console.log("取到的o_id: " + this.c_id)
@@ -254,7 +250,6 @@ export class ViewCampaignComponent {
       expected_responses: this.campaign_form.get('expected_responses')?.value,
       expected_income: this.campaign_form.get('expected_income')?.value,
       actual_cost: this.campaign_form.get('actual_cost')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
 
     this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
