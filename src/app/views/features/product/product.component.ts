@@ -12,19 +12,21 @@ import {Table} from "primeng/table";
 export class ProductComponent {
   @ViewChild('dt1') dt1!: Table;
 
-  getAllProductRequest(): void{
-  this.HttpApi.getAllProductRequest(this.search,1).subscribe(
-    res =>{
-      this.GetAllProduct  = res.body.products;
-      this.GetAllProduct = res.body.products.map((product: any) => {
-        const created_at = this.formatDate(product.created_at);
-        const updated_at = this.formatDate(product.updated_at);
-        return {...product, created_at, updated_at};
-      });
-    })
+  getAllProductRequest(): void {
+    this.HttpApi.getAllProductRequest(this.search, 1).subscribe(
+      res => {
+        this.GetAllProduct = res.body.products;
+        this.GetAllProduct = res.body.products.map((product: any) => {
+          const created_at = this.formatDate(product.created_at);
+          const updated_at = this.formatDate(product.updated_at);
+          return {...product, created_at, updated_at};
+        });
+      })
   }
+
 //POST 一筆product
   BadRequest: any
+
   postProductRequest(): void {
     if (this.product_form.controls['name'].hasError('required') ||
       this.product_form.controls['price'].hasError('required')) {
@@ -56,12 +58,8 @@ export class ProductComponent {
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
     this.HttpApi.postProductRequest(body).subscribe(Request => {
-        this.Repeated = Request
         console.log(Request)
-        if (this.Repeated.code === 400) {
-          this.BadRequest = "識別碼不可重複!!!";
-          this.edit = true;
-        } else if (this.Repeated.code === 200) {
+        if (Request.code === 200) {
           this.edit = false;
           Swal.fire({
             title: '成功',
@@ -71,20 +69,23 @@ export class ProductComponent {
             timer: 1000
           })
           this.getAllProductRequest()
-        } else {
-          Swal.fire({
-            title: '失敗',
-            text: "請確認資料是否正確 :(",
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 1500
-          }).then(() => {
-            this.edit = true;
-          })
         }
       },
       error => {
         console.log(error);
+        this.edit = false;
+        if (error.status === 400) {
+          this.BadRequest = "識別碼不可重複!!!";
+        }
+        Swal.fire({
+          title: '失敗',
+          text: "請確認資料是否正確 :(",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          this.edit = true;
+        })
       })
   }
 
@@ -129,7 +130,6 @@ export class ProductComponent {
     }
   }
 
-  Repeated: any;//判斷是否重複
   patchProductRequest(p_id: any): void {
     if (this.product_form.controls['name'].hasError('required') ||
       this.product_form.controls['price'].hasError('required')) {
@@ -162,34 +162,34 @@ export class ProductComponent {
     }
     this.HttpApi.patchProductRequest(p_id, body).subscribe(
       Request => {
-        this.Repeated = Request
         console.log(Request)
-        if (this.Repeated.code === 400) {
-          this.BadRequest = "識別碼不可重複!!!";
-          this.edit = true;
-        } else if (this.Repeated.code === 200) {
+        if (Request.code === 200) {
           this.edit = false;
           Swal.fire({
             title: '成功',
-            text: "已儲存您的變更 :)",
+            text: "已儲存您的資料 :)",
             icon: 'success',
             showConfirmButton: false,
             timer: 1000
           })
           this.getAllProductRequest()
-        } else {
-          Swal.fire({
-            title: '失敗',
-            text: "請確認資料是否正確 :(",
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 1500
-          }).then(() => {
-            this.edit = true;
-          })
         }
-      }
-    )
+      }, error => {
+        console.log(error);
+        this.edit = false;
+        if (error.status === 400) {
+          this.BadRequest = "識別碼不可重複!!!";
+        }
+        Swal.fire({
+          title: '失敗',
+          text: "請確認資料是否正確 :(",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          this.edit = true;
+        })
+      })
   }
 
 
@@ -260,11 +260,12 @@ export class ProductComponent {
   GetAllProduct!: any[];
   search: string = '';  // 搜尋關鍵字
   loading: boolean = false;
+
   loadTable(e: any) {
     let page = e.first / e.rows + 1;
     let limit = e.rows;
     this.loading = true;
-    this.HttpApi.getAllProductRequest(this.search, 1,limit, page, e).subscribe(
+    this.HttpApi.getAllProductRequest(this.search, 1, limit, page, e).subscribe(
       request => {
         this.GetAllProduct = request.body.products;
         this.GetAllProduct = request.body.products.map((product: any) => {
@@ -277,6 +278,7 @@ export class ProductComponent {
         console.log(this.GetAllProduct)
       });
   }
+
 //
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
