@@ -88,14 +88,34 @@ export class ViewQuoteComponent {
     this.getQuoteProductRequest()
     // this.getAllQuoteProductsRequest()
     this.quote_product_form = this.fb.group({
+      quote_product_id: [''],
+      product_name: [''],
+      code: [''],
+      standard_price: [''],
       product_id: [''],
       quote_id: [''],
       sub_total: [''],
-      unit_price_: [0],
-      quantity_: [''],
-      discount_: [0],
-      subtotal: [''],
+      unit_price: [0, [Validators.required]],
+      quantity: ['', [Validators.required]],
+      discount: [0, [Validators.required]],
+      total: [''],
+      description: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
+  }
+
+//編輯單一產品報價dialog
+  editOneQuoteProduct: boolean = false;
+  GetOneQuoteProduct: any;
+
+  editOneProduct(quote_product?: any) {
+    this.editOneQuoteProduct = true;
+    console.log("quote_product: " + JSON.stringify(quote_product))
+    this.GetOneQuoteProduct = quote_product
+    this.quote_product_form.patchValue(quote_product);
   }
 
   //新增產品dialog
@@ -113,6 +133,16 @@ export class ViewQuoteComponent {
   showErrorMessage = false;
 
   editProduct() {
+    if (this.GetAllQuoteProduct.length !== 0) {
+      this.GetAllQuoteProduct.forEach((product) => {
+        this.quote_product_form.addControl(`unit_price_${product.quote_product_id}`, this.fb.control((product.unit_price), Validators.required));
+        this.quote_product_form.addControl(`quantity_${product.quote_product_id}`, this.fb.control((product.quantity), Validators.required));
+        this.quote_product_form.addControl(`discount_${product.quote_product_id}`, this.fb.control((product.discount), Validators.required));
+      });
+      this.editGetAllQuoteProduct = true;
+    }
+  }
+  editSelectedProduct() {
     if (this.selectedProducts.length !== 0) {
       this.selectedProducts.forEach((product) => {
         this.quote_product_form.addControl(`unit_price_${product.product_id}`, new FormControl(0, Validators.required));
@@ -123,14 +153,6 @@ export class ViewQuoteComponent {
       this.editGetAllQuoteProduct = false;
       this.add = false;
       console.log(this.selectedProducts)
-    }
-    if (this.GetAllQuoteProduct.length !== 0) {
-      this.GetAllQuoteProduct.forEach((product) => {
-        this.quote_product_form.addControl(`unit_price_${product.quote_product_id}`, this.fb.control((product.unit_price), Validators.required));
-        this.quote_product_form.addControl(`quantity_${product.quote_product_id}`, this.fb.control((product.quantity), Validators.required));
-        this.quote_product_form.addControl(`discount_${product.quote_product_id}`, this.fb.control((product.discount), Validators.required));
-      });
-      this.editGetAllQuoteProduct = true;
     }
     if (this.selectedProducts.length === 0) {
       this.editselectedProducts = false;
@@ -334,6 +356,76 @@ export class ViewQuoteComponent {
     })
   }
 
+  patchOneQuoteProductRequest(): void {
+    if (this.quote_product_form.controls['unit_price'].hasError('required') ||
+      this.quote_product_form.controls['quantity'].hasError('required') ||
+      this.quote_product_form.controls['discount'].hasError('required')) {
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.quote_form.controls['unit_price'].hasError('required')) {
+          this.quote_form.controls['unit_price'].markAsDirty();
+        }
+        if (this.quote_form.controls['quantity'].hasError('required')) {
+          this.quote_form.controls['quantity'].markAsDirty();
+        }
+        if (this.quote_form.controls['discount'].hasError('required')) {
+          this.quote_form.controls['discount'].markAsDirty();
+        }
+        this.editOneQuoteProduct = true;
+      })
+      return;
+    }
+    const quoteProducts = [];
+    const unit_price = this.quote_product_form.get(`unit_price`)?.value;
+    const quantity = this.quote_product_form.get(`quantity`)?.value;
+    const discount = this.quote_product_form.get(`discount`)?.value;
+    const description = this.quote_product_form.get(`description`)?.value;
+    const quoteProduct = {
+      quote_product_id: this.GetOneQuoteProduct.quote_product_id,
+      quote_id: this.q_id,
+      product_id: this.GetOneQuoteProduct.product_id,
+      unit_price: unit_price,
+      quantity: quantity,
+      discount: discount,
+      description: description
+    };
+    quoteProducts.push(quoteProduct);
+    console.log(quoteProducts)
+    this.HttpApi.patchQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
+        console.log(Request)
+        this.editOneQuoteProduct = false;
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getQuoteProductRequest()
+          //this.getAllQuoteProductsRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.editOneQuoteProduct = true;
+          })
+        }
+      },
+      error => {
+        console.log(error);
+      })
+  }
+
   deleteQuoteProductRequest(quote_product_id: string): void {
     Swal.fire({
       title: '確認刪除？',
@@ -399,6 +491,7 @@ export class ViewQuoteComponent {
         console.log(this.GetAllQuoteProduct)
       });
   }
+
   // getAllQuoteProductsRequest() {
   //   this.QuoteProductloading = true;
   //   this.HttpApi.getAllQuoteProductsRequest().subscribe(
@@ -466,6 +559,10 @@ export class ViewQuoteComponent {
   }
 
   showAlertCancel() {
+    this.editOneQuoteProduct = false
+    this.editGetAllQuoteProduct=false
+    this.editselectedProducts=false
+    this.add=false
     Swal.fire({
       title: '取消',
       text: "已取消您的變更！",
