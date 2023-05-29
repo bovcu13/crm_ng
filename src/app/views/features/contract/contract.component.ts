@@ -83,9 +83,10 @@ export class ContractComponent {
         this.GetAllContract = res.body.contracts;
         this.GetAllContract = res.body.contracts.map((contract: any) => {
           const start_date = this.formatDate2(contract.start_date)
+          const end_date = this.formatDate2(contract.end_date)
           const created_at = this.formatDate(contract.created_at);
           const updated_at = this.formatDate(contract.updated_at);
-          return {...contract, start_date, created_at, updated_at};
+          return {...contract, start_date, end_date , created_at, updated_at};
         });
         this.totalRecords = res.body.total;
       },
@@ -194,6 +195,7 @@ export class ContractComponent {
       account_name: ['', [Validators.required]],
       status: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
+      end_date: [''],
       term: ['', [Validators.required]],
       description: [''],
       created_at: [''],
@@ -376,11 +378,12 @@ export class ContractComponent {
     this.loading = true;
     this.HttpApi.getAllContractRequest(this.search, 1,limit, page, e)
       .subscribe(res => {
-          this.GetAllContract = res.body.contracts.map((contract: any) => {
+          this.GetAllContract= res.body.contracts.map((contract: any) => {
             const start_date = this.formatDate2(contract.start_date)
+            const end_date = this.formatDate2(contract.end_date)
             const created_at = this.formatDate(contract.created_at);
             const updated_at = this.formatDate(contract.updated_at);
-            return {...contract, start_date, created_at, updated_at};
+            return {...contract, start_date, end_date, created_at, updated_at};
           });
           this.totalRecords = res.body.total;
           console.log(this.GetAllContract)
@@ -408,14 +411,8 @@ export class ContractComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours() - 16);
-    return start_date.toISOString().slice(0, 10);
-  }
-
-  calculateEndDate(startDate: string, term: number): string {
-    const start = new Date(startDate);
-    const end = new Date(start.getFullYear(), start.getMonth() + term, start.getDate());
-    return end.toISOString().slice(0, 10);
+    const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString().slice(0, 10);
+    return formattedDate;
   }
 
   //偵測status變量
