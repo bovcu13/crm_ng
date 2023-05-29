@@ -561,9 +561,9 @@ export class HttpApiService {
   }
 
   //取得一筆 商品報價 getone
-  getOneQuoteProductRequest(id: any): Observable<Quote> {
+  getOneQuoteProductRequest(id: any): Observable<any> {
     const url = `${this.BaseUrl}/quotes-products/${id}`;
-    return this.http.get<Quote>(url);
+    return this.http.get<any>(url);
   }
 
   //新增 商品報價 post

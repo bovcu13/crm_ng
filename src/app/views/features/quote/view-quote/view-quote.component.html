@@ -41,7 +41,7 @@
     <div class="mb-3">
       <p-card>
         <div class="flex justify-content-center w-full">
-        <button class="flex justify-content-center" [ngClass]="{
+          <button class="flex justify-content-center" [ngClass]="{
                 'surface-400': stage === '草稿',
                 'bg-red-300': stage === '需要審查',
                 'bg-blue-300': stage === '審查中',
@@ -49,11 +49,11 @@
                 'bg-yellow-300': stage === '已呈現',
                 'bg-green-300': stage === '已接受'
             }">
-          <span class="span" *ngIf="stage==='草稿'">草稿</span>
-          <i class="pi pi-check"
-             *ngIf="stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
-       </button>
-        <button class="flex justify-content-center" [ngClass]="{
+            <span class="span" *ngIf="stage==='草稿'">草稿</span>
+            <i class="pi pi-check"
+               *ngIf="stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
+          </button>
+          <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿',
                 'bg-red-300': stage === '需要審查',
                 'bg-blue-300': stage === '審查中',
@@ -61,20 +61,20 @@
                 'bg-yellow-300': stage === '已呈現',
                 'bg-green-300': stage === '已接受'
             }">
-          <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'">需要審查</span>
-          <i class="pi pi-check" *ngIf="stage==='審查中'||stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
-        </button>
-        <button class="flex justify-content-center" [ngClass]="{
+            <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'">需要審查</span>
+            <i class="pi pi-check" *ngIf="stage==='審查中'||stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
+          </button>
+          <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿'||stage === '需要審查',
                 'bg-blue-300': stage === '審查中',
                 'bg-orange-300': stage === '已批准',
                 'bg-yellow-300': stage === '已呈現',
                 'bg-green-300': stage === '已接受'
             }">
-          <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'">審查中</span>
-          <i class="pi pi-check" *ngIf="stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
-        </button>
-        <button class="flex justify-content-center" [ngClass]="{
+            <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'">審查中</span>
+            <i class="pi pi-check" *ngIf="stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
+          </button>
+          <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿'||stage === '需要審查'||stage === '審查中',
                 'bg-orange-300': stage === '已批准',
                 'bg-yellow-300': stage === '已呈現',
@@ -82,25 +82,25 @@
             }">
           <span class="span"
                 *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'">已批准</span>
-          <i class="pi pi-check" *ngIf="stage==='已呈現'||stage==='已接受'"></i>
-        </button>
-        <button class="flex justify-content-center" [ngClass]="{
+            <i class="pi pi-check" *ngIf="stage==='已呈現'||stage==='已接受'"></i>
+          </button>
+          <button class="flex justify-content-center" [ngClass]="{
                 'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
                 'bg-yellow-300': stage === '已呈現',
                 'bg-green-300': stage === '已接受'
             }">
           <span class="span"
                 *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已呈現'">已呈現</span>
-          <i class="pi pi-check" *ngIf="stage==='已接受'"></i>
+            <i class="pi pi-check" *ngIf="stage==='已接受'"></i>
 
-        </button>
+          </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
                 'bg-green-300': stage === '已接受'
             }">
-          <span class="span">已接受</span>
-        </button>
-      </div>
+            <span class="span">已接受</span>
+          </button>
+        </div>
       </p-card>
     </div>
     <div>
@@ -108,7 +108,8 @@
         <form [formGroup]="quote_form">
           <p-tabView>
             <p-tabPanel header="相關">
-              <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllQuoteProduct" [lazy]="true" [loading]="QuoteProductloading">
+              <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllQuoteProduct" [lazy]="true"
+                       [loading]="QuoteProductloading">
                 <ng-template pTemplate="caption">
                   <div class="flex justify-content-between">
                     <div class="justify-content-start mt-2">
@@ -144,10 +145,11 @@
                     <td>{{ product.total }}</td>
                     <td>
                       <div class="flex justify-content-end">
-                      <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
-                                styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                      <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
-                                pTooltip="刪除" tooltipPosition="top" (click)="deleteQuoteProductRequest(product.quote_product_id)"></p-button>
+                        <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top" (click)="editOneProduct(product)"
+                                  styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                        <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
+                                  pTooltip="刪除" tooltipPosition="top"
+                                  (click)="deleteQuoteProductRequest(product.quote_product_id)"></p-button>
                       </div>
                     </td>
                   </tr>
@@ -286,51 +288,51 @@
 </div>
 
 <!-- 新增產品dialog -->
-  <p-dialog [(visible)]="add" header=新增商品 [modal]="true">
-    <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllProduct" [(selection)]="selectedProducts"
-             [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTable($event)"
-             [(first)]="first" [loading]="loading">
-      <ng-template pTemplate="header">
-        <tr>
-          <th style="width: 4rem">
-            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-          </th>
-          <th pSortableColumn="name">名稱
-            <p-sortIcon field="name"></p-sortIcon>
-          </th>
-          <th pSortableColumn="code">識別碼
-            <p-sortIcon field="code"></p-sortIcon>
-          </th>
-          <th pSortableColumn="price">價格
-            <p-sortIcon field="price"></p-sortIcon>
-          </th>
-          <th pSortableColumn="description">描述
-            <p-sortIcon field="description"></p-sortIcon>
-          </th>
-          <!-- <th>系列</th> -->
-          <th></th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-product>
-        <tr>
-          <td>
-            <p-tableCheckbox [value]="product" ></p-tableCheckbox>
-          </td>
-          <td>{{product.name}}</td>
-          <td>{{product.code}}</td>
-          <td>{{product.price}}</td>
-          <td>{{product.description}}</td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="summary">
-        <div class="flex justify-content-end">
-          <p *ngIf="showErrorMessage" class="required-star">選擇的項目必須至少1種</p>
-          <p-button label="取消" (click)="add=false" styleClass="p-button-secondary ml-3"></p-button>
-          <p-button label="儲存" (click)="editProduct()" styleClass="p-button-info ml-1"></p-button>
-        </div>
-      </ng-template>
-    </p-table>
-  </p-dialog>
+<p-dialog [(visible)]="add" header=新增商品 [modal]="true">
+  <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllProduct" [(selection)]="selectedProducts"
+           [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTable($event)"
+           [(first)]="first" [loading]="loading">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="name">名稱
+          <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="code">識別碼
+          <p-sortIcon field="code"></p-sortIcon>
+        </th>
+        <th pSortableColumn="price">價格
+          <p-sortIcon field="price"></p-sortIcon>
+        </th>
+        <th pSortableColumn="description">描述
+          <p-sortIcon field="description"></p-sortIcon>
+        </th>
+        <!-- <th>系列</th> -->
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="product"></p-tableCheckbox>
+        </td>
+        <td>{{product.name}}</td>
+        <td>{{product.code}}</td>
+        <td>{{product.price}}</td>
+        <td>{{product.description}}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="flex justify-content-end">
+        <p *ngIf="showErrorMessage" class="required-star">選擇的項目必須至少1種</p>
+        <p-button label="取消"  (click)="showAlertCancel()" styleClass="p-button-secondary ml-3"></p-button>
+        <p-button label="儲存" (click)="editSelectedProduct()" styleClass="p-button-info ml-1"></p-button>
+      </div>
+    </ng-template>
+  </p-table>
+</p-dialog>
 
 
 <!-- 編輯所有報價產品dialog -->
@@ -363,13 +365,15 @@
             </p-inputNumber>
           </td>
           <td>
-            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount_' + product.product_id"
+            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%"
+                           [formControlName]="'discount_' + product.product_id"
                            [ngClass]="{'ng-dirty': quote_product_form.controls['discount_' +  product.product_id]?.hasError('required') && quote_product_form.controls['discount_' +  product.product_id]?.touched}">
             </p-inputNumber>
           </td>
           <td>
             <div class="flex justify-content-end">
-              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
+              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
+                        pTooltip="刪除"
                         tooltipPosition="top"></p-button>
             </div>
           </td>
@@ -377,7 +381,7 @@
       </ng-template>
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
-          <p-button label="取消" (click)="editselectedProducts=false" styleClass="p-button-secondary"></p-button>
+          <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary"></p-button>
           <p-button label="儲存" (click)="postQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
         </div>
       </ng-template>
@@ -387,7 +391,7 @@
 
 <!-- 編輯table所有報價產品dialog -->
 <form [formGroup]="quote_product_form">
-  <p-dialog  *ngIf="editGetAllQuoteProduct" [(visible)]="editGetAllQuoteProduct" header=編輯所有報價商品 [modal]="true">
+  <p-dialog *ngIf="editGetAllQuoteProduct" [(visible)]="editGetAllQuoteProduct" header=編輯所有報價商品 [modal]="true">
     <p-table [value]="GetAllQuoteProduct">
       <ng-template pTemplate="header">
         <tr>
@@ -415,13 +419,15 @@
             </p-inputNumber>
           </td>
           <td>
-            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount_' + product.quote_product_id"
+            <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%"
+                           [formControlName]="'discount_' + product.quote_product_id"
                            [ngClass]="{'ng-dirty': quote_product_form.controls['discount_' +  product.quote_product_id]?.hasError('required') && quote_product_form.controls['discount_' +  product.quote_product_id]?.touched}">
             </p-inputNumber>
           </td>
           <td>
             <div class="flex justify-content-end">
-              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
+              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
+                        pTooltip="刪除"
                         tooltipPosition="top" (click)="deleteQuoteProductRequest(product.quote_product_id)"></p-button>
             </div>
           </td>
@@ -429,10 +435,112 @@
       </ng-template>
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
-          <p-button label="取消" (click)="editGetAllQuoteProduct=false" styleClass="p-button-secondary"></p-button>
+          <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary"></p-button>
           <p-button label="儲存" (click)="patchQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
         </div>
       </ng-template>
     </p-table>
+  </p-dialog>
+</form>
+
+
+<form [formGroup]="quote_product_form">
+  <p-dialog [(visible)]="editOneQuoteProduct" header=編輯報價商品 [modal]="true">
+    <div class="grid">
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>編號</label>
+          <br>
+          <label class="mt-2 ml-2 disable">{{(quote_product_form.controls['code'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>名稱</label>
+          <br>
+          <label class="mt-2 ml-2 disable">{{(quote_product_form.controls['product_name'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>商品價格</label>
+          <br>
+          <label class="mt-2 ml-2 disable">{{(quote_product_form.controls['standard_price'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>銷售價格</label>
+          <br>
+          <p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw" class="w-full"
+                         [min]="0" [formControlName]="'unit_price'"
+                         [ngClass]="{'ng-dirty':quote_product_form.controls['unit_price'].hasError('required') && quote_product_form.controls['unit_price'].touched}">
+          </p-inputNumber>
+
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>數量</label>
+          <br>
+          <p-inputNumber inputId="integeronly" class="w-full" [min]="1" [formControlName]="'quantity'"
+                         [ngClass]="{'ng-dirty':quote_product_form.controls['quantity'].hasError('required') && quote_product_form.controls['quantity'].touched}">
+          </p-inputNumber>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>小計</label>
+          <br>
+          <label class="mt-2 ml-2 disable">{{(quote_product_form.controls['sub_total'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>折扣</label>
+          <br>
+          <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%"
+                         [formControlName]="'discount'"  class="w-full"
+                         [ngClass]="{'ng-dirty': quote_product_form.controls['discount'].hasError('required') && quote_product_form.controls['discount'].touched}">
+          </p-inputNumber>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>總價</label>
+          <br>
+          <label class="mt-2 ml-2 disable">{{(quote_product_form.controls['total'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-12 md:col-12 lg:col-12">
+        <div class="field">
+          <label>描述</label>
+          <br>
+          <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <label>建立者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label class="disable">{{(quote_product_form.controls['created_by'].value)}}</label>
+          <label class="ml-2 disable">{{(quote_product_form.controls['created_at'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <label>上次修改者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label class="disable">{{(quote_product_form.controls['updated_by'].value)}}</label>
+          <label class="ml-2 disable">{{(quote_product_form.controls['updated_at'].value)}}</label>
+        </div>
+      </div>
+    </div>
+    <ng-template pTemplate="summary">
+      <div class="flex justify-content-end">
+        <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary"></p-button>
+        <p-button label="儲存" (click)="patchOneQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
+      </div>
+    </ng-template>
   </p-dialog>
 </form>
