@@ -49,10 +49,9 @@
             <th pSortableColumn="start_date">開始日期
               <p-sortIcon field="start_date"></p-sortIcon>
             </th>
-            <!--            <th pSortableColumn="end_date">到期日期-->
-            <!--              <p-sortIcon field="end_date"></p-sortIcon>-->
-            <!--            </th>-->
-            <th>到期日期</th>
+             <th pSortableColumn="end_date">到期日期
+            <p-sortIcon field="end_date"></p-sortIcon>
+            </th>
             <th pSortableColumn="term">有效期限(月)
               <p-sortIcon field="term"></p-sortIcon>
             </th>
@@ -74,7 +73,7 @@
             <td>{{ contract.code }}</td>
             <td>{{ contract.account_name }}</td>
             <td>{{ contract.start_date }}</td>
-            <td>{{ calculateEndDate(contract.start_date, contract.term) }}</td>
+            <td>{{ contract.end_date}}</td>
             <td>{{ contract.term }}</td>
             <td>
               <div class="flex justify-content-end">
