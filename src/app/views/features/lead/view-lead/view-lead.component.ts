@@ -319,8 +319,6 @@ export class ViewLeadComponent implements OnInit {
       status: this.selectedStatus?.name,
       source: this.selectedSource?.name,
       rating: this.selectedRating?.name,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
     this.HttpApi.patchLeadRequest(this.id, body)
       .subscribe(request => {
@@ -350,8 +348,6 @@ export class ViewLeadComponent implements OnInit {
   postOpportunity(): void {
     let data = {
       status: this.status[4].name,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
     this.HttpApi.patchLeadRequest(this.id, data)
       .subscribe(request => {
@@ -420,8 +416,6 @@ export class ViewLeadComponent implements OnInit {
       account_id: this.GetAllAccount.find((a: { value: any; }) => a.value === this.getData.account_id).value,
       close_date: new Date(this.opportunity_form.value.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      created_at: this.currentDate
     }
     console.log(body)
 
