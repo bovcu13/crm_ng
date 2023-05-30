@@ -190,6 +190,8 @@ export class OrderComponent {
       contract_id: ['', [Validators.required]],
       contract_code: ['', [Validators.required]],
       amount: [''],
+      activated_by: [''],
+      activated_at: [''],
       description: [''],
       created_at: [''],
       updated_at: [''],
