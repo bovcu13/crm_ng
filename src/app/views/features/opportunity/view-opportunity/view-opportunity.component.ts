@@ -73,10 +73,10 @@ export class ViewOpportunityComponent implements OnInit {
       forecast_category: ['', [Validators.required]],
       amount: [''],
       owner: [''],
-      created_by: [''],
       created_at: [''],
-      updated_by: [''],
       updated_at: [''],
+      created_by: ['', Validators.required],
+      updated_by: ['', Validators.required],
     });
   }
 
@@ -186,8 +186,6 @@ export class ViewOpportunityComponent implements OnInit {
       account_name: this.selectedAccountName,
       close_date: new Date(this.opportunity_form.value?.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
     this.HttpApi.patchOpportunityRequest(id, body)
       .subscribe(request => {

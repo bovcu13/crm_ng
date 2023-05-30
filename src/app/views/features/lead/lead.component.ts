@@ -352,8 +352,6 @@ export class LeadComponent implements OnInit {
       account_name: this.selectedAccountName,
       rating: this.selectedRating?.name,
       // rating: "Hot",
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      created_at: this.currentDate
     }
     this.HttpApi.postLeadRequest(body).subscribe(request => {
       console.log(request)
@@ -419,8 +417,6 @@ export class LeadComponent implements OnInit {
       // account_name: this.selectedAccountName,
       rating: this.selectedRating?.name,
       // rating: "Hot",
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
 
     this.HttpApi.patchLeadRequest(id, body)
@@ -508,7 +504,6 @@ export class LeadComponent implements OnInit {
       industry_id: '00000000-0000-4000-a000-000000000000',
       type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
       parent_account_id: '00000000-0000-4000-a000-000000000000',
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61"
     };
     return this.HttpApi.postAccountRequest(body).pipe(
       tap(request => {
