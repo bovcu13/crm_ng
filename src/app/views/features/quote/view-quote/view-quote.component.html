@@ -395,6 +395,9 @@
     <p-table [value]="GetAllQuoteProduct">
       <ng-template pTemplate="header">
         <tr>
+<!--          <th style="width: 4rem">-->
+<!--            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
+<!--          </th>-->
           <th>名稱</th>
           <th>商品價格</th>
           <th><span class="required-star">*</span>報價價格</th>
@@ -405,6 +408,9 @@
       </ng-template>
       <ng-template pTemplate="body" let-product>
         <tr>
+<!--          <td>-->
+<!--            <p-tableCheckbox [value]="product"></p-tableCheckbox>-->
+<!--          </td>-->
           <td>{{ product.product_name }}</td>
           <td>{{ product.standard_price }}</td>
           <td>
@@ -435,7 +441,9 @@
       </ng-template>
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
-          <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary"></p-button>
+<!--          <p *ngIf="showErrorMessage" class="required-star">選擇的項目必須至少1種</p>-->
+<!--          <p-button label="刪除" (click)="deleteSelectQuoteProductRequest()" styleClass="p-button-danger"></p-button>-->
+          <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-1"></p-button>
           <p-button label="儲存" (click)="patchQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
         </div>
       </ng-template>
