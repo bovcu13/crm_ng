@@ -229,7 +229,9 @@ export class HttpApiService {
     let obj: any = {
       field: status,
       filter: {
-        name: search ? search : null
+        name: search ? search : null,
+        account_name: search ? search : null,
+        salesperson_name: search ? search : null,
       },
     };
     if (event) {
@@ -249,6 +251,8 @@ export class HttpApiService {
         field: status,
         filter: {
           name: keyword,
+          account_name: keyword,
+          salesperson_name: keyword,
         },
       };
     }
