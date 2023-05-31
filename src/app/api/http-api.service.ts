@@ -32,6 +32,7 @@ export class HttpApiService {
         name: search ? search : null,
         phone_number: search ? search : null,
         type: search ? search : null,
+        salesperson_name: search ? search : null,
       },
     };
     if (event) {
@@ -53,6 +54,7 @@ export class HttpApiService {
           name: keyword,
           phone_number: keyword,
           type: keyword,
+          salesperson_name: keyword,
         },
       };
     }
@@ -98,6 +100,8 @@ export class HttpApiService {
         cell_phone: search ? search : null,
         email: search ? search : null,
         name: search ? search : null,
+        salesperson_name: search ? search : null,
+        account_name: search ? search : null,
       },
     };
     if (event) {
@@ -119,6 +123,8 @@ export class HttpApiService {
           cell_phone: keyword,
           email: keyword,
           name: keyword,
+          salesperson_name: keyword,
+          account_name: keyword,
         },
       };
     }
@@ -158,8 +164,10 @@ export class HttpApiService {
       field: status,
       filter: {
         description: search ? search : null,
+        account_name: search ? search : null,
         rating: search ? search : null,
         source: search ? search : null,
+        salesperson_name: search ? search : null,
       },
     };
     if (event) {
@@ -179,8 +187,10 @@ export class HttpApiService {
         field: status,
         filter: {
           description: keyword,
+          account_name: keyword,
           rating: keyword,
           source: keyword,
+          salesperson_name: keyword,
         },
       };
     }
@@ -219,7 +229,9 @@ export class HttpApiService {
     let obj: any = {
       field: status,
       filter: {
-        name: search ? search : null
+        name: search ? search : null,
+        account_name: search ? search : null,
+        salesperson_name: search ? search : null,
       },
     };
     if (event) {
@@ -239,6 +251,8 @@ export class HttpApiService {
         field: status,
         filter: {
           name: keyword,
+          account_name: keyword,
+          salesperson_name: keyword,
         },
       };
     }
