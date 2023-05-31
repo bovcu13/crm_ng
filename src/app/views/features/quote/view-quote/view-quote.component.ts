@@ -98,7 +98,7 @@ export class ViewQuoteComponent {
       unit_price: [0, [Validators.required]],
       quantity: ['', [Validators.required]],
       discount: [0, [Validators.required]],
-      total: [''],
+      total_price: [''],
       description: [''],
       created_at: [''],
       updated_at: [''],
@@ -478,6 +478,68 @@ export class ViewQuoteComponent {
       }
     });
   }
+  // DeleteSelectedProducts: any[] = []//儲存被選的商品
+  // deleteSelectQuoteProductRequest(): void {
+  //   this.editGetAllQuoteProduct = false;
+  //   if (this.DeleteSelectedProducts.length === 0) {
+  //     this.editGetAllQuoteProduct = false;
+  //     this.showErrorMessage = true;
+  //     return;
+  //   }
+  //
+  //   Swal.fire({
+  //     title: '確認刪除？',
+  //     icon: 'warning',
+  //     confirmButtonColor: '#6EBE71',
+  //     cancelButtonColor: '#FF3034',
+  //     showCancelButton: true,
+  //     confirmButtonText: '確認',
+  //     cancelButtonText: '取消',
+  //     reverseButtons: true,
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       const deleteQuoteProducts = this.DeleteSelectedProducts.map(product => ({ quote_product_id: product.quote_product_id }));
+  //       console.log(deleteQuoteProducts);
+  //       this.HttpApi.deleteQuoteProductRequest({ products: deleteQuoteProducts }).subscribe(
+  //         Request => {
+  //           console.log(Request);
+  //           if (Request.code === 200) {
+  //             Swal.fire({
+  //               title: '成功',
+  //               text: "已刪除您的資料 :)",
+  //               icon: 'success',
+  //               showConfirmButton: false,
+  //               timer: 1000
+  //             });
+  //             this.getQuoteProductRequest();
+  //             //this.getAllQuoteProductsRequest();
+  //           } else {
+  //             Swal.fire({
+  //               title: '失敗',
+  //               text: "請確認資料是否正確 :(",
+  //               icon: 'error',
+  //               showConfirmButton: false,
+  //               timer: 1500
+  //             });
+  //           }
+  //         },
+  //         error => {
+  //           console.log(error);
+  //         }
+  //       );
+  //     } else {
+  //       Swal.fire({
+  //         title: '取消',
+  //         text: "已取消您的變更！",
+  //         icon: 'error',
+  //         showCancelButton: false,
+  //         showConfirmButton: false,
+  //         reverseButtons: false,
+  //         timer: 1000
+  //       });
+  //     }
+  //   });
+  // }
 
   GetAllQuoteProduct: any[] = [];
   QuoteProductloading: boolean = false;
