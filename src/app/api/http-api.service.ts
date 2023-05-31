@@ -32,6 +32,7 @@ export class HttpApiService {
         name: search ? search : null,
         phone_number: search ? search : null,
         type: search ? search : null,
+        salesperson_name: search ? search : null,
       },
     };
     if (event) {
@@ -53,6 +54,7 @@ export class HttpApiService {
           name: keyword,
           phone_number: keyword,
           type: keyword,
+          salesperson_name: keyword,
         },
       };
     }
