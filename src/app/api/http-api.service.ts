@@ -164,8 +164,10 @@ export class HttpApiService {
       field: status,
       filter: {
         description: search ? search : null,
+        account_name: search ? search : null,
         rating: search ? search : null,
         source: search ? search : null,
+        salesperson_name: search ? search : null,
       },
     };
     if (event) {
@@ -185,8 +187,10 @@ export class HttpApiService {
         field: status,
         filter: {
           description: keyword,
+          account_name: keyword,
           rating: keyword,
           source: keyword,
+          salesperson_name: keyword,
         },
       };
     }
