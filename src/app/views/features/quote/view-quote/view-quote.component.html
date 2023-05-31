@@ -131,7 +131,7 @@
                     <th>報價價格</th>
                     <th>數量</th>
                     <th>小計</th>
-                    <th>總計</th>
+                    <th>總價</th>
                     <th></th>
                   </tr>
                 </ng-template>
@@ -142,7 +142,7 @@
                     <td>{{ product.unit_price }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.sub_total }}</td>
-                    <td>{{ product.total }}</td>
+                    <td>{{ product.total_price }}</td>
                     <td>
                       <div class="flex justify-content-end">
                         <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top" (click)="editOneProduct(product)"
@@ -517,7 +517,7 @@
         <div class="field">
           <label>總價</label>
           <br>
-          <label class="mt-2 ml-2 disable">{{(quote_product_form.controls['total'].value)}}</label>
+          <label class="mt-2 ml-2 disable">{{(quote_product_form.controls['total_price'].value)}}</label>
         </div>
       </div>
       <div class="col-12 md:col-12 lg:col-12">

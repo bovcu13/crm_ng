@@ -98,7 +98,7 @@ export class ViewQuoteComponent {
       unit_price: [0, [Validators.required]],
       quantity: ['', [Validators.required]],
       discount: [0, [Validators.required]],
-      total: [''],
+      total_price: [''],
       description: [''],
       created_at: [''],
       updated_at: [''],
