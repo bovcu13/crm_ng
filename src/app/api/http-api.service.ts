@@ -100,6 +100,8 @@ export class HttpApiService {
         cell_phone: search ? search : null,
         email: search ? search : null,
         name: search ? search : null,
+        salesperson_name: search ? search : null,
+        account_name: search ? search : null,
       },
     };
     if (event) {
@@ -121,6 +123,8 @@ export class HttpApiService {
           cell_phone: keyword,
           email: keyword,
           name: keyword,
+          salesperson_name: keyword,
+          account_name: keyword,
         },
       };
     }
