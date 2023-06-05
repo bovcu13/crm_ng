@@ -145,7 +145,7 @@ export class OrderComponent {
       description: this.order_form.value.description,
       start_date: this.order_form.value.start_date,
       contract_id: this.selectedContract_id, //契約ID
-      account_id: this.selectedAccount_id //帳戶ID
+      //account_id: this.selectedAccount_id //帳戶ID
     }
     this.HttpApi.postOrderRequest(body).subscribe(Request => {
         console.log(Request)
@@ -273,7 +273,7 @@ export class OrderComponent {
     let body = {
       status: this.order_form.get('status')?.value,
       start_date: this.order_form.get('start_date')?.value,
-      account_id: this.selectedAccount_id, //帳戶ID
+      //account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
       contract_id: this.selectedContract_id, //契約ID
     }
@@ -401,29 +401,14 @@ export class OrderComponent {
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
-  selectedAccount_id: string = '';   //取得選擇的契約帳戶id
+  //selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
     // const today: Date = new Date(); // 創建一個Date物件
     // let todayDate: string = today.toISOString().substr(0, 10);
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
-    this.selectedAccount_id = selectedContract?.account_id;
-    // if (this.order_form.controls['start_date'].value == null) {
-    //   this.orderStartDate = todayDate
-    //   this.order_form.patchValue({start_date: null});
-    //   // this.orderStartDate = todayDate
-    //   // this.order_form.patchValue({start_date: todayDate});
-    // } else {
-    //   this.orderStartDate = this.order_form.controls['start_date'].value;
-    // }
-    // this.orderStartDate = this.order_form.controls['start_date'].value;
-    // if (this.orderStartDate < this.MinDate) {
-    //   this.order_form.controls['start_date'].setErrors({'required-star':true});
-    //   return
-    // } else {
-    //   this.order_form.controls['start_date'].value;
-    // }
+    //this.selectedAccount_id = selectedContract?.account_id;
   }
 
   //日期轉換

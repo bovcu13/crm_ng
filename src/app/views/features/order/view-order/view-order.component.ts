@@ -166,7 +166,7 @@ export class ViewOrderComponent {
           return {
             label: contract.code,
             value: contract.contract_id,
-            account_id: contract.account_id,
+            // account_id: contract.account_id,
             date: contract.start_date,
           };
         });
@@ -212,7 +212,7 @@ export class ViewOrderComponent {
     let body = {
       status: this.order_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      account_id: this.selectedAccount_id, //帳戶ID
+      // account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
       contract_id: this.selectedContract_id, //契約ID
     }
@@ -244,12 +244,12 @@ export class ViewOrderComponent {
   MinDate!: any;//契約日期
   orderStartDate: any;
   selectedContract_id: any;
-  selectedAccount_id: string = '';   //取得選擇的契約帳戶id
+  // selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.order_form.get('contract_id')?.value);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
-    this.selectedAccount_id = selectedContract?.account_id;
+    // this.selectedAccount_id = selectedContract?.account_id;
   }
 
   //偵測status變量
