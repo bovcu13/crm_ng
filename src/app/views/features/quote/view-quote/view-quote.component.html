@@ -30,7 +30,7 @@
             </div>
             <div class="col-12 flex justify-content-center">
               <label>總計: </label>
-              <label>NT$ 11,210</label>
+              <label>{{quote_form.controls['grand_total'].value}}</label>
             </div>
           </div>
         </form>
@@ -214,7 +214,7 @@
                   <div class="field">
                     <label>小計</label>
                     <br>
-                    <label class="mt-2 ml-2">{{quote_form.controls['subtotal'].value}}</label>
+                    <label class="mt-2 ml-2">{{quote_form.controls['sub_total'].value}}</label>
                     <!--<p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
                   </div>
                 </div>
@@ -237,8 +237,8 @@
                   <div class="field">
                     <label>運輸處理</label>
                     <br>
-                    <p-inputNumber class="w-full" formControlName="shipping_and_handling" suffix="%"
-                                   [minFractionDigits]="2" [min]="0" [max]="100"></p-inputNumber>
+                    <p-inputNumber class="w-full" formControlName="shipping_and_handling" mode="currency" currency="TWD" locale="en-US"
+                                   [minFractionDigits]="2" [min]="0"></p-inputNumber>
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
@@ -246,7 +246,7 @@
                     <label>總計</label>
                     <br>
                     <!-- <input type="number" class="form-control" formControlName="total_price" [value]="getNumber(quote_form.controls['total_price'].value)" /> -->
-                    <label class="mt-2 ml-2">{{quote_form.controls['total_price'].value}}</label>
+                    <label class="mt-2 ml-2">{{quote_form.controls['grand_total'].value}}</label>
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
