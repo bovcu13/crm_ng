@@ -4,14 +4,18 @@
       <h2>帳戶</h2>
       <div class="flex justify-content-end mr-2">
         <span class="p-buttonset">
-          <p-button (click)="menu.toggle($event)" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"
+<!--          <p-button (click)="menu.toggle($event)" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"-->
+          <!--                    styleClass="p-button-text"></p-button>-->
+          <p-button (click)="showDialog('add')" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"
                     styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-menu #menu [model]="account_type" [popup]="true"></p-menu>
+      <!--選擇帳戶類別menu-->
+      <!--      <p-menu #menu [model]="account_type" [popup]="true"></p-menu>-->
       <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
                (onLazyLoad)="loadTable($event)" [globalFilterFields]="['name']" [loading]="loading"
-               [rowsPerPageOptions]="[10, 20]" currentPageReportTemplate="共 {totalRecords} 筆" [showCurrentPageReport]="true">
+               [rowsPerPageOptions]="[10, 20]" currentPageReportTemplate="共 {totalRecords} 筆"
+               [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -78,8 +82,10 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>帳戶類別</label>
-          <br>
-          <label>{{(account_form.controls['type'].value)}}</label>
+          <!--          <br>-->
+          <!--          <label>{{(account_form.controls['type'].value)}}</label>-->
+          <p-multiSelect [options]="type" formControlName="type" optionLabel="name"
+                         display="chip"></p-multiSelect>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -91,7 +97,7 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>行業</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry_id" optionLabel="name"
+          <p-dropdown placeholder="　" [disabled]="true" [options]="industry_id" optionLabel="name"
                       (onChange)="industryValue($event)"
                       formControlName="industry_id" appendTo="body"></p-dropdown>
         </div>
@@ -99,7 +105,7 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系帳戶</label>
-          <p-dropdown placeholder="請選擇" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
+          <p-dropdown placeholder="　" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">

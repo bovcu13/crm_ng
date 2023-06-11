@@ -116,6 +116,25 @@ export class LeadComponent implements OnInit {
       "code": "telecommunications"
     }
   ]
+
+  type: any[] = [
+    {
+      "name": "個人客戶",
+      // "code": "personal_customer"
+    },
+    {
+      "name": "法人客戶",
+      // "code": "business_customer"
+    },
+    {
+      "name": "夥伴",
+      // "code": "partner"
+    },
+    {
+      "name": "競爭對手",
+      // "code": "competitor"
+    }
+  ];
   leadValue: any;
   //表格最後下拉控制選項
   items: MenuItem[] = [{
@@ -133,44 +152,44 @@ export class LeadComponent implements OnInit {
       icon: "pi pi-trash",
       label: '刪除',
     }];
-  account_type: MenuItem[] = [
-    {
-      label: "個人客戶",
-      icon: "pi pi-user",
-      command: () => {
-        this.addAccDialog();
-        this.account_form.controls['type'].setValue('個人客戶');
-        console.log(this.account_form.controls['type'].value)
-      }
-    },
-    {
-      label: "法人客戶",
-      icon: "pi pi-building",
-      command: () => {
-        this.addAccDialog();
-        this.account_form.controls['type'].setValue('法人客戶');
-        console.log(this.account_form.controls['type'].value)
-      }
-    },
-    {
-      label: "夥伴",
-      icon: "pi pi-users",
-      command: () => {
-        this.addAccDialog();
-        this.account_form.controls['type'].setValue('夥伴');
-        console.log(this.account_form.controls['type'].value)
-      },
-    },
-    {
-      label: "競爭者",
-      icon: "pi pi-chart-line",
-      command: () => {
-        this.addAccDialog();
-        this.account_form.controls['type'].setValue('競爭者');
-        console.log(this.account_form.controls['type'].value)
-      },
-    },
-  ]
+  // account_type: MenuItem[] = [
+  //   {
+  //     label: "個人客戶",
+  //     icon: "pi pi-user",
+  //     command: () => {
+  //       this.addAccDialog();
+  //       this.account_form.controls['type'].setValue('個人客戶');
+  //       console.log(this.account_form.controls['type'].value)
+  //     }
+  //   },
+  //   {
+  //     label: "法人客戶",
+  //     icon: "pi pi-building",
+  //     command: () => {
+  //       this.addAccDialog();
+  //       this.account_form.controls['type'].setValue('法人客戶');
+  //       console.log(this.account_form.controls['type'].value)
+  //     }
+  //   },
+  //   {
+  //     label: "夥伴",
+  //     icon: "pi pi-users",
+  //     command: () => {
+  //       this.addAccDialog();
+  //       this.account_form.controls['type'].setValue('夥伴');
+  //       console.log(this.account_form.controls['type'].value)
+  //     },
+  //   },
+  //   {
+  //     label: "競爭者",
+  //     icon: "pi pi-chart-line",
+  //     command: () => {
+  //       this.addAccDialog();
+  //       this.account_form.controls['type'].setValue('競爭者');
+  //       console.log(this.account_form.controls['type'].value)
+  //     },
+  //   },
+  // ]
   lead_form!: FormGroup;
   account_form!: FormGroup;
   edit: boolean = false;
@@ -246,6 +265,7 @@ export class LeadComponent implements OnInit {
 
   // 搜尋關鍵字
   search: string = '';
+
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
@@ -253,6 +273,7 @@ export class LeadComponent implements OnInit {
 
   total!: number;
   loading: boolean = false;
+
   // 懶加載
   loadTable(e: any) {
     this.loading = true;
@@ -267,8 +288,8 @@ export class LeadComponent implements OnInit {
       });
   }
 
-  showDialog(type:string, lead ?: any
-  ):void {
+  showDialog(type: string, lead ?: any
+  ): void {
     // 將"業務員"設定為不可修改
     // this.lead_form.controls['owner'].disable();
     this.edit = true;
@@ -307,7 +328,7 @@ export class LeadComponent implements OnInit {
     }
   }
 
-  getAllLead():void{
+  getAllLead(): void {
     this.HttpApi.getAllLeadRequest(this.search, 1).subscribe(
       request => {
         this.getData = request.body.leads;
@@ -317,7 +338,7 @@ export class LeadComponent implements OnInit {
 // 現在時間
   currentDate = new Date()
 
-  postLead():void {
+  postLead(): void {
     if (this.lead_form.controls['account_name'].hasError('required') ||
       this.lead_form.controls['status'].hasError('required') ||
       this.lead_form.controls['description'].hasError('required')
@@ -380,7 +401,7 @@ export class LeadComponent implements OnInit {
   }
 
 
-  patchLead():void {
+  patchLead(): void {
     if (this.lead_form.controls['account_name'].hasError('required') ||
       this.lead_form.controls['status'].hasError('required') ||
       this.lead_form.controls['description'].hasError('required')
@@ -447,8 +468,7 @@ export class LeadComponent implements OnInit {
   }
 
 
-  deleteLead(id:any
-  ):void {
+  deleteLead(id: any): void {
     Swal.fire({
       title: '確認刪除？',
       icon: 'warning',
@@ -497,12 +517,15 @@ export class LeadComponent implements OnInit {
 
 
 // 新增帳戶
-  postAccount():Observable<any> {
+  postAccount(): Observable<any> {
     const body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
       industry_id: '00000000-0000-4000-a000-000000000000',
-      type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
+      // 將 type 物件轉換為 string
+      // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
+      // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
+      type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: { name: any; }) => item.name),
       parent_account_id: '00000000-0000-4000-a000-000000000000',
     };
     return this.HttpApi.postAccountRequest(body).pipe(
@@ -566,7 +589,7 @@ export class LeadComponent implements OnInit {
     })
   }
 
-  addAccDialog():void {
+  addAccDialog(): void {
     this.addAcount = true;
     this.edit = false;
     this.account_form.reset();
@@ -604,18 +627,18 @@ export class LeadComponent implements OnInit {
 
   selectedStatus: any;
 
-  statusValue(event:any
-  ):void {
+  statusValue(event: any
+  ): void {
     this.selectedStatus = this.status.find((s: { name: any; }) => s.name === event.value.name);
     // console.log("code: " + event.value.code);
     console.log(event.value.name);
     this.lead_form.value.status = this.selectedStatus.name
   }
 
-  selectedAccountName!:string;
-  selectedAccountId!:string;
+  selectedAccountName!: string;
+  selectedAccountId!: string;
 
-  accountValue(event:any):void {
+  accountValue(event: any): void {
     this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
     this.selectedAccountId = event.value.value
     // console.log(this.selectedAccountId)
@@ -623,29 +646,30 @@ export class LeadComponent implements OnInit {
 
   selectedSource: any;
 
-  sourceValue(event:any):void {
+  sourceValue(event: any): void {
     this.selectedSource = this.source.find((s: { name: any; }) => s.name === event.value.name);
     this.lead_form.value.source = this.selectedSource.name
   }
 
   selectedRating: any;
 
-  ratingValue(event:any):void {
+  ratingValue(event: any): void {
     this.selectedRating = this.rating.find((s: { name: any; }) => s.name === event.value.name);
     this.lead_form.value.rating = this.selectedRating.name
     // console.log(typeof this.selectedRating.name)
     // console.log(this.selectedRating.name)
   }
 
-  industry_idValue(event:any):void {
+  industry_idValue(event: any): void {
     console.log("code: " + event.value.code);
     console.log("name: " + event.value.name);
   }
 
   selectedIndustry: any;
 
-  industryValue(event:any):void {
+  industryValue(event: any): void {
     this.selectedIndustry = this.industry.find((s: { code: any; }) => s.code === event.value.code);
     this.lead_form.value.industry = this.selectedIndustry.name
   }
+
 }

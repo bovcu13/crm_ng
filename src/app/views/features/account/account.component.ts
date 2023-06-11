@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MenuItem} from 'primeng/api';
 import {HttpApiService} from "../../../api/http-api.service";
 import {Table} from 'primeng/table';
 import {Account} from "../../../shared/models/account";
@@ -27,59 +26,63 @@ export class AccountComponent implements OnInit {
       "code": "telecommunications"
     }
   ]
-  // type: any[] = [
-  //   {
-  //     "name": "客戶",
-  //     "code": "customer"
-  //   },
-  //   {
-  //     "name": "夥伴",
-  //     "code": "partner "
-  //   },
-  //   {
-  //     "name": "競爭對手",
-  //     "code": "competitor"
-  //   }
-  // ];
+  type: any[] = [
+    {
+      "name": "個人客戶",
+      // "code": "personal_customer"
+    },
+    {
+      "name": "法人客戶",
+      // "code": "business_customer"
+    },
+    {
+      "name": "夥伴",
+      // "code": "partner"
+    },
+    {
+      "name": "競爭對手",
+      // "code": "competitor"
+    }
+  ];
 
-  account_type: MenuItem[] = [
-    {
-      label: "個人客戶",
-      icon: "pi pi-user",
-      command: () => {
-        this.showDialog('add');
-        this.account_form.controls['type'].setValue('個人客戶');
-        console.log(this.account_form.controls['type'].value)
-      }
-    },
-    {
-      label: "法人客戶",
-      icon: "pi pi-building",
-      command: () => {
-        this.showDialog('add');
-        this.account_form.controls['type'].setValue('法人客戶');
-        console.log(this.account_form.controls['type'].value)
-      }
-    },
-    {
-      label: "夥伴",
-      icon: "pi pi-users",
-      command: () => {
-        this.showDialog('add');
-        this.account_form.controls['type'].setValue('夥伴');
-        console.log(this.account_form.controls['type'].value)
-      },
-    },
-    {
-      label: "競爭者",
-      icon: "pi pi-chart-line",
-      command: () => {
-        this.showDialog('add');
-        this.account_form.controls['type'].setValue('競爭者');
-        console.log(this.account_form.controls['type'].value)
-      },
-    },
-  ]
+  // account_type: MenuItem[] = [
+  //   {
+  //     label: "個人客戶",
+  //     icon: "pi pi-user",
+  //     command: () => {
+  //       this.showDialog('add');
+  //       this.account_form.controls['type'].setValue('個人客戶');
+  //       console.log(this.account_form.controls['type'].value)
+  //     }
+  //   },
+  //   {
+  //     label: "法人客戶",
+  //     icon: "pi pi-building",
+  //     command: () => {
+  //       this.showDialog('add');
+  //       this.account_form.controls['type'].setValue('法人客戶');
+  //       console.log(this.account_form.controls['type'].value)
+  //     }
+  //   },
+  //   {
+  //     label: "夥伴",
+  //     icon: "pi pi-users",
+  //     command: () => {
+  //       this.showDialog('add');
+  //       this.account_form.controls['type'].setValue('夥伴');
+  //       console.log(this.account_form.controls['type'].value)
+  //     },
+  //   },
+  //   {
+  //     label: "競爭者",
+  //     icon: "pi pi-chart-line",
+  //     command: () => {
+  //       this.showDialog('add');
+  //       this.account_form.controls['type'].setValue('競爭者');
+  //       console.log(this.account_form.controls['type'].value)
+  //     },
+  //   },
+  // ]
   account_form: FormGroup;
 
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
@@ -114,21 +117,23 @@ export class AccountComponent implements OnInit {
       this.dialogHeader = '新增帳戶';
       this.account_form.reset();
     } else if (type === 'edit') {
-      console.log("account: " + JSON.stringify(account));
+      // console.log("account: " + JSON.stringify(account));
       this.dialogHeader = '編輯帳戶';
       this.account_form.patchValue(account);
       //dropdown
       const selectedIndustry = this.industry_id.find((s) => s.name === account.industry_id);
-      // const selectedType = this.type.find((s) => s.name === account.type);
+      const selectedType = this.type.find((s) => s.name === account.type).name;
+      console.log(typeof selectedType)
       this.account_form.patchValue({
         industry_id: selectedIndustry,
-        // type: selectedType,
+        type: selectedType,
       });
     }
   }
 
   // 搜尋關鍵字
   search: string = '';
+
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
@@ -136,6 +141,7 @@ export class AccountComponent implements OnInit {
 
   total!: number;
   loading: boolean = false;
+
   // 懶加載
   loadTable(e: any) {
     this.loading = true;
@@ -146,11 +152,14 @@ export class AccountComponent implements OnInit {
         this.getData = request.body.accounts;
         this.loading = false;
         this.total = request.body.total;
-        console.log(this.total)
+        console.log(this.total);
+      },
+      err => {
+        console.log(err.status)
       });
   }
 
-  getAllAccount():void{
+  getAllAccount(): void {
     this.HttpApi.getAllAccountRequest(this.search, 1).subscribe(
       request => {
         this.getData = request.body.accounts;
@@ -181,22 +190,27 @@ export class AccountComponent implements OnInit {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
       industry_id: '00000000-0000-4000-a000-000000000000',
-      type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
+      // 將 type 物件轉換為 string
+      // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
+      // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
+      type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: { name: any; }) => item.name),
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
     }
     this.HttpApi.postAccountRequest(body).subscribe(request => {
-      console.log(request)
-      if (request.code === 200) {
+        if (request.code === 200) {
+          this.edit = false;
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getAllAccount();
+        }
+      },
+      err => {
         this.edit = false;
-        Swal.fire({
-          title: '成功',
-          text: "已儲存您的資料 :)",
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1000
-        })
-        this.getAllAccount();
-      } else {
         Swal.fire({
           title: '失敗',
           text: "請確認資料是否正確 :(",
@@ -206,8 +220,9 @@ export class AccountComponent implements OnInit {
         }).then(() => {
           this.edit = true;
         })
-      }
-    })
+        console.log(body)
+      });
+
   }
 
   patchAccount(): void {
