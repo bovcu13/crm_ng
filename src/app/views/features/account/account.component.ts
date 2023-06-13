@@ -108,6 +108,7 @@ export class AccountComponent implements OnInit {
 
   }
 
+  // 開啟 新增/編輯帳戶 彈出視窗
   edit: boolean = false;
   dialogHeader!: string;
 
@@ -122,11 +123,9 @@ export class AccountComponent implements OnInit {
       this.account_form.patchValue(account);
       //dropdown
       const selectedIndustry = this.industry_id.find((s) => s.name === account.industry_id);
-      const selectedType = this.type.find((s) => s.name === account.type).name;
-      console.log(typeof selectedType)
       this.account_form.patchValue({
         industry_id: selectedIndustry,
-        type: selectedType,
+        type: this.account_form.controls['type'].value.map((name: string) => ({ name })),
       });
     }
   }
@@ -193,7 +192,9 @@ export class AccountComponent implements OnInit {
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
       // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
-      type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: { name: any; }) => item.name),
+      type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: {
+        name: any;
+      }) => item.name),
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
     }
     this.HttpApi.postAccountRequest(body).subscribe(request => {
@@ -246,7 +247,12 @@ export class AccountComponent implements OnInit {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
       industry_id: '00000000-0000-4000-a000-000000000000',
-      type: this.account_form.controls['type'].value ? this.account_form.controls['type'].value : '00000000-0000-4000-a000-000000000000',
+      // 將 type 物件轉換為 string
+      // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
+      // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
+      type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: {
+        name: any;
+      }) => item.name),
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
     }
     this.HttpApi.patchAccountRequest(id, body)
