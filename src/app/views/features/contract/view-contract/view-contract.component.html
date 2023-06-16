@@ -30,7 +30,7 @@
             </div>
             <div class="col-12 flex justify-content-center">
               <label>契約結束日期: </label>
-              <label [textContent]="getEndDate()"></label>
+              <label>{{contract_form.controls['end_date'].value}}</label>
             </div>
             <div class="col-12 flex justify-content-center">
               <label>有效期限(月): </label>
@@ -156,15 +156,15 @@
                 </ng-template>
               </p-table>
               <div class="mt-3">
-                <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="contract_order">
+                <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllOrder">
                   <ng-template pTemplate="caption">
                     <div class="flex justify-content-between">
                       <div class="justify-content-start mt-2">
                         <label>訂單</label>
                       </div>
                       <div class="justify-content-end">
-                        <!--                          <p-button icon="pi pi-plus" pTooltip="新增" tooltipPosition="top"-->
-                        <!--                                    styleClass="p-button-text"></p-button>-->
+                       <p-button icon="pi pi-plus" pTooltip="新增訂單" tooltipPosition="top" (click)="showDialog('add')"
+                        styleClass="p-button-text"></p-button>
                       </div>
                     </div>
                   </ng-template>
@@ -172,6 +172,7 @@
                     <tr>
                       <th>訂單編號</th>
                       <th>狀態</th>
+                      <!--<th>訂單金額</th>-->
                       <th>訂單開始日期</th>
                       <th>契約號碼</th>
                       <th></th>
@@ -179,15 +180,16 @@
                   </ng-template>
                   <ng-template pTemplate="body" let-contract_order>
                     <tr>
-                      <td>{{ contract_order.order_code }}</td>
+                      <td>{{ contract_order.code }}</td>
                       <td>{{ contract_order.status }}</td>
+                      <!--<td>{{ order.amount }}</td>-->
                       <td>{{ contract_order.start_date }}</td>
                       <td>{{ contract_order.contract_code }}</td>
                       <td>
                         <div class="flex justify-content-end">
-                        <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                        <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top" (click)="showDialog('edit',contract_order)"
                                   styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                        <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
+                        <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text" (click)="deleteOrderRequest(contract_order.order_id)"
                                   pTooltip="刪除" tooltipPosition="top"></p-button>
                         </div>
                       </td>
@@ -227,7 +229,6 @@
                     <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
                                 formControlName="status"
                                 optionLabel="name" (onChange)="onStatusChange($event)"
-                                name="status"
                                 [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError('required') && contract_form.controls['status'].touched}"></p-dropdown>
                   </div>
                 </div>
@@ -292,5 +293,93 @@
   </div>
 </div>
 
+<!--新增訂單-->
+<form [formGroup]="order_form">
+  <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
+    <div class="grid">
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>訂單號碼</label>
+          <br>
+          <label class="mt-2 ml-2 disable">{{(order_form.controls['code'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label><span class="required-star">*</span>訂單開始日期</label>
+          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="start_date"
+                      [minDate]="MinDate"
+                      [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError('required') && order_form.controls['start_date'].touched}"></p-calendar>
+          <div class="required-star" *ngIf="order_form.controls['start_date'].hasError('required-star')">
+            訂單開始日期不可早於契約日期
+          </div>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">
+        <div class="field">
+          <label>狀態</label>
+          <br>
+          <label class="mt-2 ml-2" [textContent]="order_form.controls['status'].value"></label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
+        <div class="field">
+          <label>狀態</label>
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="order_status" formControlName="status"
+                      name="status" optionLabel="name" (onChange)="onStatusChange($event)"></p-dropdown>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
+        <div class="field">
+          <label>訂單金額</label>
+          <br>
+          <label class="mt-2 ml-2" [textContent]="order_form.controls['amount'].value"></label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <div class="field">
+          <label>啟用：</label>
+          <br>
+          <ng-container *ngIf="showedit && order_form.controls['status'].value?.name === '啟動中'">
+            <label>{{(order_form.controls['activated_by'].value)}}</label>
+            <label>{{(order_form.controls['activated_at'].value)}}</label>
+          </ng-container>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="field">
+          <label>描述</label>
+          <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <label>建立者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label class="disable">{{(order_form.controls['created_by'].value)}}</label>
+          <label class="ml-2 disable">{{(order_form.controls['created_at'].value)}}</label>
+        </div>
+      </div>
+      <div class="col-12 md:col-6 lg:col-6">
+        <label>上次修改者：</label>
+        <br>
+        <div class="mt-3 field">
+          <label class="disable">{{(order_form.controls['updated_by'].value)}}</label>
+          <label class="ml-2 disable">{{(order_form.controls['updated_at'].value)}}</label>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-content-end">
+      <ng-container *ngIf="!showedit">
+        <p-button label="新增" (click)="postOrderRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <ng-container *ngIf="showedit">
+        <p-button label="儲存" (click)="patchOrderRequest()"
+                  styleClass="p-button-outlined p-button-info"></p-button>
+      </ng-container>
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
+    </div>
+  </p-dialog>
+</form>
 
 
