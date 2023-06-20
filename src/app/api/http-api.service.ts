@@ -412,6 +412,14 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
+  //--契約紀錄---------------------------------------------------------------------------------------------------
+
+//取得所有契約紀錄
+  getAllContractHistoricalRecordsRequest(sid: string): Observable<any> {
+    let url = `${this.BaseUrl}/historical-records/list/${sid}`;
+    return this.http.get<any>(url);
+  }
+
   //--訂單---------------------------------------------------------------------------------------------------
   //取得所有訂單 getall
   getAllOrderRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
@@ -502,10 +510,6 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  // getAllQuoteRequest(limit = 20, page = 1): Observable<any> {
-  //   let url = this.BaseUrl + '/quotes/list' + '?page=' + page + '&limit=' + limit;
-  //   return this.http.get<any>(url);
-  // }
 
   //取得一筆 報價 getone
   getOneQuotetRequest(id: any): Observable<Quote> {
@@ -537,38 +541,6 @@ export class HttpApiService {
     return this.http.get<any>(url);
   }
   //------------商品報價---------------------------------------------
-  //取得所有商品報價 getall
-  // getAllQuoteProductsRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
-  //   let obj: any = {
-  //     field: status,
-  //     filter: {
-  //       name: search ? search : null,
-  //     },
-  //   };
-  //   if (event) {
-  //     let direction : any;
-  //     if (event.sortOrder === 1) {
-  //       direction = "asc";
-  //     } else {
-  //       direction = "desc";
-  //     }
-  //     // 判斷是否有用全域搜尋欄
-  //     let keyword = event.globalFilter;
-  //     if (!event.globalFilter) {
-  //       keyword = event.data
-  //     }
-  //     obj = {
-  //       sort: {field: event.sortField || null, direction: direction},
-  //       field: status,
-  //       filter: {
-  //         name: keyword,
-  //       },
-  //     };
-  //   }
-  //   const url = `${this.BaseUrl}/quotes/list?page=${page}&limit=${limit}`;
-  //   return this.http.post<any>(url, obj);
-  // }
-
   getAllQuoteProductsRequest(limit = 20, page = 1): Observable<any> {
     let url = this.BaseUrl + '/quotes-products' + '?page=' + page + '&limit=' + limit;
     return this.http.get<any>(url);

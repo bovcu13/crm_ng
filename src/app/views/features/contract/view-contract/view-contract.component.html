@@ -128,7 +128,7 @@
         <form [formGroup]="contract_form">
           <p-tabView>
             <p-tabPanel header="相關">
-              <p-table [rowsPerPageOptions]="[5, 10, 15]" [lazy]="true" [value]="contract_log">
+              <p-table [rowsPerPageOptions]="[10, 15]" [lazy]="true" [value]="GetContractHistoricalRecords">
                 <ng-template pTemplate="caption">
                   <div class="flex justify-content-between">
                     <div class="justify-content-start mt-2">
@@ -138,20 +138,16 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                   <tr>
-                    <th>日期</th>
-                    <th>欄位</th>
+                    <th>修改日期</th>
                     <th>使用者</th>
-                    <th>原始值</th>
-                    <th>新值</th>
+                    <th>描述</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-contract_log>
                   <tr>
-                    <td>{{ contract_log.date }}</td>
-                    <td>{{ contract_log.field }}</td>
-                    <td>{{ contract_log.user }}</td>
-                    <td>{{ contract_log.old }}</td>
-                    <td>{{ contract_log.new }}</td>
+                    <td>{{ contract_log.modified_at }}</td>
+                    <td>{{ contract_log.modified_by }}</td>
+                    <td>{{ contract_log.description }}</td>
                   </tr>
                 </ng-template>
               </p-table>
