@@ -412,7 +412,7 @@ export class ContractComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString().slice(0, 10);
+    const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()+2).toISOString().slice(0, 10);
     return formattedDate;
   }
 
