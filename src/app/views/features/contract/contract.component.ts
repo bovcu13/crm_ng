@@ -80,8 +80,8 @@ export class ContractComponent {
 
   getAllContractRequest() {
     this.HttpApi.getAllContractRequest(this.search,1).subscribe(res => {
-        this.GetAllContract = res.body.contracts;
-        this.GetAllContract = res.body.contracts.map((contract: any) => {
+        const contract = res.body.contracts.filter((contract: any) => contract.account_name != null);
+        this.GetAllContract = contract.map((contract: any) => {
           const start_date = this.formatDate2(contract.start_date)
           const end_date = this.formatDate2(contract.end_date)
           const created_at = this.formatDate(contract.created_at);
@@ -378,7 +378,8 @@ export class ContractComponent {
     this.loading = true;
     this.HttpApi.getAllContractRequest(this.search, 1,limit, page, e)
       .subscribe(res => {
-          this.GetAllContract= res.body.contracts.map((contract: any) => {
+          const contract = res.body.contracts.filter((contract: any) => contract.account_name != null);
+          this.GetAllContract= contract.map((contract: any) => {
             const start_date = this.formatDate2(contract.start_date)
             const end_date = this.formatDate2(contract.end_date)
             const created_at = this.formatDate(contract.created_at);
