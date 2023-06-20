@@ -463,7 +463,7 @@ export class ViewContractComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
+    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
     return start_date.toISOString().slice(0, 10);
   }
 
