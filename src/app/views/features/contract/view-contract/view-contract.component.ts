@@ -55,21 +55,18 @@ export class ViewContractComponent {
       code: "activated",
     }
   ];
-
-  contract_log: any[] = [
-    {
-      date: "2023-05-06 08:00",
-      field: "已建立",
-      user: "林",
-    },
-    {
-      date: "2023-05-07 17:00",
-      field: "狀態",
-      user: "林",
-      old: "草稿",
-      new: "審批中",
-    },
-  ];
+  //取得當筆契約歷史紀錄
+  GetContractHistoricalRecords: any[] = [];
+  getAllContractHistoricalRecordsRequest(c_id: any){
+    this.HttpApi.getAllContractHistoricalRecordsRequest(c_id).subscribe(res => {
+      this.GetContractHistoricalRecords= res.body.historical_records.map((contract: any) => {
+        const modified_at = this.formatDate(contract.modified_at)
+        return {...contract, modified_at};
+      });
+      console.log(this.GetContractHistoricalRecords)
+      }
+    )
+  }
 
   //取得當筆契約資料
   GetOneContract!: any;
@@ -253,6 +250,7 @@ export class ViewContractComponent {
     this.getOneContractRequest(this.c_id)
     this.getAllAccountRequest()
     this.getAllOrderRequest()
+    this.getAllContractHistoricalRecordsRequest(this.c_id)
   }
 
   // table lazyload
