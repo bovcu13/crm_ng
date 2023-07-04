@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpApiService} from "../../../../api/http-api.service";
 import {ActivatedRoute} from "@angular/router";
 import {MessageService} from "primeng/api";
 import Swal from 'sweetalert2';
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-view-contract',
@@ -12,6 +13,7 @@ import Swal from 'sweetalert2';
   providers: [MessageService]
 })
 export class ViewContractComponent {
+  @ViewChild('dt1') dt1!: Table;
 //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -57,17 +59,31 @@ export class ViewContractComponent {
   ];
   //取得當筆契約歷史紀錄
   GetContractHistoricalRecords: any[] = [];
+  totalHistorical: any;
   getAllContractHistoricalRecordsRequest(c_id: any){
-    this.HttpApi.getAllContractHistoricalRecordsRequest(c_id).subscribe(res => {
+    this.HttpApi.getAllContractHistoricalRecordsRequest(20,1,c_id).subscribe(res => {
       this.GetContractHistoricalRecords= res.body.historical_records.map((contract: any) => {
         const modified_at = this.formatDate(contract.modified_at)
         return {...contract, modified_at};
       });
+      this.totalHistorical = res.body.total
       console.log(this.GetContractHistoricalRecords)
       }
     )
   }
-
+  loadTable(e: any) {
+    let page = e.first / e.rows + 1;
+    let limit = e.rows;
+    this.loading = true;
+    this.HttpApi.getAllContractHistoricalRecordsRequest(limit, page, e).subscribe(
+      request => {
+        this.GetContractHistoricalRecords= request.body.historical_records.map((contract: any) => {
+          const modified_at = this.formatDate(contract.modified_at)
+          return {...contract, modified_at};
+        });
+        this.totalHistorical = request.body.total
+      });
+  }
   //取得當筆契約資料
   GetOneContract!: any;
   stage: any;
@@ -100,7 +116,6 @@ export class ViewContractComponent {
       }
     );
   }
-
   patchContractRequest() {
     if (this.contract_form.controls['start_date'].hasError('required') ||
       this.contract_form.controls['account_id'].hasError('required') ||
@@ -129,6 +144,7 @@ export class ViewContractComponent {
       return;
     }
     let start_date = new Date(this.contract_form.get('start_date')?.value);
+    start_date.setDate(start_date.getDate() + 1);
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
@@ -148,6 +164,7 @@ export class ViewContractComponent {
             timer: 1000
           })
           this.getOneContractRequest(this.c_id)
+          this.getAllContractHistoricalRecordsRequest(this.c_id)
         } else {
           Swal.fire({
             title: '失敗',

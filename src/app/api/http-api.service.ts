@@ -415,9 +415,9 @@ export class HttpApiService {
   //--契約紀錄---------------------------------------------------------------------------------------------------
 
 //取得所有契約紀錄
-  getAllContractHistoricalRecordsRequest(sid: string): Observable<any> {
-    let url = `${this.BaseUrl}/historical-records/list/${sid}`;
-    return this.http.get<any>(url);
+  getAllContractHistoricalRecordsRequest(limit = 20, page = 1, sid: string): Observable<any> {
+    const url = `${this.BaseUrl}/historical-records/list/${sid}?page=${page}&limit=${limit}`;
+    return this.http.post<any>(url,sid);
   }
 
   //--訂單---------------------------------------------------------------------------------------------------

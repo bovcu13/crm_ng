@@ -274,6 +274,7 @@ export class ContractComponent {
       return;
     }
     let start_date = new Date(this.contract_form.get('start_date')?.value);
+    start_date.setDate(start_date.getDate() + 1);
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
@@ -412,7 +413,7 @@ export class ContractComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()+2).toISOString().slice(0, 10);
+    const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1).toISOString().slice(0, 10);
     return formattedDate;
   }
 
