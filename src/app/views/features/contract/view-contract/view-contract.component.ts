@@ -2,7 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpApiService} from "../../../../api/http-api.service";
 import {ActivatedRoute} from "@angular/router";
-import {LazyLoadEvent, MessageService} from "primeng/api";
+import {MessageService} from "primeng/api";
 import Swal from 'sweetalert2';
 import {Table} from "primeng/table";
 
@@ -67,6 +67,7 @@ export class ViewContractComponent {
         return {...contract, modified_at};
       });
       this.totalHistorical = res.body.total
+      console.log(this.GetContractHistoricalRecords)
       }
     )
   }
@@ -81,7 +82,6 @@ export class ViewContractComponent {
           return {...contract, modified_at};
         });
         this.totalHistorical = request.body.total
-        console.log(this.GetContractHistoricalRecords)
       });
   }
   //取得當筆契約資料
@@ -116,7 +116,6 @@ export class ViewContractComponent {
       }
     );
   }
-
   patchContractRequest() {
     if (this.contract_form.controls['start_date'].hasError('required') ||
       this.contract_form.controls['account_id'].hasError('required') ||
@@ -145,6 +144,7 @@ export class ViewContractComponent {
       return;
     }
     let start_date = new Date(this.contract_form.get('start_date')?.value);
+    start_date.setDate(start_date.getDate() + 1);
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
@@ -164,6 +164,7 @@ export class ViewContractComponent {
             timer: 1000
           })
           this.getOneContractRequest(this.c_id)
+          this.getAllContractHistoricalRecordsRequest(this.c_id)
         } else {
           Swal.fire({
             title: '失敗',
@@ -479,7 +480,7 @@ export class ViewContractComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
+    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
     return start_date.toISOString().slice(0, 10);
   }
 
