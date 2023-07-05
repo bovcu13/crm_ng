@@ -137,10 +137,10 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  // getOneContactRequest(id: any): Observable<any> {
-  //   const url = `${this.BaseUrl}/contacts/${id}`;
-  //   return this.http.get<any>(url);
-  // }
+  getOneContactRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/contacts/${id}`;
+    return this.http.get<any>(url);
+  }
 
   postContactRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/contacts`;
