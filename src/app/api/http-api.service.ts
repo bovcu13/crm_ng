@@ -72,10 +72,10 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  // getOneAccountRequest(id: any): Observable<any> {
-  //   const url = `${this.BaseUrl}/accounts/${id}`;
-  //   return this.http.get<any>(url);
-  // }
+  getOneAccountRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/accounts/${id}`;
+    return this.http.get<any>(url);
+  }
 
   postAccountRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/accounts`;
