@@ -67,7 +67,7 @@ export class QuoteComponent {
       code: "approved",
     },
     {
-      name: "已呈現",
+      name: "已報價",
       code: "presented",
     },
     {
@@ -77,7 +77,7 @@ export class QuoteComponent {
   ]
 
   getAllQuoteRequest() {
-    this.HttpApi.getAllQuoteRequest(this.search,1).subscribe(
+    this.HttpApi.getAllQuoteRequest(this.search, 1).subscribe(
       (res) => {
         this.GetAllQuote = res.body.quotes
         this.GetAllQuote = res.body.quotes.map((quote: any) => {
@@ -124,7 +124,7 @@ export class QuoteComponent {
       name: this.quote_form.value.name,
       account_id: this.selectedAccount_id,//帳戶ID
       expiration_date: this.quote_form.value.expiration_date,
-      is_syncing: this.quote_form.value.is_syncing,
+      // is_syncing: this.quote_form.value.is_syncing,
       opportunity_id: this.selectedOpportunity_id,//商機ID
       shipping_and_handling: this.quote_form.value.shipping_and_handling,
       status: this.quote_form.value.status,
@@ -289,6 +289,51 @@ export class QuoteComponent {
     })
   }
 
+  showAlertCormfirm() {
+    this.edit = false
+    Swal.fire({
+      title: '確認將報價金額同步到商機？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.quote_form.patchValue({
+          is_syncing: true,
+        });
+        console.log(this.quote_form.get('is_syncing')?.value)
+        Swal.fire({
+          title: '同步',
+          text: "已成功同步金額 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        }).then(() => {
+          this.edit = true;
+        })
+      } else {
+        this.quote_form.patchValue({
+          is_syncing: false,
+        });
+        Swal.fire({
+          title: '不同步',
+          text: "已取消同步！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        }).then(() => {
+          this.edit = true;
+        })
+      }
+    })
+  }
+
   quote_form: FormGroup;
 
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
@@ -344,12 +389,14 @@ export class QuoteComponent {
   ngOnInit() {
     this.getAllopportunityRequest()
   }
+
   // GET全部Account
   GetAllOpportunity: any[] = [];
   selectedOpportunity_id: string = '';
   opportunitysearch: any;
+
   getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch,1).subscribe(
+    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe(
       (res) => {
         this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
           return {
@@ -385,14 +432,14 @@ export class QuoteComponent {
     let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.loading = true;
-    this.HttpApi.getAllQuoteRequest(this.search, 1,limit, page, e).subscribe(
+    this.HttpApi.getAllQuoteRequest(this.search, 1, limit, page, e).subscribe(
       request => {
         this.GetAllQuote = request.body.quotes;
         this.GetAllQuote = request.body.quotes.map((quote: any) => {
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
           const updated_at = this.formatDate(quote.updated_at);
-          return {...quote,expiration_date, created_at, updated_at};
+          return {...quote, expiration_date, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
         this.loading = false;
