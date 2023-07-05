@@ -1,1 +1,53 @@
-<div class="animation">待完成..</div>
+<div class="grid mt-2">
+  <div class="col-12 md:col-12 lg:col-3">
+    <div class="mb-3">
+      <p-card>
+        <h3>Gina</h3>
+        <p-divider></p-divider>
+        <span class="p-buttonset flex justify-content-center">
+        <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+        <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+        <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
+      </span>
+        <div class="grid mt-2">
+          <div class="col-12 flex justify-content-center">
+            <label>姓名: </label>
+            {{name}}
+          </div>
+          <div class="col-12 flex justify-content-center">
+            <label>職稱: </label>
+            {{title}}
+          </div>
+        </div>
+      </p-card>
+      <div class="flex justify-content-center mt-3">
+        <p-button pTooltip="新增聯絡人" tooltipPosition="top" icon="pi pi-plus"
+                  styleClass="p-button-outlined p-button-secondary"></p-button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 md:col-12 lg:col-6">
+    <div class="mb-3">
+      <p-card>
+        <p-tabView>
+          <p-tabPanel header="詳細資料">
+
+          </p-tabPanel>
+          <p-tabPanel header="活動">
+            <h3>(待完成)</h3>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+  </div>
+  <div class="col-12 md:col-12 lg:col-3">
+    <p-card>
+      <h3>拜訪紀錄</h3>
+      <p-divider></p-divider>
+      <h3>(待完成)</h3>
+    </p-card>
+  </div>
+</div>
