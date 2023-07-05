@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
 import Swal from 'sweetalert2';
@@ -133,26 +133,57 @@ export class ViewOrderComponent {
     this.getAllContractRequest()
     this.getAllProductRequest()
     this.edit_product_form = this.fb.group({
-      name: ['', [Validators.required]],
+      quote_product_id: [''],
+      product_name: [''],
+      code: [''],
+      standard_price: [''],
+      quote_price: [''],
+      product_id: [''],
+      quote_id: [''],
+      sub_total: [''],
+      unit_price: [0, [Validators.required]],
       quantity: ['', [Validators.required]],
-      unit_price: ['', [Validators.required]],
-      price: [''],
+      discount: [0, [Validators.required]],
+      total_price: [''],
       description: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     })
   }
 
   //新增產品dialog
   add: boolean = false;
-
+  selectedProducts: any[] = []
   addProduct() {
     this.add = true;
+    this.selectedProducts = [];
   }
 
   //編輯所有產品報價dialog
-  edit: boolean = false;
+  editselectedProducts: boolean = false;
+  editGetAllOrderProduct: boolean = false;
+  showErrorMessage = false;
 
-  editProduct() {
-    this.edit = true;
+  editSelectedProduct() {
+    if (this.selectedProducts.length !== 0) {
+      this.selectedProducts.forEach((product) => {
+        this.edit_product_form.addControl(`unit_price_${product.product_id}`, new FormControl(0, Validators.required));
+        this.edit_product_form.addControl(`quantity_${product.product_id}`, new FormControl('', Validators.required));
+        this.edit_product_form.addControl(`discount_${product.product_id}`, new FormControl(0, Validators.required));
+      });
+      this.editselectedProducts = true;
+      this.editGetAllOrderProduct = false;
+      this.add = false;
+      console.log(this.selectedProducts)
+    }
+    if (this.selectedProducts.length === 0) {
+      this.editselectedProducts = false;
+      this.showErrorMessage = true;
+      return;
+    }
+
   }
 
   // GET全部Contract
@@ -270,7 +301,7 @@ export class ViewOrderComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
+    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
     return start_date.toISOString().slice(0, 10);
   }
 
