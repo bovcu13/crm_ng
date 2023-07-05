@@ -32,10 +32,10 @@ const routes: Routes = [
     children: [
       {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
       {path: 'account', component: AccountComponent, canActivate: [AuthGuard]},
-      {path: 'account/view', component: ViewAccountComponent, canActivate: [AuthGuard]},
+      {path: 'account/view/:id', component: ViewAccountComponent, canActivate: [AuthGuard]},
       {path: 'campaign', component: CampaignComponent, canActivate: [AuthGuard]},
       {path: 'campaign/view/:c_id', component: ViewCampaignComponent, canActivate: [AuthGuard]},
-      {path: 'contact/view', component: ViewContactComponent, canActivate: [AuthGuard]},
+      {path: 'contact/view/:id', component: ViewContactComponent, canActivate: [AuthGuard]},
       {path: 'contact', component: ContactComponent, canActivate: [AuthGuard]},
       {path: 'display', component: DisplayComponent, canActivate: [AuthGuard]},
       {path: 'event', component: EventComponent, canActivate: [AuthGuard]},

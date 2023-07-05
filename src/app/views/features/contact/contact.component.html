@@ -44,7 +44,7 @@
             <td>{{ contact.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
-                <p-button icon="pi pi-eye" routerLink="/main/contact/view" pTooltip="檢視" tooltipPosition="top"
+                <p-button icon="pi pi-eye" [routerLink]="['/main/contact/view',contact.contact_id]" pTooltip="檢視" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',contact)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
