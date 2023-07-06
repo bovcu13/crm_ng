@@ -166,6 +166,24 @@ export class AccountComponent implements OnInit {
       });
   }
 
+  getSeverity(status: string) {
+    switch (status.toString()) {
+      case "個人客戶":
+        return { severity: 'info', icon: 'pi pi-user' };
+
+      case "法人客戶":
+        return { severity: 'success', icon: 'pi pi-building' };
+
+      case "夥伴":
+        return { severity: 'warning', icon: 'pi pi-users' };
+
+      case "競爭對手":
+        return { severity: 'danger', icon: 'pi pi-chart-line' };
+      default:
+        return { severity: '', icon: '' };
+    }
+  }
+
   // 現在時間
   // currentDate = new Date()
 
