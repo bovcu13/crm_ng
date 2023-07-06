@@ -6,6 +6,10 @@ import {MessageService} from "primeng/api";
 import Swal from 'sweetalert2';
 import {Table} from "primeng/table";
 
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 @Component({
   selector: 'app-view-contract',
   templateUrl: './view-contract.component.html',
@@ -92,12 +96,16 @@ export class ViewContractComponent {
         this.GetOneContract = res.body;
         this.stage = res.body.status;
         this.contract_form.patchValue({
+          opportunity_id: this.GetAllOpportunity.find((opportunity: { label: any; }) => opportunity.label === res.body.opportunity_name),
+        })
+        this.contract_form.patchValue({
           code: res.body.code,
           status: this.status.find((s: { name: any; }) => s.name === this.GetOneContract.status),
           salesperson_name: res.body.salesperson_name,
           start_date: this.formatDate2(res.body.start_date),
           term: res.body.term,
           end_date: this.formatDate2(res.body.end_date),
+          // opportunity_id: this.GetOneContract.opportunity_name,
           account_id: res.body.account_id,
           account_name: res.body.account_name,
           description: res.body.description,
@@ -109,7 +117,7 @@ export class ViewContractComponent {
         if (this.GetOneContract.status === '已取消' || this.GetOneContract.status === '已過期') {
           this.contract_form.controls['status'].disable();
         }
-        console.log(this.GetOneContract)
+        console.log(res.body.opportunity_name)
       },
       (error) => {
         console.log(error);
@@ -118,7 +126,7 @@ export class ViewContractComponent {
   }
   patchContractRequest() {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['opportunity_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
       this.contract_form.controls['status'].hasError('required')) {
       Swal.fire({
@@ -131,8 +139,8 @@ export class ViewContractComponent {
         if (this.contract_form.controls['start_date'].hasError('required')) {
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if (this.contract_form.controls['account_id'].hasError('required')) {
-          this.contract_form.controls['account_id'].markAsDirty();
+        if (this.contract_form.controls['opportunity_id'].hasError('required')) {
+          this.contract_form.controls['opportunity_id'].markAsDirty();
         }
         if (this.contract_form.controls['term'].hasError('required')) {
           this.contract_form.controls['term'].markAsDirty();
@@ -144,11 +152,10 @@ export class ViewContractComponent {
       return;
     }
     let start_date = new Date(this.contract_form.get('start_date')?.value);
-    start_date.setDate(start_date.getDate() + 1);
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      account_id: this.contract_form.get('account_id')?.value,
+      opportunity_id: this.contract_form.get('opportunity_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
     }
@@ -176,6 +183,55 @@ export class ViewContractComponent {
         }
       }
     )
+  }
+
+  //刪除這個契約
+  deleteContractRequest(c_id: any): void {
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.deleteQuoteRequest(c_id).subscribe(Request => {
+          console.log(Request)
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            }).then(() => {
+              window.location.href = '/main/contract';
+            });
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
   }
 
 //編輯&新增dialog
@@ -206,16 +262,18 @@ export class ViewContractComponent {
     this.edit = true;
   }
 
-  // GET全部Account
-  GetAllAccount: any[] = [];
-  accountSearch!: string;
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
+  // GET全部Opportunity
+  GetAllOpportunity: any[] = [];
+  OpportunitySearch!: string;
+  getAllOpportunityRequest() {
+    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe(
       (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
+        const GetOpportunity = res.body.opportunities.filter((opportunity: any)  => opportunity.stage == "已結束")
+        this.GetAllOpportunity = GetOpportunity.map((opportunity: any) => {
           return {
-            label: account.name,
-            value: account.account_id
+            label: opportunity.name,
+            value: opportunity.opportunity_id,
+            account_id: opportunity.account_id,
           };
         });
       },
@@ -230,12 +288,12 @@ export class ViewContractComponent {
   c_id: any;
   order_form: FormGroup;
 
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute,private messageService: MessageService) {
     this.contract_form = this.fb.group({
       contract_id: [''],
       salesperson_name: [''],
       code: [''],
-      account_id: ['', [Validators.required]],
+      opportunity_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
       status: ['', [Validators.required]],
       start_date: [[Validators.required]],
@@ -265,7 +323,7 @@ export class ViewContractComponent {
     this.c_id = this.route.snapshot.paramMap.get('c_id')
     console.log("取到的o_id: " + this.c_id)
     this.getOneContractRequest(this.c_id)
-    this.getAllAccountRequest()
+    this.getAllOpportunityRequest()
     this.getAllOrderRequest()
     this.getAllContractHistoricalRecordsRequest(this.c_id)
   }
@@ -496,5 +554,14 @@ export class ViewContractComponent {
       timer: 1000
     })
     this.getOneContractRequest(this.c_id)
+  }
+
+  //上傳檔案
+  uploadedFiles: any[] = [];
+  onUpload(event:UploadEvent) {
+    for(let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});
   }
 }

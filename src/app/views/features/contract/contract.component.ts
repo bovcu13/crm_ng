@@ -1,42 +1,22 @@
 import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
-import {LazyLoadEvent} from 'primeng/api';
+import {LazyLoadEvent, MessageService} from 'primeng/api';
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
 
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 @Component({
   selector: 'app-contract',
   templateUrl: './contract.component.html',
-  styleUrls: ['./contract.component.scss']
+  styleUrls: ['./contract.component.scss'],
+  providers: [MessageService]
 })
 export class ContractComponent {
   @ViewChild('dt1') dt1!: Table;
-  // contract: any[] = [
-  //   {
-  //     "owner": "林",
-  //     "number": "00001",
-  //     "account_name": "milk",
-  //     "status": "草稿",
-  //     "start_date": "2023-04-09",
-  //     "term": 1,
-  //     "created_at": "2023-03-15",
-  //     "created_by": "林",
-  //     "updated_by": "林",
-  //   },
-  //   {
-  //     "owner": "林",
-  //     "number": "00002",
-  //     "account_name": "nkust",
-  //     "status": "審批中",
-  //     "start_date": "2023-02-15",
-  //     "term": 7,
-  //     "created_at": "2023-02-05",
-  //     "created_by": "林",
-  //     "updated_by": "林",
-  //   }
-  // ];
-
   //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -70,7 +50,7 @@ export class ContractComponent {
   ]
 
   ngOnInit() {
-    this.getAllAccountRequest()
+    this.getAllOpportunityRequest()
   }
 
   //GET全部contract
@@ -95,17 +75,19 @@ export class ContractComponent {
       });
   }
 
-  // GET全部Account
-  GetAllAccount: any[] = [];
-  accountSearch!: string;
+  // GET全部Opportunity
+  GetAllOpportunity: any[] = [];
+  OpportunitySearch!: string;
 
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
+  getAllOpportunityRequest() {
+    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe(
       (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
+        const GetOpportunity = res.body.opportunities.filter((opportunity: any)  => opportunity.stage == "已結束")
+        this.GetAllOpportunity = GetOpportunity.map((opportunity: any) => {
           return {
-            label: account.name,
-            value: account.account_id
+            label: opportunity.name,
+            value: opportunity.opportunity_id,
+            account_id: opportunity.account_id,
           };
         });
       },
@@ -118,7 +100,7 @@ export class ContractComponent {
 //POST 一筆contract
   postContractRequest(): void {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['opportunity_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
       this.contract_form.controls['status'].hasError('required')) {
       this.edit = false;
@@ -132,8 +114,8 @@ export class ContractComponent {
         if (this.contract_form.controls['start_date'].hasError('required')) {
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if (this.contract_form.controls['account_id'].hasError('required')) {
-          this.contract_form.controls['account_id'].markAsDirty();
+        if (this.contract_form.controls['opportunity_id'].hasError('required')) {
+          this.contract_form.controls['opportunity_id'].markAsDirty();
         }
         if (this.contract_form.controls['term'].hasError('required')) {
           this.contract_form.controls['term'].markAsDirty();
@@ -152,7 +134,7 @@ export class ContractComponent {
       description: this.contract_form.value.description,
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,
-      account_id: this.contract_form.value.account_id,
+      opportunity_id: this.contract_form.value.opportunity_id,
     }
 
     this.HttpApi.postContractRequest(body).subscribe(Request => {
@@ -186,12 +168,12 @@ export class ContractComponent {
 
   //建立formgroup
   contract_form: FormGroup;
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder,private messageService: MessageService) {
     this.contract_form = this.fb.group({
       contract_id: [''],
       salesperson_name: [''],
       code: [''],
-      account_id: ['', [Validators.required]],
+      opportunity_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
       status: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
@@ -224,7 +206,7 @@ export class ContractComponent {
       this.contract_form.patchValue(contract);
       this.contract_form.patchValue({
         start_date: new Date(contract.start_date),
-        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contract.account_name),
+        account_name: this.GetAllOpportunity.find((a: { label: any; }) => a.label === contract.account_name),
       });
       this.showedit = true;
       if(contract.status === "已過期" || contract.status === "已取消"){
@@ -246,7 +228,7 @@ export class ContractComponent {
 
   patchContractRequest(c_id: any): void {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['opportunity_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
       this.contract_form.controls['status'].hasError('required')) {
       this.edit = false;
@@ -260,8 +242,8 @@ export class ContractComponent {
         if(this.contract_form.controls['start_date'].hasError('required') ){
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if(this.contract_form.controls['account_id'].hasError('required') ){
-          this.contract_form.controls['account_id'].markAsDirty();
+        if(this.contract_form.controls['opportunity_id'].hasError('required') ){
+          this.contract_form.controls['opportunity_id'].markAsDirty();
         }
         if(this.contract_form.controls['term'].hasError('required') ){
           this.contract_form.controls['term'].markAsDirty();
@@ -274,11 +256,10 @@ export class ContractComponent {
       return;
     }
     let start_date = new Date(this.contract_form.get('start_date')?.value);
-    start_date.setDate(start_date.getDate() + 1);
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      account_id: this.contract_form.get('account_id')?.value,
+      opportunity_id: this.contract_form.get('opportunity_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
     }
@@ -420,6 +401,15 @@ export class ContractComponent {
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
+  }
+
+  //上傳檔案
+  uploadedFiles: any[] = [];
+  onUpload(event:UploadEvent) {
+    for(let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});
   }
 }
 
