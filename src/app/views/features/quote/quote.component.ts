@@ -228,7 +228,7 @@ export class QuoteComponent {
   }
 
 
-  deleteQuoteRequest(p_id: any): void {
+  deleteQuoteRequest(q_id: any): void {
     Swal.fire({
       title: '確認刪除？',
       icon: 'warning',
@@ -240,7 +240,7 @@ export class QuoteComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.HttpApi.deleteQuoteRequest(p_id).subscribe(Request => {
+        this.HttpApi.deleteQuoteRequest(q_id).subscribe(Request => {
           console.log(Request)
           if (Request.code === 200) {
             this.edit = false;
@@ -297,8 +297,8 @@ export class QuoteComponent {
       confirmButtonColor: '#6EBE71',
       cancelButtonColor: '#FF3034',
       showCancelButton: true,
-      confirmButtonText: '確認',
-      cancelButtonText: '取消',
+      confirmButtonText: '同步',
+      cancelButtonText: '不同步',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -307,8 +307,8 @@ export class QuoteComponent {
         });
         console.log(this.quote_form.get('is_syncing')?.value)
         Swal.fire({
-          title: '同步',
-          text: "已成功同步金額 :)",
+          title: '成功',
+          text: "已成功同步金額，請按下儲存鍵 :)",
           icon: 'success',
           showConfirmButton: false,
           timer: 1000
@@ -320,8 +320,8 @@ export class QuoteComponent {
           is_syncing: false,
         });
         Swal.fire({
-          title: '不同步',
-          text: "已取消同步！",
+          title: '失敗',
+          text: "已取消同步！請按下儲存鍵",
           icon: 'error',
           showCancelButton: false,
           showConfirmButton: false,

@@ -10,23 +10,6 @@ import Swal from "sweetalert2";
   styleUrls: ['./view-quote.component.scss']
 })
 export class ViewQuoteComponent {
-  quote_product: any[] = [
-    // {
-    //   name: "螢幕",
-    //   quote_price: 2500,
-    //   price: 2000,
-    //   quantity: 5,
-    //   subtotal: 12500,
-    // },
-    // {
-    //   name: "滑鼠",
-    //   quote_price: 340,
-    //   price: 300,
-    //   quantity: 10,
-    //   subtotal: 3400,
-    // },
-  ]
-
 //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -46,7 +29,7 @@ export class ViewQuoteComponent {
       code: "approved",
     },
     {
-      name: "已呈現",
+      name: "已報價",
       code: "presented",
     },
     {
@@ -249,6 +232,7 @@ export class ViewQuoteComponent {
         unit_price: unit_price,
         quantity: quantity,
         discount: discount,
+        description: ' ',
       };
       quoteProducts.push(quoteProduct);
       this.HttpApi.postQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
@@ -327,7 +311,6 @@ export class ViewQuoteComponent {
         discount: discount,
       };
       quoteProducts.push(quoteProduct);
-      console.log(quoteProducts)
       this.HttpApi.patchQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
           console.log(Request)
           this.editGetAllQuoteProduct = false;
@@ -383,7 +366,7 @@ export class ViewQuoteComponent {
       })
       return;
     }
-    const quoteProducts = [];
+    let quoteProducts = [];
     const unit_price = this.quote_product_form.get(`unit_price`)?.value;
     const quantity = this.quote_product_form.get(`quantity`)?.value;
     const discount = this.quote_product_form.get(`discount`)?.value;
@@ -398,9 +381,7 @@ export class ViewQuoteComponent {
       description: description
     };
     quoteProducts.push(quoteProduct);
-    console.log(quoteProducts)
     this.HttpApi.patchQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
-        console.log(Request)
         this.editOneQuoteProduct = false;
         if (Request.code === 200) {
           Swal.fire({
@@ -481,68 +462,6 @@ export class ViewQuoteComponent {
       }
     });
   }
-  // DeleteSelectedProducts: any[] = []//儲存被選的商品
-  // deleteSelectQuoteProductRequest(): void {
-  //   this.editGetAllQuoteProduct = false;
-  //   if (this.DeleteSelectedProducts.length === 0) {
-  //     this.editGetAllQuoteProduct = false;
-  //     this.showErrorMessage = true;
-  //     return;
-  //   }
-  //
-  //   Swal.fire({
-  //     title: '確認刪除？',
-  //     icon: 'warning',
-  //     confirmButtonColor: '#6EBE71',
-  //     cancelButtonColor: '#FF3034',
-  //     showCancelButton: true,
-  //     confirmButtonText: '確認',
-  //     cancelButtonText: '取消',
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       const deleteQuoteProducts = this.DeleteSelectedProducts.map(product => ({ quote_product_id: product.quote_product_id }));
-  //       console.log(deleteQuoteProducts);
-  //       this.HttpApi.deleteQuoteProductRequest({ products: deleteQuoteProducts }).subscribe(
-  //         Request => {
-  //           console.log(Request);
-  //           if (Request.code === 200) {
-  //             Swal.fire({
-  //               title: '成功',
-  //               text: "已刪除您的資料 :)",
-  //               icon: 'success',
-  //               showConfirmButton: false,
-  //               timer: 1000
-  //             });
-  //             this.getQuoteProductRequest();
-  //             //this.getAllQuoteProductsRequest();
-  //           } else {
-  //             Swal.fire({
-  //               title: '失敗',
-  //               text: "請確認資料是否正確 :(",
-  //               icon: 'error',
-  //               showConfirmButton: false,
-  //               timer: 1500
-  //             });
-  //           }
-  //         },
-  //         error => {
-  //           console.log(error);
-  //         }
-  //       );
-  //     } else {
-  //       Swal.fire({
-  //         title: '取消',
-  //         text: "已取消您的變更！",
-  //         icon: 'error',
-  //         showCancelButton: false,
-  //         showConfirmButton: false,
-  //         reverseButtons: false,
-  //         timer: 1000
-  //       });
-  //     }
-  //   });
-  // }
 
   GetAllQuoteProduct: any[] = [];
   QuoteProductloading: boolean = false;
@@ -556,16 +475,6 @@ export class ViewQuoteComponent {
         console.log(this.GetAllQuoteProduct)
       });
   }
-
-  // getAllQuoteProductsRequest() {
-  //   this.QuoteProductloading = true;
-  //   this.HttpApi.getAllQuoteProductsRequest().subscribe(
-  //     request => {
-  //       this.GetAllQuoteProduct = request.body.quote_products.filter((quote_products: any) => quote_products.quote_id == this.q_id);
-  //       this.QuoteProductloading = false;
-  //       console.log(this.GetAllQuoteProduct)
-  //     });
-  // }
 
   patchQuoteRequest(q_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
@@ -623,6 +532,54 @@ export class ViewQuoteComponent {
       })
   }
 
+  deleteQuoteRequest(q_id: any): void {
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.deleteQuoteRequest(q_id).subscribe(Request => {
+          console.log(Request)
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            }).then(() => {
+              window.location.href = '/main/quote';
+            });
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
+  }
+
   showAlertCancel() {
     this.editOneQuoteProduct = false
     this.editGetAllQuoteProduct=false
@@ -638,6 +595,46 @@ export class ViewQuoteComponent {
       timer: 1000
     })
     this.getOneQuotetRequest(this.q_id)
+  }
+
+  showAlertCormfirm() {
+    Swal.fire({
+      title: '確認將報價金額同步到商機？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '同步',
+      cancelButtonText: '不同步',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.quote_form.patchValue({
+          is_syncing: true,
+        });
+        console.log(this.quote_form.get('is_syncing')?.value)
+        Swal.fire({
+          title: '成功',
+          text: "已成功同步金額，請按下儲存鍵 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      } else {
+        this.quote_form.patchValue({
+          is_syncing: false,
+        });
+        Swal.fire({
+          title: '失敗',
+          text: "已取消同步！請按下儲存鍵",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
   }
 
   // GET全部Opportunity
