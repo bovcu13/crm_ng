@@ -265,7 +265,6 @@ export class ProductComponent {
     this.loading = true;
     this.HttpApi.getAllProductRequest(this.search, 1, limit, page, e).subscribe(
       request => {
-        this.GetAllProduct = request.body.products;
         this.GetAllProduct = request.body.products.map((product: any) => {
           const created_at = this.formatDate(product.created_at);
           const updated_at = this.formatDate(product.updated_at);
@@ -273,7 +272,7 @@ export class ProductComponent {
         });
         this.totalRecords = request.body.total;
         this.loading = false;
-        console.log(this.GetAllProduct)
+        console.log(request.body.GetAllProduct)
       });
   }
 
