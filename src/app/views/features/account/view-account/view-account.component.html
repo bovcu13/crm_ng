@@ -1,1 +1,128 @@
-<div class="animation">待完成..</div>
+<div class="grid mt-2">
+  <div class="col-12 md:col-12 lg:col-3">
+    <div class="mb-3">
+      <p-card>
+        <h3>Gina</h3>
+        <p-divider></p-divider>
+        <span class="p-buttonset flex justify-content-center">
+        <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+        <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+        <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
+      </span>
+        <div class="grid mt-2">
+          <div class="col-12 flex justify-content-center">
+            <label>姓名: </label>
+            {{name}}
+          </div>
+          <div class="col-12 flex justify-content-center">
+            <label>職稱: </label>
+            {{title}}
+          </div>
+        </div>
+      </p-card>
+      <div class="flex justify-content-center mt-3">
+        <p-button pTooltip="新增聯絡人" tooltipPosition="top" icon="pi pi-plus"
+                  styleClass="p-button-outlined p-button-secondary"></p-button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 md:col-12 lg:col-6">
+    <div class="mb-3">
+      <p-card>
+        <p-tabView>
+          <p-tabPanel header="詳細資料">
+            <form [formGroup]="account_form">
+              <div class="grid">
+                <div class="col-12 md:col-12 lg:col-12">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>帳戶</label>
+                    <input pInputText formControlName="name"
+                           [ngClass]="{'ng-dirty':account_form.controls['name'].hasError('required') && account_form.controls['name'].touched}">
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>業務員</label>
+                    <br>
+                    <label>{{(account_form.controls['created_by'].value)}}</label>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>帳戶類別</label>
+                    <!--          <br>-->
+                    <!--          <label>{{(account_form.controls['type'].value)}}</label>-->
+                    <p-multiSelect [options]="type" formControlName="type" optionLabel="name"
+                                   display="chip"></p-multiSelect>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>電話</label>
+                    <input pInputText formControlName="phone_number">
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>行業</label>
+                    <p-dropdown placeholder="　" [disabled]="true" [options]="industry_id" optionLabel="name"
+                                (onChange)="industryValue($event)"
+                                formControlName="industry_id" appendTo="body"></p-dropdown>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>父系帳戶</label>
+                    <p-dropdown placeholder="　" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <!--        <div class="field">-->
+                  <!--          <label>類型</label>-->
+                  <!--          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"-->
+                  <!--                      (onChange)="typeValue($event)"-->
+                  <!--                      formControlName="type" appendTo="body"></p-dropdown>-->
+                  <!--        </div>-->
+                </div>
+              </div>
+              <div class="grid">
+                <div class="col-12 md:col-6 lg:col-6">
+                  <label>建立者：</label>
+                  <div class="mt-3 field">
+                    <label>{{(account_form.controls['created_by'].value)}}</label>
+                    <label>{{(account_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <label>上次修改者：</label>
+                  <div class="mt-3 field">
+                    <label>{{(account_form.controls['updated_by'].value)}}</label>
+                    <label>{{(account_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-content-end">
+                <p-button label="儲存" (click)="patchAccount();"
+                          styleClass="p-button-outlined p-button-info"></p-button>
+                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
+              </div>
+            </form>
+          </p-tabPanel>
+          <p-tabPanel header="活動">
+            <h3>(待完成)</h3>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+  </div>
+  <div class="col-12 md:col-12 lg:col-3">
+    <p-card>
+      <h3>拜訪紀錄</h3>
+      <p-divider></p-divider>
+      <h3>(待完成)</h3>
+    </p-card>
+  </div>
+</div>

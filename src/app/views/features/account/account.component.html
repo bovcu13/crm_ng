@@ -47,13 +47,13 @@
             <td>{{ account.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
-                <p-button icon="pi pi-eye" routerLink="/main/account/view" pTooltip="檢視" tooltipPosition="top"
+                <p-button icon="pi pi-eye" [routerLink]="['/main/account/view',account.account_id]" pTooltip="檢視" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',account)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button (click)="deleteAccount(account.account_id)" icon="pi pi-trash" pTooltip="刪除"
-                          tooltipPosition="top"
-                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+<!--                <p-button (click)="deleteAccount(account.account_id)" icon="pi pi-trash" pTooltip="刪除"-->
+<!--                          tooltipPosition="top"-->
+<!--                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
               </div>
             </td>
           </tr>
