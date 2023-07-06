@@ -148,6 +148,20 @@
                  [ngClass]="{'ng-dirty':contract_form.controls['term'].hasError('required') && contract_form.controls['term'].touched}">
         </div>
       </div>
+      <!--最大1G-->
+      <div class="col-12">
+        <div class="field">
+          <label>契約檔案上傳處</label>
+          <p-toast></p-toast>
+          <p-fileUpload name="demo[]" (onUpload)="onUpload($event)" [multiple]="true" [maxFileSize]="1000000000">
+            <ng-template pTemplate="content">
+              <ul *ngIf="uploadedFiles.length">
+                <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+              </ul>
+            </ng-template>
+          </p-fileUpload>
+        </div>
+      </div>
       <div class="col-12">
         <div class="field">
           <label>描述</label>

@@ -6,6 +6,10 @@ import {MessageService} from "primeng/api";
 import Swal from 'sweetalert2';
 import {Table} from "primeng/table";
 
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 @Component({
   selector: 'app-view-contract',
   templateUrl: './view-contract.component.html',
@@ -231,7 +235,7 @@ export class ViewContractComponent {
   c_id: any;
   order_form: FormGroup;
 
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute,private messageService: MessageService) {
     this.contract_form = this.fb.group({
       contract_id: [''],
       salesperson_name: [''],
@@ -497,5 +501,14 @@ export class ViewContractComponent {
       timer: 1000
     })
     this.getOneContractRequest(this.c_id)
+  }
+
+  //上傳檔案
+  uploadedFiles: any[] = [];
+  onUpload(event:UploadEvent) {
+    for(let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});
   }
 }

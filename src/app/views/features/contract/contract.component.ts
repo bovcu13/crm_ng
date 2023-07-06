@@ -1,42 +1,22 @@
 import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
-import {LazyLoadEvent} from 'primeng/api';
+import {LazyLoadEvent, MessageService} from 'primeng/api';
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
 
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 @Component({
   selector: 'app-contract',
   templateUrl: './contract.component.html',
-  styleUrls: ['./contract.component.scss']
+  styleUrls: ['./contract.component.scss'],
+  providers: [MessageService]
 })
 export class ContractComponent {
   @ViewChild('dt1') dt1!: Table;
-  // contract: any[] = [
-  //   {
-  //     "owner": "林",
-  //     "number": "00001",
-  //     "account_name": "milk",
-  //     "status": "草稿",
-  //     "start_date": "2023-04-09",
-  //     "term": 1,
-  //     "created_at": "2023-03-15",
-  //     "created_by": "林",
-  //     "updated_by": "林",
-  //   },
-  //   {
-  //     "owner": "林",
-  //     "number": "00002",
-  //     "account_name": "nkust",
-  //     "status": "審批中",
-  //     "start_date": "2023-02-15",
-  //     "term": 7,
-  //     "created_at": "2023-02-05",
-  //     "created_by": "林",
-  //     "updated_by": "林",
-  //   }
-  // ];
-
   //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -188,7 +168,7 @@ export class ContractComponent {
 
   //建立formgroup
   contract_form: FormGroup;
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder,private messageService: MessageService) {
     this.contract_form = this.fb.group({
       contract_id: [''],
       salesperson_name: [''],
@@ -421,6 +401,15 @@ export class ContractComponent {
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
+  }
+
+  //上傳檔案
+  uploadedFiles: any[] = [];
+  onUpload(event:UploadEvent) {
+    for(let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});
   }
 }
 
