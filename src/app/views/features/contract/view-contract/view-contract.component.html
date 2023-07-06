@@ -6,7 +6,7 @@
           <h3>{{contract_form.controls['code'].value}}</h3>
           <p-divider></p-divider>
           <span class="p-buttonset flex justify-content-center">
-            <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
+            <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash" (click)="deleteContractRequest(this.c_id)"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
             <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
@@ -189,7 +189,7 @@
                 <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label><span class="required-star">*</span>商機</label>
-                    <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'"
+                    <p-dropdown [options]="GetAllOpportunity" formControlName="opportunity_id"
                                 [filter]="true" filterBy="label" [showClear]="true"
                                 [ngClass]="{'ng-dirty':contract_form.controls['opportunity_id'].hasError('required') && contract_form.controls['opportunity_id'].touched}"></p-dropdown>
                   </div>
@@ -218,7 +218,7 @@
                            [ngClass]="{'ng-dirty':contract_form.controls['term'].hasError('required') && contract_form.controls['term'].touched}">
                   </div>
                 </div>
-<!--                最大1G-->
+                <!--最大1G-->
                 <div class="col-12">
                   <div class="field">
                   <label>契約檔案上傳處</label>

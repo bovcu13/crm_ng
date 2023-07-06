@@ -96,12 +96,16 @@ export class ViewContractComponent {
         this.GetOneContract = res.body;
         this.stage = res.body.status;
         this.contract_form.patchValue({
+          opportunity_id: this.GetAllOpportunity.find((opportunity: { label: any; }) => opportunity.label === res.body.opportunity_name),
+        })
+        this.contract_form.patchValue({
           code: res.body.code,
           status: this.status.find((s: { name: any; }) => s.name === this.GetOneContract.status),
           salesperson_name: res.body.salesperson_name,
           start_date: this.formatDate2(res.body.start_date),
           term: res.body.term,
           end_date: this.formatDate2(res.body.end_date),
+          // opportunity_id: this.GetOneContract.opportunity_name,
           account_id: res.body.account_id,
           account_name: res.body.account_name,
           description: res.body.description,
@@ -113,7 +117,7 @@ export class ViewContractComponent {
         if (this.GetOneContract.status === '已取消' || this.GetOneContract.status === '已過期') {
           this.contract_form.controls['status'].disable();
         }
-        console.log(this.GetOneContract)
+        console.log(res.body.opportunity_name)
       },
       (error) => {
         console.log(error);
@@ -179,6 +183,55 @@ export class ViewContractComponent {
         }
       }
     )
+  }
+
+  //刪除這個契約
+  deleteContractRequest(c_id: any): void {
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.deleteQuoteRequest(c_id).subscribe(Request => {
+          console.log(Request)
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            }).then(() => {
+              window.location.href = '/main/contract';
+            });
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
   }
 
 //編輯&新增dialog
