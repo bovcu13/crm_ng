@@ -104,6 +104,9 @@
     <div>
       <p-card>
         <form [formGroup]="quote_form">
+          <div class="flex justify-content-left ml-3 font-bold">
+            <label>報價詳細頁面</label>
+          </div>
           <p-tabView>
             <p-tabPanel header="詳細">
               <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllQuoteProduct" [lazy]="true"
