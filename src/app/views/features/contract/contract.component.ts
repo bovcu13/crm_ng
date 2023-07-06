@@ -70,7 +70,7 @@ export class ContractComponent {
   ]
 
   ngOnInit() {
-    this.getAllAccountRequest()
+    this.getAllOpportunityRequest()
   }
 
   //GET全部contract
@@ -95,17 +95,19 @@ export class ContractComponent {
       });
   }
 
-  // GET全部Account
-  GetAllAccount: any[] = [];
-  accountSearch!: string;
+  // GET全部Opportunity
+  GetAllOpportunity: any[] = [];
+  OpportunitySearch!: string;
 
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
+  getAllOpportunityRequest() {
+    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe(
       (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
+        const GetOpportunity = res.body.opportunities.filter((opportunity: any)  => opportunity.stage == "已結束")
+        this.GetAllOpportunity = GetOpportunity.map((opportunity: any) => {
           return {
-            label: account.name,
-            value: account.account_id
+            label: opportunity.name,
+            value: opportunity.opportunity_id,
+            account_id: opportunity.account_id,
           };
         });
       },
@@ -118,7 +120,7 @@ export class ContractComponent {
 //POST 一筆contract
   postContractRequest(): void {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['opportunity_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
       this.contract_form.controls['status'].hasError('required')) {
       this.edit = false;
@@ -132,8 +134,8 @@ export class ContractComponent {
         if (this.contract_form.controls['start_date'].hasError('required')) {
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if (this.contract_form.controls['account_id'].hasError('required')) {
-          this.contract_form.controls['account_id'].markAsDirty();
+        if (this.contract_form.controls['opportunity_id'].hasError('required')) {
+          this.contract_form.controls['opportunity_id'].markAsDirty();
         }
         if (this.contract_form.controls['term'].hasError('required')) {
           this.contract_form.controls['term'].markAsDirty();
@@ -152,7 +154,7 @@ export class ContractComponent {
       description: this.contract_form.value.description,
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,
-      account_id: this.contract_form.value.account_id,
+      opportunity_id: this.contract_form.value.opportunity_id,
     }
 
     this.HttpApi.postContractRequest(body).subscribe(Request => {
@@ -191,7 +193,7 @@ export class ContractComponent {
       contract_id: [''],
       salesperson_name: [''],
       code: [''],
-      account_id: ['', [Validators.required]],
+      opportunity_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
       status: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
@@ -224,7 +226,7 @@ export class ContractComponent {
       this.contract_form.patchValue(contract);
       this.contract_form.patchValue({
         start_date: new Date(contract.start_date),
-        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contract.account_name),
+        account_name: this.GetAllOpportunity.find((a: { label: any; }) => a.label === contract.account_name),
       });
       this.showedit = true;
       if(contract.status === "已過期" || contract.status === "已取消"){
@@ -246,7 +248,7 @@ export class ContractComponent {
 
   patchContractRequest(c_id: any): void {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['opportunity_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
       this.contract_form.controls['status'].hasError('required')) {
       this.edit = false;
@@ -260,8 +262,8 @@ export class ContractComponent {
         if(this.contract_form.controls['start_date'].hasError('required') ){
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if(this.contract_form.controls['account_id'].hasError('required') ){
-          this.contract_form.controls['account_id'].markAsDirty();
+        if(this.contract_form.controls['opportunity_id'].hasError('required') ){
+          this.contract_form.controls['opportunity_id'].markAsDirty();
         }
         if(this.contract_form.controls['term'].hasError('required') ){
           this.contract_form.controls['term'].markAsDirty();
@@ -274,11 +276,10 @@ export class ContractComponent {
       return;
     }
     let start_date = new Date(this.contract_form.get('start_date')?.value);
-    start_date.setDate(start_date.getDate() + 1);
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      account_id: this.contract_form.get('account_id')?.value,
+      opportunity_id: this.contract_form.get('opportunity_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
     }

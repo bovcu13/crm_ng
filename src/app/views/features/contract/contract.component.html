@@ -110,11 +110,10 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label><span class="required-star">*</span>帳戶</label>
-          <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'"
+          <label><span class="required-star">*</span>商機</label>
+          <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'"
                       [filter]="true" filterBy="label" [showClear]="true"
-                      [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError('required') && contract_form.controls['account_id'].touched}"></p-dropdown>
-
+                      [ngClass]="{'ng-dirty':contract_form.controls['opportunity_id'].hasError('required') && contract_form.controls['opportunity_id'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">

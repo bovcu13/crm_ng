@@ -118,7 +118,7 @@ export class ViewContractComponent {
   }
   patchContractRequest() {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['opportunity_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
       this.contract_form.controls['status'].hasError('required')) {
       Swal.fire({
@@ -131,8 +131,8 @@ export class ViewContractComponent {
         if (this.contract_form.controls['start_date'].hasError('required')) {
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if (this.contract_form.controls['account_id'].hasError('required')) {
-          this.contract_form.controls['account_id'].markAsDirty();
+        if (this.contract_form.controls['opportunity_id'].hasError('required')) {
+          this.contract_form.controls['opportunity_id'].markAsDirty();
         }
         if (this.contract_form.controls['term'].hasError('required')) {
           this.contract_form.controls['term'].markAsDirty();
@@ -144,11 +144,10 @@ export class ViewContractComponent {
       return;
     }
     let start_date = new Date(this.contract_form.get('start_date')?.value);
-    start_date.setDate(start_date.getDate() + 1);
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      account_id: this.contract_form.get('account_id')?.value,
+      opportunity_id: this.contract_form.get('opportunity_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
     }
@@ -206,16 +205,18 @@ export class ViewContractComponent {
     this.edit = true;
   }
 
-  // GET全部Account
-  GetAllAccount: any[] = [];
-  accountSearch!: string;
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
+  // GET全部Opportunity
+  GetAllOpportunity: any[] = [];
+  OpportunitySearch!: string;
+  getAllOpportunityRequest() {
+    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe(
       (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
+        const GetOpportunity = res.body.opportunities.filter((opportunity: any)  => opportunity.stage == "已結束")
+        this.GetAllOpportunity = GetOpportunity.map((opportunity: any) => {
           return {
-            label: account.name,
-            value: account.account_id
+            label: opportunity.name,
+            value: opportunity.opportunity_id,
+            account_id: opportunity.account_id,
           };
         });
       },
@@ -235,7 +236,7 @@ export class ViewContractComponent {
       contract_id: [''],
       salesperson_name: [''],
       code: [''],
-      account_id: ['', [Validators.required]],
+      opportunity_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
       status: ['', [Validators.required]],
       start_date: [[Validators.required]],
@@ -265,7 +266,7 @@ export class ViewContractComponent {
     this.c_id = this.route.snapshot.paramMap.get('c_id')
     console.log("取到的o_id: " + this.c_id)
     this.getOneContractRequest(this.c_id)
-    this.getAllAccountRequest()
+    this.getAllOpportunityRequest()
     this.getAllOrderRequest()
     this.getAllContractHistoricalRecordsRequest(this.c_id)
   }
