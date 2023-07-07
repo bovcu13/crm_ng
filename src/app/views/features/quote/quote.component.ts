@@ -77,9 +77,8 @@ export class QuoteComponent {
   ]
 
   getAllQuoteRequest() {
-    this.HttpApi.getAllQuoteRequest(this.search, 1).subscribe(
-      (res) => {
-        this.GetAllQuote = res.body.quotes
+    this.HttpApi.getAllQuoteRequest(this.search, 1).subscribe({
+      next:(res) => {
         this.GetAllQuote = res.body.quotes.map((quote: any) => {
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
@@ -87,10 +86,10 @@ export class QuoteComponent {
           return {...quote, expiration_date, created_at, updated_at};
         });
       },
-      (error) => {
+      error:(error) => {
         console.log(error);
       }
-    );
+  });
   }
 
   //POST 一筆quote
@@ -131,7 +130,8 @@ export class QuoteComponent {
       tax: this.quote_form.value.tax,
       description: this.quote_form.value.description,
     }
-    this.HttpApi.postQuoteRequest(body).subscribe(Request => {
+    this.HttpApi.postQuoteRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         this.edit = false;
         if (Request.code === 200) {
@@ -155,9 +155,10 @@ export class QuoteComponent {
           })
         }
       },
-      error => {
+      error: error => {
         console.log(error);
-      })
+      }
+    })
   }
 
   patchQuoteRequest(p_id: any): void {
@@ -199,8 +200,8 @@ export class QuoteComponent {
       shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
       tax: this.quote_form.get('tax')?.value,
     }
-    this.HttpApi.patchQuoteRequest(p_id, body).subscribe(
-      Request => {
+    this.HttpApi.patchQuoteRequest(p_id, body).subscribe({
+      next: Request => {
         console.log(Request)
         this.edit = false;
         if (Request.code === 200) {
@@ -224,7 +225,11 @@ export class QuoteComponent {
             this.edit = true;
           })
         }
-      });
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
   }
 
 
@@ -240,26 +245,31 @@ export class QuoteComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.HttpApi.deleteQuoteRequest(q_id).subscribe(Request => {
-          console.log(Request)
-          if (Request.code === 200) {
-            this.edit = false;
-            Swal.fire({
-              title: '成功',
-              text: "已刪除您的資料 :)",
-              icon: 'success',
-              showConfirmButton: false,
-              timer: 1000
-            })
-            this.getAllQuoteRequest()
-          } else {
-            Swal.fire({
-              title: '失敗',
-              text: "請確認資料是否正確 :(",
-              icon: 'error',
-              showConfirmButton: false,
-              timer: 1500
-            })
+        this.HttpApi.deleteQuoteRequest(q_id).subscribe({
+          next: Request => {
+            console.log(Request)
+            if (Request.code === 200) {
+              this.edit = false;
+              Swal.fire({
+                title: '成功',
+                text: "已刪除您的資料 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllQuoteRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          },
+          error: error => {
+            console.log(error);
           }
         })
       } else {
@@ -396,10 +406,10 @@ export class QuoteComponent {
   opportunitysearch: any;
 
   getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe(
-      (res) => {
+    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe({
+      next: (res) => {
         //商機階段如果不到提案狀態就無法選擇
-        const getopportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage !== "資格評估" && opportunity.stage !=="需求分析");
+        const getopportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage !== "資格評估" && opportunity.stage !== "需求分析");
         this.GetAllOpportunity = getopportunity.map((opportunity: any) => {
           return {
             label: opportunity.name,
@@ -408,10 +418,10 @@ export class QuoteComponent {
           };
         });
       },
-      (error) => {
+      error: (error) => {
         console.log(error);
       }
-    );
+    });
   }
 
   selectedAccount_id: string = '';
