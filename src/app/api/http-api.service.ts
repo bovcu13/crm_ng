@@ -512,7 +512,7 @@ export class HttpApiService {
 
 
   //取得一筆 報價 getone
-  getOneQuotetRequest(id: any): Observable<Quote> {
+  getOneQuoteRequest(id: any): Observable<Quote> {
     const url = `${this.BaseUrl}/quotes/${id}`;
     return this.http.get<Quote>(url);
   }

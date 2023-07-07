@@ -398,7 +398,9 @@ export class QuoteComponent {
   getAllopportunityRequest() {
     this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe(
       (res) => {
-        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
+        //商機階段如果不到提案狀態就無法選擇
+        const getopportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage !== "資格評估" && opportunity.stage !=="需求分析");
+        this.GetAllOpportunity = getopportunity.map((opportunity: any) => {
           return {
             label: opportunity.name,
             value: opportunity.opportunity_id,
@@ -434,6 +436,7 @@ export class QuoteComponent {
     this.loading = true;
     this.HttpApi.getAllQuoteRequest(this.search, 1, limit, page, e).subscribe(
       request => {
+        //如果商機沒有被選取則無法顯示這筆報價
         const getquote = request.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
         this.GetAllQuote = getquote.map((quote: any) => {
           const expiration_date = this.formatDate2(quote.expiration_date)
