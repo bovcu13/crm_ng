@@ -434,14 +434,14 @@ export class QuoteComponent {
     this.loading = true;
     this.HttpApi.getAllQuoteRequest(this.search, 1, limit, page, e).subscribe(
       request => {
-        this.GetAllQuote = request.body.quotes;
-        this.GetAllQuote = request.body.quotes.map((quote: any) => {
+        const getquote = request.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
+        this.GetAllQuote = getquote.map((quote: any) => {
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
           const updated_at = this.formatDate(quote.updated_at);
           return {...quote, expiration_date, created_at, updated_at};
         });
-        this.totalRecords = request.body.total;
+        this.totalRecords = this.GetAllQuote.length;
         this.loading = false;
         console.log(this.GetAllQuote)
       });
