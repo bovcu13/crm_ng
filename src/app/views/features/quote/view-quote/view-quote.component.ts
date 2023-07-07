@@ -704,11 +704,20 @@ export class ViewQuoteComponent {
     this.loading = true;
     this.HttpApi.getAllProductRequest(this.search, 1, limit, page, e).subscribe(
       request => {
-        //商品有被啟用才可被報價
-        this.GetAllProduct = request.body.products.filter((products: any) => products.is_enable == true);
+        if(this.GetAllQuoteProduct.length == 0){
+          this.GetAllProduct = request.body.products.filter((products: any) => products.is_enable == true);
+          console.log(this.GetAllProduct)
+        }else{
+          //如果商品有被報價過則不顯示可勾選商品中
+          const finalProduct = request.body.products.filter((product: any) => {
+            return !this.GetAllQuoteProduct.some((existingProduct: any) => existingProduct.product_id === product.product_id);
+          });
+          //商品有被啟用才可被報價
+          this.GetAllProduct = finalProduct.filter((products: any) => products.is_enable == true);
+          console.log(this.GetAllProduct)
+        }
         this.totalRecords = this.GetAllProduct.length;
         this.loading = false;
-        console.log(this.GetAllProduct)
       });
   }
 

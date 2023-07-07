@@ -291,8 +291,9 @@
 <!-- 新增產品dialog -->
 <p-dialog [(visible)]="add" header=新增商品 [modal]="true">
   <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllProduct" [(selection)]="selectedProducts"
+           [showCurrentPageReport]="true"
            [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTable($event)"
-           [(first)]="first" [loading]="loading">
+           [(first)]="first" [loading]="loading" currentPageReportTemplate="共 {totalRecords} 筆">
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem">
@@ -350,7 +351,7 @@
           <th></th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-product let-i="rowIndex">
+      <ng-template pTemplate="body" let-product>
         <tr>
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
