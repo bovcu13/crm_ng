@@ -122,12 +122,13 @@ export class CampaignComponent {
   totalRecords = 0;
   search: any;
   loading: boolean = false;
+
   //懶加載
   loadTable(e: any) {
     let limit = e.rows;
     this.loading = true;
     let page = e.first / e.rows + 1;
-    this.HttpApi.getAllCampaignRequest(this.search, 1,limit, page, e).subscribe(
+    this.HttpApi.getAllCampaignRequest(this.search, 1, limit, page, e).subscribe(
       request => {
         this.loading = false;
         this.GetAllCampaign = request.body.campaigns;
@@ -137,12 +138,13 @@ export class CampaignComponent {
           const end_date = this.formatDate2(campaign.end_date)
           const created_at = this.formatDate(campaign.created_at);
           const updated_at = this.formatDate(campaign.updated_at);
-          return {...campaign,parent_campaign_id,start_date,end_date, created_at, updated_at};
+          return {...campaign, parent_campaign_id, start_date, end_date, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
         console.log(this.GetAllCampaign)
       });
   }
+
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
@@ -150,8 +152,8 @@ export class CampaignComponent {
 
 
   getAllCampaignRequest() {
-    this.HttpApi.getAllCampaignRequest(this.search,1).subscribe(
-      (res) => {
+    this.HttpApi.getAllCampaignRequest(this.search, 1).subscribe({
+      next: res => {
         const campaigns = res.body.campaigns
         this.GetAllparent_campaign = campaigns.map((campaign: any) => {
           return {
@@ -168,11 +170,12 @@ export class CampaignComponent {
           const updated_at = this.formatDate(campaign.updated_at);
           return {...campaign, parent_campaign_id, start_date, end_date, created_at, updated_at};
         });
-      },
-      (error) => {
+      }
+      ,
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   postCampaignRequest(): void {
@@ -219,7 +222,8 @@ export class CampaignComponent {
       actual_cost: this.campaign_form.value.actual_cost,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.HttpApi.postCampaignRequest(body).subscribe(Request => {
+    this.HttpApi.postCampaignRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -243,10 +247,10 @@ export class CampaignComponent {
           })
         }
       },
-      error => {
+      error: error => {
         console.log(error);
       }
-    )
+    })
   }
 
 
@@ -288,6 +292,7 @@ export class CampaignComponent {
   showedit = true;//判斷是否dialog為新增與編輯
   c_id: any;
   disableSaveButton: boolean = false
+
   showDialog(type: string, campaign?: any): void {
     this.edit = true;
     if (type === 'add') {
@@ -469,6 +474,7 @@ export class CampaignComponent {
       timer: 1000
     })
   }
+
   //如果父系行銷活動沒有被選擇
   parent_campaign_id(parent_campaign_id: string): any {
     if (parent_campaign_id == "00000000-0000-4000-a000-000000000000") {
