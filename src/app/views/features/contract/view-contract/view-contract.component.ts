@@ -117,7 +117,6 @@ export class ViewContractComponent {
         if (this.GetOneContract.status === '已取消' || this.GetOneContract.status === '已過期') {
           this.contract_form.controls['status'].disable();
         }
-        console.log(res.body.opportunity_name)
       },
       (error) => {
         console.log(error);
@@ -198,7 +197,7 @@ export class ViewContractComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.HttpApi.deleteQuoteRequest(c_id).subscribe(Request => {
+        this.HttpApi.deleteContractRequest(c_id).subscribe(Request => {
           console.log(Request)
           if (Request.code === 200) {
             Swal.fire({
