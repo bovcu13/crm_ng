@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private fb: FormBuilder,private router:Router) {
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private fb: FormBuilder, private router: Router) {
     this.login_form = this.fb.group({
       //必填
       user_name: ['admin', [Validators.required]],
@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
       this.isFloating = !this.isFloating;
     }, 1000);
   }
+
   isFloating: boolean = false;
 
   onSubmit(): void {
@@ -41,8 +42,8 @@ export class LoginComponent implements OnInit {
       "company_id": this.login_form.controls['company_id'].value,
       "password": this.login_form.controls['password'].value
     }
-    this.authService.login(body).subscribe(
-      data => {
+    this.authService.login(body).subscribe({
+      next: data => {
         this.tokenStorage.saveToken(data.body.access_token);
         this.tokenStorage.saveRefreshToken(data.body.refresh_token);
         this.tokenStorage.saveUser(data);
@@ -56,11 +57,11 @@ export class LoginComponent implements OnInit {
           icon: 'success',
           showConfirmButton: false,
           timer: 1500
-        }).then(()=>{
+        }).then(() => {
           this.router.navigate(['/main']);
         })
       },
-      err => {
+      error: err => {
         // 帳密錯誤
         Swal.fire({
           title: '失敗',
@@ -72,7 +73,7 @@ export class LoginComponent implements OnInit {
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
       }
-    );
+    });
   }
 
   reloadPage(): void {

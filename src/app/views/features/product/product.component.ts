@@ -56,7 +56,8 @@ export class ProductComponent {
       description: this.product_form.value.description,
       price: this.product_form.value.price,
     }
-    this.HttpApi.postProductRequest(body).subscribe(Request => {
+    this.HttpApi.postProductRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -70,7 +71,7 @@ export class ProductComponent {
           this.getAllProductRequest()
         }
       },
-      error => {
+      error: error => {
         console.log(error);
         this.edit = false;
         if (error.status === 400) {
@@ -85,7 +86,8 @@ export class ProductComponent {
         }).then(() => {
           this.edit = true;
         })
-      })
+      }
+    })
   }
 
 
@@ -158,8 +160,8 @@ export class ProductComponent {
       price: this.product_form.get('price')?.value,
       code: this.product_form.get('code')?.value,
     }
-    this.HttpApi.patchProductRequest(p_id, body).subscribe(
-      Request => {
+    this.HttpApi.patchProductRequest(p_id, body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -172,7 +174,8 @@ export class ProductComponent {
           })
           this.getAllProductRequest()
         }
-      }, error => {
+      },
+      error: error => {
         console.log(error);
         this.edit = false;
         if (error.status === 400) {
@@ -187,7 +190,8 @@ export class ProductComponent {
         }).then(() => {
           this.edit = true;
         })
-      })
+      }
+    })
   }
 
 

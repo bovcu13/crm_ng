@@ -110,8 +110,8 @@ export class ViewOpportunityComponent implements OnInit {
   accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
-      (request) => {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+      next: request => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
           // console.log(account);
           return {
@@ -137,21 +137,27 @@ export class ViewOpportunityComponent implements OnInit {
           }
         )
       },
-      (error) => {
-        console.log(error);
+      error: err => {
+        console.log(err);
       }
-    );
+    });
   }
 
-  // 現在時間
-  currentDate = new Date()
+    // 現在時間
+    currentDate = new Date()
 
-  patchOpportunity(id: any): void {
-    if (this.opportunity_form.controls['account_name'].hasError('required') ||
-      this.opportunity_form.controls['name'].hasError('required') ||
-      this.opportunity_form.controls['stage'].hasError('required') ||
-      this.opportunity_form.controls['forecast_category'].hasError('required') ||
-      this.opportunity_form.controls['close_date'].hasError('required')) {
+    patchOpportunity(id
+  :
+    any
+  ):
+    void {
+      if(this.opportunity_form.controls['account_name'].hasError('required') ||
+        this.opportunity_form.controls['name'].hasError('required') ||
+        this.opportunity_form.controls['stage'].hasError('required') ||
+        this.opportunity_form.controls['forecast_category'].hasError('required') ||
+        this.opportunity_form.controls['close_date'].hasError('required')
+  )
+    {
       Swal.fire({
         title: '未填寫',
         text: "請填寫必填欄位！",
@@ -212,39 +218,56 @@ export class ViewOpportunityComponent implements OnInit {
   }
 
 
-  showAlertCancel() {
-    Swal.fire({
-      title: '取消',
-      text: "已取消您的變更！",
-      icon: 'error',
-      showCancelButton: false,
-      showConfirmButton: false,
-      reverseButtons: false,
-      timer: 1000
-    })
-    this.getOneOpportunity(this.id)
+    showAlertCancel()
+    {
+      Swal.fire({
+        title: '取消',
+        text: "已取消您的變更！",
+        icon: 'error',
+        showCancelButton: false,
+        showConfirmButton: false,
+        reverseButtons: false,
+        timer: 1000
+      })
+      this.getOneOpportunity(this.id)
+    }
+
+    selectedStage: any;
+
+    stageValue(event
+  :
+    any
+  ):
+    void {
+      this.selectedStage = this.stage.find((s) => s.name === event.value.name);
+      this.opportunity_form.value.stage = this.selectedStage.name
+    }
+
+    selectedForecastCategory: any;
+
+    forecast_categoryValue(event
+  :
+    any
+  ):
+    void {
+      this.selectedForecastCategory = this.forecast_category.find((s) => s.name === event.value.name);
+      this.opportunity_form.value.forecast_category = this.selectedForecastCategory.name
+    }
+
+
+    selectedAccountName!
+  :
+    string;
+    selectedAccountId!
+  :
+    string;
+
+    accountValue(event
+  :
+    any
+  ):
+    void {
+      this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
+      this.selectedAccountId = event.value.value
+    }
   }
-
-  selectedStage: any;
-
-  stageValue(event: any): void {
-    this.selectedStage = this.stage.find((s) => s.name === event.value.name);
-    this.opportunity_form.value.stage = this.selectedStage.name
-  }
-
-  selectedForecastCategory: any;
-
-  forecast_categoryValue(event: any): void {
-    this.selectedForecastCategory = this.forecast_category.find((s) => s.name === event.value.name);
-    this.opportunity_form.value.forecast_category = this.selectedForecastCategory.name
-  }
-
-
-  selectedAccountName!: string;
-  selectedAccountId!: string;
-
-  accountValue(event: any): void {
-    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
-    this.selectedAccountId = event.value.value
-  }
-}

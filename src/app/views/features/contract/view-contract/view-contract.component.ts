@@ -10,6 +10,7 @@ interface UploadEvent {
   originalEvent: Event;
   files: File[];
 }
+
 @Component({
   selector: 'app-view-contract',
   templateUrl: './view-contract.component.html',
@@ -64,39 +65,46 @@ export class ViewContractComponent {
   //取得當筆契約歷史紀錄
   GetContractHistoricalRecords: any[] = [];
   totalHistorical: any;
-  getAllContractHistoricalRecordsRequest(c_id: any){
-    this.HttpApi.getAllContractHistoricalRecordsRequest(20,1,c_id).subscribe(res => {
-      this.GetContractHistoricalRecords= res.body.historical_records.map((contract: any) => {
-        const modified_at = this.formatDate(contract.modified_at)
-        return {...contract, modified_at};
-      });
-      this.totalHistorical = res.body.total
-      console.log(this.GetContractHistoricalRecords)
+
+  getAllContractHistoricalRecordsRequest(c_id: any) {
+    this.HttpApi.getAllContractHistoricalRecordsRequest(20, 1, c_id).subscribe(res => {
+        this.GetContractHistoricalRecords = res.body.historical_records.map((contract: any) => {
+          const modified_at = this.formatDate(contract.modified_at)
+          return {...contract, modified_at};
+        });
+        this.totalHistorical = res.body.total
+        console.log(this.GetContractHistoricalRecords)
       }
     )
   }
+
   loadTable(e: any) {
     let page = e.first / e.rows + 1;
     let limit = e.rows;
     this.loading = true;
     this.HttpApi.getAllContractHistoricalRecordsRequest(limit, page, e).subscribe(
       request => {
-        this.GetContractHistoricalRecords= request.body.historical_records.map((contract: any) => {
+        this.GetContractHistoricalRecords = request.body.historical_records.map((contract: any) => {
           const modified_at = this.formatDate(contract.modified_at)
           return {...contract, modified_at};
         });
         this.totalHistorical = request.body.total
       });
   }
+
   //取得當筆契約資料
   GetOneContract!: any;
   stage: any;
+
   getOneContractRequest(c_id: any) {
-    this.HttpApi.getOneContractRequest(c_id).subscribe(res => {
+    this.HttpApi.getOneContractRequest(c_id).subscribe({
+      next: res => {
         this.GetOneContract = res.body;
         this.stage = res.body.status;
         this.contract_form.patchValue({
-          opportunity_id: this.GetAllOpportunity.find((opportunity: { label: any; }) => opportunity.label === res.body.opportunity_name),
+          opportunity_id: this.GetAllOpportunity.find((opportunity: {
+            label: any;
+          }) => opportunity.label === res.body.opportunity_name),
         })
         this.contract_form.patchValue({
           code: res.body.code,
@@ -118,11 +126,12 @@ export class ViewContractComponent {
           this.contract_form.controls['status'].disable();
         }
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
+
   patchContractRequest() {
     if (this.contract_form.controls['start_date'].hasError('required') ||
       this.contract_form.controls['opportunity_id'].hasError('required') ||
@@ -264,10 +273,11 @@ export class ViewContractComponent {
   // GET全部Opportunity
   GetAllOpportunity: any[] = [];
   OpportunitySearch!: string;
+
   getAllOpportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe(
-      (res) => {
-        const GetOpportunity = res.body.opportunities.filter((opportunity: any)  => opportunity.stage == "已結束")
+    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe({
+      next: res => {
+        const GetOpportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage == "已結束")
         this.GetAllOpportunity = GetOpportunity.map((opportunity: any) => {
           return {
             label: opportunity.name,
@@ -276,10 +286,10 @@ export class ViewContractComponent {
           };
         });
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   //建立formgroup
@@ -287,7 +297,7 @@ export class ViewContractComponent {
   c_id: any;
   order_form: FormGroup;
 
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute,private messageService: MessageService) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute, private messageService: MessageService) {
     this.contract_form = this.fb.group({
       contract_id: [''],
       salesperson_name: [''],
@@ -333,10 +343,11 @@ export class ViewContractComponent {
   GetAllOrder: HttpApiService[] = [];
   search: string = '';  // 搜尋關鍵字
   loading: boolean = false;
+
   getAllOrderRequest() {
     this.loading = true
-    this.HttpApi.getAllOrderRequest(this.search,1).subscribe(
-      (res) => {
+    this.HttpApi.getAllOrderRequest(this.search, 1).subscribe({
+      next: res => {
         this.loading = false;
         const contracts = res.body.orders.filter((order: any) => order.contract_id == this.c_id);
         this.GetAllOrder = contracts.map((order: any) => {
@@ -349,10 +360,10 @@ export class ViewContractComponent {
         this.totalRecords = res.body.total;
         console.log(this.GetAllOrder)
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   postOrderRequest(): void {
@@ -387,7 +398,8 @@ export class ViewContractComponent {
       start_date: this.order_form.value.start_date,
       contract_id: this.c_id, //契約ID
     }
-    this.HttpApi.postOrderRequest(body).subscribe(Request => {
+    this.HttpApi.postOrderRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -411,10 +423,12 @@ export class ViewContractComponent {
           })
         }
       },
-      error => {
+      error: error => {
         console.log(error);
-      })
+      }
+    })
   }
+
   patchOrderRequest() {
     if (this.order_form.controls['start_date'].hasError('required')) {
       this.edit = false;
@@ -557,8 +571,9 @@ export class ViewContractComponent {
 
   //上傳檔案
   uploadedFiles: any[] = [];
-  onUpload(event:UploadEvent) {
-    for(let file of event.files) {
+
+  onUpload(event: UploadEvent) {
+    for (let file of event.files) {
       this.uploadedFiles.push(file);
     }
     this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});

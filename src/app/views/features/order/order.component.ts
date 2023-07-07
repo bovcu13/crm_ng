@@ -58,8 +58,8 @@ export class OrderComponent {
   }
 
   getAllOrderRequest() {
-    this.HttpApi.getAllOrderRequest(this.search,1).subscribe(
-      (res) => {
+    this.HttpApi.getAllOrderRequest(this.search, 1).subscribe({
+      next: res => {
         this.GetAllOrder = res.body.orders
         this.GetAllOrder = res.body.orders.map((order: any) => {
           const start_date = this.formatDate2(order.start_date)
@@ -71,11 +71,12 @@ export class OrderComponent {
         this.totalRecords = res.body.total;
         console.log(this.GetAllOrder)
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
+
   // table lazyload
   totalRecords = 0;
   //取得所有訂單資料
@@ -88,7 +89,7 @@ export class OrderComponent {
     let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.loading = true;
-    this.HttpApi.getAllOrderRequest(this.search, 1,limit, page, e).subscribe(
+    this.HttpApi.getAllOrderRequest(this.search, 1, limit, page, e).subscribe(
       request => {
         this.GetAllOrder = request.body.orders;
         this.GetAllOrder = request.body.orders.map((order: any) => {
@@ -96,13 +97,14 @@ export class OrderComponent {
           const activated_at = this.formatDate(order.activated_at)
           const created_at = this.formatDate(order.created_at);
           const updated_at = this.formatDate(order.updated_at);
-          return {...order,start_date,activated_at, created_at, updated_at};
+          return {...order, start_date, activated_at, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
         this.loading = false;
         console.log(this.GetAllOrder)
       });
   }
+
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
@@ -147,7 +149,8 @@ export class OrderComponent {
       contract_id: this.selectedContract_id, //契約ID
       //account_id: this.selectedAccount_id //帳戶ID
     }
-    this.HttpApi.postOrderRequest(body).subscribe(Request => {
+    this.HttpApi.postOrderRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -171,9 +174,10 @@ export class OrderComponent {
           })
         }
       },
-      error => {
+      error: error => {
         console.log(error);
-      })
+      }
+    })
   }
 
 
@@ -358,8 +362,8 @@ export class OrderComponent {
   contractsearch: any;
 
   getAllContractRequest() {
-    this.HttpApi.getAllContractRequest(this.contractsearch,1).subscribe(
-      (res) => {
+    this.HttpApi.getAllContractRequest(this.contractsearch, 1).subscribe({
+      next: res => {
         const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
         this.GetAllContract = contracts.map((contract: any) => {
           return {
@@ -370,10 +374,10 @@ export class OrderComponent {
           };
         });
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   showAlertCancel() {
@@ -401,6 +405,7 @@ export class OrderComponent {
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
+
   //selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
     // const today: Date = new Date(); // 創建一個Date物件
@@ -424,7 +429,7 @@ export class OrderComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
+    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours());
     return start_date.toISOString().slice(0, 10);
   }
 

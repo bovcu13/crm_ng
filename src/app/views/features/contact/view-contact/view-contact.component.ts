@@ -76,8 +76,8 @@ export class ViewContactComponent implements OnInit {
   accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
-      (request) => {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+      next: request => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
           // console.log(account)
           return {
@@ -86,10 +86,10 @@ export class ViewContactComponent implements OnInit {
           };
         });
       },
-      (error) => {
-        console.log(error);
+      error: err => {
+        console.log(err);
       }
-    );
+    });
   }
 
   patchContact(): void {
