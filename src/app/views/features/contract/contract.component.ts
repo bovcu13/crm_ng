@@ -270,9 +270,8 @@ export class ContractComponent {
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
     }
-
-    this.HttpApi.patchContractRequest(c_id, body).subscribe(
-      Request => {
+    this.HttpApi.patchContractRequest(c_id, body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -295,7 +294,11 @@ export class ContractComponent {
             this.edit = true;
           })
         }
-      });
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
   }
 
   deleteContractRequest(c_id: any): void {
