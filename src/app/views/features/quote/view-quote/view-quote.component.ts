@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-view-quote',
@@ -10,6 +11,7 @@ import Swal from "sweetalert2";
   styleUrls: ['./view-quote.component.scss']
 })
 export class ViewQuoteComponent {
+  @ViewChild('dt1') dt1!: Table;
 //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -70,6 +72,7 @@ export class ViewQuoteComponent {
     this.getOneQuoteRequest(this.q_id)
     this.getAllopportunityRequest()
     this.getQuoteProductRequest()
+    this.getAllQuoteHistoricalRecordsRequest(this.q_id)
     // this.getAllQuoteProductsRequest()
     this.quote_product_form = this.fb.group({
       quote_product_id: [''],
@@ -254,6 +257,7 @@ export class ViewQuoteComponent {
             this.selectedProducts = []
             this.getQuoteProductRequest()
             this.getOneQuoteRequest(this.q_id)
+            this.getAllQuoteHistoricalRecordsRequest(this.q_id)
             //this.getAllQuoteProductsRequest()
           } else {
             Swal.fire({
@@ -332,6 +336,7 @@ export class ViewQuoteComponent {
             })
             this.getQuoteProductRequest()
             this.getOneQuoteRequest(this.q_id)
+            this.getAllQuoteHistoricalRecordsRequest(this.q_id)
             //this.getAllQuoteProductsRequest()
           } else {
             Swal.fire({
@@ -379,6 +384,7 @@ export class ViewQuoteComponent {
               });
               this.getQuoteProductRequest()
               this.getOneQuoteRequest(this.q_id)
+              this.getAllQuoteHistoricalRecordsRequest(this.q_id)
               //this.getAllQuoteProductsRequest();
             } else {
               Swal.fire({
@@ -461,6 +467,7 @@ export class ViewQuoteComponent {
             })
             this.getQuoteProductRequest()
             this.getOneQuoteRequest(this.q_id)
+            this.getAllQuoteHistoricalRecordsRequest(this.q_id)
             //this.getAllQuoteProductsRequest()
           } else {
             Swal.fire({
@@ -537,6 +544,7 @@ export class ViewQuoteComponent {
             timer: 1000
           })
           this.getOneQuoteRequest(q_id)
+          this.getAllQuoteHistoricalRecordsRequest(this.q_id)
         } else {
           Swal.fire({
             title: '失敗',
@@ -747,5 +755,20 @@ export class ViewQuoteComponent {
       const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
       return expiration_date.toISOString().slice(0, 10);
     }
+  }
+
+  //取得當筆報價歷史紀錄
+  GetQuoteHistoricalRecords: any[] = [];
+  totalHistorical: any;
+  getAllQuoteHistoricalRecordsRequest(q_id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, q_id).subscribe(res => {
+        this.GetQuoteHistoricalRecords = res.body.historical_records.map((quote: any) => {
+          const modified_at = this.formatDate(quote.modified_at)
+          return {...quote, modified_at};
+        });
+        this.totalHistorical = res.body.total
+        console.log(this.GetQuoteHistoricalRecords)
+      }
+    )
   }
 }

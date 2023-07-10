@@ -85,17 +85,15 @@
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
                 'bg-yellow-300': stage === '已報價',
-                'bg-green-300': stage === '客戶簽回'
-            }">
+                'bg-green-300': stage === '客戶簽回'}">
           <span class="span"
                 *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已報價'">已報價</span>
             <i class="pi pi-check" *ngIf="stage==='客戶簽回'"></i>
 
           </button>
           <button class="flex justify-content-center" [ngClass]="{
-                'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
-                'bg-green-300': stage === '客戶簽回'
-            }">
+                'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准'||stage ==='已報價',
+                'bg-green-300': stage === '客戶簽回'}">
             <span class="span">客戶簽回</span>
           </button>
         </div>
@@ -146,7 +144,8 @@
                     <td>{{ product.total_price }}</td>
                     <td>
                       <div class="flex justify-content-end">
-                        <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top" (click)="editOneProduct(product)"
+                        <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
+                                  (click)="editOneProduct(product)"
                                   styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                         <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
                                   pTooltip="刪除" tooltipPosition="top"
@@ -195,7 +194,8 @@
                   <div class="field">
                     <label>同步到商機</label>
                     <br>
-                    <p-checkbox formControlName="is_syncing" value="is_syncing" [binary]="true" (click)="showAlertCormfirm()"></p-checkbox>
+                    <p-checkbox formControlName="is_syncing" value="is_syncing" [binary]="true"
+                                (click)="showAlertCormfirm()"></p-checkbox>
                   </div>
                 </div>
                 <div class="col-12 md:col-12 lg:col-12">
@@ -215,9 +215,11 @@
                   <div class="field">
                     <label>小計</label>
                     <br>
-<!--                    <label class="mt-2 ml-2">NT$ {{quote_form.controls['sub_total'].value}}</label>-->
-                    <p-inputNumber [disabled]="true" formControlName="sub_total" mode="currency" currency="TWD" locale="en-US"
-                                    [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
+                    <!--                    <label class="mt-2 ml-2">NT$ {{quote_form.controls['sub_total'].value}}</label>-->
+                    <p-inputNumber [disabled]="true" formControlName="sub_total" mode="currency" currency="TWD"
+                                   locale="en-US"
+                                   [minFractionDigits]="0" class="no-border w-full"
+                                   [ngClass]="{'no-border': true}"></p-inputNumber>
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
@@ -232,16 +234,18 @@
                   <div class="field">
                     <label>折扣(四捨五入)</label>
                     <br>
-                    <p-inputNumber [disabled]="true" formControlName="discount"  suffix= "%"
-                                   [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
-<!--                    <label class="mt-2 ml-2">{{quote_form.controls['discount'].value}} %</label>-->
+                    <p-inputNumber [disabled]="true" formControlName="discount" suffix="%"
+                                   [minFractionDigits]="0" class="no-border w-full"
+                                   [ngClass]="{'no-border': true}"></p-inputNumber>
+                    <!--                    <label class="mt-2 ml-2">{{quote_form.controls['discount'].value}} %</label>-->
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
                     <label>運費及其他費用</label>
                     <br>
-                    <p-inputNumber class="w-full" formControlName="shipping_and_handling" mode="currency" currency="TWD" locale="en-US"
+                    <p-inputNumber class="w-full" formControlName="shipping_and_handling" mode="currency" currency="TWD"
+                                   locale="en-US"
                                    [minFractionDigits]="0" [min]="0"></p-inputNumber>
                   </div>
                 </div>
@@ -249,9 +253,11 @@
                   <div class="field">
                     <label>總計</label>
                     <br>
-<!--                    <label class="mt-2 ml-2 font-bold">NT$ {{quote_form.controls['grand_total'].value}}</label>-->
-                    <p-inputNumber [disabled]="true" formControlName="grand_total" mode="currency" currency="TWD" locale="en-US"
-                                   [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
+                    <!--                    <label class="mt-2 ml-2 font-bold">NT$ {{quote_form.controls['grand_total'].value}}</label>-->
+                    <p-inputNumber [disabled]="true" formControlName="grand_total" mode="currency" currency="TWD"
+                                   locale="en-US"
+                                   [minFractionDigits]="0" class="no-border w-full"
+                                   [ngClass]="{'no-border': true}"></p-inputNumber>
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
@@ -276,6 +282,33 @@
                 <p-button label="儲存" (click)="patchQuoteRequest(q_id)"
                           styleClass="p-button-info"></p-button>
               </div>
+            </p-tabPanel>
+            <p-tabPanel header="歷程記錄">
+              <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetQuoteHistoricalRecords"
+                       [totalRecords]="totalHistorical" [showCurrentPageReport]="true" #dt1
+                       [paginator]="true" [rows]="5" currentPageReportTemplate="共 {totalRecords} 筆">
+                <ng-template pTemplate="caption">
+                  <div class="flex justify-content-between">
+                    <div class="justify-content-start mt-2">
+                      <label>契約歷程記錄</label>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>修改日期</th>
+                    <th>使用者</th>
+                    <th>描述</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-contract_log>
+                  <tr>
+                    <td>{{ contract_log.modified_at }}</td>
+                    <td>{{ contract_log.modified_by }}</td>
+                    <td>{{ contract_log.description }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
             </p-tabPanel>
           </p-tabView>
         </form>
@@ -333,7 +366,7 @@
     <ng-template pTemplate="summary">
       <div class="flex justify-content-end">
         <p *ngIf="showErrorMessage" class="required-star">選擇的項目必須至少1種</p>
-        <p-button label="取消"  (click)="showAlertCancel()" styleClass="p-button-secondary ml-3"></p-button>
+        <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-3"></p-button>
         <p-button label="下一步" (click)="editSelectedProduct()" styleClass="p-button-info ml-1"></p-button>
       </div>
     </ng-template>
@@ -394,9 +427,9 @@
     <p-table [value]="GetAllQuoteProduct">
       <ng-template pTemplate="header">
         <tr>
-<!--          <th style="width: 4rem">-->
-<!--            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
-<!--          </th>-->
+          <!--          <th style="width: 4rem">-->
+          <!--            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
+          <!--          </th>-->
           <th>名稱</th>
           <th>商品價格</th>
           <th><span class="required-star">*</span>報價價格</th>
@@ -407,14 +440,15 @@
       </ng-template>
       <ng-template pTemplate="body" let-product>
         <tr>
-<!--          <td>-->
-<!--            <p-tableCheckbox [value]="product"></p-tableCheckbox>-->
-<!--          </td>-->
+          <!--          <td>-->
+          <!--            <p-tableCheckbox [value]="product"></p-tableCheckbox>-->
+          <!--          </td>-->
           <td>{{ product.product_name }}</td>
           <td>{{ product.standard_price }}</td>
           <td>
             <p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw"
-                           [min]="0" [minFractionDigits]="0" [formControlName]="'unit_price_' + product.quote_product_id"
+                           [min]="0" [minFractionDigits]="0"
+                           [formControlName]="'unit_price_' + product.quote_product_id"
                            [ngClass]="{'ng-dirty': quote_product_form.controls['unit_price_' + product.quote_product_id]?.hasError('required') && quote_product_form.controls['unit_price_' +  product.quote_product_id]?.touched}">
             </p-inputNumber>
           </td>
@@ -433,8 +467,8 @@
       </ng-template>
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
-<!--          <p *ngIf="showErrorMessage" class="required-star">選擇的項目必須至少1種</p>-->
-<!--          <p-button label="刪除" (click)="deleteSelectQuoteProductRequest()" styleClass="p-button-danger"></p-button>-->
+          <!--          <p *ngIf="showErrorMessage" class="required-star">選擇的項目必須至少1種</p>-->
+          <!--          <p-button label="刪除" (click)="deleteSelectQuoteProductRequest()" styleClass="p-button-danger"></p-button>-->
           <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-1"></p-button>
           <p-button label="儲存" (click)="patchQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
         </div>
@@ -499,7 +533,8 @@
         <div class="field">
           <label>折扣</label>
           <br>
-          <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount'"  class="w-full"
+          <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount'"
+                         class="w-full"
                          [ngClass]="{'ng-dirty': quote_product_form.controls['discount'].hasError('required') && quote_product_form.controls['discount'].touched}">
           </p-inputNumber>
         </div>
