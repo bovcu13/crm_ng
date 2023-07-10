@@ -60,12 +60,12 @@ export class ToolbarComponent implements OnInit {
         routerLink: ['/main/forecasting'],
         },
       {
-        label: '商品/服務',
-        routerLink: ['/main/product'],
-      },
-      {
         label: '行銷活動',
         routerLink: ['/main/campaign'],
+      },
+      {
+        label: '商品/服務',
+        routerLink: ['/main/product'],
       },
       // {
       //   label: '顯示面板',

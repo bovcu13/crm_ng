@@ -149,8 +149,9 @@
         <div class="field">
           <label>小計</label>
           <br>
-          <label class="mt-2 ml-2">NT$ {{quote_form.controls['sub_total'].value}}</label>
-          <!--<p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
+<!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['sub_total'].value}}</label>-->
+          <p-inputNumber [disabled]="true" formControlName="sub_total" mode="currency" currency="TWD" locale="en-US"
+                         [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -165,7 +166,9 @@
         <div class="field">
           <label>折扣(四捨五入)</label>
           <br>
-          <label class="mt-2 ml-2">NT$ {{quote_form.controls['discount'].value}}</label>
+<!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['discount'].value}}</label>-->
+          <p-inputNumber [disabled]="true" formControlName="discount"  suffix= "%"
+                         [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -180,8 +183,9 @@
         <div class="field">
           <label>總計</label>
           <br>
-          <!-- <input type="number" class="form-control" formControlName="total_price" [value]="getNumber(quote_form.controls['total_price'].value)" /> -->
-          <label class="mt-2 ml-2">NT$ {{quote_form.controls['grand_total'].value}}</label>
+<!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['grand_total'].value}}</label>-->
+          <p-inputNumber [disabled]="true" formControlName="grand_total" mode="currency" currency="TWD" locale="en-US"
+                         [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-12 lg:col-12">

@@ -33,7 +33,7 @@ export class ViewQuoteComponent {
       code: "presented",
     },
     {
-      name: "已接受",
+      name: "客戶簽回",
       code: "accepted",
     }
   ]
