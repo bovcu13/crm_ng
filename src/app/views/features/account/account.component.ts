@@ -29,18 +29,22 @@ export class AccountComponent implements OnInit {
   type: any[] = [
     {
       "name": "個人客戶",
+      "icon": "pi pi-user",
       // "code": "personal_customer"
     },
     {
       "name": "法人客戶",
+      "icon": "pi pi-building",
       // "code": "business_customer"
     },
     {
       "name": "夥伴",
+      "icon": "pi pi-users",
       // "code": "partner"
     },
     {
       "name": "競爭對手",
+      "icon": "pi pi-chart-line",
       // "code": "competitor"
     }
   ];
@@ -135,7 +139,7 @@ export class AccountComponent implements OnInit {
 
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
-    this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+    this.dt.filterGlobal(this.search, stringVal);
   }
 
   total!: number;
@@ -369,4 +373,51 @@ export class AccountComponent implements OnInit {
     console.log(selectedIndustry.name);
   }
 
+  selectedValue = [
+    {
+      name: "個人客戶",
+      boolean: false
+    },
+    {
+      name: "法人客戶",
+      boolean: false
+    },
+    {
+      name: "夥伴",
+      boolean: false
+    },
+    {
+      name: "競爭者",
+      boolean: false
+    },
+  ]
+
+  selected(event: any) {
+    switch (event.itemValue.name) {
+      case "個人客戶":
+        this.selectedValue[0].boolean = !this.selectedValue[0].boolean;
+        console.log("個人客戶: " + this.selectedValue[0].boolean)
+        break;
+
+      case "法人客戶":
+        this.selectedValue[1].boolean = !this.selectedValue[1].boolean;
+        console.log("法人客戶: " + this.selectedValue[1].boolean)
+        break;
+
+      case "夥伴":
+        this.selectedValue[2].boolean = !this.selectedValue[2].boolean;
+        console.log("夥伴: " + this.selectedValue[2].boolean)
+        break;
+
+      case "競爭對手":
+        this.selectedValue[3].boolean = !this.selectedValue[3].boolean;
+        console.log("競爭對手: " + this.selectedValue[3].boolean)
+        break;
+      default:
+        console.log("error")
+        return;
+    }
+    console.log(event.itemValue.name)
+    this.dt.filterGlobal(event.itemValue.name, 'contains');
+  }
 }
