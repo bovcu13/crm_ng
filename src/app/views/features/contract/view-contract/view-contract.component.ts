@@ -67,7 +67,7 @@ export class ViewContractComponent {
   totalHistorical: any;
 
   getAllContractHistoricalRecordsRequest(c_id: any) {
-    this.HttpApi.getAllContractHistoricalRecordsRequest(20, 1, c_id).subscribe(res => {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, c_id).subscribe(res => {
         this.GetContractHistoricalRecords = res.body.historical_records.map((contract: any) => {
           const modified_at = this.formatDate(contract.modified_at)
           return {...contract, modified_at};
@@ -82,7 +82,7 @@ export class ViewContractComponent {
     let page = e.first / e.rows + 1;
     let limit = e.rows;
     this.loading = true;
-    this.HttpApi.getAllContractHistoricalRecordsRequest(limit, page, e).subscribe(
+    this.HttpApi.getAllHistoricalRecordsRequest(limit, page, e).subscribe(
       request => {
         this.GetContractHistoricalRecords = request.body.historical_records.map((contract: any) => {
           const modified_at = this.formatDate(contract.modified_at)

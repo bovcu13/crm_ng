@@ -412,10 +412,10 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
-  //--契約紀錄---------------------------------------------------------------------------------------------------
+  //--歷程紀錄---------------------------------------------------------------------------------------------------
 
-//取得所有契約紀錄
-  getAllContractHistoricalRecordsRequest(limit = 20, page = 1, sid: string): Observable<any> {
+//取得所有歷程紀錄
+  getAllHistoricalRecordsRequest(limit = 20, page = 1, sid: string): Observable<any> {
     const url = `${this.BaseUrl}/historical-records/list/${sid}?page=${page}&limit=${limit}`;
     return this.http.post<any>(url,sid);
   }
