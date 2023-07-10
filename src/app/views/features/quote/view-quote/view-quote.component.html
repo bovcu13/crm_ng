@@ -44,51 +44,51 @@
                 'bg-red-300': stage === '需要審查',
                 'bg-blue-300': stage === '審查中',
                 'bg-orange-300': stage === '已批准',
-                'bg-yellow-300': stage === '已呈現',
+                'bg-yellow-300': stage === '已報價',
                 'bg-green-300': stage === '已接受'
             }">
             <span class="span" *ngIf="stage==='草稿'">草稿</span>
             <i class="pi pi-check"
-               *ngIf="stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
+               *ngIf="stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已報價'||stage==='已接受'"></i>
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿',
                 'bg-red-300': stage === '需要審查',
                 'bg-blue-300': stage === '審查中',
                 'bg-orange-300': stage === '已批准',
-                'bg-yellow-300': stage === '已呈現',
+                'bg-yellow-300': stage === '已報價',
                 'bg-green-300': stage === '已接受'
             }">
             <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'">需要審查</span>
-            <i class="pi pi-check" *ngIf="stage==='審查中'||stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
+            <i class="pi pi-check" *ngIf="stage==='審查中'||stage==='已批准'||stage==='已報價'||stage==='已接受'"></i>
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿'||stage === '需要審查',
                 'bg-blue-300': stage === '審查中',
                 'bg-orange-300': stage === '已批准',
-                'bg-yellow-300': stage === '已呈現',
+                'bg-yellow-300': stage === '已報價',
                 'bg-green-300': stage === '已接受'
             }">
             <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'">審查中</span>
-            <i class="pi pi-check" *ngIf="stage==='已批准'||stage==='已呈現'||stage==='已接受'"></i>
+            <i class="pi pi-check" *ngIf="stage==='已批准'||stage==='已報價'||stage==='已接受'"></i>
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿'||stage === '需要審查'||stage === '審查中',
                 'bg-orange-300': stage === '已批准',
-                'bg-yellow-300': stage === '已呈現',
+                'bg-yellow-300': stage === '已報價',
                 'bg-green-300': stage === '已接受'
             }">
           <span class="span"
                 *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'">已批准</span>
-            <i class="pi pi-check" *ngIf="stage==='已呈現'||stage==='已接受'"></i>
+            <i class="pi pi-check" *ngIf="stage==='已報價'||stage==='已接受'"></i>
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
-                'bg-yellow-300': stage === '已呈現',
+                'bg-yellow-300': stage === '已報價',
                 'bg-green-300': stage === '已接受'
             }">
           <span class="span"
-                *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已呈現'">已呈現</span>
+                *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已報價'">已報價</span>
             <i class="pi pi-check" *ngIf="stage==='已接受'"></i>
 
           </button>
@@ -105,7 +105,7 @@
       <p-card>
         <form [formGroup]="quote_form">
           <div class="flex justify-content-left ml-3 font-bold">
-            <label>報價詳細頁面</label>
+            <h3>報價</h3>
           </div>
           <p-tabView>
             <p-tabPanel header="詳細">
@@ -215,8 +215,9 @@
                   <div class="field">
                     <label>小計</label>
                     <br>
-                    <label class="mt-2 ml-2">NT$ {{quote_form.controls['sub_total'].value}}</label>
-                    <!--<p-inputNumber  formControlName="subtotal" mode="currency" currency="USD" locale="en-US" [minFractionDigits]="2"> </p-inputNumber>-->
+<!--                    <label class="mt-2 ml-2">NT$ {{quote_form.controls['sub_total'].value}}</label>-->
+                    <p-inputNumber [disabled]="true" formControlName="sub_total" mode="currency" currency="TWD" locale="en-US"
+                                    [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
@@ -231,7 +232,9 @@
                   <div class="field">
                     <label>折扣(四捨五入)</label>
                     <br>
-                    <label class="mt-2 ml-2">{{quote_form.controls['discount'].value}} %</label>
+                    <p-inputNumber [disabled]="true" formControlName="discount"  suffix= "%"
+                                   [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
+<!--                    <label class="mt-2 ml-2">{{quote_form.controls['discount'].value}} %</label>-->
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
@@ -246,8 +249,9 @@
                   <div class="field">
                     <label>總計</label>
                     <br>
-                    <!-- <input type="number" class="form-control" formControlName="total_price" [value]="getNumber(quote_form.controls['total_price'].value)" /> -->
-                    <label class="mt-2 ml-2 font-bold">NT$ {{quote_form.controls['grand_total'].value}}</label>
+<!--                    <label class="mt-2 ml-2 font-bold">NT$ {{quote_form.controls['grand_total'].value}}</label>-->
+                    <p-inputNumber [disabled]="true" formControlName="grand_total" mode="currency" currency="TWD" locale="en-US"
+                                   [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">

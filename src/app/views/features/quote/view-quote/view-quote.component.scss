@@ -8,6 +8,7 @@ body {
   display: inline-block;
   transform: skew(21deg);
 }
+
 button {
   background: #FFFFFF;
   border: none;
@@ -23,7 +24,7 @@ button {
   transform: skew(-21deg);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   overflow: hidden;
-  margin-left:10px ;
+  margin-left: 10px;
 }
 
 .has-check {
