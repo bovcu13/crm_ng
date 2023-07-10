@@ -44,7 +44,7 @@
             <td>{{ contact.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
-                <p-button icon="pi pi-eye" routerLink="/main/contact/view" pTooltip="檢視" tooltipPosition="top"
+                <p-button icon="pi pi-eye" [routerLink]="['/main/contact/view',contact.contact_id]" pTooltip="檢視" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',contact)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
@@ -156,15 +156,15 @@
       <div class="col-12 md:col-6 lg:col-6"></div>
       <div class="col-12 md:col-6 lg:col-6 mt-3">
         <div class="flex justify-content-end mt-3">
+          <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
           <ng-container *ngIf="dialogHeader === '編輯聯絡人'">
             <p-button label="儲存" (click)="patchContact();edit=false"
-                      styleClass="p-button-outlined p-button-info"></p-button>
+                      styleClass="p-button-info"></p-button>
           </ng-container>
           <ng-container *ngIf="dialogHeader !== '編輯聯絡人'">
             <p-button label="新增" (click)="postContact();edit=false"
-                      styleClass="p-button-outlined p-button-info"></p-button>
+                      styleClass="p-button-info"></p-button>
           </ng-container>
-          <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
         </div>
       </div>
     </div>

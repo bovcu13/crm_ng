@@ -236,9 +236,9 @@ export class LeadComponent implements OnInit {
   accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
-      (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+      next: request => {
+        this.GetAllAccount = request.body.accounts.map((account: any) => {
           console.log(account)
           return {
             label: account.name,
@@ -246,10 +246,10 @@ export class LeadComponent implements OnInit {
           };
         });
       },
-      (error) => {
-        console.log(error);
+      error: err => {
+        console.log(err);
       }
-    );
+    });
   }
 
   // 放沒有"已轉換"階段下拉選單
@@ -525,7 +525,9 @@ export class LeadComponent implements OnInit {
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
       // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
-      type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: { name: any; }) => item.name),
+      type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: {
+        name: any;
+      }) => item.name),
       parent_account_id: '00000000-0000-4000-a000-000000000000',
     };
     return this.HttpApi.postAccountRequest(body).pipe(

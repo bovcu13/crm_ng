@@ -110,11 +110,10 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label><span class="required-star">*</span>帳戶</label>
-          <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'"
+          <label><span class="required-star">*</span>商機</label>
+          <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'"
                       [filter]="true" filterBy="label" [showClear]="true"
-                      [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError('required') && contract_form.controls['account_id'].touched}"></p-dropdown>
-
+                      [ngClass]="{'ng-dirty':contract_form.controls['opportunity_id'].hasError('required') && contract_form.controls['opportunity_id'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">
@@ -149,6 +148,20 @@
                  [ngClass]="{'ng-dirty':contract_form.controls['term'].hasError('required') && contract_form.controls['term'].touched}">
         </div>
       </div>
+      <!--最大1G-->
+      <div class="col-12">
+        <div class="field">
+          <label>契約檔案上傳處</label>
+          <p-toast></p-toast>
+          <p-fileUpload name="demo[]" (onUpload)="onUpload($event)" [multiple]="true" [maxFileSize]="1000000000">
+            <ng-template pTemplate="content">
+              <ul *ngIf="uploadedFiles.length">
+                <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+              </ul>
+            </ng-template>
+          </p-fileUpload>
+        </div>
+      </div>
       <div class="col-12">
         <div class="field">
           <label>描述</label>
@@ -173,15 +186,15 @@
       </div>
     </div>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <ng-container *ngIf="!showedit">
-        <p-button label="新增" (click)="postContractRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postContractRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="!disableSaveButton">
         <ng-container *ngIf="showedit">
           <p-button label="儲存" (click)="patchContractRequest(c_id)"
-                    styleClass="p-button-outlined p-button-info"></p-button>
+                    styleClass="p-button-info"></p-button>
         </ng-container>
-        <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
       </ng-container>
     </div>
   </p-dialog>

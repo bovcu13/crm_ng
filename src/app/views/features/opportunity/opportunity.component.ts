@@ -82,9 +82,9 @@ export class OpportunityComponent implements OnInit {
   accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
-      (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+      next: request => {
+        this.GetAllAccount = request.body.accounts.map((account: any) => {
           // console.log(account)
           return {
             label: account.name,
@@ -93,10 +93,10 @@ export class OpportunityComponent implements OnInit {
         });
         console.log(this.GetAllAccount)
       },
-      (error) => {
-        console.log(error);
+      error: err => {
+        console.log(err);
       }
-    );
+    });
   }
 
   ngOnInit() {

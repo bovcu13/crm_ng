@@ -85,6 +85,9 @@
     <div>
       <form [formGroup]="lead_form">
         <p-card>
+          <div class="flex justify-content-left ml-3 font-bold">
+            <label>線索詳細頁面</label>
+          </div>
           <p-tabView>
             <p-tabPanel header="詳細資料">
               <!--              <ng-container *ngIf="edit==false">-->
@@ -165,9 +168,9 @@
                 </div>
               </div>
               <div class="flex justify-content-end mt-3">
+                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
                 <p-button label="儲存" (click)="patchLead()"
-                          styleClass="p-button-outlined p-button-info"></p-button>
-                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
+                          styleClass="p-button-info"></p-button>
               </div>
               <!--              </ng-container>-->
             </p-tabPanel>
@@ -246,9 +249,9 @@
       </div>
     </div>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <p-button label="轉換" (click)="postOpportunity();edit=false"
-                styleClass="p-button-outlined p-button-info"></p-button>
-      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
+                styleClass="p-button-info"></p-button>
     </div>
   </p-dialog>
 </form>

@@ -23,7 +23,7 @@ export class ViewOrderComponent {
       name: "滑鼠",
       code: "mouse",
       price: 300,
-      quote_price: 	340,
+      quote_price: 340,
       order_price: 290,
       quantity: 10,
     },
@@ -57,8 +57,10 @@ export class ViewOrderComponent {
   GetOneOrder: any;
   stage: any;
   GetOneStartDate: any;
+
   getOneOrderRequest(o_id: any): void {
-    this.HttpApi.getOneOrderRequest(o_id).subscribe(res => {
+    this.HttpApi.getOneOrderRequest(o_id).subscribe({
+      next: res => {
         this.GetOneOrder = res.body
         this.stage = res.body.status;
         this.GetOneStartDate = this.formatDate2(res.body.start_date);
@@ -80,18 +82,20 @@ export class ViewOrderComponent {
         });
         console.log(this.GetOneOrder)
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   //GET全部product
   GetAllProduct: any[] = [];
   first = 0;
   productsearch: any;
+
   getAllProductRequest() {
-    this.HttpApi.getAllProductRequest(this.productsearch,1).subscribe(res => {
+    this.HttpApi.getAllProductRequest(this.productsearch, 1).subscribe({
+      next: res => {
         this.GetAllProduct = res.body.products
         this.GetAllProduct = res.body.products.map((product: any) => {
           const created_at = this.formatDate(product.created_at);
@@ -100,15 +104,17 @@ export class ViewOrderComponent {
         });
         console.log(this.GetAllProduct)
       },
-      error => {
+      error: error => {
         console.log(error);
-      });
+      }
+    });
   }
 
   //建立formgroup
   order_form: FormGroup;
   edit_product_form: FormGroup;
   o_id: any;
+
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute) {
     this.order_form = this.fb.group({
       code: [''],
@@ -189,9 +195,10 @@ export class ViewOrderComponent {
   // GET全部Contract
   GetAllContract: any[] = [];
   search: string = '';
+
   getAllContractRequest() {
-    this.HttpApi.getAllContractRequest(this.search,1).subscribe(
-      (res) => {
+    this.HttpApi.getAllContractRequest(this.search, 1).subscribe({
+      next: res => {
         const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
         this.GetAllContract = contracts.map((contract: any) => {
           return {
@@ -202,10 +209,10 @@ export class ViewOrderComponent {
           };
         });
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   patchOrderRequest() {
@@ -275,6 +282,7 @@ export class ViewOrderComponent {
   MinDate!: any;//契約日期
   orderStartDate: any;
   selectedContract_id: any;
+
   // selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.order_form.get('contract_id')?.value);

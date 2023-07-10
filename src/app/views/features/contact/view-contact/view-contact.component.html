@@ -1,1 +1,158 @@
-<div class="animation">待完成..</div>
+<div class="grid mt-2">
+  <div class="col-12 md:col-12 lg:col-3">
+    <div class="mb-3">
+      <p-card>
+        <h3>Gina</h3>
+        <p-divider></p-divider>
+        <span class="p-buttonset flex justify-content-center">
+        <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+        <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+        <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
+                  styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
+      </span>
+        <div class="grid mt-2">
+          <div class="col-12 flex justify-content-center">
+            <label>姓名: </label>
+            {{name}}
+          </div>
+          <div class="col-12 flex justify-content-center">
+            <label>職稱: </label>
+            {{title}}
+          </div>
+        </div>
+      </p-card>
+      <div class="flex justify-content-center mt-3">
+        <p-button pTooltip="新增聯絡人" tooltipPosition="top" icon="pi pi-plus"
+                  styleClass="p-button-outlined p-button-secondary"></p-button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 md:col-12 lg:col-6">
+    <div class="mb-3">
+      <p-card>
+        <div class="flex justify-content-left ml-3 font-bold">
+          <label>聯絡人詳細頁面</label>
+        </div>
+        <p-tabView>
+          <p-tabPanel header="詳細資料">
+            <form [formGroup]="contact_form">
+              <div class="grid">
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>帳戶</label>
+                    <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)"
+                                formControlName="account_name"
+                                [filter]="true" optionLabel="label" appendTo="body"
+                                filterBy="label" [showClear]="true" placeholder="選擇現有帳戶"
+                                [ngClass]="{'ng-dirty':contact_form.controls['account_name'].hasError('required') && contact_form.controls['account_name'].touched}">
+                    </p-dropdown>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>業務員</label>
+                    <br>
+                    <label>{{(contact_form.controls['created_by'].value)}}</label>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>姓名</label>
+                    <input pInputText formControlName="name"
+                           [ngClass]="{'ng-dirty':contact_form.controls['name'].hasError('required') && contact_form.controls['name'].touched}">
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>稱謂</label>
+                    <p-dropdown placeholder="請選擇" [disabled]="true" [options]="salutation" optionLabel="name"
+                                (onChange)="salutationValue($event)"
+                                formControlName="salutation" appendTo="body"></p-dropdown>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>行動電話</label>
+                    <input pInputText formControlName="cell_phone">
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label><span class="text-red-600">*</span>公司電話</label>
+                    <input
+                      [ngClass]="{'ng-dirty':contact_form.controls['phone_number'].hasError('required') && contact_form.controls['phone_number'].touched}"
+                      pInputText formControlName="phone_number">
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="field">
+                    <label>電子郵件</label>
+                    <input pInputText formControlName="email">
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>職稱</label>
+                    <input pInputText formControlName="title">
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>部門</label>
+                    <input pInputText formControlName="department">
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <div class="field">
+                    <label>直屬上司</label>
+                    <p-dropdown placeholder="請選擇" [disabled]="true"
+                                formControlName="reports_to" appendTo="body"></p-dropdown>
+                  </div>
+                </div>
+              </div>
+              <div class="grid">
+                <div class="col-12 md:col-6 lg:col-6">
+                  <label>建立者：</label>
+                  <div class="mt-3 field">
+                    <label>{{(contact_form.controls['created_by'].value)}}</label>
+                    <label>{{(contact_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+                  </div>
+                </div>
+                <div class="col-12 md:col-6 lg:col-6">
+                  <label>上次修改者：</label>
+                  <div class="mt-3 field">
+                    <label>{{(contact_form.controls['updated_by'].value)}}</label>
+                    <label>{{(contact_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="grid">
+                <div class="col-12 md:col-6 lg:col-6"></div>
+                <div class="col-12 md:col-6 lg:col-6 mt-3">
+                  <div class="flex justify-content-end mt-3">
+                    <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
+                    <p-button label="儲存" (click)="patchContact()"
+                              styleClass="p-button-info"></p-button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </p-tabPanel>
+          <p-tabPanel header="活動">
+            <h3>(待完成)</h3>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+  </div>
+  <div class="col-12 md:col-12 lg:col-3">
+    <p-card>
+      <h3>拜訪紀錄</h3>
+      <p-divider></p-divider>
+      <h3>(待完成)</h3>
+    </p-card>
+  </div>
+</div>
+

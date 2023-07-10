@@ -6,13 +6,9 @@
           <h3>{{contract_form.controls['code'].value}}</h3>
           <p-divider></p-divider>
           <span class="p-buttonset flex justify-content-center">
-            <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
+            <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash" (click)="deleteContractRequest(this.c_id)"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
-            <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
-                      styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
             <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
-                      styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
-            <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
           </span>
           <div class="grid mt-2">
@@ -126,34 +122,12 @@
     <div>
       <p-card>
         <form [formGroup]="contract_form">
-          <p-tabView>
-            <p-tabPanel header="相關">
-              <p-table [rowsPerPageOptions]="[5, 10, 15]" (onLazyLoad)="loadTable($event)" [value]="GetContractHistoricalRecords"
-                       [totalRecords]="totalHistorical" [showCurrentPageReport]="true" #dt1
-                       [paginator]="true" [rows]="5" currentPageReportTemplate="共 {totalRecords} 筆">
-                <ng-template pTemplate="caption">
-                  <div class="flex justify-content-between">
-                    <div class="justify-content-start mt-2">
-                      <label>契約歷程記錄</label>
-                    </div>
-                  </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th>修改日期</th>
-                    <th>使用者</th>
-                    <th>描述</th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-contract_log>
-                  <tr>
-                    <td>{{ contract_log.modified_at }}</td>
-                    <td>{{ contract_log.modified_by }}</td>
-                    <td>{{ contract_log.description }}</td>
-                  </tr>
-                </ng-template>
-              </p-table>
-              <div class="mt-3">
+          <div class="flex justify-content-left ml-3 font-bold">
+            <label>報價詳細頁面</label>
+          </div>
+          <p-tabView class="mt-3">
+            <p-tabPanel header="詳細">
+              <div>
                 <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllOrder" [totalRecords]="totalRecords">
                   <ng-template pTemplate="caption">
                     <div class="flex justify-content-between">
@@ -196,7 +170,7 @@
                 </p-table>
               </div>
             </p-tabPanel>
-            <p-tabPanel header="詳細資料">
+            <p-tabPanel header="編輯">
               <div class="grid">
                 <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
@@ -214,11 +188,10 @@
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
                   <div class="field">
-                    <label><span class="required-star">*</span>帳戶</label>
-                    <p-dropdown placeholder="搜尋帳戶" [options]="GetAllAccount" [formControlName]="'account_id'"
+                    <label><span class="required-star">*</span>商機</label>
+                    <p-dropdown [options]="GetAllOpportunity" formControlName="opportunity_id"
                                 [filter]="true" filterBy="label" [showClear]="true"
-                                [ngClass]="{'ng-dirty':contract_form.controls['account_id'].hasError('required') && contract_form.controls['account_id'].touched}"></p-dropdown>
-
+                                [ngClass]="{'ng-dirty':contract_form.controls['opportunity_id'].hasError('required') && contract_form.controls['opportunity_id'].touched}"></p-dropdown>
                   </div>
                 </div>
                 <div class="col-12 md:col-6 lg:col-6">
@@ -243,6 +216,20 @@
                     <label><span class="required-star">*</span>有效期間(月)</label>
                     <input type="number" pInputText formControlName="term"
                            [ngClass]="{'ng-dirty':contract_form.controls['term'].hasError('required') && contract_form.controls['term'].touched}">
+                  </div>
+                </div>
+                <!--最大1G-->
+                <div class="col-12">
+                  <div class="field">
+                  <label>契約檔案上傳處</label>
+                  <p-toast></p-toast>
+                  <p-fileUpload name="demo[]" (onUpload)="onUpload($event)" [multiple]="true" [maxFileSize]="1000000000">
+                    <ng-template pTemplate="content">
+                      <ul *ngIf="uploadedFiles.length">
+                        <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+                      </ul>
+                    </ng-template>
+                  </p-fileUpload>
                   </div>
                 </div>
                 <div class="col-12">
@@ -270,10 +257,37 @@
               </div>
               <ng-container *ngIf="stage !=='已取消' && stage !=='已過期'">
               <div class="flex justify-content-end">
-                <p-button label="儲存" (click)="patchContractRequest()" styleClass="p-button-outlined p-button-info"></p-button>
-                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
+                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
+                <p-button label="儲存" (click)="patchContractRequest()" styleClass="p-button-info"></p-button>
               </div>
               </ng-container>
+            </p-tabPanel>
+            <p-tabPanel header="歷程記錄">
+              <p-table [rowsPerPageOptions]="[5, 10, 15]" (onLazyLoad)="loadTable($event)" [value]="GetContractHistoricalRecords"
+                       [totalRecords]="totalHistorical" [showCurrentPageReport]="true" #dt1
+                       [paginator]="true" [rows]="5" currentPageReportTemplate="共 {totalRecords} 筆">
+                <ng-template pTemplate="caption">
+                  <div class="flex justify-content-between">
+                    <div class="justify-content-start mt-2">
+                      <label>契約歷程記錄</label>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>修改日期</th>
+                    <th>使用者</th>
+                    <th>描述</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-contract_log>
+                  <tr>
+                    <td>{{ contract_log.modified_at }}</td>
+                    <td>{{ contract_log.modified_by }}</td>
+                    <td>{{ contract_log.description }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
             </p-tabPanel>
           </p-tabView>
         </form>
@@ -368,14 +382,14 @@
       </div>
     </div>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <ng-container *ngIf="!showedit">
-        <p-button label="新增" (click)="postOrderRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postOrderRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="showedit">
         <p-button label="儲存" (click)="patchOrderRequest()"
-                  styleClass="p-button-outlined p-button-info"></p-button>
+                  styleClass="p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
 </form>

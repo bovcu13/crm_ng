@@ -72,10 +72,10 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  // getOneAccountRequest(id: any): Observable<any> {
-  //   const url = `${this.BaseUrl}/accounts/${id}`;
-  //   return this.http.get<any>(url);
-  // }
+  getOneAccountRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/accounts/${id}`;
+    return this.http.get<any>(url);
+  }
 
   postAccountRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/accounts`;
@@ -137,10 +137,10 @@ export class HttpApiService {
   //   return this.http.get<any>(url);
   // }
 
-  // getOneContactRequest(id: any): Observable<any> {
-  //   const url = `${this.BaseUrl}/contacts/${id}`;
-  //   return this.http.get<any>(url);
-  // }
+  getOneContactRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/contacts/${id}`;
+    return this.http.get<any>(url);
+  }
 
   postContactRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/contacts`;
@@ -412,10 +412,10 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
-  //--契約紀錄---------------------------------------------------------------------------------------------------
+  //--歷程紀錄---------------------------------------------------------------------------------------------------
 
-//取得所有契約紀錄
-  getAllContractHistoricalRecordsRequest(limit = 20, page = 1, sid: string): Observable<any> {
+//取得所有歷程紀錄
+  getAllHistoricalRecordsRequest(limit = 20, page = 1, sid: string): Observable<any> {
     const url = `${this.BaseUrl}/historical-records/list/${sid}?page=${page}&limit=${limit}`;
     return this.http.post<any>(url,sid);
   }
@@ -512,7 +512,7 @@ export class HttpApiService {
 
 
   //取得一筆 報價 getone
-  getOneQuotetRequest(id: any): Observable<Quote> {
+  getOneQuoteRequest(id: any): Observable<Quote> {
     const url = `${this.BaseUrl}/quotes/${id}`;
     return this.http.get<Quote>(url);
   }

@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
 import Swal from "sweetalert2";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-view-quote',
@@ -10,23 +11,7 @@ import Swal from "sweetalert2";
   styleUrls: ['./view-quote.component.scss']
 })
 export class ViewQuoteComponent {
-  quote_product: any[] = [
-    // {
-    //   name: "螢幕",
-    //   quote_price: 2500,
-    //   price: 2000,
-    //   quantity: 5,
-    //   subtotal: 12500,
-    // },
-    // {
-    //   name: "滑鼠",
-    //   quote_price: 340,
-    //   price: 300,
-    //   quantity: 10,
-    //   subtotal: 3400,
-    // },
-  ]
-
+  @ViewChild('dt1') dt1!: Table;
 //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -46,11 +31,11 @@ export class ViewQuoteComponent {
       code: "approved",
     },
     {
-      name: "已呈現",
+      name: "已報價",
       code: "presented",
     },
     {
-      name: "已接受",
+      name: "客戶簽回",
       code: "accepted",
     }
   ]
@@ -84,9 +69,10 @@ export class ViewQuoteComponent {
     });
     this.q_id = this.route.snapshot.paramMap.get('q_id')
     console.log("取到的q_id: " + this.q_id)
-    this.getOneQuotetRequest(this.q_id)
+    this.getOneQuoteRequest(this.q_id)
     this.getAllopportunityRequest()
     this.getQuoteProductRequest()
+    this.getAllQuoteHistoricalRecordsRequest(this.q_id)
     // this.getAllQuoteProductsRequest()
     this.quote_product_form = this.fb.group({
       quote_product_id: [''],
@@ -114,9 +100,11 @@ export class ViewQuoteComponent {
 
   editOneProduct(quote_product?: any) {
     this.editOneQuoteProduct = true;
-    console.log("quote_product: " + JSON.stringify(quote_product))
     this.GetOneQuoteProduct = quote_product
+    this.GetOneQuoteProduct.created_at = this.formatDate(quote_product.created_at)
+    this.GetOneQuoteProduct.updated_at = this.formatDate(quote_product.updated_at)
     this.quote_product_form.patchValue(quote_product);
+    console.log("quote_product: " + JSON.stringify(quote_product))
   }
 
   //新增產品dialog
@@ -143,6 +131,7 @@ export class ViewQuoteComponent {
       this.editGetAllQuoteProduct = true;
     }
   }
+
   editSelectedProduct() {
     if (this.selectedProducts.length !== 0) {
       this.selectedProducts.forEach((product) => {
@@ -169,8 +158,9 @@ export class ViewQuoteComponent {
   name: any;
   GetOneIsSyncing: any;
 
-  getOneQuotetRequest(q_id: any): void {
-    this.HttpApi.getOneQuotetRequest(q_id).subscribe(res => {
+  getOneQuoteRequest(q_id: any): void {
+    this.HttpApi.getOneQuoteRequest(q_id).subscribe({
+      next: res => {
         this.GetOneQuote = res.body;
         this.name = res.body.name;
         this.stage = res.body.status;
@@ -197,10 +187,10 @@ export class ViewQuoteComponent {
         });
         console.log(this.GetOneQuote)
       },
-      (error) => {
+      error: (error) => {
         console.log(error);
       }
-    );
+    });
   }
 
   postQuoteProductRequest(): void {
@@ -249,9 +239,11 @@ export class ViewQuoteComponent {
         unit_price: unit_price,
         quantity: quantity,
         discount: discount,
+        description: ' ',
       };
       quoteProducts.push(quoteProduct);
-      this.HttpApi.postQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
+      this.HttpApi.postQuoteProductRequest({products: quoteProducts}).subscribe({
+        next: Request => {
           console.log(Request)
           this.editselectedProducts = false;
           if (Request.code === 200) {
@@ -264,6 +256,8 @@ export class ViewQuoteComponent {
             })
             this.selectedProducts = []
             this.getQuoteProductRequest()
+            this.getOneQuoteRequest(this.q_id)
+            this.getAllQuoteHistoricalRecordsRequest(this.q_id)
             //this.getAllQuoteProductsRequest()
           } else {
             Swal.fire({
@@ -277,9 +271,10 @@ export class ViewQuoteComponent {
             })
           }
         },
-        error => {
+        error: error => {
           console.log(error);
-        })
+        }
+      })
     })
   }
 
@@ -327,8 +322,8 @@ export class ViewQuoteComponent {
         discount: discount,
       };
       quoteProducts.push(quoteProduct);
-      console.log(quoteProducts)
-      this.HttpApi.patchQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
+      this.HttpApi.patchQuoteProductRequest({products: quoteProducts}).subscribe({
+        next: Request => {
           console.log(Request)
           this.editGetAllQuoteProduct = false;
           if (Request.code === 200) {
@@ -340,6 +335,8 @@ export class ViewQuoteComponent {
               timer: 1000
             })
             this.getQuoteProductRequest()
+            this.getOneQuoteRequest(this.q_id)
+            this.getAllQuoteHistoricalRecordsRequest(this.q_id)
             //this.getAllQuoteProductsRequest()
           } else {
             Swal.fire({
@@ -353,10 +350,68 @@ export class ViewQuoteComponent {
             })
           }
         },
-        error => {
+        error: error => {
           console.log(error);
-        })
+        }
+      })
     })
+  }
+
+  deleteQuoteProductRequest(quote_product_id: string): void {
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const quoteProducts: string[] = [quote_product_id];
+        console.log({products: quoteProducts});
+        this.HttpApi.deleteQuoteProductRequest({products: quoteProducts}).subscribe({
+          next: Request => {
+            console.log(Request);
+            if (Request.code === 200) {
+              Swal.fire({
+                title: '成功',
+                text: "已刪除您的資料 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              });
+              this.getQuoteProductRequest()
+              this.getOneQuoteRequest(this.q_id)
+              this.getAllQuoteHistoricalRecordsRequest(this.q_id)
+              //this.getAllQuoteProductsRequest();
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+          },
+          error: error => {
+            console.log(error);
+          }
+        });
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        });
+      }
+    });
   }
 
   patchOneQuoteProductRequest(): void {
@@ -383,7 +438,7 @@ export class ViewQuoteComponent {
       })
       return;
     }
-    const quoteProducts = [];
+    let quoteProducts = [];
     const unit_price = this.quote_product_form.get(`unit_price`)?.value;
     const quantity = this.quote_product_form.get(`quantity`)?.value;
     const discount = this.quote_product_form.get(`discount`)?.value;
@@ -398,151 +453,39 @@ export class ViewQuoteComponent {
       description: description
     };
     quoteProducts.push(quoteProduct);
-    console.log(quoteProducts)
-    this.HttpApi.patchQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
-        console.log(Request)
-        this.editOneQuoteProduct = false;
-        if (Request.code === 200) {
-          Swal.fire({
-            title: '成功',
-            text: "已儲存您的資料 :)",
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1000
-          })
-          this.getQuoteProductRequest()
-          //this.getAllQuoteProductsRequest()
-        } else {
-          Swal.fire({
-            title: '失敗',
-            text: "請確認資料是否正確 :(",
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 1500
-          }).then(() => {
-            this.editOneQuoteProduct = true;
-          })
+    this.HttpApi.patchQuoteProductRequest({products: quoteProducts}).subscribe(
+      {
+        next: Request => {
+          this.editOneQuoteProduct = false;
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已儲存您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getQuoteProductRequest()
+            this.getOneQuoteRequest(this.q_id)
+            this.getAllQuoteHistoricalRecordsRequest(this.q_id)
+            //this.getAllQuoteProductsRequest()
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            }).then(() => {
+              this.editOneQuoteProduct = true;
+            })
+          }
+        },
+        error: error => {
+          console.log(error);
         }
-      },
-      error => {
-        console.log(error);
       })
   }
-
-  deleteQuoteProductRequest(quote_product_id: string): void {
-    Swal.fire({
-      title: '確認刪除？',
-      icon: 'warning',
-      confirmButtonColor: '#6EBE71',
-      cancelButtonColor: '#FF3034',
-      showCancelButton: true,
-      confirmButtonText: '確認',
-      cancelButtonText: '取消',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const quoteProducts: string[] = [quote_product_id];
-        console.log({products: quoteProducts});
-        this.HttpApi.deleteQuoteProductRequest({products: quoteProducts}).subscribe(Request => {
-            console.log(Request);
-            if (Request.code === 200) {
-              Swal.fire({
-                title: '成功',
-                text: "已刪除您的資料 :)",
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000
-              });
-              this.getQuoteProductRequest()
-              //this.getAllQuoteProductsRequest();
-            } else {
-              Swal.fire({
-                title: '失敗',
-                text: "請確認資料是否正確 :(",
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500
-              });
-            }
-          },
-          error => {
-            console.log(error);
-          });
-      } else {
-        Swal.fire({
-          title: '取消',
-          text: "已取消您的變更！",
-          icon: 'error',
-          showCancelButton: false,
-          showConfirmButton: false,
-          reverseButtons: false,
-          timer: 1000
-        });
-      }
-    });
-  }
-  // DeleteSelectedProducts: any[] = []//儲存被選的商品
-  // deleteSelectQuoteProductRequest(): void {
-  //   this.editGetAllQuoteProduct = false;
-  //   if (this.DeleteSelectedProducts.length === 0) {
-  //     this.editGetAllQuoteProduct = false;
-  //     this.showErrorMessage = true;
-  //     return;
-  //   }
-  //
-  //   Swal.fire({
-  //     title: '確認刪除？',
-  //     icon: 'warning',
-  //     confirmButtonColor: '#6EBE71',
-  //     cancelButtonColor: '#FF3034',
-  //     showCancelButton: true,
-  //     confirmButtonText: '確認',
-  //     cancelButtonText: '取消',
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       const deleteQuoteProducts = this.DeleteSelectedProducts.map(product => ({ quote_product_id: product.quote_product_id }));
-  //       console.log(deleteQuoteProducts);
-  //       this.HttpApi.deleteQuoteProductRequest({ products: deleteQuoteProducts }).subscribe(
-  //         Request => {
-  //           console.log(Request);
-  //           if (Request.code === 200) {
-  //             Swal.fire({
-  //               title: '成功',
-  //               text: "已刪除您的資料 :)",
-  //               icon: 'success',
-  //               showConfirmButton: false,
-  //               timer: 1000
-  //             });
-  //             this.getQuoteProductRequest();
-  //             //this.getAllQuoteProductsRequest();
-  //           } else {
-  //             Swal.fire({
-  //               title: '失敗',
-  //               text: "請確認資料是否正確 :(",
-  //               icon: 'error',
-  //               showConfirmButton: false,
-  //               timer: 1500
-  //             });
-  //           }
-  //         },
-  //         error => {
-  //           console.log(error);
-  //         }
-  //       );
-  //     } else {
-  //       Swal.fire({
-  //         title: '取消',
-  //         text: "已取消您的變更！",
-  //         icon: 'error',
-  //         showCancelButton: false,
-  //         showConfirmButton: false,
-  //         reverseButtons: false,
-  //         timer: 1000
-  //       });
-  //     }
-  //   });
-  // }
 
   GetAllQuoteProduct: any[] = [];
   QuoteProductloading: boolean = false;
@@ -556,16 +499,6 @@ export class ViewQuoteComponent {
         console.log(this.GetAllQuoteProduct)
       });
   }
-
-  // getAllQuoteProductsRequest() {
-  //   this.QuoteProductloading = true;
-  //   this.HttpApi.getAllQuoteProductsRequest().subscribe(
-  //     request => {
-  //       this.GetAllQuoteProduct = request.body.quote_products.filter((quote_products: any) => quote_products.quote_id == this.q_id);
-  //       this.QuoteProductloading = false;
-  //       console.log(this.GetAllQuoteProduct)
-  //     });
-  // }
 
   patchQuoteRequest(q_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
@@ -599,8 +532,8 @@ export class ViewQuoteComponent {
       tax: this.quote_form.get('tax')?.value,
     }
 
-    this.HttpApi.patchQuoteRequest(q_id, body).subscribe(
-      Request => {
+    this.HttpApi.patchQuoteRequest(q_id, body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           Swal.fire({
@@ -610,7 +543,8 @@ export class ViewQuoteComponent {
             showConfirmButton: false,
             timer: 1000
           })
-          this.getOneQuotetRequest(q_id)
+          this.getOneQuoteRequest(q_id)
+          this.getAllQuoteHistoricalRecordsRequest(this.q_id)
         } else {
           Swal.fire({
             title: '失敗',
@@ -620,14 +554,66 @@ export class ViewQuoteComponent {
             timer: 1500
           })
         }
-      })
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
+  }
+
+  deleteQuoteRequest(q_id: any): void {
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.deleteQuoteRequest(q_id).subscribe(Request => {
+          console.log(Request)
+          if (Request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已刪除您的資料 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            }).then(() => {
+              window.location.href = '/main/quote';
+            });
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
   }
 
   showAlertCancel() {
     this.editOneQuoteProduct = false
-    this.editGetAllQuoteProduct=false
-    this.editselectedProducts=false
-    this.add=false
+    this.editGetAllQuoteProduct = false
+    this.editselectedProducts = false
+    this.add = false
     Swal.fire({
       title: '取消',
       text: "已取消您的變更！",
@@ -637,7 +623,47 @@ export class ViewQuoteComponent {
       reverseButtons: false,
       timer: 1000
     })
-    this.getOneQuotetRequest(this.q_id)
+    this.getOneQuoteRequest(this.q_id)
+  }
+
+  showAlertCormfirm() {
+    Swal.fire({
+      title: '確認將報價金額同步到商機？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '同步',
+      cancelButtonText: '不同步',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.quote_form.patchValue({
+          is_syncing: true,
+        });
+        console.log(this.quote_form.get('is_syncing')?.value)
+        Swal.fire({
+          title: '成功',
+          text: "已成功同步金額，請按下儲存鍵 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      } else {
+        this.quote_form.patchValue({
+          is_syncing: false,
+        });
+        Swal.fire({
+          title: '失敗',
+          text: "已取消同步！請按下儲存鍵",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
   }
 
   // GET全部Opportunity
@@ -646,9 +672,11 @@ export class ViewQuoteComponent {
   opportunitysearch: any;
 
   getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe(
-      (res) => {
-        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
+    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe({
+      next: (res) => {
+        //商機階段如果不到提案狀態就無法選擇
+        const getopportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage !== "資格評估" && opportunity.stage !== "需求分析");
+        this.GetAllOpportunity = getopportunity.map((opportunity: any) => {
           return {
             label: opportunity.name,
             value: opportunity.opportunity_id,
@@ -656,10 +684,10 @@ export class ViewQuoteComponent {
           };
         });
       },
-      (error) => {
+      error: (error) => {
         console.log(error);
       }
-    );
+    });
   }
 
   selectedAccount_id: string = '';
@@ -684,10 +712,20 @@ export class ViewQuoteComponent {
     this.loading = true;
     this.HttpApi.getAllProductRequest(this.search, 1, limit, page, e).subscribe(
       request => {
-        this.GetAllProduct = request.body.products.filter((products: any) => products.is_enable == true);
-        this.totalRecords = request.body.total;
+        if(this.GetAllQuoteProduct.length == 0){
+          this.GetAllProduct = request.body.products.filter((products: any) => products.is_enable == true);
+          console.log(this.GetAllProduct)
+        }else{
+          //如果商品有被報價過則不顯示可勾選商品中
+          const finalProduct = request.body.products.filter((product: any) => {
+            return !this.GetAllQuoteProduct.some((existingProduct: any) => existingProduct.product_id === product.product_id);
+          });
+          //商品有被啟用才可被報價
+          this.GetAllProduct = finalProduct.filter((products: any) => products.is_enable == true);
+          console.log(this.GetAllProduct)
+        }
+        this.totalRecords = this.GetAllProduct.length;
         this.loading = false;
-        console.log(this.GetAllProduct)
       });
   }
 
@@ -717,5 +755,20 @@ export class ViewQuoteComponent {
       const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
       return expiration_date.toISOString().slice(0, 10);
     }
+  }
+
+  //取得當筆報價歷史紀錄
+  GetQuoteHistoricalRecords: any[] = [];
+  totalHistorical: any;
+  getAllQuoteHistoricalRecordsRequest(q_id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, q_id).subscribe(res => {
+        this.GetQuoteHistoricalRecords = res.body.historical_records.map((quote: any) => {
+          const modified_at = this.formatDate(quote.modified_at)
+          return {...quote, modified_at};
+        });
+        this.totalHistorical = res.body.total
+        console.log(this.GetQuoteHistoricalRecords)
+      }
+    )
   }
 }

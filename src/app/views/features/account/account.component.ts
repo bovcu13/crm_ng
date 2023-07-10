@@ -125,7 +125,7 @@ export class AccountComponent implements OnInit {
       const selectedIndustry = this.industry_id.find((s) => s.name === account.industry_id);
       this.account_form.patchValue({
         industry_id: selectedIndustry,
-        type: this.account_form.controls['type'].value.map((name: string) => ({ name })),
+        type: this.account_form.controls['type'].value.map((name: string) => ({name})),
       });
     }
   }
@@ -146,16 +146,17 @@ export class AccountComponent implements OnInit {
     this.loading = true;
     // let limit = e.rows;
     let page = e.first / e.rows + 1;
-    this.HttpApi.getAllAccountRequest(this.search, 1, page, e).subscribe(
-      request => {
+    this.HttpApi.getAllAccountRequest(this.search, 1, page, e).subscribe({
+      next: request => {
         this.getData = request.body.accounts;
         this.loading = false;
         this.total = request.body.total;
         console.log(this.total);
       },
-      err => {
+      error: err => {
         console.log(err.status)
-      });
+      }
+    });
   }
 
   getAllAccount(): void {
@@ -164,6 +165,24 @@ export class AccountComponent implements OnInit {
         this.getData = request.body.accounts;
         this.total = request.body.total;
       });
+  }
+
+  getSeverity(status: string) {
+    switch (status.toString()) {
+      case "個人客戶":
+        return {severity: 'info', icon: 'pi pi-user'};
+
+      case "法人客戶":
+        return {severity: 'success', icon: 'pi pi-building'};
+
+      case "夥伴":
+        return {severity: 'warning', icon: 'pi pi-users'};
+
+      case "競爭對手":
+        return {severity: 'danger', icon: 'pi pi-chart-line'};
+      default:
+        return {severity: '', icon: ''};
+    }
   }
 
   // 現在時間
@@ -197,7 +216,8 @@ export class AccountComponent implements OnInit {
       }) => item.name),
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
     }
-    this.HttpApi.postAccountRequest(body).subscribe(request => {
+    this.HttpApi.postAccountRequest(body).subscribe({
+      next: request => {
         if (request.code === 200) {
           this.edit = false;
           Swal.fire({
@@ -210,7 +230,7 @@ export class AccountComponent implements OnInit {
           this.getAllAccount();
         }
       },
-      err => {
+      error: err => {
         this.edit = false;
         Swal.fire({
           title: '失敗',
@@ -222,7 +242,8 @@ export class AccountComponent implements OnInit {
           this.edit = true;
         })
         console.log(body)
-      });
+      }
+    });
 
   }
 

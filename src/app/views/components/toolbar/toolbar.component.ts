@@ -40,10 +40,6 @@ export class ToolbarComponent implements OnInit {
         routerLink: ['/main/opportunity'],
       },
       {
-        label: '商品/服務',
-        routerLink: ['/main/product'],
-        },
-      {
         label: '報價',
         routerLink: ['/main/quote'],
         },
@@ -56,17 +52,21 @@ export class ToolbarComponent implements OnInit {
         routerLink: ['/main/order'],
         },
       {
-        label: '行銷活動',
-        routerLink: ['/main/campaign'],
-        },
+        label: '報表',
+        routerLink: ['/main/report'],
+      },
       {
         label: '預測',
         routerLink: ['/main/forecasting'],
         },
       {
-        label: '報告',
-        routerLink: ['/main/report'],
-        },
+        label: '行銷活動',
+        routerLink: ['/main/campaign'],
+      },
+      {
+        label: '商品/服務',
+        routerLink: ['/main/product'],
+      },
       // {
       //   label: '顯示面板',
       //   routerLink: ['/main/display'],

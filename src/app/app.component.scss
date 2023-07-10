@@ -22,6 +22,12 @@ p-card {
     border-radius: 6px;
   }
 
+  //輸入框無邊線 & 無法修改
+  .no-border .p-inputnumber .p-inputnumber-input {
+    border: none;
+    pointer-events: none;
+  }
+
   .p-password,
   .p-dropdown {
     width: 100%;
