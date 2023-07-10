@@ -321,18 +321,29 @@ export class ViewLeadComponent implements OnInit {
       rating: this.selectedRating?.name,
     }
     this.HttpApi.patchLeadRequest(this.id, body)
-      .subscribe(request => {
-        console.log(request)
-        if (request.code === 200) {
-          Swal.fire({
-            title: '成功',
-            text: "已儲存您的變更 :)",
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1000
-          })
-          this.getOneLead(this.id);
-        } else {
+      .subscribe({
+        next: request => {
+          console.log(request)
+          if (request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已儲存您的變更 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getOneLead(this.id);
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        },
+        error: err => {
           Swal.fire({
             title: '失敗',
             text: "請確認資料是否正確 :(",
@@ -340,6 +351,7 @@ export class ViewLeadComponent implements OnInit {
             showConfirmButton: false,
             timer: 1500
           })
+          console.log(err)
         }
       });
   }
