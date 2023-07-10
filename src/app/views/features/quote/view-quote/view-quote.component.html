@@ -45,11 +45,11 @@
                 'bg-blue-300': stage === '審查中',
                 'bg-orange-300': stage === '已批准',
                 'bg-yellow-300': stage === '已報價',
-                'bg-green-300': stage === '已接受'
+                'bg-green-300': stage === '客戶簽回'
             }">
             <span class="span" *ngIf="stage==='草稿'">草稿</span>
             <i class="pi pi-check"
-               *ngIf="stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已報價'||stage==='已接受'"></i>
+               *ngIf="stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已報價'||stage==='客戶簽回'"></i>
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿',
@@ -57,46 +57,46 @@
                 'bg-blue-300': stage === '審查中',
                 'bg-orange-300': stage === '已批准',
                 'bg-yellow-300': stage === '已報價',
-                'bg-green-300': stage === '已接受'
+                'bg-green-300': stage === '客戶簽回'
             }">
             <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'">需要審查</span>
-            <i class="pi pi-check" *ngIf="stage==='審查中'||stage==='已批准'||stage==='已報價'||stage==='已接受'"></i>
+            <i class="pi pi-check" *ngIf="stage==='審查中'||stage==='已批准'||stage==='已報價'||stage==='客戶簽回'"></i>
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿'||stage === '需要審查',
                 'bg-blue-300': stage === '審查中',
                 'bg-orange-300': stage === '已批准',
                 'bg-yellow-300': stage === '已報價',
-                'bg-green-300': stage === '已接受'
+                'bg-green-300': stage === '客戶簽回'
             }">
             <span class="span" *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'">審查中</span>
-            <i class="pi pi-check" *ngIf="stage==='已批准'||stage==='已報價'||stage==='已接受'"></i>
+            <i class="pi pi-check" *ngIf="stage==='已批准'||stage==='已報價'||stage==='客戶簽回'"></i>
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check':stage === '草稿'||stage === '需要審查'||stage === '審查中',
                 'bg-orange-300': stage === '已批准',
                 'bg-yellow-300': stage === '已報價',
-                'bg-green-300': stage === '已接受'
+                'bg-green-300': stage === '客戶簽回'
             }">
           <span class="span"
                 *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'">已批准</span>
-            <i class="pi pi-check" *ngIf="stage==='已報價'||stage==='已接受'"></i>
+            <i class="pi pi-check" *ngIf="stage==='已報價'||stage==='客戶簽回'"></i>
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
                 'bg-yellow-300': stage === '已報價',
-                'bg-green-300': stage === '已接受'
+                'bg-green-300': stage === '客戶簽回'
             }">
           <span class="span"
                 *ngIf="stage==='草稿'||stage==='需要審查'||stage==='審查中'||stage==='已批准'||stage==='已報價'">已報價</span>
-            <i class="pi pi-check" *ngIf="stage==='已接受'"></i>
+            <i class="pi pi-check" *ngIf="stage==='客戶簽回'"></i>
 
           </button>
           <button class="flex justify-content-center" [ngClass]="{
                 'has-check': stage === '草稿'||stage === '需要審查'||stage === '審查中'||stage === '已批准',
-                'bg-green-300': stage === '已接受'
+                'bg-green-300': stage === '客戶簽回'
             }">
-            <span class="span">已接受</span>
+            <span class="span">客戶簽回</span>
           </button>
         </div>
       </p-card>
