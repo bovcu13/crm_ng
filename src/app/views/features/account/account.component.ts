@@ -29,22 +29,22 @@ export class AccountComponent implements OnInit {
   type: any[] = [
     {
       "name": "個人客戶",
-      "icon": "pi pi-user",
+      // "icon": "pi pi-user",
       // "code": "personal_customer"
     },
     {
       "name": "法人客戶",
-      "icon": "pi pi-building",
+      // "icon": "pi pi-building",
       // "code": "business_customer"
     },
     {
       "name": "夥伴",
-      "icon": "pi pi-users",
+      // "icon": "pi pi-users",
       // "code": "partner"
     },
     {
       "name": "競爭對手",
-      "icon": "pi pi-chart-line",
+      // "icon": "pi pi-chart-line",
       // "code": "competitor"
     }
   ];
@@ -128,9 +128,10 @@ export class AccountComponent implements OnInit {
       //dropdown
       const selectedIndustry = this.industry_id.find((s) => s.name === account.industry_id);
       this.account_form.patchValue({
+        type: this.account_form.controls['type'].value.map((name: string) => ({ name })),
         industry_id: selectedIndustry,
-        type: this.account_form.controls['type'].value.map((name: string) => ({name})),
       });
+      console.log(this.account_form.value)
     }
   }
 
@@ -155,7 +156,7 @@ export class AccountComponent implements OnInit {
         this.getData = request.body.accounts;
         this.loading = false;
         this.total = request.body.total;
-        console.log(this.total);
+        // console.log(this.total);
       },
       error: err => {
         console.log(err.status)
@@ -220,6 +221,7 @@ export class AccountComponent implements OnInit {
       }) => item.name),
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
     }
+    console.log(body.type)
     this.HttpApi.postAccountRequest(body).subscribe({
       next: request => {
         if (request.code === 200) {
@@ -266,7 +268,6 @@ export class AccountComponent implements OnInit {
       })
       return;
     }
-
     let id = this.account_form.controls['account_id'].value
     let body = {
       name: this.account_form.controls['name'].value,
@@ -280,6 +281,7 @@ export class AccountComponent implements OnInit {
       }) => item.name),
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
     }
+    console.log(body.type)
     this.HttpApi.patchAccountRequest(id, body)
       .subscribe(request => {
         console.log(request)
@@ -396,28 +398,44 @@ export class AccountComponent implements OnInit {
     switch (event.itemValue.name) {
       case "個人客戶":
         this.selectedValue[0].boolean = !this.selectedValue[0].boolean;
-        console.log("個人客戶: " + this.selectedValue[0].boolean)
+        console.log("個人客戶: " + this.selectedValue[0].boolean);
+        // this.accountTypefilter();
         break;
 
       case "法人客戶":
         this.selectedValue[1].boolean = !this.selectedValue[1].boolean;
-        console.log("法人客戶: " + this.selectedValue[1].boolean)
+        console.log("法人客戶: " + this.selectedValue[1].boolean);
+        // this.accountTypefilter();
         break;
 
       case "夥伴":
         this.selectedValue[2].boolean = !this.selectedValue[2].boolean;
-        console.log("夥伴: " + this.selectedValue[2].boolean)
+        console.log("夥伴: " + this.selectedValue[2].boolean);
+        // this.accountTypefilter();
         break;
 
       case "競爭對手":
         this.selectedValue[3].boolean = !this.selectedValue[3].boolean;
-        console.log("競爭對手: " + this.selectedValue[3].boolean)
+        console.log("競爭對手: " + this.selectedValue[3].boolean);
+        // this.accountTypefilter();
         break;
       default:
         console.log("error")
         return;
     }
-    console.log(event.itemValue.name)
-    this.dt.filterGlobal(event.itemValue.name, 'contains');
+    console.log(this.selectedValue)
+  }
+
+  accountTypefilter(): void {
+    let mutiSearch: string[] = []
+    let trueValue = 0;
+    for (const i in this.selectedValue) {
+      if (this.selectedValue[i].boolean) {
+        mutiSearch[trueValue] = this.selectedValue[i].name
+        trueValue++;
+        console.log(mutiSearch.map(obj => obj.toString()))
+      }
+    }
+    this.dt.filterGlobal(mutiSearch.map(obj => obj.toString()), 'contains');
   }
 }
