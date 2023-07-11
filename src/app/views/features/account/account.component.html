@@ -36,7 +36,8 @@
               類型
               <p-sortIcon field="type"></p-sortIcon>
               <p-columnFilter field="type" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false"
-                              [showAddButton]="false" [showClearButton]="false" [showApplyButton]="false" class="ml-auto">
+                              [showAddButton]="false" [showClearButton]="false" [showApplyButton]="false"
+                              class="ml-auto">
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
                   <p-multiSelect [ngModel]="value" [options]="type" placeholder="勾選帳戶類別"
                                  optionLabel="name" display="chip" (onChange)="selected($event)">
@@ -61,9 +62,10 @@
             <!--            <td>{{ account.type }}</td>-->
             <td>
               <ng-container *ngFor="let value of account.type">
-                <p-tag [icon]="getSeverity(value.toString().split(',')).icon"
-                       [severity]="getSeverity(value.toString().split(',')).severity" class="mr-2"
-                       [value]="value.toString().split(',')"></p-tag>
+<!--                [icon]="getSeverity(value.toString().split(',')).icon"-->
+                <p-tag
+                  [severity]="getSeverity(value.toString().split(',')).severity" class="mr-2"
+                  [value]="value.toString().split(',')"></p-tag>
               </ng-container>
             </td>
             <td>{{ account.created_by }}</td>
