@@ -102,29 +102,40 @@
     <div>
       <p-card>
         <form [formGroup]="quote_form">
-          <div class="flex justify-content-left ml-3 font-bold">
+          <div class="flex ml-3 font-bold">
             <h3>報價</h3>
           </div>
           <p-tabView>
             <p-tabPanel header="詳細">
               <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllQuoteProduct" [lazy]="true"
-                       [loading]="QuoteProductloading">
+                       [loading]="QuoteProductloading" [(selection)]="deleteSelectQuoteProduct">
                 <ng-template pTemplate="caption">
-                  <div class="flex justify-content-between">
-                    <div class="justify-content-start mt-2">
+                  <div class="flex">
+                    <div class="mt-2">
                       <label>報價條列項目</label>
                     </div>
-                    <div class="justify-content-end">
-                      <p-button icon="pi pi-plus" pTooltip="新增商品/服務" (click)="addProduct()" tooltipPosition="top"
-                                styleClass="p-button-text"></p-button>
-                      <p-button icon="pi pi-pencil" pTooltip="編輯所有報價商品/服務" (click)="editProduct()"
-                                tooltipPosition="top"
-                                styleClass="p-button-text"></p-button>
+                    <div class="flex ml-auto justify-content-end">
+                      <div class="mt-2">
+                        <label *ngIf="ErrorMessage" class="required-star">選擇的項目必須至少1種</label>
+                      </div>
+                      <div class="justify-content-end">
+                        <p-button icon="pi pi-plus" pTooltip="新增商品/服務" (click)="addProduct()" tooltipPosition="top"
+                                  styleClass="p-button-text"></p-button>
+                        <p-button icon="pi pi-pencil" pTooltip="編輯所有報價商品/服務" (click)="editProduct()"
+                                  tooltipPosition="top"
+                                  styleClass="p-button-text"></p-button>
+                        <p-button icon="pi pi-trash" pTooltip="刪除所選商品/服務" (click)="deleteSelectQuoteProductRequest()"
+                                  tooltipPosition="top"
+                                  styleClass="p-button-text"></p-button>
+                      </div>
                     </div>
                   </div>
                 </ng-template>
                 <ng-template pTemplate="header">
                   <tr>
+                    <th style="width: 4rem">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
                     <th>名稱</th>
                     <th>商品價格</th>
                     <th>報價價格</th>
@@ -136,6 +147,9 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
                   <tr>
+                    <td>
+                      <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                    </td>
                     <td>{{ product.product_name }}</td>
                     <td>{{ product.standard_price }}</td>
                     <td>{{ product.unit_price }}</td>
