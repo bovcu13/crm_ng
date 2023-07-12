@@ -58,13 +58,47 @@ export class ViewContactComponent implements OnInit {
     });
   }
 
+//取得聯絡人歷程紀錄
+  GetContactHistoricalRecords: any[] = [];
+  totalHistorical: any;
+
+  getAllContactHistoricalRecordsRequest(id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, id).subscribe(request => {
+        this.GetContactHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+        console.log("更新")
+      }
+    )
+  }
+
+  loading: boolean = false;
+
+  // 懶加載
+  loadTable(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllHistoricalRecordsRequest(limit, page, this.id).subscribe({
+      next: request => {
+        this.GetContactHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+        console.log(this.GetContactHistoricalRecords)
+        console.log(this.totalHistorical)
+        this.loading = false;
+      },
+      error: err => {
+        console.log(err.status)
+      }
+    });
+  }
+
   getOneContact(id: any): void {
     this.HttpApi.getOneContactRequest(id).subscribe(
       request => {
         this.contact_form.patchValue(request.body);
         this.contact_form.patchValue({
           salutation: this.salutation.find(s => s.name === request.body.salutation),
-          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === request.body.account_name),
+          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === request.body.name),
         });
         console.log(request.body)
       }
@@ -79,7 +113,7 @@ export class ViewContactComponent implements OnInit {
     this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
       next: request => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
-          // console.log(account)
+          console.log(account)
           return {
             label: account.name,
             value: account.account_id
@@ -143,6 +177,7 @@ export class ViewContactComponent implements OnInit {
             timer: 1000
           })
           this.getOneContact(this.id);
+          this.getAllContactHistoricalRecordsRequest(this.id)
         } else {
           Swal.fire({
             title: '失敗',
