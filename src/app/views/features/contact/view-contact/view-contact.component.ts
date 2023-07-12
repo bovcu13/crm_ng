@@ -66,7 +66,6 @@ export class ViewContactComponent implements OnInit {
     this.HttpApi.getAllHistoricalRecordsRequest(20, 1, id).subscribe(request => {
         this.GetContactHistoricalRecords = request.body.historical_records
         this.totalHistorical = request.body.total
-        console.log("更新")
       }
     )
   }
@@ -98,7 +97,7 @@ export class ViewContactComponent implements OnInit {
         this.contact_form.patchValue(request.body);
         this.contact_form.patchValue({
           salutation: this.salutation.find(s => s.name === request.body.salutation),
-          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === request.body.name),
+          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === request.body.account_name),
         });
         console.log(request.body)
       }
@@ -113,7 +112,7 @@ export class ViewContactComponent implements OnInit {
     this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
       next: request => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
-          console.log(account)
+          // console.log(account)
           return {
             label: account.name,
             value: account.account_id
