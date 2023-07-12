@@ -68,6 +68,40 @@ export class ViewAccountComponent implements OnInit {
     });
   }
 
+  //取得帳戶歷程紀錄
+  GetAccountHistoricalRecords: any[] = [];
+  totalHistorical: any;
+
+  getAllAccountHistoricalRecordsRequest(id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, id).subscribe(request => {
+        this.GetAccountHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+        console.log("更新")
+      }
+    )
+  }
+
+  loading: boolean = false;
+
+  // 懶加載
+  loadTable(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllHistoricalRecordsRequest(limit, page, this.id).subscribe({
+      next: request => {
+        this.GetAccountHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+        console.log(this.GetAccountHistoricalRecords)
+        console.log(this.totalHistorical)
+        this.loading = false;
+      },
+      error: err => {
+        console.log(err.status)
+      }
+    });
+  }
+
   getData: any;
 
   getOneAccount(id: any): void {
@@ -78,7 +112,7 @@ export class ViewAccountComponent implements OnInit {
         const selectedIndustry = this.industry_id.find((s) => s.name === request.body.industry_id);
         this.account_form.patchValue({
           industry_id: selectedIndustry,
-          type: this.account_form.controls['type'].value.map((name: string) => ({ name })),
+          type: this.account_form.controls['type'].value.map((name: string) => ({name})),
         });
         console.log(request.body)
       }
@@ -123,6 +157,7 @@ export class ViewAccountComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
+          this.getAllAccountHistoricalRecordsRequest(this.id)
         } else {
           Swal.fire({
             title: '失敗',
