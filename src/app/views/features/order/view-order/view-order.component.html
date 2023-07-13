@@ -360,8 +360,8 @@
       </ng-template>
       <ng-template pTemplate="body" let-product>
         <tr>
-          <td>{{ product.name }}</td>
-          <td>{{ product.price }}</td>
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.standard_price }}</td>
           <td>{{ product.quote_price }}</td>
           <td>
             <p-inputNumber inputId="integeronly" [min]="0" [formControlName]="'quantity_' + product.order_product_id" [minFractionDigits]="0"
