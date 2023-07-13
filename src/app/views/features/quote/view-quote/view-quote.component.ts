@@ -356,7 +356,70 @@ export class ViewQuoteComponent {
       })
     })
   }
-
+  //一次刪除多個報價商品
+  deleteSelectQuoteProduct: any[]=[]
+  deletequoteproduct: any[] = []
+  ErrorMessage = false;
+  deleteSelectQuoteProductRequest(): void {
+    if (this.deleteSelectQuoteProduct.length == 0){
+      this.ErrorMessage = true;
+    }else{
+      Swal.fire({
+        title: '確認刪除？',
+        icon: 'warning',
+        confirmButtonColor: '#6EBE71',
+        cancelButtonColor: '#FF3034',
+        showCancelButton: true,
+        confirmButtonText: '確認',
+        cancelButtonText: '取消',
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deletequoteproduct = this.deleteSelectQuoteProduct.map(product => product.quote_product_id);
+          this.HttpApi.deleteQuoteProductRequest({products: this.deletequoteproduct}).subscribe({
+            next: Request => {
+              console.log(Request);
+              if (Request.code === 200) {
+                Swal.fire({
+                  title: '成功',
+                  text: "已刪除您的資料 :)",
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 1000
+                });
+                this.getQuoteProductRequest()
+                this.getOneQuoteRequest(this.q_id)
+                this.getAllQuoteHistoricalRecordsRequest(this.q_id)
+                //this.getAllQuoteProductsRequest();
+              } else {
+                Swal.fire({
+                  title: '失敗',
+                  text: "請確認資料是否正確 :(",
+                  icon: 'error',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+              }
+            },
+            error: error => {
+              console.log(error);
+            }
+          });
+        } else {
+          Swal.fire({
+            title: '取消',
+            text: "已取消您的變更！",
+            icon: 'error',
+            showCancelButton: false,
+            showConfirmButton: false,
+            reverseButtons: false,
+            timer: 1000
+          });
+        }
+      });
+    }
+  }
+ //刪除單個報價商品
   deleteQuoteProductRequest(quote_product_id: string): void {
     Swal.fire({
       title: '確認刪除？',

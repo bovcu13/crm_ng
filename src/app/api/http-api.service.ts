@@ -352,6 +352,38 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
+  //取得依訂單獲得的所有商品含報價
+  getAllOrderProdcutRequest(search: string,sid: string,status=1,limit = 20, page = 1, event?: any): Observable<any>{
+    let obj: any = {
+      field: status,
+      filter: {
+        code: search ? search : null,
+      },
+    };
+    if (event) {
+      let direction: any;
+      if (event.sortOrder === 1) {
+        direction = "asc";
+      } else {
+        direction = "desc";
+      }
+      // 判斷是否有用全域搜尋欄
+      let keyword = event.globalFilter;
+      if (!event.globalFilter) {
+        keyword = event.data
+      }
+      obj = {
+        sort: { field: event.sortField || null, direction: direction },
+        field: status,
+        filter: {
+          code: keyword,
+        },
+      };
+    }
+    const url = `${this.BaseUrl}/products/get-by-order/${sid}?page=${page}&limit=${limit}`;
+    return this.http.post<any>(url, obj);
+  }
+
   //--契約---------------------------------------------------------------------------------------------------
 
 //取得所有契約
@@ -476,6 +508,44 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
+  //取得一筆 訂單含訂單產品 getone
+  getOrderProductRequest(sid: any): Observable<any> {
+    const url = `${this.BaseUrl}/orders/products/${sid}`;
+    return this.http.get<any>(url);
+  }
+//------------訂單商品---------------------------------------------
+  getAllOrderProductsRequest(limit = 20, page = 1): Observable<any> {
+    let url = this.BaseUrl + '/orders-products' + '?page=' + page + '&limit=' + limit;
+    return this.http.get<any>(url);
+  }
+
+  //取得一筆 商品報價 getone
+  getOneOrderProductRequest(id: any): Observable<any> {
+    const url = `${this.BaseUrl}/orders-products/${id}`;
+    return this.http.get<any>(url);
+  }
+
+  //新增 商品報價 post
+  postOrderProductRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/orders-products`;
+    return this.http.post<any>(url, body);
+  }
+
+  //修改 商品報價 patch
+  patchOrderProductRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/orders-products`;
+    return this.http.patch<any>(url, body);
+  }
+
+  //刪除 商品報價 delete
+  deleteOrderProductRequest(body: any): Observable<any> {
+    const url = `${this.BaseUrl}/orders-products`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const options = { headers: headers, body: body };
+
+    return this.http.delete<any>(url, options);
+  }
+
 //----報價---------------------------------------------------------------------------------------------------
 
   //取得所有報價 getall
@@ -535,7 +605,7 @@ export class HttpApiService {
     return this.http.delete<any>(url);
   }
 
-  //取得一筆 報價 getone
+  //取得一筆 報價含報價產品 getone
   getQuoteProductRequest(id: any): Observable<any> {
     const url = `${this.BaseUrl}/quotes/products/${id}`;
     return this.http.get<any>(url);
@@ -569,7 +639,6 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/quotes-products`;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     const options = { headers: headers, body: body };
-
     return this.http.delete<any>(url, options);
   }
 
