@@ -33,23 +33,25 @@
               <p-sortIcon field="phone_number"></p-sortIcon>
             </th>
             <th pSortableColumn="type">
-              類型
-              <p-sortIcon field="type"></p-sortIcon>
-              <p-columnFilter field="type" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false"
-                              [showAddButton]="false" [showClearButton]="false" [showApplyButton]="false"
-                              class="ml-auto">
-                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-multiSelect [ngModel]="value" [options]="type" placeholder="勾選帳戶類別"
-                                 optionLabel="name" display="chip" (onChange)="selected($event)">
-                    <ng-template let-option pTemplate="item">
-                      <div class="inline-block vertical-align-middle">
-                        <i [class]=option.icon style="font-size: 1rem"></i>
-                        <span class="ml-1 mt-1">{{ option.name }}</span>
-                      </div>
-                    </ng-template>
-                  </p-multiSelect>
-                </ng-template>
-              </p-columnFilter>
+              <div class="flex justify-content-start align-items-center">
+                <p-columnFilter field="type" matchMode="in" display="menu" [showMatchModes]="false"
+                                [showOperator]="false"
+                                [showAddButton]="false" [showClearButton]="false" [showApplyButton]="false">
+                  <ng-template pTemplate="filter">
+                    <p-multiSelect [showToggleAll]="true" [(ngModel)]="selectedValue" [options]="type" placeholder="勾選帳戶類別"
+                                   optionLabel="name" (onChange)="selected($event)">
+                      <!--                    <ng-template let-option pTemplate="item">-->
+                      <!--                      <div class="inline-block vertical-align-middle">-->
+                      <!--                        <i [class]=option.icon style="font-size: 1rem"></i>-->
+                      <!--                        <span class="ml-1 mt-1">{{ option.name }}</span>-->
+                      <!--                      </div>-->
+                      <!--                    </ng-template>-->
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+                類型
+                <p-sortIcon field="type"></p-sortIcon>
+              </div>
             </th>
             <th>業務員</th>
             <th></th>
@@ -62,7 +64,7 @@
             <!--            <td>{{ account.type }}</td>-->
             <td>
               <ng-container *ngFor="let value of account.type">
-<!--                [icon]="getSeverity(value.toString().split(',')).icon"-->
+                <!--                [icon]="getSeverity(value.toString().split(',')).icon"-->
                 <p-tag
                   [severity]="getSeverity(value.toString().split(',')).severity" class="mr-2"
                   [value]="value.toString().split(',')"></p-tag>

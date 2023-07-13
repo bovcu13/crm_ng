@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http'; //http協定
+import {HttpClient, HttpHeaders} from '@angular/common/http'; //http協定
 import {Contract} from "../shared/models/contract";
 import {Quote} from '../shared/models/quote';
 import {Observable} from 'rxjs';
-import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +18,9 @@ export class HttpApiService {
   //--使用者-------------------------------------------------------------------------------------------------
 
   getAllUserRequest(page: number): Observable<any> {
-      const url = `${this.BaseUrl}/users?page=${page}&limit=10`;
-      return this.http.get<any>(url);
-    }
+    const url = `${this.BaseUrl}/users?page=${page}&limit=10`;
+    return this.http.get<any>(url);
+  }
 
   //--帳戶---------------------------------------------------------------------------------------------------
 
@@ -36,27 +35,29 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction : any;
+      let direction: any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
         direction = "desc";
       }
       // 判斷是否有用全域搜尋欄
-      let keyword = event.globalFilter;
+      let keyword: string = event.globalFilter;
       if (!event.globalFilter) {
         keyword = event.data
       }
-      obj = {
-        sort: {field: event.sortField || null, direction: direction},
-        field: status,
-        filter: {
-          name: keyword,
-          phone_number: keyword,
-          type: [keyword],
-          salesperson_name: keyword,
-        },
-      };
+      if (keyword) {
+        obj = {
+          sort: {field: event.sortField || null, direction: direction},
+          field: status,
+          filter: {
+            name: keyword,
+            phone_number: keyword,
+            type: keyword.split(','),
+            salesperson_name: keyword,
+          },
+        };
+      }
     }
     const url = `${this.BaseUrl}/accounts/list?page=${page}&limit=10`;
     return this.http.post<any>(url, obj);
@@ -105,7 +106,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction : any;
+      let direction: any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -171,7 +172,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction : any;
+      let direction: any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -235,7 +236,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction : any;
+      let direction: any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -303,7 +304,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction : any;
+      let direction: any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -387,7 +388,7 @@ export class HttpApiService {
   //--契約---------------------------------------------------------------------------------------------------
 
 //取得所有契約
-  getAllContractRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
+  getAllContractRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -407,7 +408,7 @@ export class HttpApiService {
         keyword = event.data
       }
       obj = {
-        sort: { field: event.sortField || null, direction: direction },
+        sort: {field: event.sortField || null, direction: direction},
         field: status,
         filter: {
           code: keyword,
@@ -417,6 +418,7 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/contracts/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
+
   // getAllContractRequest(limit = 20, page = 1): Observable<any> {
   //   let url = this.BaseUrl + '/contracts/list' + '?page=' + page + '&limit=' + limit;
   //   return this.http.get<any>(url);
@@ -449,12 +451,12 @@ export class HttpApiService {
 //取得所有歷程紀錄
   getAllHistoricalRecordsRequest(limit = 20, page = 1, sid: string): Observable<any> {
     const url = `${this.BaseUrl}/historical-records/list/${sid}?page=${page}&limit=${limit}`;
-    return this.http.post<any>(url,sid);
+    return this.http.post<any>(url, sid);
   }
 
   //--訂單---------------------------------------------------------------------------------------------------
   //取得所有訂單 getall
-  getAllOrderRequest(search: string,status=1,limit = 20, page = 1, event?: any): Observable<any> {
+  getAllOrderRequest(search: string, status = 1, limit = 20, page = 1, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -462,7 +464,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction : any;
+      let direction: any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -474,7 +476,7 @@ export class HttpApiService {
         keyword = event.data
       }
       obj = {
-        sort: { field: event.sortField || null, direction: direction },
+        sort: {field: event.sortField || null, direction: direction},
         field: status,
         filter: {
           code: keyword,
@@ -541,7 +543,7 @@ export class HttpApiService {
   deleteOrderProductRequest(body: any): Observable<any> {
     const url = `${this.BaseUrl}/orders-products`;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    const options = { headers: headers, body: body };
+    const options = {headers: headers, body: body};
 
     return this.http.delete<any>(url, options);
   }
@@ -557,7 +559,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction : any;
+      let direction: any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -610,6 +612,7 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/quotes/products/${id}`;
     return this.http.get<any>(url);
   }
+
   //------------商品報價---------------------------------------------
   getAllQuoteProductsRequest(limit = 20, page = 1): Observable<any> {
     let url = this.BaseUrl + '/quotes-products' + '?page=' + page + '&limit=' + limit;
@@ -653,7 +656,7 @@ export class HttpApiService {
       },
     };
     if (event) {
-      let direction : any;
+      let direction: any;
       if (event.sortOrder === 1) {
         direction = "asc";
       } else {
@@ -676,6 +679,7 @@ export class HttpApiService {
     const url = `${this.BaseUrl}/campaigns/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
+
   // getAllCampaignRequest(limit = 20, page = 1): Observable<any> {
   //   const url = this.BaseUrl + '/campaigns/list' + '?page=' + page + '&limit=' + limit;
   //   return this.http.get<any>(url);
