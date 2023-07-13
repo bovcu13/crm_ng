@@ -69,9 +69,10 @@ export class ViewQuoteComponent {
     });
     this.q_id = this.route.snapshot.paramMap.get('q_id')
     console.log("取到的q_id: " + this.q_id)
+    this.getQuoteProductRequest()
     this.getOneQuoteRequest(this.q_id)
     this.getAllopportunityRequest()
-    this.getQuoteProductRequest()
+    this.getAllProductRequest()
     this.getAllQuoteHistoricalRecordsRequest(this.q_id)
     // this.getAllQuoteProductsRequest()
     this.quote_product_form = this.fb.group({
@@ -113,6 +114,7 @@ export class ViewQuoteComponent {
   addProduct() {
     this.add = true;
     this.selectedProducts = [];
+    this.getAllProductRequest()
   }
 
   selectedProducts: any[] = []//儲存被選的商品
@@ -258,6 +260,7 @@ export class ViewQuoteComponent {
             this.getQuoteProductRequest()
             this.getOneQuoteRequest(this.q_id)
             this.getAllQuoteHistoricalRecordsRequest(this.q_id)
+            this.getAllProductRequest()
             //this.getAllQuoteProductsRequest()
           } else {
             Swal.fire({
@@ -337,6 +340,7 @@ export class ViewQuoteComponent {
             this.getQuoteProductRequest()
             this.getOneQuoteRequest(this.q_id)
             this.getAllQuoteHistoricalRecordsRequest(this.q_id)
+            this.getAllProductRequest()
             //this.getAllQuoteProductsRequest()
           } else {
             Swal.fire({
@@ -356,14 +360,16 @@ export class ViewQuoteComponent {
       })
     })
   }
+
   //一次刪除多個報價商品
-  deleteSelectQuoteProduct: any[]=[]
+  deleteSelectQuoteProduct: any[] = []
   deletequoteproduct: any[] = []
   ErrorMessage = false;
+
   deleteSelectQuoteProductRequest(): void {
-    if (this.deleteSelectQuoteProduct.length == 0){
+    if (this.deleteSelectQuoteProduct.length == 0) {
       this.ErrorMessage = true;
-    }else{
+    } else {
       Swal.fire({
         title: '確認刪除？',
         icon: 'warning',
@@ -390,6 +396,7 @@ export class ViewQuoteComponent {
                 this.getQuoteProductRequest()
                 this.getOneQuoteRequest(this.q_id)
                 this.getAllQuoteHistoricalRecordsRequest(this.q_id)
+                this.getAllProductRequest()
                 //this.getAllQuoteProductsRequest();
               } else {
                 Swal.fire({
@@ -419,7 +426,8 @@ export class ViewQuoteComponent {
       });
     }
   }
- //刪除單個報價商品
+
+  //刪除單個報價商品
   deleteQuoteProductRequest(quote_product_id: string): void {
     Swal.fire({
       title: '確認刪除？',
@@ -448,6 +456,7 @@ export class ViewQuoteComponent {
               this.getQuoteProductRequest()
               this.getOneQuoteRequest(this.q_id)
               this.getAllQuoteHistoricalRecordsRequest(this.q_id)
+              this.getAllProductRequest()
               //this.getAllQuoteProductsRequest();
             } else {
               Swal.fire({
@@ -488,14 +497,14 @@ export class ViewQuoteComponent {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.quote_form.controls['unit_price'].hasError('required')) {
-          this.quote_form.controls['unit_price'].markAsDirty();
+        if (this.quote_product_form.controls['unit_price'].hasError('required')) {
+          this.quote_product_form.controls['unit_price'].markAsDirty();
         }
-        if (this.quote_form.controls['quantity'].hasError('required')) {
-          this.quote_form.controls['quantity'].markAsDirty();
+        if (this.quote_product_form.controls['quantity'].hasError('required')) {
+          this.quote_product_form.controls['quantity'].markAsDirty();
         }
-        if (this.quote_form.controls['discount'].hasError('required')) {
-          this.quote_form.controls['discount'].markAsDirty();
+        if (this.quote_product_form.controls['discount'].hasError('required')) {
+          this.quote_product_form.controls['discount'].markAsDirty();
         }
         this.editOneQuoteProduct = true;
       })
@@ -531,6 +540,7 @@ export class ViewQuoteComponent {
             this.getQuoteProductRequest()
             this.getOneQuoteRequest(this.q_id)
             this.getAllQuoteHistoricalRecordsRequest(this.q_id)
+            this.getAllProductRequest()
             //this.getAllQuoteProductsRequest()
           } else {
             Swal.fire({
@@ -551,17 +561,44 @@ export class ViewQuoteComponent {
   }
 
   GetAllQuoteProduct: any[] = [];
-  QuoteProductloading: boolean = false;
-
   getQuoteProductRequest() {
     this.QuoteProductloading = true;
     this.HttpApi.getQuoteProductRequest(this.q_id).subscribe(
       request => {
-        this.GetAllQuoteProduct = request.body.products;
-        this.QuoteProductloading = false;
+        this.GetAllQuoteProduct = request.body.products
         console.log(this.GetAllQuoteProduct)
+        this.QuoteProductloading = false;
       });
   }
+
+  ngOnInit(): void {
+    this.getAllProductRequest();
+  }
+  QuoteProductloading: boolean = false;
+  GetAllProduct!: any[];
+  productsearch: any;
+  totalRecords = 0;
+
+  getAllProductRequest() {
+    this.HttpApi.getAllProductRequest(this.productsearch,1,20).subscribe({
+      next: Request => {
+        if (this.GetAllQuoteProduct !== undefined) {
+          const product = Request.body.products.filter((product: any) => product.is_enable === true)
+          // 过滤掉已被选择的产品
+          this.GetAllProduct = product.filter((product: any) => {
+            return !this.GetAllQuoteProduct.some((quoteProduct: any) => quoteProduct.product_id === product.product_id);
+          });
+        } else {
+          this.GetAllProduct = Request.body.products.filter((product: any) => product.is_enable === true)
+        }
+        this.totalRecords = this.GetAllProduct.length;
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
+  }
+
 
   patchQuoteRequest(q_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
@@ -761,36 +798,6 @@ export class ViewQuoteComponent {
     this.selectedAccount_id = selectedOpportunity?.account_id;
   }
 
-  //GET全部product
-  //懶加載
-  totalRecords = 0;
-  first = 0;
-  GetAllProduct!: any[];
-  search: string = '';  // 搜尋關鍵字
-  loading: boolean = false;
-
-  loadTable(e: any) {
-    let page = e.first / e.rows + 1;
-    let limit = e.rows;
-    this.loading = true;
-    this.HttpApi.getAllProductRequest(this.search, 1, limit, page, e).subscribe(
-      request => {
-        if(this.GetAllQuoteProduct.length == 0){
-          this.GetAllProduct = request.body.products.filter((products: any) => products.is_enable == true);
-          console.log(this.GetAllProduct)
-        }else{
-          //如果商品有被報價過則不顯示可勾選商品中
-          const finalProduct = request.body.products.filter((product: any) => {
-            return !this.GetAllQuoteProduct.some((existingProduct: any) => existingProduct.product_id === product.product_id);
-          });
-          //商品有被啟用才可被報價
-          this.GetAllProduct = finalProduct.filter((products: any) => products.is_enable == true);
-          console.log(this.GetAllProduct)
-        }
-        this.totalRecords = this.GetAllProduct.length;
-        this.loading = false;
-      });
-  }
 
   //偵測status變量
   onStatusChange(event: any) {
@@ -823,6 +830,7 @@ export class ViewQuoteComponent {
   //取得當筆報價歷史紀錄
   GetQuoteHistoricalRecords: any[] = [];
   totalHistorical: any;
+
   getAllQuoteHistoricalRecordsRequest(q_id: any) {
     this.HttpApi.getAllHistoricalRecordsRequest(20, 1, q_id).subscribe(res => {
         this.GetQuoteHistoricalRecords = res.body.historical_records.map((quote: any) => {
