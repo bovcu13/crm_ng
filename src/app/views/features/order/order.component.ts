@@ -227,10 +227,11 @@ export class OrderComponent {
       console.log("order: " + JSON.stringify(order))
       this.dialogHeader = '編輯訂單';
       this.order_form.patchValue(order);
+
       this.order_form.patchValue({
         start_date: new Date(order.start_date),
       });
-      this.showedit = true; // 不顯示 activated_by 控件
+      this.showedit = true; // 顯示 activated_by 控件
       // 綁定已經選擇的狀態
       this.selectedStatus = this.status.find(s => s.name === order.status);
       this.selectedStatusName = this.selectedStatus.name
