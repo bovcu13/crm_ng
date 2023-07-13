@@ -157,7 +157,6 @@ export class ViewOrderComponent {
       const orderProducts = []
       const unit_price = this.edit_product_form.get(`unit_price_${product.product_id}`)?.value;
       const quantity = this.edit_product_form.get(`quantity_${product.product_id}`)?.value;
-      //todo
       if(product.quote_price == "-"){
         product.quote_price = 0
       }
@@ -170,7 +169,6 @@ export class ViewOrderComponent {
         description: ' ',
       };
       orderProducts.push(orderProduct);
-      console.log(orderProduct)
       this.HttpApi.postOrderProductRequest({products: orderProducts}).subscribe({
         next: Request => {
           console.log(Request)
@@ -236,6 +234,9 @@ export class ViewOrderComponent {
       const orderProducts = []
       const unit_price = this.edit_product_form.get(`unit_price_${product.order_product_id}`)?.value;
       const quantity = this.edit_product_form.get(`quantity_${product.order_product_id}`)?.value;
+      if(product.quote_price == "-"){
+        product.quote_price = 0
+      }
       const orderProduct = {
         order_product_id: product.order_product_id,
         quote_price: product.quote_price,
@@ -304,6 +305,9 @@ export class ViewOrderComponent {
     const unit_price = this.edit_product_form.get(`unit_price`)?.value;
     const quantity = this.edit_product_form.get(`quantity`)?.value;
     const description = this.edit_product_form.get(`description`)?.value;
+    if(this.GetOneOrderProduct.quote_price == "-"){
+      this.GetOneOrderProduct.quote_price = 0
+    }
     const orderProduct = {
       order_product_id: this.GetOneOrderProduct.order_product_id,
       order_id: this.o_id,
@@ -314,7 +318,7 @@ export class ViewOrderComponent {
       description: description
     };
     orderProducts.push(orderProduct);
-    this.HttpApi.patchQuoteProductRequest({products: orderProducts}).subscribe(
+    this.HttpApi.patchOrderProductRequest({products: orderProducts}).subscribe(
       {
         next: Request => {
           this.editOneOrderProduct = false;
@@ -368,7 +372,6 @@ export class ViewOrderComponent {
           const deletequoteproduct = this.deleteSelectOrderProduct.map(product => product.order_product_id);
           this.HttpApi.deleteOrderProductRequest({products: deletequoteproduct}).subscribe({
             next: Request => {
-              console.log(deletequoteproduct)
               console.log(Request);
               if (Request.code === 200) {
                 Swal.fire({
@@ -520,6 +523,7 @@ export class ViewOrderComponent {
   addProduct() {
     this.add = true;
     this.selectedProducts = [];
+    this.getAllOrderProductRequest()
   }
   //控制所選訂單商品dialog
   editSelectOrderProducts: boolean = false;

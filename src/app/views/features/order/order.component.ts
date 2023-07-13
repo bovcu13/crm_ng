@@ -193,7 +193,7 @@ export class OrderComponent {
       status: [''],
       contract_id: ['', [Validators.required]],
       contract_code: ['', [Validators.required]],
-      amount: [''],
+      grand_total: [''],
       activated_by: [''],
       activated_at: [''],
       description: [''],
@@ -405,15 +405,10 @@ export class OrderComponent {
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
-
-  //selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
-    // const today: Date = new Date(); // 創建一個Date物件
-    // let todayDate: string = today.toISOString().substr(0, 10);
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
-    //this.selectedAccount_id = selectedContract?.account_id;
   }
 
   //日期轉換

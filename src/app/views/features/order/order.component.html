@@ -37,7 +37,7 @@
             <th pSortableColumn="account_id">帳戶
               <p-sortIcon field="account_id"></p-sortIcon>
             </th>
-            <!--            <th pSortableColumn="amount">訂單金額<p-sortIcon field="amount"></p-sortIcon></th>-->
+            <th pSortableColumn="grand_total">訂單金額<p-sortIcon field="grand_total"></p-sortIcon></th>
             <th pSortableColumn="start_date">訂單開始日期
               <p-sortIcon field="start_date"></p-sortIcon>
             </th>
@@ -56,7 +56,7 @@
             </td>
             <td>{{ order.code }}</td>
             <td>{{ order.account_name }}</td>
-            <!--<td>{{ order.amount }}</td>-->
+            <td>{{ order.grand_total }}</td>
             <td>{{ order.start_date }}</td>
             <td>{{ order.contract_code}}</td>
             <td>
@@ -126,7 +126,10 @@
         <div class="field">
           <label>訂單金額</label>
           <br>
-          <label class="mt-2 ml-2" [textContent]="order_form.controls['amount'].value"></label>
+          <p-inputNumber [disabled]="true" formControlName="grand_total" mode="currency" currency="TWD"
+                         locale="en-US"
+                         [minFractionDigits]="0" class="no-border w-full"
+                         [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
