@@ -343,8 +343,7 @@
 <p-dialog [(visible)]="add" header=新增商品 [modal]="true">
   <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllProduct" [(selection)]="selectedProducts"
            [showCurrentPageReport]="true"
-           [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTable($event)"
-           [(first)]="first" [loading]="loading" currentPageReportTemplate="共 {totalRecords} 筆">
+           [rows]="100000" [lazy]="true" [loading]="QuoteProductloading">
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem">
@@ -428,7 +427,7 @@
       <ng-template pTemplate="summary">
         <div class="flex justify-content-end">
           <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary"></p-button>
-          <p-button label="儲存" (click)="postQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
+          <p-button label="新增" (click)="postQuoteProductRequest()" styleClass="p-button-info ml-1"></p-button>
         </div>
       </ng-template>
     </p-table>
@@ -513,7 +512,10 @@
         <div class="field">
           <label>商品價格</label>
           <br>
-          <label class="mt-2 ml-2 disable">NT$ {{(quote_product_form.controls['standard_price'].value)}}</label>
+          <p-inputNumber [disabled]="true" formControlName="standard_price" mode="currency" currency="TWD"
+                         locale="en-US"
+                         [minFractionDigits]="0" class="no-border w-full"
+                         [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -540,7 +542,10 @@
         <div class="field">
           <label>小計</label>
           <br>
-          <label class="mt-2 ml-2 disable">NT$ {{(quote_product_form.controls['sub_total'].value)}}</label>
+          <p-inputNumber [disabled]="true" formControlName="sub_total" mode="currency" currency="TWD"
+                         locale="en-US"
+                         [minFractionDigits]="0" class="no-border w-full"
+                         [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -557,7 +562,10 @@
         <div class="field">
           <label>總價</label>
           <br>
-          <label class="mt-2 ml-2 disable">NT$ {{(quote_product_form.controls['total_price'].value)}}</label>
+          <p-inputNumber [disabled]="true" formControlName="total_price" mode="currency" currency="TWD"
+                         locale="en-US"
+                         [minFractionDigits]="0" class="no-border w-full"
+                         [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-12 lg:col-12">
