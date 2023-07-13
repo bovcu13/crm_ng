@@ -3,9 +3,6 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
 import Swal from 'sweetalert2';
-import _default from "chart.js/dist/plugins/plugin.tooltip";
-import numbers = _default.defaults.animations.numbers;
-
 @Component({
   selector: 'app-view-order',
   templateUrl: './view-order.component.html',

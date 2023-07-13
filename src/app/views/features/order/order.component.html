@@ -170,10 +170,12 @@
       <ng-container *ngIf="!showedit">
         <p-button label="新增" (click)="postOrderRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
-      <ng-container *ngIf="showedit">
-        <p-button label="儲存" (click)="patchOrderRequest(o_id)"
-                  styleClass="p-button-info"></p-button>
-      </ng-container>
+      <ng-container *ngIf="selectedStatusName === '草稿'">
+<!--        <ng-container *ngIf="order_form.controls['status'].value === '草稿'">-->
+          <p-button label="儲存" (click)="patchOrderRequest(o_id)"
+                    styleClass="p-button-info"></p-button>
+        </ng-container>
+<!--      </ng-container>-->
     </div>
   </p-dialog>
 </form>
