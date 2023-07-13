@@ -53,7 +53,7 @@ export class HttpApiService {
         filter: {
           name: keyword,
           phone_number: keyword,
-          type: keyword,
+          type: [keyword],
           salesperson_name: keyword,
         },
       };

@@ -58,6 +58,39 @@ export class ViewContactComponent implements OnInit {
     });
   }
 
+//取得聯絡人歷程紀錄
+  GetContactHistoricalRecords: any[] = [];
+  totalHistorical: any;
+
+  getAllContactHistoricalRecordsRequest(id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, id).subscribe(request => {
+        this.GetContactHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+      }
+    )
+  }
+
+  loading: boolean = false;
+
+  // 懶加載
+  loadTable(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllHistoricalRecordsRequest(limit, page, this.id).subscribe({
+      next: request => {
+        this.GetContactHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+        console.log(this.GetContactHistoricalRecords)
+        console.log(this.totalHistorical)
+        this.loading = false;
+      },
+      error: err => {
+        console.log(err.status)
+      }
+    });
+  }
+
   getOneContact(id: any): void {
     this.HttpApi.getOneContactRequest(id).subscribe(
       request => {
@@ -143,6 +176,7 @@ export class ViewContactComponent implements OnInit {
             timer: 1000
           })
           this.getOneContact(this.id);
+          this.getAllContactHistoricalRecordsRequest(this.id)
         } else {
           Swal.fire({
             title: '失敗',

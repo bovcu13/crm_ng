@@ -217,6 +217,39 @@ export class ViewLeadComponent implements OnInit {
     this.which = this.filteredStatus
   }
 
+  //取得線索歷程紀錄
+  GetLeadHistoricalRecords: any[] = [];
+  totalHistorical: any;
+
+  getAllLeadHistoricalRecordsRequest(id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, id).subscribe(request => {
+        this.GetLeadHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+      }
+    )
+  }
+
+  loading: boolean = false;
+
+  // 懶加載
+  loadTable(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllHistoricalRecordsRequest(limit, page, this.id).subscribe({
+      next: request => {
+        this.GetLeadHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+        console.log(this.GetLeadHistoricalRecords)
+        console.log(this.totalHistorical)
+        this.loading = false;
+      },
+      error: err => {
+        console.log(err.status)
+      }
+    });
+  }
+
   getData: any;
   status_value!: string;
 
@@ -321,18 +354,30 @@ export class ViewLeadComponent implements OnInit {
       rating: this.selectedRating?.name,
     }
     this.HttpApi.patchLeadRequest(this.id, body)
-      .subscribe(request => {
-        console.log(request)
-        if (request.code === 200) {
-          Swal.fire({
-            title: '成功',
-            text: "已儲存您的變更 :)",
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1000
-          })
-          this.getOneLead(this.id);
-        } else {
+      .subscribe({
+        next: request => {
+          console.log(request)
+          if (request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已儲存您的變更 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getOneLead(this.id);
+            this.getAllLeadHistoricalRecordsRequest(this.id)
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        },
+        error: err => {
           Swal.fire({
             title: '失敗',
             text: "請確認資料是否正確 :(",
@@ -340,6 +385,7 @@ export class ViewLeadComponent implements OnInit {
             showConfirmButton: false,
             timer: 1500
           })
+          console.log(err)
         }
       });
   }
