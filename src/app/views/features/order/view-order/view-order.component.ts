@@ -181,6 +181,7 @@ export class ViewOrderComponent {
             this.getOneOrderRequest(this.o_id)
             this.getAllOrderProductRequest()
             this.getOrderProductRequest(this.o_id)
+            this.getAllHistoricalRecordsRequest(this.o_id)
             this.selectedProducts = []
           } else {
             Swal.fire({
@@ -258,6 +259,7 @@ export class ViewOrderComponent {
             this.getOneOrderRequest(this.o_id)
             this.getAllOrderProductRequest()
             this.getOrderProductRequest(this.o_id)
+            this.getAllHistoricalRecordsRequest(this.o_id)
           } else {
             Swal.fire({
               title: '失敗',
@@ -330,6 +332,7 @@ export class ViewOrderComponent {
             this.getOneOrderRequest(this.o_id)
             this.getAllOrderProductRequest()
             this.getOrderProductRequest(this.o_id)
+            this.getAllHistoricalRecordsRequest(this.o_id)
           } else {
             Swal.fire({
               title: '失敗',
@@ -381,6 +384,7 @@ export class ViewOrderComponent {
                 this.getOneOrderRequest(this.o_id)
                 this.getAllOrderProductRequest()
                 this.getOrderProductRequest(this.o_id)
+                this.getAllHistoricalRecordsRequest(this.o_id)
               } else {
                 Swal.fire({
                   title: '失敗',
@@ -437,6 +441,7 @@ export class ViewOrderComponent {
               this.getOneOrderRequest(this.o_id)
               this.getAllOrderProductRequest()
               this.getOrderProductRequest(this.o_id)
+              this.getAllHistoricalRecordsRequest(this.o_id)
             } else {
               Swal.fire({
                 title: '失敗',
@@ -493,6 +498,7 @@ export class ViewOrderComponent {
     this.getOneOrderRequest(this.o_id)
     this.getAllContractRequest()
     this.getAllOrderProductRequest()
+    this.getAllHistoricalRecordsRequest(this.o_id)
     this.edit_product_form = this.fb.group({
       quote_product_id: [''],
       product_name: [''],
@@ -645,6 +651,7 @@ export class ViewOrderComponent {
             timer: 1000
           })
           this.getOneOrderRequest(this.o_id)
+          this.getAllHistoricalRecordsRequest(this.o_id)
         } else {
           Swal.fire({
             title: '失敗',
@@ -711,12 +718,10 @@ export class ViewOrderComponent {
   orderStartDate: any;
   selectedContract_id: any;
 
-  // selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.order_form.get('contract_id')?.value);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
-    // this.selectedAccount_id = selectedContract?.account_id;
   }
 
   //偵測status變量
@@ -752,5 +757,24 @@ export class ViewOrderComponent {
       timer: 1000
     })
     this.getOneOrderRequest(this.o_id)
+  }
+
+  //此筆訂單歷程紀錄
+  GetOrderHistoricalRecords: any[] = [];
+  totalHistorical: any;
+  getAllHistoricalRecordsRequest(o_id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, o_id).subscribe({
+      next: res => {
+        this.GetOrderHistoricalRecords = res.body.historical_records.map((order: any) => {
+          const modified_at = this.formatDate(order.modified_at)
+          return {...order, modified_at};
+        });
+        this.totalHistorical = res.body.total
+        console.log(this.GetOrderHistoricalRecords)
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
   }
 }
