@@ -4,6 +4,8 @@ import {HttpApiService} from "../../../api/http-api.service";
 import {Table} from 'primeng/table';
 import {Account} from "../../../shared/models/account";
 import Swal from "sweetalert2";
+import _default from "chart.js/dist/plugins/plugin.tooltip";
+import numbers = _default.defaults.animations.numbers;
 
 @Component({
   selector: 'app-account',
@@ -128,7 +130,7 @@ export class AccountComponent implements OnInit {
       //dropdown
       const selectedIndustry = this.industry_id.find((s) => s.name === account.industry_id);
       this.account_form.patchValue({
-        type: this.account_form.controls['type'].value.map((name: string) => ({ name })),
+        type: this.account_form.controls['type'].value.map((name: string) => ({name})),
         industry_id: selectedIndustry,
       });
       console.log(this.account_form.value)
@@ -136,7 +138,7 @@ export class AccountComponent implements OnInit {
   }
 
   // 搜尋關鍵字
-  search: string = '';
+  search!: string;
 
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
@@ -389,41 +391,41 @@ export class AccountComponent implements OnInit {
       boolean: false
     },
     {
-      name: "競爭者",
+      name: "競爭對手",
       boolean: false
     },
   ]
 
   selected(event: any) {
+    console.log(this.selectedValue)
     switch (event.itemValue.name) {
       case "個人客戶":
         this.selectedValue[0].boolean = !this.selectedValue[0].boolean;
         console.log("個人客戶: " + this.selectedValue[0].boolean);
-        // this.accountTypefilter();
+        this.accountTypefilter();
         break;
 
       case "法人客戶":
         this.selectedValue[1].boolean = !this.selectedValue[1].boolean;
         console.log("法人客戶: " + this.selectedValue[1].boolean);
-        // this.accountTypefilter();
+        this.accountTypefilter();
         break;
 
       case "夥伴":
         this.selectedValue[2].boolean = !this.selectedValue[2].boolean;
         console.log("夥伴: " + this.selectedValue[2].boolean);
-        // this.accountTypefilter();
+        this.accountTypefilter();
         break;
 
       case "競爭對手":
         this.selectedValue[3].boolean = !this.selectedValue[3].boolean;
         console.log("競爭對手: " + this.selectedValue[3].boolean);
-        // this.accountTypefilter();
+        this.accountTypefilter();
         break;
       default:
         console.log("error")
         return;
     }
-    console.log(this.selectedValue)
   }
 
   accountTypefilter(): void {
@@ -433,9 +435,12 @@ export class AccountComponent implements OnInit {
       if (this.selectedValue[i].boolean) {
         mutiSearch[trueValue] = this.selectedValue[i].name
         trueValue++;
-        console.log(mutiSearch.map(obj => obj.toString()))
+        // console.log(JSON.stringify(mutiSearch).slice(1, -1).replace(/"/g, ""))
       }
     }
-    this.dt.filterGlobal(mutiSearch.map(obj => obj.toString()), 'contains');
+    // string[] → string
+    // ["法人客戶","夥伴"] → 法人客戶,夥伴
+    // g（global flag）：正則表達式中的全域標誌
+    this.dt.filterGlobal(JSON.stringify(mutiSearch).slice(1, -1).replace(/"/g, ""), 'contains');
   }
 }
