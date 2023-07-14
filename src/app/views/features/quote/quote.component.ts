@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
+import {PrimeIcons} from "primeng/api";
 
 @Component({
   selector: 'app-quote',
@@ -11,44 +12,7 @@ import {Table} from "primeng/table";
 })
 export class QuoteComponent {
   @ViewChild('dt1') dt1!: Table;
-  quote: any[] = [
-    {
-      "quote_id": 1,
-      "number": "00001",
-      "name": "milk",
-      "opportunity_name": "12345",
-      "account_name": "NKUST",
-      "syncing": true,
-      "status": "已接受",
-      "describe": "test1",
-      "expiration_date": "2023-04-05",
-      "tax": 10,
-      "shipping_and_handling": "1.5",
-      "subtotal": 50.00,
-      "created_at": "2023-04-15",
-      "created_by": "林",
-      "updated_by": "林",
-    },
-    {
-      "quote_id": 2,
-      "number": "00002",
-      "name": "aaa",
-      "opportunity_name": "sam",
-      "account_name": "Gina",
-      "syncing": false,
-      "status": "審查中",
-      "describe": "test2",
-      "expiration_date": "2023-04-04",
-      "tax": "",
-      "shipping_and_handling": "",
-      "subtotal": 60.00,
-      "created_at": "2023-04-14",
-      "created_by": "林",
-      "updated_by": "林",
-    }
-  ];
-
-  //p-dropdown status的下拉值
+    //p-dropdown status的下拉值
   status: any[] = [
     {
       name: "草稿",
@@ -81,10 +45,11 @@ export class QuoteComponent {
       next:(res) => {
         const getquote = res.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
         this.GetAllQuote = getquote.map((quote: any) => {
+          const syncing = quote.is_syncing ? '是' : '否';
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
           const updated_at = this.formatDate(quote.updated_at);
-          return {...quote, expiration_date, created_at, updated_at};
+          return {...quote, syncing, expiration_date, created_at, updated_at};
         });
       },
       error:(error) => {
@@ -124,10 +89,9 @@ export class QuoteComponent {
       name: this.quote_form.value.name,
       account_id: this.selectedAccount_id,//帳戶ID
       expiration_date: this.quote_form.value.expiration_date,
-      // is_syncing: this.quote_form.value.is_syncing,
       opportunity_id: this.selectedOpportunity_id,//商機ID
       shipping_and_handling: this.quote_form.value.shipping_and_handling,
-      status: this.quote_form.value.status,
+      status: this.quote_form.get('status')?.value.name,
       tax: this.quote_form.value.tax,
       description: this.quote_form.value.description,
     }
@@ -201,6 +165,7 @@ export class QuoteComponent {
       shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
       tax: this.quote_form.get('tax')?.value,
     }
+    console.log(this.quote_form.get('shipping_and_handling')?.value)
     this.HttpApi.patchQuoteRequest(p_id, body).subscribe({
       next: Request => {
         console.log(Request)
@@ -316,7 +281,6 @@ export class QuoteComponent {
         this.quote_form.patchValue({
           is_syncing: true,
         });
-        console.log(this.quote_form.get('is_syncing')?.value)
         Swal.fire({
           title: '成功',
           text: "已成功同步金額，請按下儲存鍵 :)",
@@ -361,9 +325,9 @@ export class QuoteComponent {
       description: [''],
       expiration_date: [''],
       total_price: [''],
-      tax: [''],
+      tax: [0],
       discount: [''],
-      shipping_and_handling: [''],
+      shipping_and_handling: [0],
       sub_total: [''],
       grand_total: [''],
       created_at: [''],
@@ -462,10 +426,11 @@ export class QuoteComponent {
         //如果商機沒有被選取則無法顯示這筆報價
         const getquote = request.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
         this.GetAllQuote = getquote.map((quote: any) => {
+          const syncing = quote.is_syncing ? '是' : '否';
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
           const updated_at = this.formatDate(quote.updated_at);
-          return {...quote, expiration_date, created_at, updated_at};
+          return {...quote, syncing, expiration_date, created_at, updated_at};
         });
         this.totalRecords = this.GetAllQuote.length;
         this.loading = false;
