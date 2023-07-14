@@ -131,12 +131,8 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系行銷活動</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllparent_campaign"
-                      [filter]="true" filterBy="label" [showClear]="true"
-                      formControlName="parent_campaign_id"></p-dropdown>
-          <div class="required-star" *ngIf="campaign_form.controls['parent_campaign_id'].hasError('Parent_idError')">
-            無法選取同樣的行銷活動到父系行銷活動中
-          </div>
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllparent_campaign" formControlName="parent_campaign_name"
+                      optionLabel="label"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -229,15 +225,15 @@
       </div>
     </div>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <ng-container *ngIf="!showedit">
-        <p-button label="新增" (click)="postCampaignRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postCampaignRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="!disableSaveButton">
         <ng-container *ngIf="showedit">
           <p-button label="儲存" (click)="patchCampaignRequest(c_id)" [disabled]="disableSaveButton"
-                    styleClass="p-button-outlined p-button-info"></p-button>
+                    styleClass="p-button-info"></p-button>
         </ng-container>
-        <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
       </ng-container>
     </div>
   </p-dialog>
