@@ -222,12 +222,20 @@ export class OrderComponent {
       this.dialogHeader = '新增訂單';
       this.order_form.reset();
       this.showedit = false; // 不顯示 activated_by 控件
-      this.order_form.patchValue({status: this.status[0].name});
+      this.order_form.patchValue({status: this.status.find(s => s.name === this.status[0].name),});
+      this.order_form.controls['status'].disable();
     } else if (type === 'edit') {
       console.log("order: " + JSON.stringify(order))
       this.dialogHeader = '編輯訂單';
+      if (order.status === "啟動中") {
+        this.order_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === order.status),
+        });
+        this.order_form.controls['status'].disable();
+      }else{
+        this.order_form.controls['status'].enable();
+      }
       this.order_form.patchValue(order);
-
       this.order_form.patchValue({
         start_date: new Date(order.start_date),
       });

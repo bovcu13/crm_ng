@@ -118,22 +118,26 @@
                       <div class="mt-2">
                         <label *ngIf="ErrorMessage" class="required-star">選擇的項目必須至少1種</label>
                       </div>
-                      <div class="justify-content-end">
-                        <p-button icon="pi pi-plus" pTooltip="新增商品/服務" (click)="addProduct()" tooltipPosition="top"
-                                  styleClass="p-button-text"></p-button>
-                        <p-button icon="pi pi-pencil" pTooltip="編輯所有報價商品/服務" (click)="editProduct()"
-                                  tooltipPosition="top"
-                                  styleClass="p-button-text"></p-button>
-                        <p-button icon="pi pi-trash" pTooltip="刪除所選商品/服務" (click)="deleteSelectQuoteProductRequest()"
-                                  tooltipPosition="top"
-                                  styleClass="p-button-text"></p-button>
-                      </div>
+                      <ng-container *ngIf="stage !== '客戶簽回'">
+                        <div class="justify-content-end">
+                          <p-button icon="pi pi-plus" pTooltip="新增商品/服務" (click)="addProduct()"
+                                    tooltipPosition="top"
+                                    styleClass="p-button-text"></p-button>
+                          <p-button icon="pi pi-pencil" pTooltip="編輯所有報價商品/服務" (click)="editProduct()"
+                                    tooltipPosition="top"
+                                    styleClass="p-button-text"></p-button>
+                          <p-button icon="pi pi-trash" pTooltip="刪除所選商品/服務"
+                                    (click)="deleteSelectQuoteProductRequest()"
+                                    tooltipPosition="top"
+                                    styleClass="p-button-text"></p-button>
+                        </div>
+                      </ng-container>
                     </div>
                   </div>
                 </ng-template>
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 4rem">
+                    <th style="width: 4rem" *ngIf="stage !== '客戶簽回'">
                       <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
                     <th>名稱</th>
@@ -147,7 +151,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
                   <tr>
-                    <td>
+                    <td *ngIf="stage !== '客戶簽回'">
                       <p-tableCheckbox [value]="product"></p-tableCheckbox>
                     </td>
                     <td>{{ product.product_name }}</td>
@@ -291,11 +295,13 @@
                   </div>
                 </div>
               </div>
-              <div class="flex justify-content-end">
-                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
-                <p-button label="儲存" (click)="patchQuoteRequest(q_id)"
-                          styleClass="p-button-info"></p-button>
-              </div>
+              <ng-container *ngIf="stage !== '客戶簽回'">
+                <div class="flex justify-content-end">
+                  <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
+                  <p-button label="儲存" (click)="patchQuoteRequest(q_id)"
+                            styleClass="p-button-info"></p-button>
+                </div>
+              </ng-container>
             </p-tabPanel>
             <p-tabPanel header="歷程記錄">
               <p-table [rowsPerPageOptions]="[5, 10, 15]" [value]="GetQuoteHistoricalRecords"

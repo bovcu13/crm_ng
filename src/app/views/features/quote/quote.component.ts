@@ -79,7 +79,8 @@ export class QuoteComponent {
   getAllQuoteRequest() {
     this.HttpApi.getAllQuoteRequest(this.search, 1).subscribe({
       next:(res) => {
-        this.GetAllQuote = res.body.quotes.map((quote: any) => {
+        const getquote = res.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
+        this.GetAllQuote = getquote.map((quote: any) => {
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
           const updated_at = this.formatDate(quote.updated_at);
@@ -377,6 +378,7 @@ export class QuoteComponent {
   showedit = true;//判斷是否dialog為新增與編輯
   selectedStatus!: any;
   q_id: any;
+  disableSaveButton: boolean = false
 
   showDialog(type: string, quote?: any): void {
     this.edit = true;
@@ -384,10 +386,21 @@ export class QuoteComponent {
       this.dialogHeader = '新增報價';
       this.quote_form.reset();
       this.showedit = false;
-      this.quote_form.patchValue({status: this.status[0].name});
+      this.quote_form.patchValue({status: this.status.find(s => s.name === this.status[0].name),});
+      this.quote_form.controls['status'].disable();
     } else if (type === 'edit') {
       console.log("quote: " + JSON.stringify(quote))
       this.dialogHeader = '編輯報價';
+      if (quote.status === "客戶簽回") {
+        this.quote_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === quote.status),
+        });
+        this.quote_form.controls['status'].disable();
+        this.disableSaveButton = true;
+      }else{
+        this.quote_form.controls['status'].enable();
+        this.disableSaveButton = false;
+      }
       this.quote_form.patchValue(quote);
       this.showedit = true;
       // 綁定已經選擇的狀態
@@ -495,7 +508,7 @@ export class QuoteComponent {
       return null
     } else {
       const date = new Date(dateString2);
-      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours());
+      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
       return expiration_date.toISOString().slice(0, 10);
     }
   }
