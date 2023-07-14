@@ -133,7 +133,7 @@ export class ContractComponent {
 
     let body = {
       code: this.contract_form.value.code,
-      status: this.contract_form.value.status,
+      status: this.contract_form.get('status')?.value.name,
       description: this.contract_form.value.description,
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,

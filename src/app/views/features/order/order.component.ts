@@ -143,7 +143,7 @@ export class OrderComponent {
       return;
     }
     let body = {
-      status: this.order_form.value.status,
+      status: this.order_form.get('status')?.value.name,
       description: this.order_form.value.description,
       start_date: this.order_form.value.start_date,
       contract_id: this.selectedContract_id, //契約ID

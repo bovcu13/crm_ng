@@ -166,7 +166,7 @@ export class ViewQuoteComponent {
         this.GetOneQuote = res.body;
         this.name = res.body.name;
         this.stage = res.body.status;
-        this.GetOneIsSyncing = res.body.is_syncing;
+        this.GetOneIsSyncing = res.body.is_syncing ? '是' : '否';
         this.quote_form.patchValue({
           name: res.body.name,
           code: res.body.code,
