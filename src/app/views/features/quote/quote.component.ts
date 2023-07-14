@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
-import {PrimeIcons} from "primeng/api";
 
 @Component({
   selector: 'app-quote',

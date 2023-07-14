@@ -4,7 +4,8 @@
       <h2>商品/服務</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"
+                    pTooltip="新增商品/服務"></p-button>
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[10, 20]" [value]="GetAllProduct" [paginator]="true" #dt1
@@ -48,9 +49,9 @@
               <div class="flex justify-content-end">
               <p-button (click)="showDialog('edit',product)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash"
-                        styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
-                        tooltipPosition="top" (click)="deleteProductRequest(product.product_id)"></p-button>
+<!--              <p-button icon="pi pi-trash"-->
+<!--                        styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"-->
+<!--                        tooltipPosition="top" (click)="deleteProductRequest(product.product_id)"></p-button>-->
               </div>
             </td>
           </tr>
@@ -123,14 +124,14 @@
       </div>
     </div>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <ng-container *ngIf="!showedit">
-        <p-button label="新增" (click)="postProductRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postProductRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="showedit">
         <p-button label="儲存" (click)="patchProductRequest(p_id)"
-                  styleClass="p-button-outlined p-button-info"></p-button>
+                  styleClass="p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
 </form>
