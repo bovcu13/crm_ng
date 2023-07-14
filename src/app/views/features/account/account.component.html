@@ -35,7 +35,7 @@
             <th pSortableColumn="type">
               <div class="flex justify-content-start align-items-center">
                 <p-columnFilter field="type" matchMode="in" display="menu" [showMatchModes]="false"
-                                [showOperator]="false"
+                                [showOperator]="false" (click)="clickFilter()"
                                 [showAddButton]="false" [showClearButton]="false" [showApplyButton]="false">
                   <ng-template pTemplate="filter">
                     <p-multiSelect [showToggleAll]="true" [(ngModel)]="selectedValue" [options]="type" placeholder="勾選帳戶類別"
