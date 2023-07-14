@@ -8,7 +8,7 @@
                     styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10, 15]"
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="1000000" [paginator]="true" [rowsPerPageOptions]="[10, 20]"
                (onLazyLoad)="loadTable($event)" [loading]="loading" currentPageReportTemplate="共 {totalRecords} 筆" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="flex">

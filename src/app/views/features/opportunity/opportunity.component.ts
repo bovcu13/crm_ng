@@ -111,7 +111,7 @@ export class OpportunityComponent implements OnInit {
     this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
-  total!: number;
+  totalRecords!: number;
   loading: boolean = false;
 
   // 懶加載
@@ -124,7 +124,7 @@ export class OpportunityComponent implements OnInit {
         this.getData = request.body.opportunities;
         this.loading = false;
         console.log(this.getData)
-        this.total = request.body.total;
+        this.totalRecords = request.body.total;
       });
   }
 
@@ -160,7 +160,7 @@ export class OpportunityComponent implements OnInit {
     this.HttpApi.getAllOpportunityRequest(this.search, 1).subscribe(
       request => {
         this.getData = request.body.opportunities;
-        this.total = request.body.total;
+        this.totalRecords = request.body.total;
       });
   }
 
