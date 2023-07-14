@@ -57,10 +57,6 @@ export class CampaignComponent {
     },
   ];
 
-  ngOnInit() {
-
-  }
-
   //p-dropdown狀態
   status: any[] = [
     {
@@ -117,7 +113,6 @@ export class CampaignComponent {
   ];
   //取得所有行銷活動資料
   GetAllCampaign: HttpApiService[] = [];
-  GetAllparent_campaign: any[] = [];
   first = 0;
   totalRecords = 0;
   search: any;
@@ -131,7 +126,6 @@ export class CampaignComponent {
     this.HttpApi.getAllCampaignRequest(this.search, 1, limit, page, e).subscribe(
       request => {
         this.loading = false;
-        this.GetAllCampaign = request.body.campaigns;
         this.GetAllCampaign = request.body.campaigns.map((campaign: any) => {
           const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)
           const start_date = this.formatDate2(campaign.start_date)
@@ -141,7 +135,6 @@ export class CampaignComponent {
           return {...campaign, parent_campaign_id, start_date, end_date, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
-        console.log(this.GetAllCampaign)
       });
   }
 
@@ -150,18 +143,21 @@ export class CampaignComponent {
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
+  ngOnInit(): void {
+    this.getAllCampaignRequest();
+  }
 
+  GetAllparent_campaign: any[] = [];
   getAllCampaignRequest() {
     this.HttpApi.getAllCampaignRequest(this.search, 1).subscribe({
       next: res => {
-        const campaigns = res.body.campaigns
-        this.GetAllparent_campaign = campaigns.map((campaign: any) => {
+        this.GetAllparent_campaign = res.body.campaigns.map((campaign: any) => {
           return {
             label: campaign.name,
             value: campaign.campaign_id,
           };
         });
-        this.GetAllCampaign = res.body.campaigns
+        console.log(this.GetAllparent_campaign)
         this.GetAllCampaign = res.body.campaigns.map((campaign: any) => {
           const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)
           const start_date = this.formatDate2(campaign.start_date)
@@ -310,7 +306,7 @@ export class CampaignComponent {
           label: any;
         }) => a.label === campaign.parent_campaign_name),
       });
-      if (campaign.status === "已終止") {
+      if (campaign.status === "已中止") {
         this.campaign_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
         });
@@ -319,6 +315,7 @@ export class CampaignComponent {
       } else {
         this.campaign_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
+          parent_campaign_name: this.GetAllparent_campaign.find((a: { label: any; }) => a.label === campaign.parent_campaign_name),
         });
         this.campaign_form.controls['status'].enable();
         this.disableSaveButton = false;
