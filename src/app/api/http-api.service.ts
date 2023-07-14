@@ -62,7 +62,7 @@ export class HttpApiService {
         };
       }
     }
-    const url = `${BaseUrl}/accounts/list?page=${page}&limit=10`;
+    const url = `${BaseUrl}/accounts/list?page=${page}&limit=20`;
     return this.http.post<any>(url, obj);
   }
 
