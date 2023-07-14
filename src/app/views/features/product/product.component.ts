@@ -276,7 +276,7 @@ export class ProductComponent {
         });
         this.totalRecords = request.body.total;
         this.loading = false;
-        console.log(request.body.GetAllProduct)
+        console.log(this.GetAllProduct)
       });
   }
 

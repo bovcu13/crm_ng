@@ -4,7 +4,8 @@
       <h2>契約</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button icon="pi pi-plus" (click)="showDialog('add')" styleClass="p-button-text"></p-button>
+          <p-button icon="pi pi-plus" (click)="showDialog('add')" styleClass="p-button-text"
+                    pTooltip="新增契約" tooltipPosition="top"></p-button>
         </span>
       </div>
       <p-table [value]="GetAllContract" [paginator]="true" [rows]="1000000" [totalRecords]="totalRecords"
@@ -77,11 +78,11 @@
             <td>{{ contract.term }}</td>
             <td>
               <div class="flex justify-content-end">
-                <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
+                <p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-text"
                           [routerLink]="['/main/contract/view/', contract.contract_id]"></p-button>
-                <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)"
+                <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)"
+                <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)" pTooltip="刪除" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>

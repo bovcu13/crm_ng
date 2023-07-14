@@ -4,7 +4,8 @@
       <h2>訂單</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"
+                    pTooltip="新增訂單"></p-button>
         </span>
       </div>
       <p-table [rowsPerPageOptions]="[10, 20]" [(first)]="first" [showCurrentPageReport]="true"
@@ -61,11 +62,11 @@
             <td>{{ order.contract_code}}</td>
             <td>
               <div class="flex justify-content-end">
-              <p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-text"
+              <p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-text"
                         [routerLink]="['/main/order/view/', order.order_id]"></p-button>
-              <p-button (click)="showDialog('edit',order)" icon="pi pi-pencil"
+              <p-button (click)="showDialog('edit',order)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash" (click)="deleteOrderRequest(order.order_id)"
+              <p-button icon="pi pi-trash" (click)="deleteOrderRequest(order.order_id)" pTooltip="刪除" tooltipPosition="top"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
