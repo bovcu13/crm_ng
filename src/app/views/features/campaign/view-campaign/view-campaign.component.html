@@ -6,13 +6,9 @@
           <h3>{{name}}</h3>
           <p-divider></p-divider>
           <span class="p-buttonset flex justify-content-center">
-            <p-button pTooltip="編輯" tooltipPosition="top" icon="pi pi-pencil"
-                      styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
             <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash"
-                      styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+                      styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
             <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
-                      styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
-            <p-button pTooltip="轉換" tooltipPosition="top" icon="pi pi-sync"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
           </span>
           <div class="grid mt-2">
@@ -303,9 +299,9 @@
                 </div>
               </div>
               <div class="flex justify-content-end" *ngIf="stage!=='已中止'">
+                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
                 <p-button label="儲存" (click)="patchCampaignRequest(c_id)"
-                          styleClass="p-button-outlined p-button-info"></p-button>
-                <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
+                          styleClass="p-button-info"></p-button>
               </div>
             </p-tabPanel>
           </p-tabView>

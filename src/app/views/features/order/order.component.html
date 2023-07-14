@@ -107,17 +107,10 @@
           </div>
         </div>
       </div>
-      <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>狀態</label>
-          <br>
-          <label class="mt-2 ml-2" [textContent]="order_form.controls['status'].value"></label>
-        </div>
-      </div>
-      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
-        <div class="field">
-          <label>狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
+          <p-dropdown placeholder="請選擇" appendTo="body" [options]="status" formControlName="status"
                       name="status" optionLabel="name" (onChange)="onStatusChange($event)"
                       [(ngModel)]="selectedStatus"></p-dropdown>
         </div>

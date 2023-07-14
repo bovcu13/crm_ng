@@ -51,8 +51,12 @@
             <th pSortableColumn="expiration_date">到期日期
               <p-sortIcon field="expiration_date"></p-sortIcon>
             </th>
-            <th pSortableColumn="subtotal">小計<p-sortIcon field="subtotal"></p-sortIcon></th>
-            <th pSortableColumn="total_price">總計<p-sortIcon field="total_price"></p-sortIcon></th>
+            <th pSortableColumn="subtotal">小計
+              <p-sortIcon field="subtotal"></p-sortIcon>
+            </th>
+            <th pSortableColumn="total_price">總計
+              <p-sortIcon field="total_price"></p-sortIcon>
+            </th>
             <th></th>
           </tr>
         </ng-template>
@@ -94,24 +98,17 @@
 <form [formGroup]="quote_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>編號</label>
           <br>
           <label class="mt-2 ml-2 disable">{{(quote_form.controls['code'].value)}}</label>
         </div>
       </div>
-      <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>狀態</label>
-          <br>
-          <label class="mt-2 ml-2" [textContent]="quote_form.controls['status'].value"></label>
-        </div>
-      </div>
-      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
-        <div class="field">
-          <label>狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status" formControlName="status"
+          <p-dropdown placeholder="請選擇" appendTo="body" [options]="status" formControlName="status"
                       optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
         </div>
       </div>
@@ -135,7 +132,8 @@
         <div class="field">
           <label>同步到商機</label>
           <br>
-          <p-checkbox formControlName="is_syncing" value="is_syncing" [binary]="true" (click)="showAlertCormfirm()"></p-checkbox>
+          <p-checkbox formControlName="is_syncing" value="is_syncing" [binary]="true"
+                      (click)="showAlertCormfirm()"></p-checkbox>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -149,9 +147,10 @@
         <div class="field">
           <label>小計</label>
           <br>
-<!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['sub_total'].value}}</label>-->
+          <!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['sub_total'].value}}</label>-->
           <p-inputNumber [disabled]="true" formControlName="sub_total" mode="currency" currency="TWD" locale="en-US"
-                         [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
+                         [minFractionDigits]="0" class="no-border w-full"
+                         [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -166,16 +165,18 @@
         <div class="field">
           <label>折扣(四捨五入)</label>
           <br>
-<!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['discount'].value}}</label>-->
-          <p-inputNumber [disabled]="true" formControlName="discount"  suffix= "%"
-                         [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
+          <!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['discount'].value}}</label>-->
+          <p-inputNumber [disabled]="true" formControlName="discount" suffix="%"
+                         [minFractionDigits]="0" class="no-border w-full"
+                         [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>運費及其他費用</label>
           <br>
-          <p-inputNumber class="w-full" formControlName="shipping_and_handling" mode="currency" currency="TWD" locale="en-US"
+          <p-inputNumber class="w-full" formControlName="shipping_and_handling" mode="currency" currency="TWD"
+                         locale="en-US"
                          [minFractionDigits]="0" [min]="0"></p-inputNumber>
         </div>
       </div>
@@ -183,9 +184,10 @@
         <div class="field">
           <label>總計</label>
           <br>
-<!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['grand_total'].value}}</label>-->
+          <!--          <label class="mt-2 ml-2">NT$ {{quote_form.controls['grand_total'].value}}</label>-->
           <p-inputNumber [disabled]="true" formControlName="grand_total" mode="currency" currency="TWD" locale="en-US"
-                         [minFractionDigits]="0" class="no-border w-full"  [ngClass]="{'no-border': true}"></p-inputNumber>
+                         [minFractionDigits]="0" class="no-border w-full"
+                         [ngClass]="{'no-border': true}"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-12 lg:col-12">
@@ -216,9 +218,10 @@
       <ng-container *ngIf="!showedit">
         <p-button label="新增" (click)="postQuoteRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
-      <ng-container *ngIf="showedit">
-        <p-button label="儲存" (click)="patchQuoteRequest(q_id)"
-                  styleClass="p-button-info"></p-button>
+      <ng-container *ngIf="!disableSaveButton">
+        <ng-container *ngIf="showedit">
+          <p-button label="儲存" (click)="patchQuoteRequest(q_id)" styleClass="p-button-info"></p-button>
+        </ng-container>
       </ng-container>
     </div>
   </p-dialog>

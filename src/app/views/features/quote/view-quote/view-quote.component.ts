@@ -822,7 +822,7 @@ export class ViewQuoteComponent {
       return null
     } else {
       const date = new Date(dateString2);
-      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
+      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
       return expiration_date.toISOString().slice(0, 10);
     }
   }

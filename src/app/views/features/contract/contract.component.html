@@ -116,20 +116,11 @@
                       [ngClass]="{'ng-dirty':contract_form.controls['opportunity_id'].hasError('required') && contract_form.controls['opportunity_id'].touched}"></p-dropdown>
         </div>
       </div>
-      <div class="col-12 md:col-6 lg:col-6" *ngIf="!showedit">
-        <div class="field">
-          <label>狀態</label>
-          <br>
-          <label class="mt-2 ml-2">{{(contract_form.controls['status'].value)}}</label>
-        </div>
-      </div>
-      <div class="col-12 md:col-6 lg:col-6" *ngIf="showedit">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>狀態</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="status"
-                      formControlName="status"
-                      optionLabel="name" (onChange)="onStatusChange($event)"
-                      name="status"
+          <p-dropdown placeholder="請選擇" appendTo="body" [options]="status"
+                      formControlName="status" optionLabel="name" (onChange)="onStatusChange($event)" name="status"
                       [ngClass]="{'ng-dirty':contract_form.controls['status'].hasError('required') && contract_form.controls['status'].touched}"></p-dropdown>
         </div>
       </div>

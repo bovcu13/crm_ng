@@ -206,7 +206,8 @@ export class ContractComponent {
       this.dialogHeader = '新增契約';
       this.contract_form.reset();
       this.showedit = false;
-      this.contract_form.patchValue({status: this.status[0].name});
+      this.contract_form.patchValue({status: this.status.find(s => s.name === this.status[0].name),});
+      this.contract_form.controls['status'].disable();
     } else if (type === 'edit') {
       console.log("contract: " + JSON.stringify(contract))
       this.dialogHeader = '編輯契約';
