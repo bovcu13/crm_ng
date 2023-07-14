@@ -109,7 +109,6 @@ export class AccountComponent implements OnInit {
 
 
   ngOnInit() {
-
   }
 
   // 開啟 新增/編輯帳戶 彈出視窗
@@ -373,6 +372,10 @@ export class AccountComponent implements OnInit {
     const selectedIndustry = this.industry_id.find((s: { code: any; }) => s.code === event.value.code);
     console.log(event.value.code);
     console.log(selectedIndustry.name);
+  }
+
+  clickSort(): void {
+    this.dt.filterGlobal(JSON.stringify(["個人客戶", "法人客戶", "夥伴", "競爭對手"]).slice(1, -1).replace(/"/g, ""), 'contains');
   }
 
   selectedValue = [

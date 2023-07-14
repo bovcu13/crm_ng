@@ -6,7 +6,7 @@
         <span class="p-buttonset">
 <!--          <p-button (click)="menu.toggle($event)" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"-->
           <!--                    styleClass="p-button-text"></p-button>-->
-          <p-button (click)="showDialog('add')" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"
+          <p-button (click)="showDialog('add')" pTooltip="新增帳戶" icon="pi pi-plus"
                     styleClass="p-button-text"></p-button>
         </span>
       </div>
@@ -26,10 +26,10 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name">帳戶
+            <th pSortableColumn="name" (click)="clickSort()">帳戶
               <p-sortIcon field="name"></p-sortIcon>
             </th>
-            <th pSortableColumn="phone_number">電話
+            <th pSortableColumn="phone_number" (click)="clickSort()">電話
               <p-sortIcon field="phone_number"></p-sortIcon>
             </th>
             <th>
@@ -72,7 +72,6 @@
             <td>
               <div class="flex justify-content-end">
                 <p-button icon="pi pi-eye" [routerLink]="['/main/account/view',account.account_id]" pTooltip="檢視"
-                          tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',account)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
