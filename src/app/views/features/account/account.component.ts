@@ -4,8 +4,6 @@ import {HttpApiService} from "../../../api/http-api.service";
 import {Table} from 'primeng/table';
 import {Account} from "../../../shared/models/account";
 import Swal from "sweetalert2";
-import _default from "chart.js/dist/plugins/plugin.tooltip";
-import numbers = _default.defaults.animations.numbers;
 
 @Component({
   selector: 'app-account',
@@ -249,7 +247,7 @@ export class AccountComponent implements OnInit {
         }).then(() => {
           this.edit = true;
         })
-        console.log(body)
+        console.log(err)
       }
     });
 
@@ -395,6 +393,10 @@ export class AccountComponent implements OnInit {
       boolean: false
     },
   ]
+
+  clickHeader():void{
+    this.dt.filterGlobal(JSON.stringify(["個人客戶", "法人客戶", "夥伴", "競爭對手"]).slice(1, -1).replace(/"/g, ""), 'contains');
+  }
 
   selected(event: any) {
     console.log(this.selectedValue)
