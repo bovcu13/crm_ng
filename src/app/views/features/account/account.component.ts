@@ -394,7 +394,7 @@ export class AccountComponent implements OnInit {
     },
   ]
 
-  clickFilter():void{
+  clickHeader():void{
     this.dt.filterGlobal(JSON.stringify(["個人客戶", "法人客戶", "夥伴", "競爭對手"]).slice(1, -1).replace(/"/g, ""), 'contains');
   }
 
