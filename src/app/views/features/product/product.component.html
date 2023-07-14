@@ -7,7 +7,7 @@
           <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllProduct" [paginator]="true" #dt1
+      <p-table [rowsPerPageOptions]="[10, 20]" [value]="GetAllProduct" [paginator]="true" #dt1
                [rows]="1000" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTable($event)"
                [showCurrentPageReport]="true" [(first)]="first" [loading]="loading"
                currentPageReportTemplate="共 {totalRecords} 筆">

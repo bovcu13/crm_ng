@@ -143,7 +143,7 @@ export class AccountComponent implements OnInit {
     this.dt.filterGlobal(this.search, stringVal);
   }
 
-  total!: number;
+  totalRecords!: number;
   loading: boolean = false;
 
   // 懶加載
@@ -155,7 +155,7 @@ export class AccountComponent implements OnInit {
       next: request => {
         this.getData = request.body.accounts;
         this.loading = false;
-        this.total = request.body.total;
+        this.totalRecords = request.body.total;
         // console.log(this.total);
       },
       error: err => {
@@ -168,7 +168,7 @@ export class AccountComponent implements OnInit {
     this.HttpApi.getAllAccountRequest(this.search, 1).subscribe(
       request => {
         this.getData = request.body.accounts;
-        this.total = request.body.total;
+        this.totalRecords = request.body.total;
       });
   }
 
