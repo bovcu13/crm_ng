@@ -8,16 +8,41 @@ p-card {
   .p-card {
     border-radius: 10px; //元素的外邊框圓角 px越大越圓 google
   }
+
   .p-button.p-button-text {
-      background: 0;
-      color: #607D8B;
-  }
-  .p-button.p-button-text:hover {
-    background: rgba(33, 150, 243, 0.04);
+    background: 0;
     color: #607D8B;
+
+    &:hover {
+      background: rgba(33, 150, 243, 0.04);
+      color: #607D8B;
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
   }
 
-  .p-inputtext,.p-multiselect,.p-inputnumber {
+  // 表格點擊狀態鈕樣式
+  .status {
+    .p-button.p-button-text {
+      &:hover {
+        background: rgb(230 230 230);
+      }
+    }
+
+    // 選擇之狀態給予background
+    .status-focus {
+      .p-button.p-button-text {
+        &:focus {
+          background: rgb(230 230 230);
+        }
+      }
+    }
+  }
+
+
+  .p-inputtext, .p-multiselect, .p-inputnumber {
     width: 100%;
     border-radius: 6px;
   }
@@ -87,7 +112,7 @@ h3 {
   margin: 0 0 10px 0;
 }
 
-.text-white{
+.text-white {
   color: #FFFFFB;
 }
 
