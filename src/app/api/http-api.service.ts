@@ -172,6 +172,7 @@ export class HttpApiService {
         rating: search ? search : null,
         source: search ? search : null,
         salesperson_name: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -195,6 +196,7 @@ export class HttpApiService {
           rating: keyword,
           source: keyword,
           salesperson_name: keyword,
+          status: keyword,
         },
       };
     }
