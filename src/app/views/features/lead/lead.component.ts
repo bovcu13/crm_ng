@@ -22,22 +22,27 @@ export class LeadComponent implements OnInit {
     {
       name: "不明確",
       code: "Unqualified",
+      boolean: false
     },
     {
       name: "新線索",
       code: "New",
+      boolean: false
     },
     {
       name: "評估中",
       code: "Working",
+      boolean: false
     },
     {
       name: "發展中",
       code: "Nurturing",
+      boolean: false
     },
     {
       name: "已轉換",
       code: "Closed",
+      boolean: false
     }
   ]
 
@@ -239,7 +244,7 @@ export class LeadComponent implements OnInit {
     this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
       next: request => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
-          console.log(account)
+          // console.log(account)
           return {
             label: account.name,
             value: account.account_id
@@ -268,7 +273,7 @@ export class LeadComponent implements OnInit {
 
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
-    this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+    this.dt.filterGlobal(this.search, stringVal);
   }
 
   total!: number;
@@ -288,8 +293,26 @@ export class LeadComponent implements OnInit {
       });
   }
 
-  showDialog(type: string, lead ?: any
-  ): void {
+  // 點擊表頭狀態列執行搜尋
+  statusFilter(status: string): void {
+    this.dt.filterGlobal(status, 'contains');
+  }
+
+  toggleStatusFilter(index: number) {
+    if (this.status[index].boolean) {
+      this.getAllLead();
+      this.status[index].boolean = false
+    } else {
+      this.dt.filterGlobal(this.status[index].name, 'contains');
+      for (let i in this.status) {
+        this.status[i].boolean = false
+      }
+      this.status[index].boolean = true
+    }
+    console.log(this.status)
+  }
+
+  showDialog(type: string, lead ?: any): void {
     // 將"業務員"設定為不可修改
     // this.lead_form.controls['owner'].disable();
     this.edit = true;
@@ -629,8 +652,7 @@ export class LeadComponent implements OnInit {
 
   selectedStatus: any;
 
-  statusValue(event: any
-  ): void {
+  statusValue(event: any): void {
     this.selectedStatus = this.status.find((s: { name: any; }) => s.name === event.value.name);
     // console.log("code: " + event.value.code);
     console.log(event.value.name);
