@@ -23,30 +23,37 @@ export class ContractComponent {
     {
       name: "草稿",
       code: "draft",
+      boolean: false
     },
     {
       name: "審批中",
       code: "in_approval",
+      boolean: false
     },
     {
       name: "拒絕",
       code: "rejected",
+      boolean: false
     },
     {
       name: "等待簽名",
       code: "awaiting_signature",
+      boolean: false
     },
     {
       name: "已簽署",
       code: "signed",
+      boolean: false
     },
     {
       name: "已取消",
       code: "canceled",
+      boolean: false
     },
     {
       name: "已過期",
       code: "expired",
+      boolean: false
     },
   ]
 
@@ -191,6 +198,24 @@ export class ContractComponent {
       created_by: [''],
       updated_by: [''],
     });
+  }
+
+  // 點擊表頭狀態列執行搜尋
+  toggleStatusFilter(index: number) {
+    // 若已被點擊過則取消 filter
+    if (this.status[index].boolean) {
+      this.getAllContractRequest();
+      this.status[index].boolean = false
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
+      this.dt1.filterGlobal(this.status[index].name, 'contains');
+      for (let i in this.status) {
+        this.status[i].boolean = false
+      }
+      this.status[index].boolean = true
+    }
+    // console.log(this.status)
   }
 
   //新增&編輯dialog
