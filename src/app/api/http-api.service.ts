@@ -172,6 +172,7 @@ export class HttpApiService {
         rating: search ? search : null,
         source: search ? search : null,
         salesperson_name: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -195,6 +196,7 @@ export class HttpApiService {
           rating: keyword,
           source: keyword,
           salesperson_name: keyword,
+          status: keyword,
         },
       };
     }
@@ -236,6 +238,7 @@ export class HttpApiService {
         name: search ? search : null,
         account_name: search ? search : null,
         salesperson_name: search ? search : null,
+        stage: search ? search : null,
       },
     };
     if (event) {
@@ -257,6 +260,7 @@ export class HttpApiService {
           name: keyword,
           account_name: keyword,
           salesperson_name: keyword,
+          stage: keyword
         },
       };
     }
@@ -396,6 +400,7 @@ export class HttpApiService {
       field: status,
       filter: {
         code: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -415,6 +420,7 @@ export class HttpApiService {
         field: status,
         filter: {
           code: keyword,
+          status: keyword,
         },
       };
     }
@@ -464,6 +470,7 @@ export class HttpApiService {
       field: status,
       filter: {
         code: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -483,6 +490,7 @@ export class HttpApiService {
         field: status,
         filter: {
           code: keyword,
+          status: keyword
         },
       };
     }
@@ -560,6 +568,7 @@ export class HttpApiService {
       field: status,
       filter: {
         name: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -579,6 +588,7 @@ export class HttpApiService {
         field: status,
         filter: {
           name: keyword,
+          status: keyword
         },
       };
     }
@@ -657,6 +667,7 @@ export class HttpApiService {
       filter: {
         name: search ? search : null,
         type: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -677,6 +688,7 @@ export class HttpApiService {
         filter: {
           name: keyword,
           type: keyword,
+          status: keyword,
         },
       };
     }

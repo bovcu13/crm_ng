@@ -14,21 +14,42 @@
                currentPageReportTemplate="共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
-            <div class="flex align-items-center ml-2">
-              <span class="text-400 pi pi-circle-fill mr-1"></span>
-              <span>{{status[0].name}}</span>
-              <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[1].name}}</span>
-              <span class="text-red-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[2].name}}</span>
-              <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[3].name}}</span>
-              <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[4].name}}</span>
-              <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[5].name}}</span>
-              <span class="text-black-alpha-60 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[6].name}}</span>
+            <div class="status flex align-items-center">
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(0)"
+                        [ngClass]="{'status-focus': status[0].boolean}">
+                <span class="text-400 pi pi-circle-fill mr-1"></span>
+                <span class="font-bold text-color">{{status[0].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(1)"
+                        [ngClass]="{'status-focus': status[1].boolean}">
+                <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[1].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(2)"
+                        [ngClass]="{'status-focus': status[2].boolean}">
+                <span class="text-red-300 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[2].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(3)"
+                        [ngClass]="{'status-focus': status[3].boolean}">
+                <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[3].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(4)"
+                        [ngClass]="{'status-focus': status[4].boolean}">
+                <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[4].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(5)"
+                        [ngClass]="{'status-focus': status[5].boolean}">
+                <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[5].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(6)"
+                        [ngClass]="{'status-focus': status[6].boolean}">
+                <span class="text-black-alpha-60 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[6].name}}</span>
+              </p-button>
             </div>
             <span class="p-input-icon-left ml-auto">
                <td><input [(ngModel)]="search" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
@@ -50,8 +71,8 @@
             <th pSortableColumn="start_date">開始日期
               <p-sortIcon field="start_date"></p-sortIcon>
             </th>
-             <th pSortableColumn="end_date">到期日期
-            <p-sortIcon field="end_date"></p-sortIcon>
+            <th pSortableColumn="end_date">到期日期
+              <p-sortIcon field="end_date"></p-sortIcon>
             </th>
             <th pSortableColumn="term">有效期限(月)
               <p-sortIcon field="term"></p-sortIcon>
@@ -78,11 +99,14 @@
             <td>{{ contract.term }}</td>
             <td>
               <div class="flex justify-content-end">
-                <p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-text"
+                <p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"
                           [routerLink]="['/main/contract/view/', contract.contract_id]"></p-button>
-                <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)" pTooltip="編輯" tooltipPosition="top"
+                <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)" pTooltip="編輯"
+                          tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)" pTooltip="刪除" tooltipPosition="top"
+                <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)" pTooltip="刪除"
+                          tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
