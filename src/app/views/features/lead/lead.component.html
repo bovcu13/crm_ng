@@ -10,8 +10,8 @@
         </span>
         </div>
       </div>
-      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
-               (onLazyLoad)="loadTable($event)" [loading]="loading" [rowsPerPageOptions]="[10, 20]"
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="selectedRows" [paginator]="true"
+               (onLazyLoad)="loadTable($event)" [loading]="loading" [rowsPerPageOptions]="rowsPerPageOptions"
                currentPageReportTemplate="共 {totalRecords} 筆" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="flex">
