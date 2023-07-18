@@ -238,6 +238,7 @@ export class HttpApiService {
         name: search ? search : null,
         account_name: search ? search : null,
         salesperson_name: search ? search : null,
+        stage: search ? search : null,
       },
     };
     if (event) {
@@ -259,6 +260,7 @@ export class HttpApiService {
           name: keyword,
           account_name: keyword,
           salesperson_name: keyword,
+          stage: keyword
         },
       };
     }
