@@ -70,7 +70,7 @@ export class ContractComponent {
           const updated_at = this.formatDate(contract.updated_at);
           return {...contract, start_date, end_date, created_at, updated_at};
         });
-        this.totalRecords = res.body.total;
+        this.totalRecords = this.GetAllContract.length;
       },
       error: error => {
         console.log(error);
@@ -381,7 +381,7 @@ export class ContractComponent {
             const updated_at = this.formatDate(contract.updated_at);
             return {...contract, start_date, end_date, created_at, updated_at};
           });
-          this.totalRecords = res.body.total;
+          this.totalRecords = this.GetAllContract.length;
           console.log(this.GetAllContract)
           this.loading = false;
         },
