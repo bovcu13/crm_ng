@@ -16,26 +16,32 @@ export class QuoteComponent {
     {
       name: "草稿",
       code: "draft",
+      boolean: false
     },
     {
       name: "需要審查",
       code: "need_review",
+      boolean: false
     },
     {
       name: "審查中",
       code: "in_review",
+      boolean: false
     },
     {
       name: "已批准",
       code: "approved",
+      boolean: false
     },
     {
       name: "已報價",
       code: "presented",
+      boolean: false
     },
     {
       name: "客戶簽回",
       code: "accepted",
+      boolean: false
     }
   ]
 
@@ -342,6 +348,24 @@ export class QuoteComponent {
   selectedStatus!: any;
   q_id: any;
   disableSaveButton: boolean = false
+
+  // 點擊表頭狀態列執行搜尋
+  toggleStatusFilter(index: number) {
+    // 若已被點擊過則取消 filter
+    if (this.status[index].boolean) {
+      this.getAllQuoteRequest();
+      this.status[index].boolean = false
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
+      this.dt1.filterGlobal(this.status[index].name, 'contains');
+      for (let i in this.status) {
+        this.status[i].boolean = false
+      }
+      this.status[index].boolean = true
+    }
+    // console.log(this.status)
+  }
 
   showDialog(type: string, quote?: any): void {
     this.edit = true;
