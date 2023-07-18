@@ -278,13 +278,16 @@ export class LeadComponent implements OnInit {
 
   total!: number;
   loading: boolean = false;
+  rowsPerPageOptions: number[] = [10, 20];
+  selectedRows: number = 10;
 
   // 懶加載
   loadTable(e: any) {
     this.loading = true;
-    // let limit = e.rows;
+    this.selectedRows = e.rows
+    let limit = e.rows;
     let page = e.first / e.rows + 1;
-    this.HttpApi.getAllLeadRequest(this.search, 1, page, e).subscribe(
+    this.HttpApi.getAllLeadRequest(this.search, 1, page, limit, e).subscribe(
       request => {
         this.getData = request.body.leads;
         this.loading = false;
@@ -351,7 +354,7 @@ export class LeadComponent implements OnInit {
   }
 
   getAllLead(): void {
-    this.HttpApi.getAllLeadRequest(this.search, 1).subscribe(
+    this.HttpApi.getAllLeadRequest(this.search, 1, 1, this.selectedRows).subscribe(
       request => {
         this.getData = request.body.leads;
       });

@@ -12,9 +12,9 @@
       </div>
       <!--選擇帳戶類別menu-->
       <!--      <p-menu #menu [model]="account_type" [popup]="true"></p-menu>-->
-      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="totalRecords" [rows]="10" [paginator]="true"
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="totalRecords" [rows]="selectedRows" [paginator]="true"
                (onLazyLoad)="loadTable($event)" [globalFilterFields]="['name']" [loading]="loading"
-               [rowsPerPageOptions]="[10, 20]" currentPageReportTemplate="共 {totalRecords} 筆"
+               [rowsPerPageOptions]="rowsPerPageOptions" currentPageReportTemplate="共 {totalRecords} 筆"
                [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="flex">
@@ -75,9 +75,9 @@
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',account)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <!--                <p-button (click)="deleteAccount(account.account_id)" icon="pi pi-trash" pTooltip="刪除"-->
-                <!--                          tooltipPosition="top"-->
-                <!--                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
+                <p-button (click)="deleteAccount(account.account_id)" icon="pi pi-trash" pTooltip="刪除"
+                          tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
           </tr>
@@ -105,11 +105,12 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label>帳戶類別</label>
+          <label><span class="text-red-600">*</span>帳戶類別</label>
           <!--          <br>-->
           <!--          <label>{{(account_form.controls['type'].value)}}</label>-->
           <p-multiSelect [options]="type" formControlName="type" optionLabel="name"
-                         display="chip"></p-multiSelect>
+                         display="chip"
+                         [ngClass]="{'ng-dirty':account_form.controls['type'].hasError('required') && account_form.controls['type'].touched}"></p-multiSelect>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">

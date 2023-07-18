@@ -27,7 +27,7 @@ export class HttpApiService {
 
   //--帳戶---------------------------------------------------------------------------------------------------
 
-  getAllAccountRequest(search: string, status = 1, page = 1, event?: any): Observable<any> {
+  getAllAccountRequest(search: string, status = 1, page = 1, limit = 10, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -62,7 +62,7 @@ export class HttpApiService {
         };
       }
     }
-    const url = `${BaseUrl}/accounts/list?page=${page}&limit=20`;
+    const url = `${BaseUrl}/accounts/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
 
@@ -97,7 +97,7 @@ export class HttpApiService {
   }
 
   //--聯絡人---------------------------------------------------------------------------------------------------
-  getAllContactRequest(search: string, status = 1, page = 1, event?: any): Observable<any> {
+  getAllContactRequest(search: string, status = 1, page = 1, limit = 10, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -132,7 +132,7 @@ export class HttpApiService {
         },
       };
     }
-    const url = `${BaseUrl}/contacts/list?page=${page}&limit=10`;
+    const url = `${BaseUrl}/contacts/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
 
@@ -163,7 +163,7 @@ export class HttpApiService {
 
   //--線索---------------------------------------------------------------------------------------------------
 
-  getAllLeadRequest(search: string, status = 1, page = 1, event?: any): Observable<any> {
+  getAllLeadRequest(search: string, status = 1, page = 1, limit = 10, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -200,7 +200,7 @@ export class HttpApiService {
         },
       };
     }
-    const url = `${BaseUrl}/leads/list?page=${page}&limit=10`;
+    const url = `${BaseUrl}/leads/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
 
@@ -231,7 +231,7 @@ export class HttpApiService {
 
   //--商機---------------------------------------------------------------------------------------------------
 
-  getAllOpportunityRequest(search: string, status = 1, page = 1, event?: any): Observable<any> {
+  getAllOpportunityRequest(search: string, status = 1, page = 1, limit = 10, event?: any): Observable<any> {
     let obj: any = {
       field: status,
       filter: {
@@ -264,7 +264,7 @@ export class HttpApiService {
         },
       };
     }
-    const url = `${BaseUrl}/opportunities/list?page=${page}&limit=10`;
+    const url = `${BaseUrl}/opportunities/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
 

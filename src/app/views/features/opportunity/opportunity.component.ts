@@ -118,13 +118,16 @@ export class OpportunityComponent implements OnInit {
 
   totalRecords!: number;
   loading: boolean = false;
+  rowsPerPageOptions: number[] = [10, 20];
+  selectedRows: number = 10;
 
   // 懶加載
   loadTable(e: any) {
     this.loading = true;
-    // let limit = e.rows;
+    this.selectedRows = e.rows
+    let limit = e.rows;
     let page = e.first / e.rows + 1;
-    this.HttpApi.getAllOpportunityRequest(this.search, 1, page, e).subscribe(
+    this.HttpApi.getAllOpportunityRequest(this.search, 1, page, limit, e).subscribe(
       request => {
         this.getData = request.body.opportunities;
         this.loading = false;
@@ -180,7 +183,7 @@ export class OpportunityComponent implements OnInit {
   }
 
   getAllOpportunity(): void {
-    this.HttpApi.getAllOpportunityRequest(this.search, 1).subscribe(
+    this.HttpApi.getAllOpportunityRequest(this.search, 1, 1, this.selectedRows).subscribe(
       request => {
         this.getData = request.body.opportunities;
         this.totalRecords = request.body.total;
