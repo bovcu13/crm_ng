@@ -19,7 +19,7 @@
                 <span class="text-400 pi pi-circle-fill mr-1"></span>
                 <span class="font-bold text-color">{{status[0].name}}</span>
               </p-button>
-              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(1)" [ngClass]="{'status-focus': status[0].boolean}">
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(1)" [ngClass]="{'status-focus': status[1].boolean}">
                 <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
                 <span class="font-bold text-color">{{status[1].name}}</span>
               </p-button>
