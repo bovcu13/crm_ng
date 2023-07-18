@@ -11,86 +11,56 @@ import {Table} from "primeng/table";
 })
 export class QuoteComponent {
   @ViewChild('dt1') dt1!: Table;
-  quote: any[] = [
-    {
-      "quote_id": 1,
-      "number": "00001",
-      "name": "milk",
-      "opportunity_name": "12345",
-      "account_name": "NKUST",
-      "syncing": true,
-      "status": "已接受",
-      "describe": "test1",
-      "expiration_date": "2023-04-05",
-      "tax": 10,
-      "shipping_and_handling": "1.5",
-      "subtotal": 50.00,
-      "created_at": "2023-04-15",
-      "created_by": "林",
-      "updated_by": "林",
-    },
-    {
-      "quote_id": 2,
-      "number": "00002",
-      "name": "aaa",
-      "opportunity_name": "sam",
-      "account_name": "Gina",
-      "syncing": false,
-      "status": "審查中",
-      "describe": "test2",
-      "expiration_date": "2023-04-04",
-      "tax": "",
-      "shipping_and_handling": "",
-      "subtotal": 60.00,
-      "created_at": "2023-04-14",
-      "created_by": "林",
-      "updated_by": "林",
-    }
-  ];
-
-  //p-dropdown status的下拉值
+    //p-dropdown status的下拉值
   status: any[] = [
     {
       name: "草稿",
       code: "draft",
+      boolean: false
     },
     {
       name: "需要審查",
       code: "need_review",
+      boolean: false
     },
     {
       name: "審查中",
       code: "in_review",
+      boolean: false
     },
     {
       name: "已批准",
       code: "approved",
+      boolean: false
     },
     {
-      name: "已呈現",
+      name: "已報價",
       code: "presented",
+      boolean: false
     },
     {
-      name: "已接受",
+      name: "客戶簽回",
       code: "accepted",
+      boolean: false
     }
   ]
 
   getAllQuoteRequest() {
-    this.HttpApi.getAllQuoteRequest(this.search,1).subscribe(
-      (res) => {
-        this.GetAllQuote = res.body.quotes
-        this.GetAllQuote = res.body.quotes.map((quote: any) => {
+    this.HttpApi.getAllQuoteRequest(this.search, 1).subscribe({
+      next:(res) => {
+        const getquote = res.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
+        this.GetAllQuote = getquote.map((quote: any) => {
+          const syncing = quote.is_syncing ? '是' : '否';
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
           const updated_at = this.formatDate(quote.updated_at);
-          return {...quote, expiration_date, created_at, updated_at};
+          return {...quote, syncing, expiration_date, created_at, updated_at};
         });
       },
-      (error) => {
+      error:(error) => {
         console.log(error);
       }
-    );
+  });
   }
 
   //POST 一筆quote
@@ -124,15 +94,14 @@ export class QuoteComponent {
       name: this.quote_form.value.name,
       account_id: this.selectedAccount_id,//帳戶ID
       expiration_date: this.quote_form.value.expiration_date,
-      is_syncing: this.quote_form.value.is_syncing,
       opportunity_id: this.selectedOpportunity_id,//商機ID
       shipping_and_handling: this.quote_form.value.shipping_and_handling,
-      status: this.quote_form.value.status,
+      status: this.quote_form.get('status')?.value.name,
       tax: this.quote_form.value.tax,
       description: this.quote_form.value.description,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.HttpApi.postQuoteRequest(body).subscribe(Request => {
+    this.HttpApi.postQuoteRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         this.edit = false;
         if (Request.code === 200) {
@@ -156,9 +125,10 @@ export class QuoteComponent {
           })
         }
       },
-      error => {
+      error: error => {
         console.log(error);
-      })
+      }
+    })
   }
 
   patchQuoteRequest(p_id: any): void {
@@ -199,10 +169,10 @@ export class QuoteComponent {
       opportunity_id: this.selectedOpportunity_id, //商機ID
       shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
       tax: this.quote_form.get('tax')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
-    this.HttpApi.patchQuoteRequest(p_id, body).subscribe(
-      Request => {
+    console.log(this.quote_form.get('shipping_and_handling')?.value)
+    this.HttpApi.patchQuoteRequest(p_id, body).subscribe({
+      next: Request => {
         console.log(Request)
         this.edit = false;
         if (Request.code === 200) {
@@ -226,11 +196,15 @@ export class QuoteComponent {
             this.edit = true;
           })
         }
-      });
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
   }
 
 
-  deleteQuoteRequest(p_id: any): void {
+  deleteQuoteRequest(q_id: any): void {
     Swal.fire({
       title: '確認刪除？',
       icon: 'warning',
@@ -242,26 +216,31 @@ export class QuoteComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.HttpApi.deleteQuoteRequest(p_id).subscribe(Request => {
-          console.log(Request)
-          if (Request.code === 200) {
-            this.edit = false;
-            Swal.fire({
-              title: '成功',
-              text: "已刪除您的資料 :)",
-              icon: 'success',
-              showConfirmButton: false,
-              timer: 1000
-            })
-            this.getAllQuoteRequest()
-          } else {
-            Swal.fire({
-              title: '失敗',
-              text: "請確認資料是否正確 :(",
-              icon: 'error',
-              showConfirmButton: false,
-              timer: 1500
-            })
+        this.HttpApi.deleteQuoteRequest(q_id).subscribe({
+          next: Request => {
+            console.log(Request)
+            if (Request.code === 200) {
+              this.edit = false;
+              Swal.fire({
+                title: '成功',
+                text: "已刪除您的資料 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllQuoteRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          },
+          error: error => {
+            console.log(error);
           }
         })
       } else {
@@ -291,6 +270,50 @@ export class QuoteComponent {
     })
   }
 
+  showAlertCormfirm() {
+    this.edit = false
+    Swal.fire({
+      title: '確認將報價金額同步到商機？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '同步',
+      cancelButtonText: '不同步',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.quote_form.patchValue({
+          is_syncing: true,
+        });
+        Swal.fire({
+          title: '成功',
+          text: "已成功同步金額，請按下儲存鍵 :)",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        }).then(() => {
+          this.edit = true;
+        })
+      } else {
+        this.quote_form.patchValue({
+          is_syncing: false,
+        });
+        Swal.fire({
+          title: '失敗',
+          text: "已取消同步！請按下儲存鍵",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        }).then(() => {
+          this.edit = true;
+        })
+      }
+    })
+  }
+
   quote_form: FormGroup;
 
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
@@ -306,11 +329,12 @@ export class QuoteComponent {
       status: [''],
       description: [''],
       expiration_date: [''],
-      tax: [''],
-      discount: [''],
       total_price: [''],
-      shipping_and_handling: [''],
-      subtotal: [''],
+      tax: [0],
+      discount: [''],
+      shipping_and_handling: [0],
+      sub_total: [''],
+      grand_total: [''],
       created_at: [''],
       updated_at: [''],
       created_by: [''],
@@ -323,6 +347,25 @@ export class QuoteComponent {
   showedit = true;//判斷是否dialog為新增與編輯
   selectedStatus!: any;
   q_id: any;
+  disableSaveButton: boolean = false
+
+  // 點擊表頭狀態列執行搜尋
+  toggleStatusFilter(index: number) {
+    // 若已被點擊過則取消 filter
+    if (this.status[index].boolean) {
+      this.getAllQuoteRequest();
+      this.status[index].boolean = false
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
+      this.dt1.filterGlobal(this.status[index].name, 'contains');
+      for (let i in this.status) {
+        this.status[i].boolean = false
+      }
+      this.status[index].boolean = true
+    }
+    // console.log(this.status)
+  }
 
   showDialog(type: string, quote?: any): void {
     this.edit = true;
@@ -330,10 +373,21 @@ export class QuoteComponent {
       this.dialogHeader = '新增報價';
       this.quote_form.reset();
       this.showedit = false;
-      this.quote_form.patchValue({status: this.status[0].name});
+      this.quote_form.patchValue({status: this.status.find(s => s.name === this.status[0].name),});
+      this.quote_form.controls['status'].disable();
     } else if (type === 'edit') {
       console.log("quote: " + JSON.stringify(quote))
       this.dialogHeader = '編輯報價';
+      if (quote.status === "客戶簽回") {
+        this.quote_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === quote.status),
+        });
+        this.quote_form.controls['status'].disable();
+        this.disableSaveButton = true;
+      }else{
+        this.quote_form.controls['status'].enable();
+        this.disableSaveButton = false;
+      }
       this.quote_form.patchValue(quote);
       this.showedit = true;
       // 綁定已經選擇的狀態
@@ -345,14 +399,18 @@ export class QuoteComponent {
   ngOnInit() {
     this.getAllopportunityRequest()
   }
+
   // GET全部Account
   GetAllOpportunity: any[] = [];
   selectedOpportunity_id: string = '';
   opportunitysearch: any;
+
   getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch,1).subscribe(
-      (res) => {
-        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
+    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe({
+      next: (res) => {
+        //商機階段如果不到提案狀態就無法選擇
+        const getopportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage !== "資格評估" && opportunity.stage !== "需求分析");
+        this.GetAllOpportunity = getopportunity.map((opportunity: any) => {
           return {
             label: opportunity.name,
             value: opportunity.opportunity_id,
@@ -360,10 +418,10 @@ export class QuoteComponent {
           };
         });
       },
-      (error) => {
+      error: (error) => {
         console.log(error);
       }
-    );
+    });
   }
 
   selectedAccount_id: string = '';
@@ -386,16 +444,18 @@ export class QuoteComponent {
     let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.loading = true;
-    this.HttpApi.getAllQuoteRequest(this.search, 1,limit, page, e).subscribe(
+    this.HttpApi.getAllQuoteRequest(this.search, 1, limit, page, e).subscribe(
       request => {
-        this.GetAllQuote = request.body.quotes;
-        this.GetAllQuote = request.body.quotes.map((quote: any) => {
+        //如果商機沒有被選取則無法顯示這筆報價
+        const getquote = request.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
+        this.GetAllQuote = getquote.map((quote: any) => {
+          const syncing = quote.is_syncing ? '是' : '否';
           const expiration_date = this.formatDate2(quote.expiration_date)
           const created_at = this.formatDate(quote.created_at);
           const updated_at = this.formatDate(quote.updated_at);
-          return {...quote,expiration_date, created_at, updated_at};
+          return {...quote, syncing, expiration_date, created_at, updated_at};
         });
-        this.totalRecords = request.body.total;
+        this.totalRecords = this.GetAllQuote.length;
         this.loading = false;
         console.log(this.GetAllQuote)
       });
@@ -436,7 +496,7 @@ export class QuoteComponent {
       return null
     } else {
       const date = new Date(dateString2);
-      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours());
+      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
       return expiration_date.toISOString().slice(0, 10);
     }
   }

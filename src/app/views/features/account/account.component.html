@@ -1,17 +1,21 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>帳戶</h2>
       <div class="flex justify-content-end mr-2">
         <span class="p-buttonset">
-          <p-button (click)="menu.toggle($event)" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"
+<!--          <p-button (click)="menu.toggle($event)" pTooltip="新增帳戶" tooltipPosition="top" icon="pi pi-plus"-->
+          <!--                    styleClass="p-button-text"></p-button>-->
+          <p-button (click)="showDialog('add')" pTooltip="新增帳戶" icon="pi pi-plus"
                     styleClass="p-button-text"></p-button>
         </span>
       </div>
-      <p-menu #menu [model]="account_type" [popup]="true"></p-menu>
-      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
+      <!--選擇帳戶類別menu-->
+      <!--      <p-menu #menu [model]="account_type" [popup]="true"></p-menu>-->
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="totalRecords" [rows]="10" [paginator]="true"
                (onLazyLoad)="loadTable($event)" [globalFilterFields]="['name']" [loading]="loading"
-               [rowsPerPageOptions]="[10, 20]" currentPageReportTemplate="共 {totalRecords} 筆" [showCurrentPageReport]="true">
+               [rowsPerPageOptions]="[10, 20]" currentPageReportTemplate="共 {totalRecords} 筆"
+               [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="flex">
             <span class="p-input-icon-left ml-auto">
@@ -22,14 +26,30 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name">帳戶
+            <th pSortableColumn="name" (click)="clickSort()">帳戶
               <p-sortIcon field="name"></p-sortIcon>
             </th>
-            <th pSortableColumn="phone_number">電話
+            <th pSortableColumn="phone_number" (click)="clickSort()">電話
               <p-sortIcon field="phone_number"></p-sortIcon>
             </th>
-            <th pSortableColumn="type">類型
-              <p-sortIcon field="type"></p-sortIcon>
+            <th>
+              類型
+              <p-columnFilter field="type" matchMode="in" display="menu" [showMatchModes]="false"
+                              [showOperator]="false"
+                              [showAddButton]="false" [showClearButton]="false" [showApplyButton]="false">
+                <ng-template pTemplate="filter">
+                  <p-multiSelect [showToggleAll]="false" [(ngModel)]="selectedValue" [options]="type"
+                                 placeholder="勾選帳戶類別"
+                                 optionLabel="name" (onChange)="selected($event)">
+                    <!--                    <ng-template let-option pTemplate="item">-->
+                    <!--                      <div class="inline-block vertical-align-middle">-->
+                    <!--                        <i [class]=option.icon style="font-size: 1rem"></i>-->
+                    <!--                        <span class="ml-1 mt-1">{{ option.name }}</span>-->
+                    <!--                      </div>-->
+                    <!--                    </ng-template>-->
+                  </p-multiSelect>
+                </ng-template>
+              </p-columnFilter>
             </th>
             <th>業務員</th>
             <th></th>
@@ -39,17 +59,25 @@
           <tr>
             <td>{{ account.name }}</td>
             <td>{{ account.phone_number }}</td>
-            <td>{{ account.type }}</td>
+            <!--            <td>{{ account.type }}</td>-->
+            <td>
+              <ng-container *ngFor="let value of account.type">
+                <!--                [icon]="getSeverity(value.toString().split(',')).icon"-->
+                <p-tag
+                  [severity]="getSeverity(value.toString().split(',')).severity" class="mr-2"
+                  [value]="value.toString().split(',')"></p-tag>
+              </ng-container>
+            </td>
             <td>{{ account.created_by }}</td>
             <td>
               <div class="flex justify-content-end">
-                <p-button icon="pi pi-eye" routerLink="/main/account/view" pTooltip="檢視" tooltipPosition="top"
+                <p-button icon="pi pi-eye" [routerLink]="['/main/account/view',account.account_id]" pTooltip="檢視"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',account)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button (click)="deleteAccount(account.account_id)" icon="pi pi-trash" pTooltip="刪除"
-                          tooltipPosition="top"
-                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <!--                <p-button (click)="deleteAccount(account.account_id)" icon="pi pi-trash" pTooltip="刪除"-->
+                <!--                          tooltipPosition="top"-->
+                <!--                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>-->
               </div>
             </td>
           </tr>
@@ -61,48 +89,50 @@
 <form [formGroup]="account_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-12">
+      <div class="col-12 md:col-12 lg:col-12">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
           <input pInputText formControlName="name"
                  [ngClass]="{'ng-dirty':account_form.controls['name'].hasError('required') && account_form.controls['name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>業務員</label>
           <br>
           <label>{{(account_form.controls['created_by'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>帳戶類別</label>
-          <br>
-          <label>{{(account_form.controls['type'].value)}}</label>
+          <!--          <br>-->
+          <!--          <label>{{(account_form.controls['type'].value)}}</label>-->
+          <p-multiSelect [options]="type" formControlName="type" optionLabel="name"
+                         display="chip"></p-multiSelect>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>電話</label>
           <input pInputText formControlName="phone_number">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>行業</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry_id" optionLabel="name"
+          <p-dropdown placeholder="　" [disabled]="true" [options]="industry_id" optionLabel="name"
                       (onChange)="industryValue($event)"
                       formControlName="industry_id" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系帳戶</label>
-          <p-dropdown placeholder="請選擇" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
+          <p-dropdown placeholder="　" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <!--        <div class="field">-->
         <!--          <label>類型</label>-->
         <!--          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"-->
@@ -113,14 +143,14 @@
     </div>
     <ng-container *ngIf="dialogHeader === '編輯帳戶'">
       <div class="grid">
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>建立者：</label>
           <div class="mt-3 field">
             <label>{{(account_form.controls['created_by'].value)}}</label>
             <label>{{(account_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>上次修改者：</label>
           <div class="mt-3 field">
             <label>{{(account_form.controls['updated_by'].value)}}</label>
@@ -130,14 +160,14 @@
       </div>
     </ng-container>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <ng-container *ngIf="dialogHeader === '編輯帳戶'">
         <p-button label="儲存" (click)="patchAccount();edit=false"
-                  styleClass="p-button-outlined p-button-info"></p-button>
+                  styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="dialogHeader !== '編輯帳戶'">
-        <p-button label="新增" (click)="postAccount()" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postAccount()" styleClass="p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
 </form>

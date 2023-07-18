@@ -1,14 +1,15 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>商品/服務</h2>
       <div class="flex justify-content-end">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+          <p-button (click)="showDialog('add')" icon="pi pi-plus" styleClass="p-button-text"
+                    pTooltip="新增商品/服務"></p-button>
         </span>
       </div>
-      <p-table [rowsPerPageOptions]="[10, 15]" [value]="GetAllProduct" [paginator]="true" #dt1
-               [rows]="5" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTable($event)"
+      <p-table [rowsPerPageOptions]="[10, 20]" [value]="GetAllProduct" [paginator]="true" #dt1
+               [rows]="1000" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTable($event)"
                [showCurrentPageReport]="true" [(first)]="first" [loading]="loading"
                currentPageReportTemplate="共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
@@ -44,12 +45,14 @@
             <td>{{ product.price }}</td>
             <td>{{ product.description }}</td>
             <!-- <td>{{ product.series }}</td> -->
-            <td class="icon-align-right">
+            <td>
+              <div class="flex justify-content-end">
               <p-button (click)="showDialog('edit',product)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                         styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash"
-                        styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"
-                        tooltipPosition="top" (click)="deleteProductRequest(product.product_id)"></p-button>
+<!--              <p-button icon="pi pi-trash"-->
+<!--                        styleClass="p-button-rounded p-button-secondary p-button-text" pTooltip="刪除"-->
+<!--                        tooltipPosition="top" (click)="deleteProductRequest(product.product_id)"></p-button>-->
+              </div>
             </td>
           </tr>
         </ng-template>
@@ -60,14 +63,14 @@
 <form [formGroup]="product_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>商品/服務名稱</label>
           <input pInputText formControlName="name"
                  [ngClass]="{'ng-dirty':product_form.controls['name'].hasError('required') && product_form.controls['name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>價錢</label>
           <br>
@@ -76,21 +79,21 @@
           </p-inputNumber>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>識別碼</label>
           <input pInputText formControlName="code">
           <small *ngIf="BadRequest" style="color: red">{{BadRequest}}</small>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>已啟用</label>
           <br>
           <p-checkbox formControlName="is_enable" value="is_enable" [binary]="true"></p-checkbox>
         </div>
       </div>
-      <!-- <div class="col-6">
+      <!-- <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>系列</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" optionLabel="name" formControlName="series"
@@ -103,7 +106,7 @@
           <textarea [rows]="5" pInputTextarea formControlName="description"></textarea>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <label>建立者：</label>
         <br>
         <div class="mt-3 field">
@@ -111,7 +114,7 @@
           <label class="ml-2 disable">{{(product_form.controls['created_at'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <label>上次修改者：</label>
         <br>
         <div class="mt-3 field">
@@ -121,14 +124,14 @@
       </div>
     </div>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <ng-container *ngIf="!showedit">
-        <p-button label="新增" (click)="postProductRequest()" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postProductRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="showedit">
         <p-button label="儲存" (click)="patchProductRequest(p_id)"
-                  styleClass="p-button-outlined p-button-info"></p-button>
+                  styleClass="p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
 </form>

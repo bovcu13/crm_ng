@@ -46,10 +46,12 @@ export class OrderComponent {
     {
       name: "草稿",
       code: "draft",
+      boolean: false
     },
     {
       name: "啟動中",
       code: "activated",
+      boolean: false
     }
   ]
 
@@ -58,8 +60,8 @@ export class OrderComponent {
   }
 
   getAllOrderRequest() {
-    this.HttpApi.getAllOrderRequest(this.search,1).subscribe(
-      (res) => {
+    this.HttpApi.getAllOrderRequest(this.search, 1).subscribe({
+      next: res => {
         this.GetAllOrder = res.body.orders
         this.GetAllOrder = res.body.orders.map((order: any) => {
           const start_date = this.formatDate2(order.start_date)
@@ -71,11 +73,12 @@ export class OrderComponent {
         this.totalRecords = res.body.total;
         console.log(this.GetAllOrder)
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
+
   // table lazyload
   totalRecords = 0;
   //取得所有訂單資料
@@ -88,7 +91,7 @@ export class OrderComponent {
     let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.loading = true;
-    this.HttpApi.getAllOrderRequest(this.search, 1,limit, page, e).subscribe(
+    this.HttpApi.getAllOrderRequest(this.search, 1, limit, page, e).subscribe(
       request => {
         this.GetAllOrder = request.body.orders;
         this.GetAllOrder = request.body.orders.map((order: any) => {
@@ -96,13 +99,14 @@ export class OrderComponent {
           const activated_at = this.formatDate(order.activated_at)
           const created_at = this.formatDate(order.created_at);
           const updated_at = this.formatDate(order.updated_at);
-          return {...order,start_date,activated_at, created_at, updated_at};
+          return {...order, start_date, activated_at, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
         this.loading = false;
         console.log(this.GetAllOrder)
       });
   }
+
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
@@ -141,14 +145,14 @@ export class OrderComponent {
       return;
     }
     let body = {
-      status: this.order_form.value.status,
+      status: this.order_form.get('status')?.value.name,
       description: this.order_form.value.description,
       start_date: this.order_form.value.start_date,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
       contract_id: this.selectedContract_id, //契約ID
-      account_id: this.selectedAccount_id //帳戶ID
+      //account_id: this.selectedAccount_id //帳戶ID
     }
-    this.HttpApi.postOrderRequest(body).subscribe(Request => {
+    this.HttpApi.postOrderRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -172,9 +176,10 @@ export class OrderComponent {
           })
         }
       },
-      error => {
+      error: error => {
         console.log(error);
-      })
+      }
+    })
   }
 
 
@@ -190,10 +195,10 @@ export class OrderComponent {
       status: [''],
       contract_id: ['', [Validators.required]],
       contract_code: ['', [Validators.required]],
-      amount: [''],
-      description: [''],
+      grand_total: [''],
       activated_by: [''],
       activated_at: [''],
+      description: [''],
       created_at: [''],
       updated_at: [''],
       created_by: [''],
@@ -204,6 +209,24 @@ export class OrderComponent {
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
+  }
+
+  // 點擊表頭狀態列執行搜尋
+  toggleStatusFilter(index: number) {
+    // 若已被點擊過則取消 filter
+    if (this.status[index].boolean) {
+      this.getAllOrderRequest();
+      this.status[index].boolean = false
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
+      this.dt1.filterGlobal(this.status[index].name, 'contains');
+      for (let i in this.status) {
+        this.status[i].boolean = false
+      }
+      this.status[index].boolean = true
+    }
+    // console.log(this.status)
   }
 
   //編輯&新增dialog
@@ -219,15 +242,24 @@ export class OrderComponent {
       this.dialogHeader = '新增訂單';
       this.order_form.reset();
       this.showedit = false; // 不顯示 activated_by 控件
-      this.order_form.patchValue({status: this.status[0].name});
+      this.order_form.patchValue({status: this.status.find(s => s.name === this.status[0].name),});
+      this.order_form.controls['status'].disable();
     } else if (type === 'edit') {
       console.log("order: " + JSON.stringify(order))
       this.dialogHeader = '編輯訂單';
+      if (order.status === "啟動中") {
+        this.order_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === order.status),
+        });
+        this.order_form.controls['status'].disable();
+      }else{
+        this.order_form.controls['status'].enable();
+      }
       this.order_form.patchValue(order);
       this.order_form.patchValue({
         start_date: new Date(order.start_date),
       });
-      this.showedit = true; // 不顯示 activated_by 控件
+      this.showedit = true; // 顯示 activated_by 控件
       // 綁定已經選擇的狀態
       this.selectedStatus = this.status.find(s => s.name === order.status);
       this.selectedStatusName = this.selectedStatus.name
@@ -274,10 +306,9 @@ export class OrderComponent {
     let body = {
       status: this.order_form.get('status')?.value,
       start_date: this.order_form.get('start_date')?.value,
-      account_id: this.selectedAccount_id, //帳戶ID
+      //account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
       contract_id: this.selectedContract_id, //契約ID
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45", //修改者ID(必填)
     }
     this.HttpApi.patchOrderRequest(o_id, body).subscribe(
       Request => {
@@ -360,8 +391,8 @@ export class OrderComponent {
   contractsearch: any;
 
   getAllContractRequest() {
-    this.HttpApi.getAllContractRequest(this.contractsearch,1).subscribe(
-      (res) => {
+    this.HttpApi.getAllContractRequest(this.contractsearch, 1).subscribe({
+      next: res => {
         const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
         this.GetAllContract = contracts.map((contract: any) => {
           return {
@@ -372,10 +403,10 @@ export class OrderComponent {
           };
         });
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   showAlertCancel() {
@@ -403,29 +434,10 @@ export class OrderComponent {
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
-  selectedAccount_id: string = '';   //取得選擇的契約帳戶id
   validateStartDate() {
-    // const today: Date = new Date(); // 創建一個Date物件
-    // let todayDate: string = today.toISOString().substr(0, 10);
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
-    this.selectedAccount_id = selectedContract?.account_id;
-    // if (this.order_form.controls['start_date'].value == null) {
-    //   this.orderStartDate = todayDate
-    //   this.order_form.patchValue({start_date: null});
-    //   // this.orderStartDate = todayDate
-    //   // this.order_form.patchValue({start_date: todayDate});
-    // } else {
-    //   this.orderStartDate = this.order_form.controls['start_date'].value;
-    // }
-    // this.orderStartDate = this.order_form.controls['start_date'].value;
-    // if (this.orderStartDate < this.MinDate) {
-    //   this.order_form.controls['start_date'].setErrors({'required-star':true});
-    //   return
-    // } else {
-    //   this.order_form.controls['start_date'].value;
-    // }
   }
 
   //日期轉換
@@ -441,7 +453,7 @@ export class OrderComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours() - 16);
+    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours());
     return start_date.toISOString().slice(0, 10);
   }
 

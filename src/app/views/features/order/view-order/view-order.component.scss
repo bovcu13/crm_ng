@@ -16,7 +16,8 @@ button {
   padding: 10px 20px;
   display: flex;
   font-size: 15px;
-  width: 200px;
+  min-width: 15%;
+  max-width: 30%;
   text-transform: uppercase;
   cursor: default;
   transform: skew(-21deg);

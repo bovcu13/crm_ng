@@ -17,23 +17,28 @@ export class OpportunityComponent implements OnInit {
   stage: any[] = [
     {
       name: "資格評估",
-      code: "qualification"
+      code: "qualification",
+      boolean: false
     },
     {
       name: "需求分析",
-      code: "needs_analysis "
+      code: "needs_analysis ",
+      boolean: false
     },
     {
       name: "提案",
-      code: "potential"
+      code: "potential",
+      boolean: false
     },
     {
       name: "談判",
-      code: "negotiation"
+      code: "negotiation",
+      boolean: false
     },
     {
       name: "已結束",
-      code: "closed"
+      code: "closed",
+      boolean: false
     }
   ]
   forecast_category: any[] = [
@@ -71,10 +76,10 @@ export class OpportunityComponent implements OnInit {
       forecast_category: ['', [Validators.required]],
       amount: [''],
       owner: [''],
-      created_by: [''],
       created_at: [''],
-      updated_by: [''],
       updated_at: [''],
+      created_by: ['', Validators.required],
+      updated_by: ['', Validators.required],
     });
   }
 
@@ -82,9 +87,9 @@ export class OpportunityComponent implements OnInit {
   accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
-      (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+      next: request => {
+        this.GetAllAccount = request.body.accounts.map((account: any) => {
           // console.log(account)
           return {
             label: account.name,
@@ -93,10 +98,10 @@ export class OpportunityComponent implements OnInit {
         });
         console.log(this.GetAllAccount)
       },
-      (error) => {
-        console.log(error);
+      error: err => {
+        console.log(err);
       }
-    );
+    });
   }
 
   ngOnInit() {
@@ -111,19 +116,39 @@ export class OpportunityComponent implements OnInit {
     this.dt.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
-  total!: number;
+  totalRecords!: number;
+  loading: boolean = false;
 
   // 懶加載
   loadTable(e: any) {
-    // this.loading = true;
+    this.loading = true;
     // let limit = e.rows;
     let page = e.first / e.rows + 1;
     this.HttpApi.getAllOpportunityRequest(this.search, 1, page, e).subscribe(
       request => {
         this.getData = request.body.opportunities;
+        this.loading = false;
         console.log(this.getData)
-        this.total = request.body.total;
+        this.totalRecords = request.body.total;
       });
+  }
+
+  // 點擊表頭狀態列執行搜尋
+  toggleStageFilter(index: number) {
+    // 若已被點擊過則取消 filter
+    if (this.stage[index].boolean) {
+      this.getAllOpportunity();
+      this.stage[index].boolean = false
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
+      this.dt.filterGlobal(this.stage[index].name, 'contains');
+      for (let i in this.stage) {
+        this.stage[i].boolean = false
+      }
+      this.stage[index].boolean = true
+    }
+    // console.log(this.status)
   }
 
   edit: boolean = false;
@@ -158,7 +183,7 @@ export class OpportunityComponent implements OnInit {
     this.HttpApi.getAllOpportunityRequest(this.search, 1).subscribe(
       request => {
         this.getData = request.body.opportunities;
-        this.total = request.body.total;
+        this.totalRecords = request.body.total;
       });
   }
 
@@ -207,8 +232,6 @@ export class OpportunityComponent implements OnInit {
       account_name: this.selectedAccountName,
       close_date: new Date(this.opportunity_form.value.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      created_at: this.currentDate
     }
 
     this.HttpApi.postOpportunityRequest(body)
@@ -282,8 +305,6 @@ export class OpportunityComponent implements OnInit {
       account_name: this.selectedAccountName,
       close_date: new Date(this.opportunity_form.value?.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
     this.HttpApi.patchOpportunityRequest(id, body)
       .subscribe(request => {

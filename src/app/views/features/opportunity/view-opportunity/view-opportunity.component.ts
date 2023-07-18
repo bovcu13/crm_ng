@@ -73,16 +73,49 @@ export class ViewOpportunityComponent implements OnInit {
       forecast_category: ['', [Validators.required]],
       amount: [''],
       owner: [''],
-      created_by: [''],
       created_at: [''],
-      updated_by: [''],
       updated_at: [''],
+      created_by: ['', Validators.required],
+      updated_by: ['', Validators.required],
     });
   }
 
   ngOnInit() {
     this.getAllAccountRequest()
     this.getOneOpportunity(this.id)
+  }
+
+  //取得商機歷程紀錄
+  GetOpportunityHistoricalRecords: any[] = [];
+  totalHistorical: any;
+
+  getAllOpportunityHistoricalRecordsRequest(id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, id).subscribe(request => {
+        this.GetOpportunityHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+      }
+    )
+  }
+
+  loading: boolean = false;
+
+  // 懶加載
+  loadTable(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllHistoricalRecordsRequest(limit, page, this.id).subscribe({
+      next: request => {
+        this.GetOpportunityHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+        console.log(this.GetOpportunityHistoricalRecords)
+        console.log(this.totalHistorical)
+        this.loading = false;
+      },
+      error: err => {
+        console.log(err.status)
+      }
+    });
   }
 
   getData: any;
@@ -110,8 +143,8 @@ export class ViewOpportunityComponent implements OnInit {
   accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
-      (request) => {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+      next: request => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
           // console.log(account);
           return {
@@ -137,10 +170,10 @@ export class ViewOpportunityComponent implements OnInit {
           }
         )
       },
-      (error) => {
-        console.log(error);
+      error: err => {
+        console.log(err);
       }
-    );
+    });
   }
 
   // 現在時間
@@ -151,7 +184,8 @@ export class ViewOpportunityComponent implements OnInit {
       this.opportunity_form.controls['name'].hasError('required') ||
       this.opportunity_form.controls['stage'].hasError('required') ||
       this.opportunity_form.controls['forecast_category'].hasError('required') ||
-      this.opportunity_form.controls['close_date'].hasError('required')) {
+      this.opportunity_form.controls['close_date'].hasError('required')
+    ) {
       Swal.fire({
         title: '未填寫',
         text: "請填寫必填欄位！",
@@ -186,8 +220,6 @@ export class ViewOpportunityComponent implements OnInit {
       account_name: this.selectedAccountName,
       close_date: new Date(this.opportunity_form.value?.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
     this.HttpApi.patchOpportunityRequest(id, body)
       .subscribe(request => {
@@ -201,6 +233,7 @@ export class ViewOpportunityComponent implements OnInit {
             timer: 1000
           })
           this.getOneOpportunity(this.id)
+          this.getAllOpportunityHistoricalRecordsRequest(this.id)
         } else {
           Swal.fire({
             title: '失敗',
@@ -229,23 +262,39 @@ export class ViewOpportunityComponent implements OnInit {
 
   selectedStage: any;
 
-  stageValue(event: any): void {
+  stageValue(event
+               :
+               any
+  ):
+    void {
     this.selectedStage = this.stage.find((s) => s.name === event.value.name);
     this.opportunity_form.value.stage = this.selectedStage.name
   }
 
   selectedForecastCategory: any;
 
-  forecast_categoryValue(event: any): void {
+  forecast_categoryValue(event
+                           :
+                           any
+  ):
+    void {
     this.selectedForecastCategory = this.forecast_category.find((s) => s.name === event.value.name);
     this.opportunity_form.value.forecast_category = this.selectedForecastCategory.name
   }
 
 
-  selectedAccountName!: string;
-  selectedAccountId!: string;
+  selectedAccountName!
+    :
+    string;
+  selectedAccountId!
+    :
+    string;
 
-  accountValue(event: any): void {
+  accountValue(event
+                 :
+                 any
+  ):
+    void {
     this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
     this.selectedAccountId = event.value.value
   }

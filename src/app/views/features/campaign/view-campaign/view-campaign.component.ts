@@ -108,7 +108,8 @@ export class ViewCampaignComponent {
   GetOneEndDate: any;
 
   getOneCampaignRequest(c_id: any) {
-    this.HttpApi.getOneCampaignRequest(c_id).subscribe(res => {
+    this.HttpApi.getOneCampaignRequest(c_id).subscribe({
+      next: res => {
         this.GetOneCampaign = res.body;
         this.name = res.body.name;
         this.stage = res.body.status;
@@ -141,19 +142,20 @@ export class ViewCampaignComponent {
         }
         console.log(this.GetOneCampaign)
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   // GET全部Account
   GetAllparent_campaign: any[] = [];
   selectedParent_id: string = '';
   search: any;
+
   getAllCampaignRequest() {
-    this.HttpApi.getAllCampaignRequest(this.search,1).subscribe(
-      (res) => {
+    this.HttpApi.getAllCampaignRequest(this.search, 1).subscribe({
+      next: res => {
         this.GetAllparent_campaign = res.body.campaigns.map((campaign: any) => {
           return {
             label: campaign.name,
@@ -161,10 +163,10 @@ export class ViewCampaignComponent {
           };
         });
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   //建立formgroup表單
@@ -254,7 +256,6 @@ export class ViewCampaignComponent {
       expected_responses: this.campaign_form.get('expected_responses')?.value,
       expected_income: this.campaign_form.get('expected_income')?.value,
       actual_cost: this.campaign_form.get('actual_cost')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
 
     this.HttpApi.patchCampaignRequest(c_id, body).subscribe(
@@ -328,15 +329,15 @@ export class ViewCampaignComponent {
   contactSearch!: string;
 
   getAllContactRequest() {
-    this.HttpApi.getAllContactRequest(this.contactSearch, 1).subscribe(
-      (res) => {
+    this.HttpApi.getAllContactRequest(this.contactSearch, 1).subscribe({
+      next: res => {
         this.GetAllContact = res.body.contacts
         console.log(this.GetAllContact)
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   //確認新增 險所與聯絡人dialog

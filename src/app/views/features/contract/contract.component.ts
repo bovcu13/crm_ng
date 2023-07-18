@@ -1,76 +1,64 @@
 import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
-import {LazyLoadEvent} from 'primeng/api';
+import {LazyLoadEvent, MessageService} from 'primeng/api';
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 
 @Component({
   selector: 'app-contract',
   templateUrl: './contract.component.html',
-  styleUrls: ['./contract.component.scss']
+  styleUrls: ['./contract.component.scss'],
+  providers: [MessageService]
 })
 export class ContractComponent {
   @ViewChild('dt1') dt1!: Table;
-  // contract: any[] = [
-  //   {
-  //     "owner": "林",
-  //     "number": "00001",
-  //     "account_name": "milk",
-  //     "status": "草稿",
-  //     "start_date": "2023-04-09",
-  //     "term": 1,
-  //     "created_at": "2023-03-15",
-  //     "created_by": "林",
-  //     "updated_by": "林",
-  //   },
-  //   {
-  //     "owner": "林",
-  //     "number": "00002",
-  //     "account_name": "nkust",
-  //     "status": "審批中",
-  //     "start_date": "2023-02-15",
-  //     "term": 7,
-  //     "created_at": "2023-02-05",
-  //     "created_by": "林",
-  //     "updated_by": "林",
-  //   }
-  // ];
-
   //p-dropdown status的下拉值
   status: any[] = [
     {
       name: "草稿",
       code: "draft",
+      boolean: false
     },
     {
       name: "審批中",
       code: "in_approval",
+      boolean: false
     },
     {
       name: "拒絕",
       code: "rejected",
+      boolean: false
     },
     {
       name: "等待簽名",
       code: "awaiting_signature",
+      boolean: false
     },
     {
       name: "已簽署",
       code: "signed",
+      boolean: false
     },
     {
       name: "已取消",
       code: "canceled",
+      boolean: false
     },
     {
       name: "已過期",
       code: "expired",
+      boolean: false
     },
   ]
 
   ngOnInit() {
-    this.getAllAccountRequest()
+    this.getAllOpportunityRequest()
   }
 
   //GET全部contract
@@ -79,45 +67,50 @@ export class ContractComponent {
   totalRecords = 0;
 
   getAllContractRequest() {
-    this.HttpApi.getAllContractRequest(this.search,1).subscribe(res => {
-        this.GetAllContract = res.body.contracts;
-        this.GetAllContract = res.body.contracts.map((contract: any) => {
+    this.HttpApi.getAllContractRequest(this.search, 1).subscribe({
+      next: res => {
+        const contract = res.body.contracts.filter((contract: any) => contract.account_name != null);
+        this.GetAllContract = contract.map((contract: any) => {
           const start_date = this.formatDate2(contract.start_date)
+          const end_date = this.formatDate2(contract.end_date)
           const created_at = this.formatDate(contract.created_at);
           const updated_at = this.formatDate(contract.updated_at);
-          return {...contract, start_date, created_at, updated_at};
+          return {...contract, start_date, end_date, created_at, updated_at};
         });
         this.totalRecords = res.body.total;
       },
-      error => {
+      error: error => {
         console.log(error);
-      });
+      }
+    });
   }
 
-  // GET全部Account
-  GetAllAccount: any[] = [];
-  accountSearch!: string;
+  // GET全部Opportunity
+  GetAllOpportunity: any[] = [];
+  OpportunitySearch!: string;
 
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
-      (res) => {
-        this.GetAllAccount = res.body.accounts.map((account: any) => {
+  getAllOpportunityRequest() {
+    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe({
+      next: res => {
+        const GetOpportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage == "已結束")
+        this.GetAllOpportunity = GetOpportunity.map((opportunity: any) => {
           return {
-            label: account.name,
-            value: account.account_id
+            label: opportunity.name,
+            value: opportunity.opportunity_id,
+            account_id: opportunity.account_id,
           };
         });
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
 //POST 一筆contract
   postContractRequest(): void {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['opportunity_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
       this.contract_form.controls['status'].hasError('required')) {
       this.edit = false;
@@ -131,8 +124,8 @@ export class ContractComponent {
         if (this.contract_form.controls['start_date'].hasError('required')) {
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if (this.contract_form.controls['account_id'].hasError('required')) {
-          this.contract_form.controls['account_id'].markAsDirty();
+        if (this.contract_form.controls['opportunity_id'].hasError('required')) {
+          this.contract_form.controls['opportunity_id'].markAsDirty();
         }
         if (this.contract_form.controls['term'].hasError('required')) {
           this.contract_form.controls['term'].markAsDirty();
@@ -147,15 +140,15 @@ export class ContractComponent {
 
     let body = {
       code: this.contract_form.value.code,
-      status: this.contract_form.value.status,
+      status: this.contract_form.get('status')?.value.name,
       description: this.contract_form.value.description,
       start_date: this.contract_form.value.start_date,
       term: this.contract_form.value.term,
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      account_id: this.contract_form.value.account_id,
+      opportunity_id: this.contract_form.value.opportunity_id,
     }
 
-    this.HttpApi.postContractRequest(body).subscribe(Request => {
+    this.HttpApi.postContractRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -179,22 +172,25 @@ export class ContractComponent {
           })
         }
       },
-      error => {
+      error: error => {
         console.log(error);
-      })
+      }
+    })
   }
 
   //建立formgroup
   contract_form: FormGroup;
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
+
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private messageService: MessageService) {
     this.contract_form = this.fb.group({
       contract_id: [''],
       salesperson_name: [''],
       code: [''],
-      account_id: ['', [Validators.required]],
+      opportunity_id: ['', [Validators.required]],
       account_name: ['', [Validators.required]],
       status: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
+      end_date: [''],
       term: ['', [Validators.required]],
       description: [''],
       created_at: [''],
@@ -204,35 +200,55 @@ export class ContractComponent {
     });
   }
 
+  // 點擊表頭狀態列執行搜尋
+  toggleStatusFilter(index: number) {
+    // 若已被點擊過則取消 filter
+    if (this.status[index].boolean) {
+      this.getAllContractRequest();
+      this.status[index].boolean = false
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
+      this.dt1.filterGlobal(this.status[index].name, 'contains');
+      for (let i in this.status) {
+        this.status[i].boolean = false
+      }
+      this.status[index].boolean = true
+    }
+    // console.log(this.status)
+  }
+
   //新增&編輯dialog
   edit: boolean = false;
   dialogHeader!: string;
   showedit = true;//判斷是否dialog為新增與編輯
   c_id: any;
   disableSaveButton: boolean = false
+
   showDialog(type: string, contract?: any): void {
     this.edit = true;
     if (type === 'add') {
       this.dialogHeader = '新增契約';
       this.contract_form.reset();
       this.showedit = false;
-      this.contract_form.patchValue({status: this.status[0].name});
+      this.contract_form.patchValue({status: this.status.find(s => s.name === this.status[0].name),});
+      this.contract_form.controls['status'].disable();
     } else if (type === 'edit') {
       console.log("contract: " + JSON.stringify(contract))
       this.dialogHeader = '編輯契約';
       this.contract_form.patchValue(contract);
       this.contract_form.patchValue({
         start_date: new Date(contract.start_date),
-        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contract.account_name),
+        account_name: this.GetAllOpportunity.find((a: { label: any; }) => a.label === contract.account_name),
       });
       this.showedit = true;
-      if(contract.status === "已過期" || contract.status === "已取消"){
+      if (contract.status === "已過期" || contract.status === "已取消") {
         this.contract_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === contract.status),
         });
         this.contract_form.controls['status'].disable();
         this.disableSaveButton = true;
-      }else {
+      } else {
         this.contract_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === contract.status),
         });
@@ -245,7 +261,7 @@ export class ContractComponent {
 
   patchContractRequest(c_id: any): void {
     if (this.contract_form.controls['start_date'].hasError('required') ||
-      this.contract_form.controls['account_id'].hasError('required') ||
+      this.contract_form.controls['opportunity_id'].hasError('required') ||
       this.contract_form.controls['term'].hasError('required') ||
       this.contract_form.controls['status'].hasError('required')) {
       this.edit = false;
@@ -256,16 +272,16 @@ export class ContractComponent {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if(this.contract_form.controls['start_date'].hasError('required') ){
+        if (this.contract_form.controls['start_date'].hasError('required')) {
           this.contract_form.controls['start_date'].markAsDirty();
         }
-        if(this.contract_form.controls['account_id'].hasError('required') ){
-          this.contract_form.controls['account_id'].markAsDirty();
+        if (this.contract_form.controls['opportunity_id'].hasError('required')) {
+          this.contract_form.controls['opportunity_id'].markAsDirty();
         }
-        if(this.contract_form.controls['term'].hasError('required') ){
+        if (this.contract_form.controls['term'].hasError('required')) {
           this.contract_form.controls['term'].markAsDirty();
         }
-        if(this.contract_form.controls['status'].hasError('required') ){
+        if (this.contract_form.controls['status'].hasError('required')) {
           this.contract_form.controls['status'].markAsDirty();
         }
         this.edit = true;
@@ -276,14 +292,12 @@ export class ContractComponent {
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      account_id: this.contract_form.get('account_id')?.value,
+      opportunity_id: this.contract_form.get('opportunity_id')?.value,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45"
     }
-
-    this.HttpApi.patchContractRequest(c_id, body).subscribe(
-      Request => {
+    this.HttpApi.patchContractRequest(c_id, body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -306,7 +320,11 @@ export class ContractComponent {
             this.edit = true;
           })
         }
-      });
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
   }
 
   deleteContractRequest(c_id: any): void {
@@ -372,25 +390,32 @@ export class ContractComponent {
   //懶加載
   search: string = '';  // 搜尋關鍵字
   loading: boolean = false;
+
   loadPostsLazy(e: LazyLoadEvent) {
     let page = e.first! / e.rows! + 1;
     let limit = e.rows;
     this.loading = true;
-    this.HttpApi.getAllContractRequest(this.search, 1,limit, page, e)
-      .subscribe(res => {
-          this.GetAllContract = res.body.contracts.map((contract: any) => {
+    this.HttpApi.getAllContractRequest(this.search, 1, limit, page, e)
+      .subscribe({
+        next: res => {
+          const contract = res.body.contracts.filter((contract: any) => contract.account_name != null);
+          this.GetAllContract = contract.map((contract: any) => {
             const start_date = this.formatDate2(contract.start_date)
+            const end_date = this.formatDate2(contract.end_date)
             const created_at = this.formatDate(contract.created_at);
             const updated_at = this.formatDate(contract.updated_at);
-            return {...contract, start_date, created_at, updated_at};
+            return {...contract, start_date, end_date, created_at, updated_at};
           });
           this.totalRecords = res.body.total;
+          console.log(this.GetAllContract)
           this.loading = false;
         },
-        error => {
+        error: error => {
           console.log(error);
-        });
+        }
+      });
   }
+
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
@@ -409,19 +434,23 @@ export class ContractComponent {
 
   formatDate2(dateString2: string): string {
     const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours() - 16);
-    return start_date.toISOString().slice(0, 10);
-  }
-
-  calculateEndDate(startDate: string, term: number): string {
-    const start = new Date(startDate);
-    const end = new Date(start.getFullYear(), start.getMonth() + term, start.getDate());
-    return end.toISOString().slice(0, 10);
+    const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().slice(0, 10);
+    return formattedDate;
   }
 
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
+  }
+
+  //上傳檔案
+  uploadedFiles: any[] = [];
+
+  onUpload(event: UploadEvent) {
+    for (let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});
   }
 }
 

@@ -1,31 +1,46 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>線索</h2>
       <div class="flex flex-row justify-content-start">
         <div class="flex ml-auto mr-2">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" pTooltip="新增線索" tooltipPosition="top" icon="pi pi-plus"
+          <p-button (click)="showDialog('add')" pTooltip="新增線索" icon="pi pi-plus"
                     styleClass="p-button-text"></p-button>
         </span>
         </div>
       </div>
       <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
-               (onLazyLoad)="loadTable($event)" [loading]="loading" [rowsPerPageOptions]="[10, 15]"
+               (onLazyLoad)="loadTable($event)" [loading]="loading" [rowsPerPageOptions]="[10, 20]"
                currentPageReportTemplate="共 {totalRecords} 筆" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="flex">
-            <div class="flex align-items-center ml-2">
-              <span class="text-400 pi pi-circle-fill mr-1"></span>
-              <span>{{status[0].name}}</span>
-              <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[1].name}}</span>
-              <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[2].name}}</span>
-              <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[3].name}}</span>
-              <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[4].name}}</span>
+            <div class="status flex align-items-center">
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(0)"
+                        [ngClass]="{'status-focus': status[0].boolean}">
+                <span class="text-400 pi pi-circle-fill mr-1"></span>
+                <span class="font-bold text-color">{{status[0].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(1)"
+                        [ngClass]="{'status-focus': status[1].boolean}">
+                <span class="text-blue-300 pi pi-circle-fill mr-1"></span>
+                <span class="font-bold text-color">{{status[1].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(2)"
+                        [ngClass]="{'status-focus': status[2].boolean}">
+                <span class="text-yellow-300 pi pi-circle-fill mr-1"></span>
+                <span class="font-bold text-color">{{status[2].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(3)"
+                        [ngClass]="{'status-focus': status[3].boolean}">
+                <span class="text-orange-300 pi pi-circle-fill mr-1"></span>
+                <span class="font-bold text-color">{{status[3].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(4)"
+                        [ngClass]="{'status-focus': status[4].boolean}">
+                <span class="text-green-300 pi pi-circle-fill mr-1"></span>
+                <span class="font-bold text-color">{{status[4].name}}</span>
+              </p-button>
             </div>
             <span class="p-input-icon-left ml-auto">
               <td><input type="text" [(ngModel)]="search" (input)="applyFilterGlobal($event, 'contains')" pInputText
@@ -44,8 +59,8 @@
             <th pSortableColumn="description">描述
               <p-sortIcon field="description"></p-sortIcon>
             </th>
-            <th>帳戶
-              <!--              <p-sortIcon field="account_name"></p-sortIcon>-->
+            <th pSortableColumn="account_name">帳戶
+              <p-sortIcon field="account_name"></p-sortIcon>
             </th>
             <th pSortableColumn="rating">分級
               <p-sortIcon field="rating"></p-sortIcon>
@@ -113,7 +128,7 @@
 <form [formGroup]="lead_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>線索狀態</label>
           <p-dropdown placeholder="請選擇" optionLabel="name" [options]=which
@@ -122,7 +137,7 @@
           ></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>業務員</label>
           <br>
@@ -130,7 +145,7 @@
           <!--          <input pInputText formControlName="created_by">-->
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
           <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
@@ -141,8 +156,10 @@
         </div>
       </div>
       <ng-container *ngIf="dialogHeader !== '編輯線索'">
-        <div class="col-6 flex justify-content-start mt-4">
-          <p-button (click)="type.toggle($event)" icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top"
+        <div class="col-12 md:col-6 lg:col-6 flex justify-content-start mt-4">
+          <!--<p-button (click)="type.toggle($event)" icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top"-->
+          <!--styleClass="p-button-raised p-button-text"></p-button>-->
+          <p-button (click)="addAccDialog()" icon="pi pi-plus" pTooltip="新增帳戶" tooltipPosition="top"
                     styleClass="p-button-raised p-button-text"></p-button>
         </div>
       </ng-container>
@@ -153,14 +170,14 @@
                     [ngClass]="{'ng-dirty':lead_form.controls['description'].hasError('required') && lead_form.controls['description'].touched}"></textarea>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>分級</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
                       (onChange)="ratingValue($event)" formControlName="rating" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>線索來源</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source" optionLabel="name"
@@ -170,14 +187,14 @@
     </div>
     <ng-container *ngIf="dialogHeader === '編輯線索'">
       <div class="grid">
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>建立者：</label>
           <div class="mt-3 field">
             <label>{{(lead_form.controls['created_by'].value)}}</label>
             <label>{{(lead_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>上次修改者：</label>
           <div class="mt-3 field">
             <label>{{(lead_form.controls['updated_by'].value)}}</label>
@@ -187,16 +204,17 @@
       </div>
     </ng-container>
     <div class="flex justify-content-end mt-3">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <ng-container *ngIf="dialogHeader === '編輯線索'">
-        <p-button label="儲存" (click)="patchLead();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchLead();edit=false" styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="dialogHeader !== '編輯線索'">
-        <p-button label="新增" (click)="postLead();edit=false" styleClass="p-button-outlined p-button-info"></p-button>
+        <p-button label="新增" (click)="postLead();edit=false" styleClass="p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
-  <p-menu #type [model]="account_type" [popup]="true"></p-menu>
+  <!--帳戶類別 menu-->
+  <!--<p-menu #type [model]="account_type" [popup]="true"></p-menu>-->
 </form>
 <form [formGroup]="account_form">
   <p-dialog [(visible)]="addAcount" header="新增帳戶" [modal]="true">
@@ -208,27 +226,29 @@
                  [ngClass]="{'ng-dirty':account_form.controls['name'].hasError('required') && account_form.controls['name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>業務員</label>
           <br>
           <label>{{(account_form.controls['created_by'].value)}}</label>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>帳戶類別</label>
-          <br>
-          <label>{{(account_form.controls['type'].value)}}</label>
+          <!--          <br>-->
+          <!--          <label>{{(account_form.controls['type'].value)}}</label>-->
+          <p-multiSelect [options]="type" formControlName="type" optionLabel="name"
+                         display="chip"></p-multiSelect>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>電話</label>
           <input pInputText formControlName="phone_number">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>行業</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
@@ -236,7 +256,7 @@
                       formControlName="industry" appendTo="body"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系帳戶</label>
           <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" [filter]="true"
@@ -244,7 +264,7 @@
                       formControlName="parent_account_id"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <!--        <div class="field">-->
         <!--          <label>類型</label>-->
         <!--          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="type" optionLabel="name"-->
@@ -254,9 +274,9 @@
       </div>
     </div>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="addAccshowAlertCancel()" styleClass="p-button-secondary mr-1"></p-button>
       <p-button label="新增" (click)="add_Acount()"
-                styleClass="p-button-outlined p-button-info"></p-button>
-      <p-button label="取消" (click)="addAccshowAlertCancel()" styleClass="p-button-secondary ml-1"></p-button>
+                styleClass="p-button-info"></p-button>
     </div>
   </p-dialog>
 </form>

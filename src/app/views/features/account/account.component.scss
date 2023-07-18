@@ -1,1 +1,33 @@
 @import 'src/app/app.component.scss';
+
+:host ::ng-deep {
+  .p-tag{
+    font-size: 1rem;
+    .p-tag-icon {
+      font-size: 1rem;
+    }
+  }
+  // 藍
+  .p-tag.p-tag-info {
+    color: #183347;
+    background-color:#D3E5EF;
+  }
+
+  // 紅
+  .p-tag.p-tag-danger {
+    color: #5D1715;
+    background-color:#FFE2DD;
+  }
+
+  // 綠
+  .p-tag.p-tag-success {
+    color: #1C3829;
+    background-color:#DBEDDB;
+  }
+
+  // 黃
+  .p-tag.p-tag-warning {
+    color: #402C1B;
+    background-color:#FDECC8;
+  }
+}

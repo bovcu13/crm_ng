@@ -57,27 +57,27 @@ export class CampaignComponent {
     },
   ];
 
-  ngOnInit() {
-
-  }
-
   //p-dropdown狀態
   status: any[] = [
     {
       name: "策劃中",
       code: "planned",
+      boolean: false
     },
     {
       name: "進行中",
       code: "in_progress",
+      boolean: false
     },
     {
       name: "已完成",
       code: "completed",
+      boolean: false
     },
     {
       name: "已中止",
       code: "aborted",
+      boolean: false
     },
   ];
   //p-dropdown狀態
@@ -117,49 +117,51 @@ export class CampaignComponent {
   ];
   //取得所有行銷活動資料
   GetAllCampaign: HttpApiService[] = [];
-  GetAllparent_campaign: any[] = [];
   first = 0;
   totalRecords = 0;
   search: any;
   loading: boolean = false;
+
   //懶加載
   loadTable(e: any) {
     let limit = e.rows;
     this.loading = true;
     let page = e.first / e.rows + 1;
-    this.HttpApi.getAllCampaignRequest(this.search, 1,limit, page, e).subscribe(
+    this.HttpApi.getAllCampaignRequest(this.search, 1, limit, page, e).subscribe(
       request => {
         this.loading = false;
-        this.GetAllCampaign = request.body.campaigns;
         this.GetAllCampaign = request.body.campaigns.map((campaign: any) => {
           const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)
           const start_date = this.formatDate2(campaign.start_date)
           const end_date = this.formatDate2(campaign.end_date)
           const created_at = this.formatDate(campaign.created_at);
           const updated_at = this.formatDate(campaign.updated_at);
-          return {...campaign,parent_campaign_id,start_date,end_date, created_at, updated_at};
+          return {...campaign, parent_campaign_id, start_date, end_date, created_at, updated_at};
         });
         this.totalRecords = request.body.total;
-        console.log(this.GetAllCampaign)
       });
   }
+
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
+  ngOnInit(): void {
+    this.getAllCampaignRequest();
+  }
 
+  GetAllparent_campaign: any[] = [];
   getAllCampaignRequest() {
-    this.HttpApi.getAllCampaignRequest(this.search,1).subscribe(
-      (res) => {
-        const campaigns = res.body.campaigns
-        this.GetAllparent_campaign = campaigns.map((campaign: any) => {
+    this.HttpApi.getAllCampaignRequest(this.search, 1).subscribe({
+      next: res => {
+        this.GetAllparent_campaign = res.body.campaigns.map((campaign: any) => {
           return {
             label: campaign.name,
             value: campaign.campaign_id,
           };
         });
-        this.GetAllCampaign = res.body.campaigns
+        console.log(this.GetAllparent_campaign)
         this.GetAllCampaign = res.body.campaigns.map((campaign: any) => {
           const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)
           const start_date = this.formatDate2(campaign.start_date)
@@ -168,11 +170,12 @@ export class CampaignComponent {
           const updated_at = this.formatDate(campaign.updated_at);
           return {...campaign, parent_campaign_id, start_date, end_date, created_at, updated_at};
         });
-      },
-      (error) => {
+      }
+      ,
+      error: error => {
         console.log(error);
       }
-    );
+    });
   }
 
   postCampaignRequest(): void {
@@ -219,7 +222,8 @@ export class CampaignComponent {
       actual_cost: this.campaign_form.value.actual_cost,
       created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
     }
-    this.HttpApi.postCampaignRequest(body).subscribe(Request => {
+    this.HttpApi.postCampaignRequest(body).subscribe({
+      next: Request => {
         console.log(Request)
         if (Request.code === 200) {
           this.edit = false;
@@ -243,10 +247,10 @@ export class CampaignComponent {
           })
         }
       },
-      error => {
+      error: error => {
         console.log(error);
       }
-    )
+    })
   }
 
 
@@ -282,12 +286,31 @@ export class CampaignComponent {
     });
   }
 
+  // 點擊表頭狀態列執行搜尋
+  toggleStatusFilter(index: number) {
+    // 若已被點擊過則取消 filter
+    if (this.status[index].boolean) {
+      this.getAllCampaignRequest();
+      this.status[index].boolean = false
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
+      this.dt1.filterGlobal(this.status[index].name, 'contains');
+      for (let i in this.status) {
+        this.status[i].boolean = false
+      }
+      this.status[index].boolean = true
+    }
+    // console.log(this.status)
+  }
+
   //dialog方法
   edit: boolean = false;
   dialogHeader!: string;
   showedit = true;//判斷是否dialog為新增與編輯
   c_id: any;
   disableSaveButton: boolean = false
+
   showDialog(type: string, campaign?: any): void {
     this.edit = true;
     if (type === 'add') {
@@ -305,7 +328,7 @@ export class CampaignComponent {
           label: any;
         }) => a.label === campaign.parent_campaign_name),
       });
-      if (campaign.status === "已終止") {
+      if (campaign.status === "已中止") {
         this.campaign_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
         });
@@ -314,6 +337,7 @@ export class CampaignComponent {
       } else {
         this.campaign_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
+          parent_campaign_name: this.GetAllparent_campaign.find((a: { label: any; }) => a.label === campaign.parent_campaign_name),
         });
         this.campaign_form.controls['status'].enable();
         this.disableSaveButton = false;
@@ -410,7 +434,6 @@ export class CampaignComponent {
     );
   }
 
-
   deleteCampaignRequest(c_id: any): void {
     Swal.fire({
       title: '確認刪除？',
@@ -470,6 +493,7 @@ export class CampaignComponent {
       timer: 1000
     })
   }
+
   //如果父系行銷活動沒有被選擇
   parent_campaign_id(parent_campaign_id: string): any {
     if (parent_campaign_id == "00000000-0000-4000-a000-000000000000") {

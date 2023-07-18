@@ -217,6 +217,39 @@ export class ViewLeadComponent implements OnInit {
     this.which = this.filteredStatus
   }
 
+  //取得線索歷程紀錄
+  GetLeadHistoricalRecords: any[] = [];
+  totalHistorical: any;
+
+  getAllLeadHistoricalRecordsRequest(id: any) {
+    this.HttpApi.getAllHistoricalRecordsRequest(20, 1, id).subscribe(request => {
+        this.GetLeadHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+      }
+    )
+  }
+
+  loading: boolean = false;
+
+  // 懶加載
+  loadTable(e: any) {
+    this.loading = true;
+    let limit = e.rows;
+    let page = e.first / e.rows + 1;
+    this.HttpApi.getAllHistoricalRecordsRequest(limit, page, this.id).subscribe({
+      next: request => {
+        this.GetLeadHistoricalRecords = request.body.historical_records
+        this.totalHistorical = request.body.total
+        console.log(this.GetLeadHistoricalRecords)
+        console.log(this.totalHistorical)
+        this.loading = false;
+      },
+      error: err => {
+        console.log(err.status)
+      }
+    });
+  }
+
   getData: any;
   status_value!: string;
 
@@ -248,8 +281,8 @@ export class ViewLeadComponent implements OnInit {
   accountSearch!: string;
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe(
-      (request) => {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+      next: request => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
           // console.log(account);
           return {
@@ -275,10 +308,10 @@ export class ViewLeadComponent implements OnInit {
           }
         )
       },
-      (error) => {
-        console.log(error);
+      error: err => {
+        console.log(err);
       }
-    );
+    });
   }
 
   showDialog(): void {
@@ -319,22 +352,32 @@ export class ViewLeadComponent implements OnInit {
       status: this.selectedStatus?.name,
       source: this.selectedSource?.name,
       rating: this.selectedRating?.name,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
     this.HttpApi.patchLeadRequest(this.id, body)
-      .subscribe(request => {
-        console.log(request)
-        if (request.code === 200) {
-          Swal.fire({
-            title: '成功',
-            text: "已儲存您的變更 :)",
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1000
-          })
-          this.getOneLead(this.id);
-        } else {
+      .subscribe({
+        next: request => {
+          console.log(request)
+          if (request.code === 200) {
+            Swal.fire({
+              title: '成功',
+              text: "已儲存您的變更 :)",
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            this.getOneLead(this.id);
+            this.getAllLeadHistoricalRecordsRequest(this.id)
+          } else {
+            Swal.fire({
+              title: '失敗',
+              text: "請確認資料是否正確 :(",
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        },
+        error: err => {
           Swal.fire({
             title: '失敗',
             text: "請確認資料是否正確 :(",
@@ -342,6 +385,7 @@ export class ViewLeadComponent implements OnInit {
             showConfirmButton: false,
             timer: 1500
           })
+          console.log(err)
         }
       });
   }
@@ -350,8 +394,6 @@ export class ViewLeadComponent implements OnInit {
   postOpportunity(): void {
     let data = {
       status: this.status[4].name,
-      updated_by: "b93bda2c-d18d-4cc4-b0ad-a57056f8fc45",
-      updated_at: this.currentDate
     }
     this.HttpApi.patchLeadRequest(this.id, data)
       .subscribe(request => {
@@ -420,8 +462,6 @@ export class ViewLeadComponent implements OnInit {
       account_id: this.GetAllAccount.find((a: { value: any; }) => a.value === this.getData.account_id).value,
       close_date: new Date(this.opportunity_form.value.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
-      created_by: "7f5443f8-e607-4793-8370-560b8b688a61",
-      created_at: this.currentDate
     }
     console.log(body)
 

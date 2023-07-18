@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {AuthService} from "../../../_services/auth.service";
-import {TokenStorageService} from "../../../_services/token-storage.service";
+import {AuthService} from "../../../services/auth.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from "@angular/router";
 import Swal from "sweetalert2";
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private fb: FormBuilder,private router:Router) {
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private fb: FormBuilder, private router: Router) {
     this.login_form = this.fb.group({
       //必填
       user_name: ['admin', [Validators.required]],
@@ -29,14 +29,11 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.tokenStorage.getToken()) {
-      this.isLoggedIn = true;
-      this.roles = this.tokenStorage.getUser().roles;
-    }
     setInterval(() => {
       this.isFloating = !this.isFloating;
     }, 1000);
   }
+
   isFloating: boolean = false;
 
   onSubmit(): void {
@@ -45,20 +42,8 @@ export class LoginComponent implements OnInit {
       "company_id": this.login_form.controls['company_id'].value,
       "password": this.login_form.controls['password'].value
     }
-    this.authService.login(body).subscribe(
-      data => {
-        // 帳密錯誤
-        if (data.code === 403){
-          console.log(data)
-          Swal.fire({
-            title: '失敗',
-            text: "請確認帳密是否正確 :(",
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 1500
-          })
-          return
-        }
+    this.authService.login(body).subscribe({
+      next: data => {
         this.tokenStorage.saveToken(data.body.access_token);
         this.tokenStorage.saveRefreshToken(data.body.refresh_token);
         this.tokenStorage.saveUser(data);
@@ -72,16 +57,23 @@ export class LoginComponent implements OnInit {
           icon: 'success',
           showConfirmButton: false,
           timer: 1500
-        }).then(()=>{
+        }).then(() => {
           this.router.navigate(['/main']);
         })
       },
-      err => {
-        console.log(err)
+      error: err => {
+        // 帳密錯誤
+        Swal.fire({
+          title: '失敗',
+          text: "請確認帳密是否正確 :(",
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 1500
+        })
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
       }
-    );
+    });
   }
 
   reloadPage(): void {

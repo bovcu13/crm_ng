@@ -1,30 +1,41 @@
 <div class="flex justify-content-center">
-  <div class="col-10">
+  <div class="col-10 md:col-10 lg:col-10">
     <p-card>
       <h2>商機</h2>
       <div class="flex flex-row justify-content-start">
 
         <div class="flex ml-auto mr-2">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" pTooltip="新增商機" tooltipPosition="top" icon="pi pi-plus"
+          <p-button (click)="showDialog('add')" pTooltip="新增商機" icon="pi pi-plus"
                     styleClass="p-button-text"></p-button>
         </span>
         </div>
       </div>
-      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="total" [rows]="10" [paginator]="true"
-               (onLazyLoad)="loadTable($event)">
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="totalRecords" [rows]="10000"  [rowsPerPageOptions]="[10, 20]" [paginator]="true"
+               (onLazyLoad)="loadTable($event)" [loading]="loading" currentPageReportTemplate="共 {totalRecords} 筆"
+               [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
-          <div class="flex align-items-center ml-2">
-            <span class="text-400 pi pi-circle-fill mr-1"></span>
-            <span>{{stage[0].name}}</span>
-            <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
-            <span>{{stage[1].name}}</span>
-            <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
-            <span>{{stage[2].name}}</span>
-            <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
-            <span>{{stage[3].name}}</span>
-            <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
-            <span>{{stage[4].name}}</span>
+          <div class="status flex align-items-center">
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(0)" [ngClass]="{'status-focus': stage[0].boolean}">
+              <span class="text-400 pi pi-circle-fill mr-1"></span>
+              <span class="font-bold text-color">{{stage[0].name}}</span>
+            </p-button>
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(1)" [ngClass]="{'status-focus': stage[1].boolean}">
+              <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span class="font-bold text-color">{{stage[1].name}}</span>
+            </p-button>
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(2)" [ngClass]="{'status-focus': stage[2].boolean}">
+              <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span class="font-bold text-color">{{stage[2].name}}</span>
+            </p-button>
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(3)" [ngClass]="{'status-focus': stage[3].boolean}">
+              <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span class="font-bold text-color">{{stage[3].name}}</span>
+            </p-button>
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(4)" [ngClass]="{'status-focus': stage[4].boolean}">
+              <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
+              <span class="font-bold text-color">{{stage[4].name}}</span>
+            </p-button>
             <div class="flex ml-auto mr-2">
             <span class="p-input-icon-left ml-auto">
               <td><input type="text" [(ngModel)]="search" (input)="applyFilterGlobal($event, 'contains')" pInputText
@@ -41,7 +52,9 @@
             <th pSortableColumn="name">商機名稱
               <p-sortIcon field="name"></p-sortIcon>
             </th>
-            <th>帳戶</th>
+            <th pSortableColumn="account_name">帳戶
+              <p-sortIcon field="account_name"></p-sortIcon>
+            </th>
             <th pSortableColumn="close_date">結束日期
               <p-sortIcon field="close_date"></p-sortIcon>
             </th>
@@ -85,14 +98,14 @@
 <form [formGroup]="opportunity_form">
   <p-dialog [(visible)]="edit" header={{dialogHeader}} [modal]="true">
     <div class="grid">
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>商機名稱</label>
           <input pInputText formControlName="name"
                  [ngClass]="{'ng-dirty':opportunity_form.controls['name'].hasError('required')  && opportunity_form.controls['name'].touched}">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
           <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
@@ -102,7 +115,7 @@
           </p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>階段</label>
           <p-dropdown [disabled]="true" [options]="stage" optionLabel="name"
@@ -110,7 +123,7 @@
                       [ngClass]="{'ng-dirty':opportunity_form.controls['stage'].hasError('required')  && opportunity_form.controls['stage'].touched}"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>預測種類</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="forecast_category" optionLabel="name"
@@ -119,20 +132,21 @@
                       [ngClass]="{'ng-dirty':opportunity_form.controls['forecast_category'].hasError('required')  && opportunity_form.controls['forecast_category'].touched}"></p-dropdown>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>結束日期</label>
           <p-calendar formControlName="close_date" appendTo="body" dateFormat="yy-mm-dd"
                       [ngClass]="{'ng-dirty':opportunity_form.controls['close_date'].hasError('required')  && opportunity_form.controls['close_date'].touched}"></p-calendar>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>金額</label>
-          <input pInputText formControlName="amount">
+          <br>
+          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="amount" [minFractionDigits]="0"></p-inputNumber>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>業務員</label>
           <br>
@@ -142,14 +156,14 @@
     </div>
     <ng-container *ngIf="dialogHeader === '編輯商機'">
       <div class="grid">
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>建立者：</label>
           <div class="mt-3 field">
             <label>{{(opportunity_form.controls['created_by'].value)}}</label>
             <label>{{(opportunity_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-12 md:col-6 lg:col-6">
           <label>上次修改者：</label>
           <div class="mt-3 field">
             <label>{{(opportunity_form.controls['updated_by'].value)}}</label>
@@ -159,15 +173,15 @@
       </div>
     </ng-container>
     <div class="flex justify-content-end">
+      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
       <ng-container *ngIf="dialogHeader === '編輯商機'">
         <p-button label="儲存" (click)="patchOpportunity();edit=false"
-                  styleClass="p-button-outlined p-button-info"></p-button>
+                  styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="dialogHeader !== '編輯商機'">
         <p-button label="新增" (click)="postOpportunity();edit=false"
-                  styleClass="p-button-outlined p-button-info"></p-button>
+                  styleClass="p-button-info"></p-button>
       </ng-container>
-      <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary ml-2"></p-button>
     </div>
   </p-dialog>
 </form>
