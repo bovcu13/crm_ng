@@ -564,6 +564,7 @@ export class HttpApiService {
       field: status,
       filter: {
         name: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -583,6 +584,7 @@ export class HttpApiService {
         field: status,
         filter: {
           name: keyword,
+          status: keyword
         },
       };
     }
