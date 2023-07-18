@@ -294,22 +294,21 @@ export class LeadComponent implements OnInit {
   }
 
   // 點擊表頭狀態列執行搜尋
-  statusFilter(status: string): void {
-    this.dt.filterGlobal(status, 'contains');
-  }
-
   toggleStatusFilter(index: number) {
+    // 若已被點擊過則取消 filter
     if (this.status[index].boolean) {
       this.getAllLead();
       this.status[index].boolean = false
-    } else {
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
       this.dt.filterGlobal(this.status[index].name, 'contains');
       for (let i in this.status) {
         this.status[i].boolean = false
       }
       this.status[index].boolean = true
     }
-    console.log(this.status)
+    // console.log(this.status)
   }
 
   showDialog(type: string, lead ?: any): void {
