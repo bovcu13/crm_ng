@@ -17,23 +17,28 @@ export class OpportunityComponent implements OnInit {
   stage: any[] = [
     {
       name: "資格評估",
-      code: "qualification"
+      code: "qualification",
+      boolean: false
     },
     {
       name: "需求分析",
-      code: "needs_analysis "
+      code: "needs_analysis ",
+      boolean: false
     },
     {
       name: "提案",
-      code: "potential"
+      code: "potential",
+      boolean: false
     },
     {
       name: "談判",
-      code: "negotiation"
+      code: "negotiation",
+      boolean: false
     },
     {
       name: "已結束",
-      code: "closed"
+      code: "closed",
+      boolean: false
     }
   ]
   forecast_category: any[] = [
@@ -126,6 +131,24 @@ export class OpportunityComponent implements OnInit {
         console.log(this.getData)
         this.totalRecords = request.body.total;
       });
+  }
+
+  // 點擊表頭狀態列執行搜尋
+  toggleStageFilter(index: number) {
+    // 若已被點擊過則取消 filter
+    if (this.stage[index].boolean) {
+      this.getAllOpportunity();
+      this.stage[index].boolean = false
+    }
+    // 將所有狀態值改為 false，並且將點擊狀態改為true、執行該狀態 filter
+    else {
+      this.dt.filterGlobal(this.stage[index].name, 'contains');
+      for (let i in this.stage) {
+        this.stage[i].boolean = false
+      }
+      this.stage[index].boolean = true
+    }
+    // console.log(this.status)
   }
 
   edit: boolean = false;
