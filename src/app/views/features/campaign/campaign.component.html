@@ -14,15 +14,27 @@
                currentPageReportTemplate="共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
-            <div class="flex align-items-center ml-2">
-              <span class="text-400 pi pi-circle-fill mr-1"></span>
-              <span>{{status[0].name}}</span>
-              <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[1].name}}</span>
-              <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[2].name}}</span>
-              <span class="text-red-300 pi pi-circle-fill mr-1 ml-2"></span>
-              <span>{{status[3].name}}</span>
+            <div class="status flex align-items-center">
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(0)"
+                        [ngClass]="{'status-focus': status[0].boolean}">
+                <span class="text-400 pi pi-circle-fill mr-1"></span>
+                <span class="font-bold text-color">{{status[0].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(1)"
+                        [ngClass]="{'status-focus': status[1].boolean}">
+                <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[1].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(2)"
+                        [ngClass]="{'status-focus': status[2].boolean}">
+                <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[2].name}}</span>
+              </p-button>
+              <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStatusFilter(3)"
+                        [ngClass]="{'status-focus': status[3].boolean}">
+                <span class="text-red-300 pi pi-circle-fill mr-1 ml-2"></span>
+                <span class="font-bold text-color">{{status[3].name}}</span>
+              </p-button>
             </div>
             <span class="p-input-icon-left ml-auto">
                <td><input [(ngModel)]="search" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
@@ -132,7 +144,8 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系行銷活動</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllparent_campaign" formControlName="parent_campaign_name"
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllparent_campaign"
+                      formControlName="parent_campaign_name"
                       optionLabel="label"></p-dropdown>
         </div>
       </div>

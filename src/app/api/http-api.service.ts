@@ -400,6 +400,7 @@ export class HttpApiService {
       field: status,
       filter: {
         code: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -419,6 +420,7 @@ export class HttpApiService {
         field: status,
         filter: {
           code: keyword,
+          status: keyword,
         },
       };
     }
@@ -468,6 +470,7 @@ export class HttpApiService {
       field: status,
       filter: {
         code: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -487,6 +490,7 @@ export class HttpApiService {
         field: status,
         filter: {
           code: keyword,
+          status: keyword
         },
       };
     }
@@ -663,6 +667,7 @@ export class HttpApiService {
       filter: {
         name: search ? search : null,
         type: search ? search : null,
+        status: search ? search : null,
       },
     };
     if (event) {
@@ -683,6 +688,7 @@ export class HttpApiService {
         filter: {
           name: keyword,
           type: keyword,
+          status: keyword,
         },
       };
     }
