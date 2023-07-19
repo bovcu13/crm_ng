@@ -12,7 +12,8 @@
       </div>
       <!--選擇帳戶類別menu-->
       <!--      <p-menu #menu [model]="account_type" [popup]="true"></p-menu>-->
-      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="totalRecords" [rows]="selectedRows" [paginator]="true"
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="totalRecords" [rows]="selectedRows"
+               [paginator]="true"
                (onLazyLoad)="loadTable($event)" [globalFilterFields]="['name']" [loading]="loading"
                [rowsPerPageOptions]="rowsPerPageOptions" currentPageReportTemplate="共 {totalRecords} 筆"
                [showCurrentPageReport]="true">
@@ -48,6 +49,7 @@
                     <!--                      </div>-->
                     <!--                    </ng-template>-->
                   </p-multiSelect>
+                  <p-button label="清除" (click)="clearFilter()" styleClass="p-button-outlined p-button-info mt-4"></p-button>
                 </ng-template>
               </p-columnFilter>
             </th>
