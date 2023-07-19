@@ -81,8 +81,8 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label>識別碼</label>
-          <input pInputText formControlName="code">
+          <label><span class="required-star">*</span>識別碼</label>
+          <input pInputText formControlName="code" [ngClass]="{'ng-dirty':product_form.controls['code'].hasError('required') && product_form.controls['code'].touched}">
           <small *ngIf="BadRequest" style="color: red">{{BadRequest}}</small>
         </div>
       </div>
@@ -111,7 +111,7 @@
         <br>
         <div class="mt-3 field">
           <label class="disable">{{(product_form.controls['created_by'].value)}}</label>
-          <label class="ml-2 disable">{{(product_form.controls['created_at'].value)}}</label>
+          <label class="ml-2 disable">{{(product_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -119,7 +119,7 @@
         <br>
         <div class="mt-3 field">
           <label class="disable">{{(product_form.controls['updated_by'].value)}}</label>
-          <label class="ml-2 disable">{{(product_form.controls['updated_at'].value)}}</label>
+          <label class="ml-2 disable">{{(product_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
         </div>
       </div>
     </div>

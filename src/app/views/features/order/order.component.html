@@ -62,7 +62,7 @@
             <td>{{ order.code }}</td>
             <td>{{ order.account_name }}</td>
             <td>{{ order.grand_total }}</td>
-            <td>{{ order.start_date }}</td>
+            <td>{{ order.start_date |date:'yyyy-MM-dd'}}</td>
             <td>{{ order.contract_code}}</td>
             <td>
               <div class="flex justify-content-end">
@@ -136,7 +136,7 @@
           <br>
           <ng-container *ngIf="showedit && selectedStatusName === '啟動中'">
             <label>{{(order_form.controls['activated_by'].value)}}</label>
-            <label>{{(order_form.controls['activated_at'].value)}}</label>
+            <label>{{(order_form.controls['activated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
           </ng-container>
         </div>
       </div>
@@ -151,7 +151,7 @@
         <br>
         <div class="mt-3 field">
           <label class="disable">{{(order_form.controls['created_by'].value)}}</label>
-          <label class="ml-2 disable">{{(order_form.controls['created_at'].value)}}</label>
+          <label class="ml-2 disable">{{(order_form.controls['created_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -159,7 +159,7 @@
         <br>
         <div class="mt-3 field">
           <label class="disable">{{(order_form.controls['updated_by'].value)}}</label>
-          <label class="ml-2 disable">{{(order_form.controls['updated_at'].value)}}</label>
+          <label class="ml-2 disable">{{(order_form.controls['updated_at'].value|date:'yyyy-MM-dd HH:mm')}}</label>
         </div>
       </div>
     </div>

@@ -63,13 +63,6 @@ export class OrderComponent {
     this.HttpApi.getAllOrderRequest(this.search, 1).subscribe({
       next: res => {
         this.GetAllOrder = res.body.orders
-        this.GetAllOrder = res.body.orders.map((order: any) => {
-          const start_date = this.formatDate2(order.start_date)
-          const activated_at = this.formatDate(order.activated_at)
-          const created_at = this.formatDate(order.created_at);
-          const updated_at = this.formatDate(order.updated_at);
-          return {...order, start_date, activated_at, created_at, updated_at};
-        });
         this.totalRecords = res.body.total;
         console.log(this.GetAllOrder)
       },
@@ -94,13 +87,6 @@ export class OrderComponent {
     this.HttpApi.getAllOrderRequest(this.search, 1, limit, page, e).subscribe(
       request => {
         this.GetAllOrder = request.body.orders;
-        this.GetAllOrder = request.body.orders.map((order: any) => {
-          const start_date = this.formatDate2(order.start_date)
-          const activated_at = this.formatDate(order.activated_at)
-          const created_at = this.formatDate(order.created_at);
-          const updated_at = this.formatDate(order.updated_at);
-          return {...order, start_date, activated_at, created_at, updated_at};
-        });
         this.totalRecords = request.body.total;
         this.loading = false;
         console.log(this.GetAllOrder)
@@ -430,7 +416,6 @@ export class OrderComponent {
     this.order_form.patchValue({status: statusName});
   }
 
-
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
@@ -439,22 +424,4 @@ export class OrderComponent {
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
   }
-
-  //日期轉換
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
-  formatDate2(dateString2: string): string {
-    const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours());
-    return start_date.toISOString().slice(0, 10);
-  }
-
 }

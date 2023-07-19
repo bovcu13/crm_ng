@@ -3,25 +3,14 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
 import Swal from 'sweetalert2';
+import {DatePipe} from "@angular/common";
 @Component({
   selector: 'app-view-order',
   templateUrl: './view-order.component.html',
   styleUrls: ['./view-order.component.scss'],
+  providers: [DatePipe],
 })
 export class ViewOrderComponent {
-  order_log: any[] = [
-    {
-      date: "2023-05-06 08:00",
-      user: "林",
-      status: "已建立",
-    },
-    {
-      date: "2023-05-07 17:00",
-      user: "林",
-      status: "更改狀態",
-    },
-  ]
-
   //p-dropdown status的下拉值
   status: any[] = [
     {
@@ -48,23 +37,12 @@ export class ViewOrderComponent {
       next: res => {
         this.GetOneOrder = res.body
         this.stage = res.body.status;
-        this.GetOneStartDate = this.formatDate2(res.body.start_date);
+        this.GetOneStartDate = res.body.start_date;
+        this.order_form.patchValue(res.body)
         this.order_form.patchValue({
-          code: res.body.code,
           status: this.status.find((s: { name: any; }) => s.name === this.GetOneOrder.status),
-          start_date: this.formatDate2(res.body.start_date),
-          account_id: res.body.account_id,
-          account_name: res.body.account_name,
-          contract_id: res.body.contract_id,
-          contract_code: res.body.contract_code,
-          grand_total: res.body.grand_total,
-          description: res.body.description,
-          activated_by: res.body.activated_by,
-          activated_at: this.formatDate(res.body.activated_at),
-          updated_by: res.body.updated_by,
-          updated_at: this.formatDate(res.body.updated_at),
-          created_at: this.formatDate(res.body.created_at),
-          created_by: res.body.created_by,
+          start_date: new Date(res.body.start_date),
+          activated_at: new Date(res.body.activated_at),
         });
         console.log(this.GetOneOrder)
       },
@@ -99,11 +77,9 @@ export class ViewOrderComponent {
       next: res => {
         const product = res.body.products.filter((product: any) => product.is_enable === true)
         this.GetAllProduct = product.map((product: any) => {
-          const created_at = this.formatDate(product.created_at);
-          const updated_at = this.formatDate(product.updated_at);
           //如果quote_price為0，則轉成 - 字串
           const quote_price = product.quote_price === 0 ? "-" : product.quote_price;
-          return {...product, quote_price, created_at, updated_at};
+          return {...product, quote_price};
         });
         if (this.GetOrderProduct !== undefined){
           this.GetAllProduct = this.GetAllProduct.filter((product: any) => {
@@ -474,7 +450,8 @@ export class ViewOrderComponent {
   edit_product_form: FormGroup;
   o_id: any;
 
-  constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute
+  ,private datePipe: DatePipe) {
     this.order_form = this.fb.group({
       code: [''],
       account_id: ['', [Validators.required]],
@@ -559,8 +536,6 @@ export class ViewOrderComponent {
   editOneProduct(order_product?: any) {
     this.editOneOrderProduct = true;
     this.GetOneOrderProduct = order_product
-    this.GetOneOrderProduct.created_at = this.formatDate(order_product.created_at)
-    this.GetOneOrderProduct.updated_at = this.formatDate(order_product.updated_at)
     this.edit_product_form.patchValue(order_product);
     console.log("order_product: " + JSON.stringify(order_product))
   }
@@ -728,24 +703,6 @@ export class ViewOrderComponent {
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
-
-  //日期轉換
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
-  formatDate2(dateString2: string): string {
-    const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, date.getHours());
-    return start_date.toISOString().slice(0, 10);
-  }
-
   showAlertCancel() {
     Swal.fire({
       title: '取消',
@@ -765,11 +722,14 @@ export class ViewOrderComponent {
   getAllHistoricalRecordsRequest(o_id: any) {
     this.HttpApi.getAllHistoricalRecordsRequest(20, 1, o_id).subscribe({
       next: res => {
-        this.GetOrderHistoricalRecords = res.body.historical_records.map((order: any) => {
-          const modified_at = this.formatDate(order.modified_at)
-          return {...order, modified_at};
-        });
+        this.GetOrderHistoricalRecords = res.body.historical_records
         this.totalHistorical = res.body.total
+        this.GetOrderHistoricalRecords.forEach((record) => {
+          if (record.content.startsWith('修改訂單開始日期為')) {
+            const formattedDate = this.datePipe.transform(record.value, 'yyyy-MM-dd');
+            record.value = formattedDate || record.value;
+          }
+        });
         console.log(this.GetOrderHistoricalRecords)
       },
       error: error => {

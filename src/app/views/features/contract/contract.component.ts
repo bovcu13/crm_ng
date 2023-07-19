@@ -69,15 +69,8 @@ export class ContractComponent {
   getAllContractRequest() {
     this.HttpApi.getAllContractRequest(this.search, 1).subscribe({
       next: res => {
-        const contract = res.body.contracts.filter((contract: any) => contract.account_name != null);
-        this.GetAllContract = contract.map((contract: any) => {
-          const start_date = this.formatDate2(contract.start_date)
-          const end_date = this.formatDate2(contract.end_date)
-          const created_at = this.formatDate(contract.created_at);
-          const updated_at = this.formatDate(contract.updated_at);
-          return {...contract, start_date, end_date, created_at, updated_at};
-        });
-        this.totalRecords = res.body.total;
+        this.GetAllContract = res.body.contracts.filter((contract: any) => contract.account_name != null);
+        this.totalRecords = this.GetAllContract.length;
       },
       error: error => {
         console.log(error);
@@ -398,15 +391,8 @@ export class ContractComponent {
     this.HttpApi.getAllContractRequest(this.search, 1, limit, page, e)
       .subscribe({
         next: res => {
-          const contract = res.body.contracts.filter((contract: any) => contract.account_name != null);
-          this.GetAllContract = contract.map((contract: any) => {
-            const start_date = this.formatDate2(contract.start_date)
-            const end_date = this.formatDate2(contract.end_date)
-            const created_at = this.formatDate(contract.created_at);
-            const updated_at = this.formatDate(contract.updated_at);
-            return {...contract, start_date, end_date, created_at, updated_at};
-          });
-          this.totalRecords = res.body.total;
+          this.GetAllContract = res.body.contracts.filter((contract: any) => contract.account_name != null);
+          this.totalRecords = this.GetAllContract.length;
           console.log(this.GetAllContract)
           this.loading = false;
         },
@@ -419,23 +405,6 @@ export class ContractComponent {
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
-  }
-
-//日期轉換
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
-  formatDate2(dateString2: string): string {
-    const date = new Date(dateString2);
-    const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString().slice(0, 10);
-    return formattedDate;
   }
 
   //偵測status變量

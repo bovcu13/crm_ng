@@ -5,6 +5,7 @@ import {ActivatedRoute} from "@angular/router";
 import {MessageService} from "primeng/api";
 import Swal from 'sweetalert2';
 import {Table} from "primeng/table";
+import {DatePipe} from "@angular/common";
 
 interface UploadEvent {
   originalEvent: Event;
@@ -15,7 +16,7 @@ interface UploadEvent {
   selector: 'app-view-contract',
   templateUrl: './view-contract.component.html',
   styleUrls: ['./view-contract.component.scss'],
-  providers: [MessageService]
+  providers: [MessageService, DatePipe],
 })
 export class ViewContractComponent {
   @ViewChild('dt1') dt1!: Table;
@@ -68,11 +69,14 @@ export class ViewContractComponent {
 
   getAllContractHistoricalRecordsRequest(c_id: any) {
     this.HttpApi.getAllHistoricalRecordsRequest(20, 1, c_id).subscribe(res => {
-        this.GetContractHistoricalRecords = res.body.historical_records.map((contract: any) => {
-          const modified_at = this.formatDate(contract.modified_at)
-          return {...contract, modified_at};
-        });
+        this.GetContractHistoricalRecords = res.body.historical_records
         this.totalHistorical = res.body.total
+        this.GetContractHistoricalRecords.forEach((record) => {
+          if (record.content.startsWith('修改契約開始日期為')) {
+            const formattedDate = this.datePipe.transform(record.value, 'yyyy-MM-dd');
+            record.value = formattedDate || record.value;
+          }
+        });
         console.log(this.GetContractHistoricalRecords)
       }
     )
@@ -84,11 +88,14 @@ export class ViewContractComponent {
     this.loading = true;
     this.HttpApi.getAllHistoricalRecordsRequest(limit, page, e).subscribe(
       request => {
-        this.GetContractHistoricalRecords = request.body.historical_records.map((contract: any) => {
-          const modified_at = this.formatDate(contract.modified_at)
-          return {...contract, modified_at};
-        });
+        this.GetContractHistoricalRecords = request.body.historical_records
         this.totalHistorical = request.body.total
+        this.GetContractHistoricalRecords.forEach((record) => {
+          if (record.content.startsWith('修改契約開始日期為')) {
+            const formattedDate = this.datePipe.transform(record.value, 'yyyy-MM-dd');
+            record.value = formattedDate || record.value;
+          }
+        });
       });
   }
 
@@ -101,27 +108,14 @@ export class ViewContractComponent {
       next: res => {
         this.GetOneContract = res.body;
         this.stage = res.body.status;
+        this.contract_form.patchValue(res.body)
         this.contract_form.patchValue({
+          status: this.status.find((s: { name: any; }) => s.name === this.GetOneContract.status),
+          start_date: new Date(res.body.start_date),
           opportunity_id: this.GetAllOpportunity.find((opportunity: {
             label: any;
           }) => opportunity.label === res.body.opportunity_name),
         })
-        this.contract_form.patchValue({
-          code: res.body.code,
-          status: this.status.find((s: { name: any; }) => s.name === this.GetOneContract.status),
-          salesperson_name: res.body.salesperson_name,
-          start_date: this.formatDate2(res.body.start_date),
-          term: res.body.term,
-          end_date: this.formatDate2(res.body.end_date),
-          // opportunity_id: this.GetOneContract.opportunity_name,
-          account_id: res.body.account_id,
-          account_name: res.body.account_name,
-          description: res.body.description,
-          updated_by: res.body.updated_by,
-          updated_at: this.formatDate(res.body.updated_at),
-          created_at: this.formatDate(res.body.created_at),
-          created_by: res.body.created_by,
-        });
         if (this.GetOneContract.status === '已取消' || this.GetOneContract.status === '已過期') {
           this.contract_form.controls['status'].disable();
         }
@@ -261,7 +255,6 @@ export class ViewContractComponent {
       this.dialogHeader = '編輯訂單';
       this.order_form.patchValue(order);
       this.order_form.patchValue({
-        start_date: new Date(order.start_date),
         status: this.order_status.find((s: { name: any; }) => s.name === order.status),
       });
       this.showedit = true; // 不顯示 activated_by 控件
@@ -297,7 +290,8 @@ export class ViewContractComponent {
   c_id: any;
   order_form: FormGroup;
 
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute, private messageService: MessageService) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute, private messageService: MessageService
+    , private datePipe: DatePipe) {
     this.contract_form = this.fb.group({
       contract_id: [''],
       salesperson_name: [''],
@@ -349,14 +343,7 @@ export class ViewContractComponent {
     this.HttpApi.getAllOrderRequest(this.search, 1).subscribe({
       next: res => {
         this.loading = false;
-        const contracts = res.body.orders.filter((order: any) => order.contract_id == this.c_id);
-        this.GetAllOrder = contracts.map((order: any) => {
-          const start_date = this.formatDate2(order.start_date)
-          const activated_at = this.formatDate(order.activated_at)
-          const created_at = this.formatDate(order.created_at);
-          const updated_at = this.formatDate(order.updated_at);
-          return {...order, start_date, activated_at, created_at, updated_at};
-        });
+        this.GetAllOrder = res.body.orders.filter((order: any) => order.contract_id == this.c_id);
         this.totalRecords = res.body.total;
         console.log(this.GetAllOrder)
       },
@@ -536,23 +523,6 @@ export class ViewContractComponent {
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
-  }
-
-  //日期轉換
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
-  formatDate2(dateString2: string): string {
-    const date = new Date(dateString2);
-    const start_date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
-    return start_date.toISOString().slice(0, 10);
   }
 
   showAlertCancel() {
