@@ -1,10 +1,9 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Calendar} from 'primeng/calendar';
 
 @Component({
   selector: 'app-event',
@@ -12,9 +11,8 @@ import {Calendar} from 'primeng/calendar';
   styleUrls: ['./event.component.scss'],
 })
 export class EventComponent {
-  @ViewChild('fullstartDate') fullstartDate!: Calendar;
-  @ViewChild('startDate') startDate!: Calendar;
-  @ViewChild('endDate') endDate!: Calendar;
+  minDate: Date; // 最早時間，午夜12時
+  maxDate: any; // 最晚時間，晚間11點59分
   //主辦人dropdown值
   main: any[] = [
     {"name": "王大天",},
@@ -86,35 +84,18 @@ export class EventComponent {
       start_date: ['', [Validators.required]],
       end_date: ['', [Validators.required]],
       type: ['', [Validators.required]],
+      description: [''],
     });
-    //驗證日期是否有效
-    if (this.event_form.controls['start_date'].value > this.event_form.controls['end_date'].value) {
-      this.event_form.controls['end_date'].setErrors({'incorrect': true});
-    }
+    const today = new Date();
+    // 設定最小日期為今天
+    this.minDate = today;
   }
-
+  // 當選擇日期後，設定最大日期為選擇日期當天的晚間11點59分
+  onDateSelect(event: string | number | Date) {
+    const selectedDate = new Date(event);
+    this.maxDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 23, 59, 59);
+  }
   ngOnInit() {
-    // 判斷全天日期是否有被選取
-    // const alldayControl = this.event_form.get('allday');
-    // if (alldayControl) {
-    //   alldayControl.valueChanges.subscribe(value => {
-    //     const startDateControl = this.event_form.get('start_date');
-    //     const endDateControl = this.event_form.get('end_date');
-    //     if (startDateControl && endDateControl) {
-    //       // 轉換為 Calendar 類型
-    //       const startDateCalendar = startDateControl as unknown as Calendar;
-    //       const endDateCalendar = endDateControl as unknown as Calendar;
-    //       if (value) {
-    //         // 如果 checkbox 被選取，設置日期格式為 yy-mm-dd
-    //         startDateCalendar.dateFormat = 'yy-mm-dd';
-    //       } else {
-    //         // 如果 checkbox 沒有被選取，設置日期格式為 yy-mm-dd hh:mm:ss
-    //         startDateCalendar.dateFormat = 'yy-mm-dd hh:mm:ss';
-    //         endDateCalendar.dateFormat = 'yy-mm-dd hh:mm:ss';
-    //       }
-    //     }
-    //   });
-    // }
     //日曆控制選項
     this.options = {
       plugins: [
@@ -265,6 +246,5 @@ export class EventComponent {
     const typeValue = this.type.find((s: { code: any; }) => s.code === event.value.code);
     console.log(event.value.code, typeValue.name);
   }
-
 }
 
