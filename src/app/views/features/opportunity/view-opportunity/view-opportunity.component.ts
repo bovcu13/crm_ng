@@ -4,12 +4,13 @@ import {HttpApiService} from "../../../../api/http-api.service";
 import {ActivatedRoute} from "@angular/router";
 import {MessageService} from "primeng/api";
 import Swal from "sweetalert2";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-view-opportunity',
   templateUrl: './view-opportunity.component.html',
   styleUrls: ['./view-opportunity.component.scss'],
-  providers: [MessageService]
+  providers: [MessageService,DatePipe]
 })
 export class ViewOpportunityComponent implements OnInit {
   name: string = "name"
@@ -62,7 +63,7 @@ export class ViewOpportunityComponent implements OnInit {
   id: any;
 
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute
-    , private messageService: MessageService) {
+    , private messageService: MessageService, private datePipe: DatePipe) {
     this.id = this.route.snapshot.paramMap.get('id');
     this.opportunity_form = this.fb.group({
       opportunity_id: ['', [Validators.required]],
@@ -93,6 +94,12 @@ export class ViewOpportunityComponent implements OnInit {
     this.HttpApi.getAllHistoricalRecordsRequest(20, 1, id).subscribe(request => {
         this.GetOpportunityHistoricalRecords = request.body.historical_records
         this.totalHistorical = request.body.total
+        this.GetOpportunityHistoricalRecords.forEach((record) => {
+          if (record.content.startsWith('修改商機結束日期為')) {
+            const formattedDate = this.datePipe.transform(record.value, 'yyyy-MM-dd');
+            record.value = formattedDate || record.value;
+          }
+        });
       }
     )
   }
@@ -111,6 +118,12 @@ export class ViewOpportunityComponent implements OnInit {
         console.log(this.GetOpportunityHistoricalRecords)
         console.log(this.totalHistorical)
         this.loading = false;
+        this.GetOpportunityHistoricalRecords.forEach((record) => {
+          if (record.content.startsWith('修改商機結束日期為')) {
+            const formattedDate = this.datePipe.transform(record.value, 'yyyy-MM-dd');
+            record.value = formattedDate || record.value;
+          }
+        });
       },
       error: err => {
         console.log(err.status)
@@ -262,10 +275,7 @@ export class ViewOpportunityComponent implements OnInit {
 
   selectedStage: any;
 
-  stageValue(event
-               :
-               any
-  ):
+  stageValue(event: any):
     void {
     this.selectedStage = this.stage.find((s) => s.name === event.value.name);
     this.opportunity_form.value.stage = this.selectedStage.name
@@ -273,28 +283,16 @@ export class ViewOpportunityComponent implements OnInit {
 
   selectedForecastCategory: any;
 
-  forecast_categoryValue(event
-                           :
-                           any
-  ):
-    void {
+  forecast_categoryValue(event: any): void {
     this.selectedForecastCategory = this.forecast_category.find((s) => s.name === event.value.name);
     this.opportunity_form.value.forecast_category = this.selectedForecastCategory.name
   }
 
 
-  selectedAccountName!
-    :
-    string;
-  selectedAccountId!
-    :
-    string;
+  selectedAccountName!: string;
+  selectedAccountId!: string;
 
-  accountValue(event
-                 :
-                 any
-  ):
-    void {
+  accountValue(event: any): void {
     this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
     this.selectedAccountId = event.value.value
   }

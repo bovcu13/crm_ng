@@ -82,7 +82,6 @@ export class ViewContactComponent implements OnInit {
         this.GetContactHistoricalRecords = request.body.historical_records
         this.totalHistorical = request.body.total
         console.log(this.GetContactHistoricalRecords)
-        console.log(this.totalHistorical)
         this.loading = false;
       },
       error: err => {

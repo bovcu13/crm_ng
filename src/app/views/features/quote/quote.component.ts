@@ -51,10 +51,7 @@ export class QuoteComponent {
         const getquote = res.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
         this.GetAllQuote = getquote.map((quote: any) => {
           const syncing = quote.is_syncing ? '是' : '否';
-          const expiration_date = this.formatDate2(quote.expiration_date)
-          const created_at = this.formatDate(quote.created_at);
-          const updated_at = this.formatDate(quote.updated_at);
-          return {...quote, syncing, expiration_date, created_at, updated_at};
+          return {...quote, syncing};
         });
       },
       error:(error) => {
@@ -90,10 +87,12 @@ export class QuoteComponent {
       || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
     }
+    let expiration_date = new Date(this.quote_form.value.expiration_date);
+    expiration_date.setHours(expiration_date.getHours() + 8);
     let body = {
       name: this.quote_form.value.name,
       account_id: this.selectedAccount_id,//帳戶ID
-      expiration_date: this.quote_form.value.expiration_date,
+      expiration_date: new Date(expiration_date).toISOString(),
       opportunity_id: this.selectedOpportunity_id,//商機ID
       shipping_and_handling: this.quote_form.value.shipping_and_handling,
       status: this.quote_form.get('status')?.value.name,
@@ -159,10 +158,11 @@ export class QuoteComponent {
       return;
     }
     let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
+    expiration_date.setHours(expiration_date.getHours() + 8);
     let body = {
       name: this.quote_form.get('name')?.value,
       status: this.quote_form.get('status')?.value,
-      expiration_date: expiration_date.toISOString(),
+      expiration_date:new Date(expiration_date).toISOString(),
       is_syncing: this.quote_form.get('is_syncing')?.value,
       account_id: this.selectedAccount_id, //帳戶ID
       description: this.quote_form.get('description')?.value,
@@ -389,6 +389,10 @@ export class QuoteComponent {
         this.disableSaveButton = false;
       }
       this.quote_form.patchValue(quote);
+      this.quote_form.patchValue({
+        status: this.status.find((s: { name: any; }) => s.name === quote.status),
+        expiration_date: new Date(this.quote_form.value.expiration_date),
+      });
       this.showedit = true;
       // 綁定已經選擇的狀態
       this.selectedStatus = this.status.find(s => s.name === quote.status);
@@ -450,10 +454,7 @@ export class QuoteComponent {
         const getquote = request.body.quotes.filter((quote: any) => quote.opportunity_id !== "00000000-0000-4000-a000-000000000000")
         this.GetAllQuote = getquote.map((quote: any) => {
           const syncing = quote.is_syncing ? '是' : '否';
-          const expiration_date = this.formatDate2(quote.expiration_date)
-          const created_at = this.formatDate(quote.created_at);
-          const updated_at = this.formatDate(quote.updated_at);
-          return {...quote, syncing, expiration_date, created_at, updated_at};
+          return {...quote, syncing};
         });
         this.totalRecords = this.GetAllQuote.length;
         this.loading = false;
@@ -477,28 +478,6 @@ export class QuoteComponent {
     let statusName = this.selectedStatus ? this.selectedStatus.name : "";
     //將statusName更新到表單中
     this.quote_form.patchValue({status: statusName});
-  }
-
-  //日期轉換
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
-  //拿到到期日期轉格式
-  formatDate2(dateString2: string): any {
-    if (dateString2 == "0001-01-01T00:00:00Z" || dateString2 == "1970-01-01T00:00:00Z") {
-      return null
-    } else {
-      const date = new Date(dateString2);
-      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
-      return expiration_date.toISOString().slice(0, 10);
-    }
   }
 
 }

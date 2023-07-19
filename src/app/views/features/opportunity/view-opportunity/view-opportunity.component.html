@@ -197,7 +197,7 @@
                   <tr>
                     <td>{{ account_log.modified_at|date:'yyyy-MM-dd HH:mm' }}</td>
                     <td>{{ account_log.modified_by }}</td>
-                    <td>{{ account_log.description }}</td>
+                    <td>{{ account_log.content }}{{ account_log.value}}</td>
                   </tr>
                 </ng-template>
               </p-table>

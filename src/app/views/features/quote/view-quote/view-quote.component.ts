@@ -4,11 +4,13 @@ import {ActivatedRoute} from '@angular/router';
 import {HttpApiService} from 'src/app/api/http-api.service';
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-view-quote',
   templateUrl: './view-quote.component.html',
-  styleUrls: ['./view-quote.component.scss']
+  styleUrls: ['./view-quote.component.scss'],
+  providers: [DatePipe]
 })
 export class ViewQuoteComponent {
   @ViewChild('dt1') dt1!: Table;
@@ -43,7 +45,8 @@ export class ViewQuoteComponent {
   quote_form: FormGroup;
   quote_product_form: FormGroup;
 
-  constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private HttpApi: HttpApiService, private route: ActivatedRoute,
+              private datePipe: DatePipe) {
     this.quote_form = this.fb.group({
       quote_id: [''],
       code: [''],
@@ -56,10 +59,10 @@ export class ViewQuoteComponent {
       status: [''],
       description: [''],
       expiration_date: [''],
-      tax: [''],
+      tax: [0],
       discount: [''],
       total_price: [''],
-      shipping_and_handling: [''],
+      shipping_and_handling: [0],
       sub_total: [''],
       grand_total: [''],
       created_at: [''],
@@ -102,8 +105,6 @@ export class ViewQuoteComponent {
   editOneProduct(quote_product?: any) {
     this.editOneQuoteProduct = true;
     this.GetOneQuoteProduct = quote_product
-    this.GetOneQuoteProduct.created_at = this.formatDate(quote_product.created_at)
-    this.GetOneQuoteProduct.updated_at = this.formatDate(quote_product.updated_at)
     this.quote_product_form.patchValue(quote_product);
     console.log("quote_product: " + JSON.stringify(quote_product))
   }
@@ -167,25 +168,10 @@ export class ViewQuoteComponent {
         this.name = res.body.name;
         this.stage = res.body.status;
         this.GetOneIsSyncing = res.body.is_syncing ? '是' : '否';
+        this.quote_form.patchValue(res.body)
         this.quote_form.patchValue({
-          name: res.body.name,
-          code: res.body.code,
           status: this.status.find((s: { name: any; }) => s.name === this.GetOneQuote.status),
-          opportunity_name: res.body.opportunity_name,
-          opportunity_id: res.body.opportunity_id,
-          is_syncing: res.body.is_syncing,
-          account_id: res.body.account_id,
-          discount: res.body.discount,
-          description: res.body.description,
-          sub_total: res.body.sub_total,
-          shipping_and_handling: res.body.shipping_and_handling,
-          tax: res.body.tax,
-          grand_total: res.body.grand_total,
-          expiration_date: this.formatDate2(res.body.expiration_date),
-          updated_by: res.body.updated_by,
-          updated_at: this.formatDate(res.body.updated_at),
-          created_at: this.formatDate(res.body.created_at),
-          created_by: res.body.created_by,
+          expiration_date: new Date(res.body.expiration_date)
         });
         console.log(this.GetOneQuote)
       },
@@ -620,10 +606,12 @@ export class ViewQuoteComponent {
       return;
     }
     let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
+    expiration_date.setHours(expiration_date.getHours() + 8);
+    console.log(expiration_date)
     let body = {
       name: this.quote_form.get('name')?.value,
       status: this.quote_form.get('status')?.value.name,
-      expiration_date: expiration_date.toISOString(),
+      expiration_date: new Date(expiration_date).toISOString(),
       is_syncing: this.quote_form.get('is_syncing')?.value,
       account_id: this.selectedAccount_id, //帳戶ID
       description: this.quote_form.get('description')?.value,
@@ -804,40 +792,20 @@ export class ViewQuoteComponent {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
   }
 
-
-  //日期轉換
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
-  //拿到到期日期轉格式
-  formatDate2(dateString2: string): any {
-    if (dateString2 == "0001-01-01T00:00:00Z" || dateString2 == "1970-01-01T00:00:00Z") {
-      return null
-    } else {
-      const date = new Date(dateString2);
-      const expiration_date = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1, date.getHours());
-      return expiration_date.toISOString().slice(0, 10);
-    }
-  }
-
   //取得當筆報價歷史紀錄
   GetQuoteHistoricalRecords: any[] = [];
   totalHistorical: any;
 
   getAllQuoteHistoricalRecordsRequest(q_id: any) {
     this.HttpApi.getAllHistoricalRecordsRequest(20, 1, q_id).subscribe(res => {
-        this.GetQuoteHistoricalRecords = res.body.historical_records.map((quote: any) => {
-          const modified_at = this.formatDate(quote.modified_at)
-          return {...quote, modified_at};
-        });
+        this.GetQuoteHistoricalRecords = res.body.historical_records
         this.totalHistorical = res.body.total
+      this.GetQuoteHistoricalRecords.forEach((record) => {
+        if (record.content.startsWith('修改報價到期日期為')) {
+          const formattedDate = this.datePipe.transform(record.value, 'yyyy-MM-dd');
+          record.value = formattedDate || record.value;
+        }
+      });
         console.log(this.GetQuoteHistoricalRecords)
       }
     )

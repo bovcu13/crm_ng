@@ -16,19 +16,14 @@ export class ProductComponent {
     this.HttpApi.getAllProductRequest(this.search, 1).subscribe(
       res => {
         this.GetAllProduct = res.body.products;
-        this.GetAllProduct = res.body.products.map((product: any) => {
-          const created_at = this.formatDate(product.created_at);
-          const updated_at = this.formatDate(product.updated_at);
-          return {...product, created_at, updated_at};
-        });
       })
   }
 
 //POST 一筆product
   BadRequest: any
-
   postProductRequest(): void {
     if (this.product_form.controls['name'].hasError('required') ||
+      this.product_form.controls['code'].hasError('required')  ||
       this.product_form.controls['price'].hasError('required')) {
       this.edit = false;
       Swal.fire({
@@ -40,6 +35,9 @@ export class ProductComponent {
       }).then(() => {
         if (this.product_form.controls['name'].hasError('required')) {
           this.product_form.controls['name'].markAsDirty();
+        }
+        if (this.product_form.controls['code'].hasError('required')) {
+          this.product_form.controls['code'].markAsDirty();
         }
         if (this.product_form.controls['price'].hasError('required')) {
           this.product_form.controls['price'].markAsDirty();
@@ -99,7 +97,7 @@ export class ProductComponent {
       product_id: [''],
       name: ['', [Validators.required]],
       series: [''],
-      code: [''],
+      code: ['', [Validators.required]],
       is_enable: [false],
       price: ['', [Validators.required]],
       description: [''],
@@ -133,6 +131,7 @@ export class ProductComponent {
 
   patchProductRequest(p_id: any): void {
     if (this.product_form.controls['name'].hasError('required') ||
+      this.product_form.controls['code'].hasError('required') ||
       this.product_form.controls['price'].hasError('required')) {
       this.edit = false;
       Swal.fire({
@@ -144,6 +143,9 @@ export class ProductComponent {
       }).then(() => {
         if (this.product_form.controls['name'].hasError('required')) {
           this.product_form.controls['name'].markAsDirty();
+        }
+        if (this.product_form.controls['code'].hasError('required')) {
+          this.product_form.controls['code'].markAsDirty();
         }
         if (this.product_form.controls['price'].hasError('required')) {
           this.product_form.controls['price'].markAsDirty();
@@ -269,11 +271,7 @@ export class ProductComponent {
     this.loading = true;
     this.HttpApi.getAllProductRequest(this.search, 1, limit, page, e).subscribe(
       request => {
-        this.GetAllProduct = request.body.products.map((product: any) => {
-          const created_at = this.formatDate(product.created_at);
-          const updated_at = this.formatDate(product.updated_at);
-          return {...product, created_at, updated_at};
-        });
+        this.GetAllProduct = request.body.products
         this.totalRecords = request.body.total;
         this.loading = false;
         console.log(this.GetAllProduct)
@@ -284,17 +282,6 @@ export class ProductComponent {
   applyFilterGlobal($event: any, stringVal: any) {
     this.search = ($event.target as HTMLInputElement).value
     this.dt1.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
-  }
-
-  //日期轉換
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    const hour = ("0" + date.getHours()).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
   }
 }
 
