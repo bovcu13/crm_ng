@@ -96,7 +96,7 @@ export class AccountComponent implements OnInit {
       owner: [''],
       phone_number: [''],
       industry_id: [''],
-      type: [''],
+      type: ['', [Validators.required]],
       parent_account_id: [''],
       created_at: [''],
       updated_at: [''],
@@ -144,13 +144,17 @@ export class AccountComponent implements OnInit {
 
   totalRecords!: number;
   loading: boolean = false;
+  rowsPerPageOptions: number[] = [10, 20];
+  selectedRows: number = 10;
 
   // 懶加載
   loadTable(e: any) {
+    console.log(e.rows)
+    this.selectedRows = e.rows
     this.loading = true;
-    // let limit = e.rows;
+    let limit = e.rows;
     let page = e.first / e.rows + 1;
-    this.HttpApi.getAllAccountRequest(this.search, 1, page, e).subscribe({
+    this.HttpApi.getAllAccountRequest(this.search, 1, page, limit, e).subscribe({
       next: request => {
         this.getData = request.body.accounts;
         this.loading = false;
@@ -158,13 +162,13 @@ export class AccountComponent implements OnInit {
         // console.log(this.total);
       },
       error: err => {
-        console.log(err.status)
+        console.log(err)
       }
     });
   }
 
   getAllAccount(): void {
-    this.HttpApi.getAllAccountRequest(this.search, 1).subscribe(
+    this.HttpApi.getAllAccountRequest(this.search, 1, 1, this.selectedRows).subscribe(
       request => {
         this.getData = request.body.accounts;
         this.totalRecords = request.body.total;
@@ -193,7 +197,8 @@ export class AccountComponent implements OnInit {
   // currentDate = new Date()
 
   postAccount(): void {
-    if (this.account_form.controls['name'].hasError('required')) {
+    if (this.account_form.controls['name'].hasError('required') ||
+      this.account_form.controls['type'].hasError('required')) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -203,6 +208,7 @@ export class AccountComponent implements OnInit {
         timer: 1000
       }).then(() => {
         this.account_form.controls['name'].markAsDirty();
+        this.account_form.controls['type'].markAsDirty();
         this.edit = true;
       })
       return;
@@ -232,7 +238,7 @@ export class AccountComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           })
-          this.getAllAccount();
+          this.getAllAccount()
         }
       },
       error: err => {
@@ -249,11 +255,11 @@ export class AccountComponent implements OnInit {
         console.log(err)
       }
     });
-
   }
 
   patchAccount(): void {
-    if (this.account_form.controls['name'].hasError('required')) {
+    if (this.account_form.controls['name'].hasError('required') ||
+      this.account_form.controls['type'].hasError('required')) {
       this.edit = false;
       Swal.fire({
         title: '未填寫',
@@ -263,6 +269,7 @@ export class AccountComponent implements OnInit {
         timer: 1000
       }).then(() => {
         this.account_form.controls['name'].markAsDirty();
+        this.account_form.controls['type'].markAsDirty();
         this.edit = true;
       })
       return;
@@ -302,6 +309,12 @@ export class AccountComponent implements OnInit {
             showConfirmButton: false,
             timer: 1500
           }).then(() => {
+            if (this.account_form.controls['name'].hasError('required')) {
+              this.account_form.controls['name'].markAsDirty();
+            }
+            if (this.account_form.controls['type'].hasError('required')) {
+              this.account_form.controls['type'].markAsDirty();
+            }
             this.edit = true;
           })
         }

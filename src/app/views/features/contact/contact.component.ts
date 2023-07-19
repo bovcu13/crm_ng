@@ -68,7 +68,8 @@ export class ContactComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAllAccountRequest()
+    this.getAccountTotalRequest();
+    this.getAllAccountRequest();
   }
 
   // 搜尋關鍵字
@@ -81,12 +82,16 @@ export class ContactComponent implements OnInit {
 
   total!: number;
   loading: boolean = false;
+  rowsPerPageOptions: number[] = [10, 20];
+  selectedRows: number = 10;
+
   // 懶加載
   loadTable(e: any) {
-     this.loading = true;
-    // let limit = e.rows;
+    this.loading = true;
+    this.selectedRows = e.rows
+    let limit = e.rows;
     let page = e.first / e.rows + 1;
-    this.HttpApi.getAllContactRequest(this.search, 1, page, e).subscribe(
+    this.HttpApi.getAllContactRequest(this.search, 1, page, limit, e).subscribe(
       request => {
         this.getData = request.body.contacts;
         this.loading = false;
@@ -98,9 +103,22 @@ export class ContactComponent implements OnInit {
   // 取得帳戶 option
   GetAllAccount!: any[];
   accountSearch!: string;
+  accountTotal!: number;
+
+  // 先取得所有帳戶數量
+  getAccountTotalRequest() {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1,).subscribe({
+      next: request => {
+        this.accountTotal = request.body.total
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
 
   getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1, 1, this.accountTotal).subscribe({
       next: request => {
         this.GetAllAccount = request.body.accounts.map((account: any) => {
           // console.log(account)
@@ -134,8 +152,8 @@ export class ContactComponent implements OnInit {
     }
   }
 
-  getAllContact():void{
-    this.HttpApi.getAllContactRequest(this.search, 1).subscribe(
+  getAllContact(): void {
+    this.HttpApi.getAllContactRequest(this.search, 1,1, this.selectedRows).subscribe(
       request => {
         this.getData = request.body.contacts;
         this.total = request.body.total;
