@@ -149,7 +149,7 @@ export class AccountComponent implements OnInit {
 
   // 懶加載
   loadTable(e: any) {
-    console.log(e.rows)
+    console.log(e)
     this.selectedRows = e.rows
     this.loading = true;
     let limit = e.rows;
@@ -173,6 +173,28 @@ export class AccountComponent implements OnInit {
         this.getData = request.body.accounts;
         this.totalRecords = request.body.total;
       });
+  }
+
+  clearFilter() {
+    this.dt.clear();
+    this.selectedValue = [
+      {
+        name: "個人客戶",
+        boolean: false
+      },
+      {
+        name: "法人客戶",
+        boolean: false
+      },
+      {
+        name: "夥伴",
+        boolean: false
+      },
+      {
+        name: "競爭對手",
+        boolean: false
+      },
+    ]
   }
 
   getSeverity(status: string) {
@@ -411,7 +433,7 @@ export class AccountComponent implements OnInit {
   ]
 
   selected(event: any) {
-    console.log(this.selectedValue)
+    console.log(event)
     switch (event.itemValue.name) {
       case "個人客戶":
         this.selectedValue[0].boolean = !this.selectedValue[0].boolean;
