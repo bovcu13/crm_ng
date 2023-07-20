@@ -7,11 +7,6 @@ import Swal from 'sweetalert2';
 import {Table} from "primeng/table";
 import {DatePipe} from "@angular/common";
 
-interface UploadEvent {
-  originalEvent: Event;
-  files: File[];
-}
-
 @Component({
   selector: 'app-view-contract',
   templateUrl: './view-contract.component.html',
@@ -542,7 +537,7 @@ export class ViewContractComponent {
   //上傳檔案
   uploadedFiles: any[] = [];
 
-  onUpload(event: UploadEvent) {
+  onUpload(event: any) {
     for (let file of event.files) {
       this.uploadedFiles.push(file);
     }

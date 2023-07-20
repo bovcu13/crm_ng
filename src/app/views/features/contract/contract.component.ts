@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
-import {LazyLoadEvent, MessageService} from 'primeng/api';
+import {MessageService} from 'primeng/api';
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
 
@@ -384,7 +384,7 @@ export class ContractComponent {
   search: string = '';  // 搜尋關鍵字
   loading: boolean = false;
 
-  loadPostsLazy(e: LazyLoadEvent) {
+  loadTable(e: any) {
     let page = e.first! / e.rows! + 1;
     let limit = e.rows;
     this.loading = true;
@@ -415,7 +415,7 @@ export class ContractComponent {
   //上傳檔案
   uploadedFiles: any[] = [];
 
-  onUpload(event: UploadEvent) {
+  onUpload(event: any) {
     for (let file of event.files) {
       this.uploadedFiles.push(file);
     }
