@@ -223,8 +223,8 @@
                   <div class="field">
                   <label>契約檔案上傳處</label>
                   <p-toast></p-toast>
-                  <p-fileUpload name="demo[]" (onUpload)="onUpload($event)" [multiple]="true" [maxFileSize]="1000000000">
-                    <ng-template pTemplate="content">
+                  <p-fileUpload name="demo[]"  [multiple]="true" [maxFileSize]="1000000000"  (onUpload)="onUpload($event)">
+                    <ng-template pTemplate="content" >
                       <ul *ngIf="uploadedFiles.length">
                         <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
                       </ul>

@@ -10,7 +10,7 @@
       </div>
       <p-table [value]="GetAllContract" [paginator]="true" [rows]="1000000" [totalRecords]="totalRecords"
                [rowsPerPageOptions]="[10, 20]" [(first)]="first" #dt1 [loading]="loading"
-               [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadPostsLazy($event)"
+               [showCurrentPageReport]="true" [lazy]="true" (onLazyLoad)="loadTable($event)"
                currentPageReportTemplate="共 {totalRecords} 筆">
         <ng-template pTemplate="caption">
           <div class="flex">
@@ -169,7 +169,7 @@
         <div class="field">
           <label>契約檔案上傳處</label>
           <p-toast></p-toast>
-          <p-fileUpload name="demo[]" (onUpload)="onUpload($event)" [multiple]="true" [maxFileSize]="1000000000">
+          <p-fileUpload name="demo[]" [multiple]="true" [maxFileSize]="1000000000" (onUpload)="onUpload($event)">
             <ng-template pTemplate="content">
               <ul *ngIf="uploadedFiles.length">
                 <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
