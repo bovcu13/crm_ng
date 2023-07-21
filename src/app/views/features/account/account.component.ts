@@ -98,6 +98,7 @@ export class AccountComponent implements OnInit {
       industry_id: [''],
       type: ['', [Validators.required]],
       parent_account_id: [''],
+      parent_account_name: [''],
       created_at: [''],
       updated_at: [''],
       created_by: ['', Validators.required],
@@ -109,6 +110,7 @@ export class AccountComponent implements OnInit {
 
 
   ngOnInit() {
+    this.getAllAccountRequest(1);
   }
 
   // 開啟 新增/編輯帳戶 彈出視窗
@@ -121,16 +123,16 @@ export class AccountComponent implements OnInit {
       this.dialogHeader = '新增帳戶';
       this.account_form.reset();
     } else if (type === 'edit') {
-      // console.log("account: " + JSON.stringify(account));
+      console.log(account);
       this.dialogHeader = '編輯帳戶';
       this.account_form.patchValue(account);
       //dropdown
       const selectedIndustry = this.industry_id.find((s) => s.name === account.industry_id);
       this.account_form.patchValue({
         type: this.account_form.controls['type'].value.map((name: string) => ({name})),
+        parent_account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === account.parent_account_name),
         industry_id: selectedIndustry,
       });
-      console.log(this.account_form.value)
     }
   }
 
@@ -149,7 +151,7 @@ export class AccountComponent implements OnInit {
 
   // 懶加載
   loadTable(e: any) {
-    console.log(e)
+    // console.log(e)
     this.selectedRows = e.rows
     this.loading = true;
     let limit = e.rows;
@@ -165,6 +167,55 @@ export class AccountComponent implements OnInit {
         console.log(err)
       }
     });
+  }
+
+  // 取得帳戶 option
+  GetAllAccount: any[] = [];
+  accountSearch!: string;
+  accountTotal!: number;
+  accountPage: number = 1;
+  accountLimit: number = 20;
+  first: number = 0;
+  last: number = 12;
+
+// 取得 account fuction
+  getAllAccountRequest(page: number) {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1, page, this.accountLimit).subscribe({
+      next: request => {
+        this.accountTotal = request.body.total
+        const newAccounts = request.body.accounts.map((account: any) => {
+          // console.log(account)
+          return {
+            label: account.name,
+            value: account.account_id
+          };
+        });
+        // 將新請求到的資料加入 GetAllAccount 陣列
+        this.GetAllAccount = [...this.GetAllAccount, ...newAccounts];
+        console.log(this.GetAllAccount)
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+// 帳戶懶加載
+  loadAccount(e: any) {
+    // console.log(e)
+    // 滾輪往下滑
+    if (e.first > this.first || e.last > this.last) {
+      // console.log('++')
+      if (e.last % this.accountLimit === 0 && this.accountPage < (Math.ceil(this.accountTotal / this.accountLimit))) {
+        this.accountPage++;
+        this.getAllAccountRequest(this.accountPage)
+        console.log(this.accountPage)
+      }
+    }
+    // 滾輪往上滑
+    else if (e.first < this.first || e.last < this.last) {
+      // console.log('--')
+    }
   }
 
   getAllAccount(): void {
@@ -240,13 +291,13 @@ export class AccountComponent implements OnInit {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
       industry_id: '00000000-0000-4000-a000-000000000000',
+      parent_account_id: this.account_form.controls['parent_account_name'].value.value,
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
       // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
       type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: {
         name: any;
       }) => item.name),
-      parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
     }
     console.log(body.type)
     this.HttpApi.postAccountRequest(body).subscribe({

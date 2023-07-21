@@ -68,8 +68,7 @@ export class ContactComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAccountTotalRequest();
-    this.getAllAccountRequest();
+    this.getAllAccountRequest(1);
   }
 
   // 搜尋關鍵字
@@ -101,32 +100,46 @@ export class ContactComponent implements OnInit {
   }
 
   // 取得帳戶 option
-  GetAllAccount!: any[];
+  GetAllAccount: any[] = [];
   accountSearch!: string;
   accountTotal!: number;
+  accountPage: number = 1;
+  accountLimit: number = 20;
+  first: number = 0;
+  last: number = 12;
 
-  // 先取得所有帳戶數量
-  getAccountTotalRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1,).subscribe({
-      next: request => {
-        this.accountTotal = request.body.total
-      },
-      error: err => {
-        console.log(err);
+  // 帳戶懶加載
+  loadAccount(e: any) {
+    // console.log(e)
+    // 滾輪往下滑
+    if (e.first > this.first || e.last > this.last) {
+      // console.log('++')
+      if (e.last % this.accountLimit === 0 && this.accountPage < (Math.ceil(this.accountTotal / this.accountLimit))) {
+        this.accountPage++;
+        this.getAllAccountRequest(this.accountPage)
       }
-    });
+    }
+    // 滾輪往上滑
+    else if (e.first < this.first || e.last < this.last) {
+      // console.log('--')
+    }
   }
 
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1, 1, this.accountTotal).subscribe({
+  // 取得 account fuction
+  getAllAccountRequest(page: number) {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1, page, this.accountLimit).subscribe({
       next: request => {
-        this.GetAllAccount = request.body.accounts.map((account: any) => {
+        this.accountTotal = request.body.total
+        const newAccounts = request.body.accounts.map((account: any) => {
           // console.log(account)
           return {
             label: account.name,
             value: account.account_id
           };
         });
+        // 將新請求到的資料加入 GetAllAccount 陣列
+        this.GetAllAccount = [...this.GetAllAccount, ...newAccounts];
+        console.log(this.GetAllAccount)
       },
       error: err => {
         console.log(err);
@@ -153,7 +166,7 @@ export class ContactComponent implements OnInit {
   }
 
   getAllContact(): void {
-    this.HttpApi.getAllContactRequest(this.search, 1,1, this.selectedRows).subscribe(
+    this.HttpApi.getAllContactRequest(this.search, 1, 1, this.selectedRows).subscribe(
       request => {
         this.getData = request.body.contacts;
         this.total = request.body.total;
