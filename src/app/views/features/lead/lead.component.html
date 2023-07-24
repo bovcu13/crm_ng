@@ -111,7 +111,13 @@
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',lead)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button (click)="deleteLead(lead.lead_id)" icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
+                <p-button *ngIf="lead.status === status[0].name || lead.status === status[1].name || lead.status === status[2].name || lead.status === status[3].name"
+                          (click)="deleteLead(lead.lead_id)" icon="pi pi-trash" pTooltip="刪除"
+                          tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button *ngIf="lead.status === status[4].name"
+                          icon="pi pi-trash" pTooltip="{{lead.status}}狀態不可刪除"
+                          tooltipPosition="top" [disabled]="true"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
 
