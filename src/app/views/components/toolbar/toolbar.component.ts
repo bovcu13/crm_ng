@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 export class ToolbarComponent implements OnInit {
   showSidebar: any
   items: MenuItem[] = [];
+  role: MenuItem[] = [];
   account: MenuItem[] = [];
 
   ngOnInit() {
@@ -66,6 +67,10 @@ export class ToolbarComponent implements OnInit {
       {
         label: '商品/服務',
         routerLink: ['/main/product'],
+      },
+      {
+        label: '權限',
+        routerLink: ['/main/role'],
       },
       // {
       //   label: '顯示面板',
