@@ -28,6 +28,7 @@ import { ViewOrderComponent } from '../features/order/view-order/view-order.comp
 import { ViewContractComponent } from '../features/contract/view-contract/view-contract.component';
 import { ViewCampaignComponent } from '../features/campaign/view-campaign/view-campaign.component';
 import { FooterComponent} from "../components/footer/footer.component";
+import { RoleComponent } from '../features/role/role/role.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { FooterComponent} from "../components/footer/footer.component";
     ViewOrderComponent,
     ViewContractComponent,
     ViewCampaignComponent,
-    FooterComponent
+    FooterComponent,
+    RoleComponent
   ],
   imports: [
     CommonModule,

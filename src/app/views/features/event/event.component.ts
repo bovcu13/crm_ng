@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ElementRef} from '@angular/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -71,7 +71,7 @@ export class EventComponent {
   //建立formgroup表單
   event_form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private elementRef: ElementRef) {
     this.event_form = this.fb.group({
       subject: ['', [Validators.required]],
       main: [[], [Validators.required]],
@@ -201,6 +201,11 @@ export class EventComponent {
         console.log("DATE CLICKED !!!");
         //this.newDialog();
         this.showDialog('add');
+        const titleElement = this.elementRef.nativeElement.querySelector('.fc-toolbar-title');
+        if (titleElement) {
+          const title = titleElement.innerText;
+          console.log('Title:', title);
+        }
       },
       //點選事件開啟編輯事件
       eventClick: (info: any) => {
