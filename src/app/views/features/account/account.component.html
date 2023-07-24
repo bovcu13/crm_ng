@@ -125,9 +125,9 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>行業</label>
-          <p-dropdown placeholder="　" [disabled]="true" [options]="industry_id" optionLabel="name"
-                      (onChange)="industryValue($event)"
-                      formControlName="industry_id" appendTo="body"></p-dropdown>
+          <p-dropdown formControlName="industry_id" [options]="getIndustries" [showClear]="true" placeholder="　"
+                      [filter]="true" optionLabel="label" appendTo="body" (onLazyLoad)="loadIndusty($event)"
+                      [lazy]="true" [virtualScroll]="true" [virtualScrollItemSize]="38"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
