@@ -12,20 +12,6 @@ import Swal from "sweetalert2";
 })
 export class AccountComponent implements OnInit {
   @ViewChild('dt') dt!: Table;
-  industry_id: any[] = [
-    {
-      "name": "零售業",
-      "code": "retail"
-    },
-    {
-      "name": "技術",
-      "code": "technology "
-    },
-    {
-      "name": "通訊",
-      "code": "telecommunications"
-    }
-  ]
   type: any[] = [
     {
       "name": "個人客戶",
@@ -111,6 +97,7 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {
     this.getAllAccountRequest(1);
+    this.getAllIndusty(1);
   }
 
   // 開啟 新增/編輯帳戶 彈出視窗
@@ -123,15 +110,14 @@ export class AccountComponent implements OnInit {
       this.dialogHeader = '新增帳戶';
       this.account_form.reset();
     } else if (type === 'edit') {
-      console.log(account);
+      console.log(account.parent_account_name);
       this.dialogHeader = '編輯帳戶';
       this.account_form.patchValue(account);
       //dropdown
-      const selectedIndustry = this.industry_id.find((s) => s.name === account.industry_id);
       this.account_form.patchValue({
-        type: this.account_form.controls['type'].value.map((name: string) => ({name})),
+        industry_id: this.getIndustries.find((a: { value: any; }) => a.value === account.industry_id),
         parent_account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === account.parent_account_name),
-        industry_id: selectedIndustry,
+        type: this.account_form.controls['type'].value.map((name: string) => ({name})),
       });
     }
   }
@@ -290,7 +276,7 @@ export class AccountComponent implements OnInit {
     let body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
-      industry_id: '00000000-0000-4000-a000-000000000000',
+      industry_id: this.account_form.controls['industry_id'].value.value,
       parent_account_id: this.account_form.controls['parent_account_name'].value.value,
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
@@ -299,7 +285,7 @@ export class AccountComponent implements OnInit {
         name: any;
       }) => item.name),
     }
-    console.log(body.type)
+    console.log(body.industry_id)
     this.HttpApi.postAccountRequest(body).subscribe({
       next: request => {
         if (request.code === 200) {
@@ -351,7 +337,7 @@ export class AccountComponent implements OnInit {
     let body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
-      industry_id: '00000000-0000-4000-a000-000000000000',
+      industry_id: this.account_form.controls['industry_id'].value.value,
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
       // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
@@ -360,7 +346,7 @@ export class AccountComponent implements OnInit {
       }) => item.name),
       parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
     }
-    console.log(body.type)
+    console.log(body.industry_id)
     this.HttpApi.patchAccountRequest(id, body)
       .subscribe(request => {
         console.log(request)
@@ -441,6 +427,51 @@ export class AccountComponent implements OnInit {
     })
   }
 
+  getIndustries: any[]=[];
+  totalIndustries!: number;
+
+  getAllIndusty(page: number): void {
+    this.HttpApi.getAllIndustryRequest(page, this.industyLimit).subscribe({
+      next: request => {
+        this.totalIndustries = request.body.total
+        const newIndustries = request.body.industries.map((industry: any) => {
+          // console.log(account)
+          return {
+            label: industry.name,
+            value: industry.industry_id
+          };
+        });
+        // 將新請求到的資料加入 GetAllAccount 陣列
+        this.getIndustries = [...this.getIndustries, ...newIndustries];
+        console.log(this.getIndustries)
+      },
+      error: err => {
+        console.log(err)
+      }
+    })
+  }
+
+  industyPage: number = 1;
+  industyLimit: number = 20;
+
+  // 行業懶加載
+  loadIndusty(e: any) {
+    // console.log(e)
+    // 滾輪往下滑
+    if (e.first > this.first || e.last > this.last) {
+      // console.log('++')
+      if (e.last % this.industyLimit === 0 && this.industyPage < (Math.ceil(this.accountTotal / this.industyLimit))) {
+        this.industyPage++;
+        this.getAllIndusty(this.industyPage)
+        console.log(this.industyPage)
+      }
+    }
+    // 滾輪往上滑
+    else if (e.first < this.first || e.last < this.last) {
+      // console.log('--')
+    }
+  }
+
   showAlertCancel() {
     this.edit = false
     Swal.fire({
@@ -452,12 +483,6 @@ export class AccountComponent implements OnInit {
       reverseButtons: false,
       timer: 1000
     })
-  }
-
-  industryValue(event: any): void {
-    const selectedIndustry = this.industry_id.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedIndustry.name);
   }
 
   clickSort(): void {

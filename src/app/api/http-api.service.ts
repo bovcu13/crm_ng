@@ -25,6 +25,35 @@ export class HttpApiService {
     return this.http.get<any>(url);
   }
 
+  //--行業------------------------------------------------------------------------------------------------
+
+  getAllIndustryRequest(page = 1, limit = 10): Observable<any> {
+    const url = `${BaseUrl}/industries?page=${page}&limit=${limit}`;
+    return this.http.get<any>(url);
+  }
+
+  getOneIndustryRequest(id: any): Observable<any> {
+    const url = `${BaseUrl}/industries/${id}`;
+    return this.http.get<any>(url);
+  }
+
+  postIndustryRequest(body: any): Observable<any> {
+    const url = `${BaseUrl}/industries`;
+    return this.http.post<any>(url, body);
+  }
+
+  patchIndustryRequest(id: any, body: any): Observable<any> {
+    const url = `${BaseUrl}/industries/${id}`;
+    return this.http.patch<any>(url, body);
+  }
+
+  deleteIndustryRequest(id: any): Observable<any> {
+    const url = `${BaseUrl}/industries/${id}`;
+    return this.http.delete<any>(url);
+  }
+
+
+
   //--帳戶---------------------------------------------------------------------------------------------------
 
   getAllAccountRequest(search: string, status = 1, page = 1, limit = 10, event?: any): Observable<any> {
