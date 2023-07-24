@@ -11,28 +11,34 @@
         </span>
         </div>
       </div>
-      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="totalRecords" [rows]="selectedRows"  [rowsPerPageOptions]="rowsPerPageOptions" [paginator]="true"
+      <p-table #dt [value]="getData" [lazy]="true" [totalRecords]="totalRecords" [rows]="selectedRows"
+               [rowsPerPageOptions]="rowsPerPageOptions" [paginator]="true"
                (onLazyLoad)="loadTable($event)" [loading]="loading" currentPageReportTemplate="共 {totalRecords} 筆"
                [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="status flex align-items-center">
-            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(0)" [ngClass]="{'status-focus': stage[0].boolean}">
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(0)"
+                      [ngClass]="{'status-focus': stage[0].boolean}">
               <span class="text-400 pi pi-circle-fill mr-1"></span>
               <span class="font-bold text-color">{{stage[0].name}}</span>
             </p-button>
-            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(1)" [ngClass]="{'status-focus': stage[1].boolean}">
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(1)"
+                      [ngClass]="{'status-focus': stage[1].boolean}">
               <span class="text-blue-300 pi pi-circle-fill mr-1 ml-2"></span>
               <span class="font-bold text-color">{{stage[1].name}}</span>
             </p-button>
-            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(2)" [ngClass]="{'status-focus': stage[2].boolean}">
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(2)"
+                      [ngClass]="{'status-focus': stage[2].boolean}">
               <span class="text-yellow-300 pi pi-circle-fill mr-1 ml-2"></span>
               <span class="font-bold text-color">{{stage[2].name}}</span>
             </p-button>
-            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(3)" [ngClass]="{'status-focus': stage[3].boolean}">
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(3)"
+                      [ngClass]="{'status-focus': stage[3].boolean}">
               <span class="text-orange-300 pi pi-circle-fill mr-1 ml-2"></span>
               <span class="font-bold text-color">{{stage[3].name}}</span>
             </p-button>
-            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(4)" [ngClass]="{'status-focus': stage[4].boolean}">
+            <p-button styleClass="p-button-rounded p-button-text" (click)="toggleStageFilter(4)"
+                      [ngClass]="{'status-focus': stage[4].boolean}">
               <span class="text-green-300 pi pi-circle-fill mr-1 ml-2"></span>
               <span class="font-bold text-color">{{stage[4].name}}</span>
             </p-button>
@@ -84,8 +90,13 @@
                 <p-button (click)="showDialog('edit',opportunity)" icon="pi pi-pencil" pTooltip="編輯"
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button (click)="deleteOpportunity(opportunity.opportunity_id)" icon="pi pi-trash" pTooltip="刪除"
+                <p-button *ngIf="opportunity.stage === stage[0].name || opportunity.stage === stage[1].name"
+                          (click)="deleteOpportunity(opportunity.opportunity_id)" icon="pi pi-trash" pTooltip="刪除"
                           tooltipPosition="top"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button *ngIf="!(opportunity.stage === stage[0].name || opportunity.stage === stage[1].name)"
+                          icon="pi pi-trash" pTooltip="{{opportunity.stage}}階段不可刪除"
+                          tooltipPosition="top" [disabled]="true"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
@@ -143,7 +154,8 @@
         <div class="field">
           <label>金額</label>
           <br>
-          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="amount" [minFractionDigits]="0"></p-inputNumber>
+          <p-inputNumber class="w-full" mode="currency" currency="TWD" formControlName="amount"
+                         [minFractionDigits]="0"></p-inputNumber>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
