@@ -49,7 +49,8 @@
                     <!--                      </div>-->
                     <!--                    </ng-template>-->
                   </p-multiSelect>
-                  <p-button label="清除" (click)="clearFilter()" styleClass="p-button-outlined p-button-info mt-4"></p-button>
+                  <p-button label="清除" (click)="clearFilter()"
+                            styleClass="p-button-outlined p-button-info mt-4"></p-button>
                 </ng-template>
               </p-columnFilter>
             </th>
@@ -111,7 +112,7 @@
           <!--          <br>-->
           <!--          <label>{{(account_form.controls['type'].value)}}</label>-->
           <p-multiSelect [options]="type" formControlName="type" optionLabel="name"
-                         display="chip"
+                         display="chip" appendTo="body"
                          [ngClass]="{'ng-dirty':account_form.controls['type'].hasError('required') && account_form.controls['type'].touched}"></p-multiSelect>
         </div>
       </div>
@@ -124,15 +125,22 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>行業</label>
-          <p-dropdown placeholder="　" [disabled]="true" [options]="industry_id" optionLabel="name"
-                      (onChange)="industryValue($event)"
-                      formControlName="industry_id" appendTo="body"></p-dropdown>
+          <p-dropdown formControlName="industry_id" [options]="getIndustries" [showClear]="true" placeholder="　"
+                      [filter]="true" optionLabel="label" appendTo="body" (onLazyLoad)="loadIndusty($event)"
+                      [lazy]="true" [virtualScroll]="true" [virtualScrollItemSize]="38"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系帳戶</label>
-          <p-dropdown placeholder="　" appendTo="body" [filter]="true" filterBy="name"></p-dropdown>
+          <p-dropdown [options]="GetAllAccount" formControlName="parent_account_name"
+                      [filter]="true" optionLabel="label" appendTo="body" (onLazyLoad)="loadAccount($event)"
+                      [lazy]="true"
+                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶" [virtualScroll]="true"
+                      [virtualScrollItemSize]="38"
+                      [ngClass]="{'ng-dirty':account_form.controls['parent_account_name'].hasError('required') && account_form.controls['parent_account_name'].touched}">
+          </p-dropdown>
+
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
