@@ -39,7 +39,7 @@ export class ViewOpportunityComponent implements OnInit {
   ]
   forecast_category: any[] = [
     {
-      "name": "被遺漏",
+      "name": "商機被遺漏",
       "code": "omitted"
     },
     {
