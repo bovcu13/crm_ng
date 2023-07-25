@@ -1,2 +1,8 @@
 @import 'src/app/app.component.scss';
 
+:host ::ng-deep{
+  .p-accordion p-accordiontab:last-child .p-accordion-content {
+    padding: 0;
+    border: none;
+  }
+}
