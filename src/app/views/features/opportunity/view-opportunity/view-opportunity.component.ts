@@ -67,7 +67,10 @@ export class ViewOpportunityComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.opportunity_form = this.fb.group({
       opportunity_id: ['', [Validators.required]],
-      account_name: ['', [Validators.required]],
+      account_name: [''],
+      account_id: [''],
+      lead_name: [''],
+      lead_id: [''],
       name: ['', [Validators.required]],
       close_date: ['', [Validators.required]],
       stage: ['', [Validators.required]],
@@ -82,8 +85,9 @@ export class ViewOpportunityComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAllAccountRequest()
-    this.getOneOpportunity(this.id)
+    this.getAllAccountRequest();
+    this.getOneOpportunity(this.id);
+    this.getAllLeadRequest(1);
   }
 
   //取得商機歷程紀錄
@@ -140,16 +144,45 @@ export class ViewOpportunityComponent implements OnInit {
         this.getData = request.body
         console.log(this.getData)
         this.opportunity_form.controls['account_name'].disable();
+        this.opportunity_form.controls['lead_name'].disable();
         this.opportunity_form.patchValue(this.getData)
         this.opportunity_form.patchValue({
           stage: this.stage.find(s => s.name === this.getData.stage),
           forecast_category: this.forecast_category.find(s => s.name === this.getData.forecast_category),
           account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name),
+          lead_name:this.GetAllLead.find((a: { value: any; }) => a.value === this.getData.lead_id),
           close_date: new Date(this.opportunity_form.value.close_date),
         });
         this.status = this.stage.find((s: { name: any; }) => s.name === this.getData.stage).name
       }
     )
+  }
+
+  // 取得線索 option
+  GetAllLead: any[] = [];
+  leadTotal!: number;
+  leadtPage: number = 1;
+  leadLimit: number = 20;
+
+  // 取得 lead fuction
+  getAllLeadRequest(page: number) {
+    this.HttpApi.getAllLeadRequest(this.accountSearch, 1, page, this.leadLimit).subscribe({
+      next: request => {
+        this.leadTotal = request.body.total
+        const newLeads = request.body.leads.map((lead: any) => {
+          return {
+            label: lead.description,
+            value: lead.lead_id
+          };
+        });
+        // 將新請求到的資料加入 GetAllAccount 陣列
+        this.GetAllLead = [...this.GetAllLead, ...newLeads];
+        console.log(this.GetAllLead)
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
   GetAllAccount: any[] = [];
