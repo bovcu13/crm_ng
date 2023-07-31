@@ -189,7 +189,7 @@ export class OpportunityComponent implements OnInit {
       this.opportunity_form.controls['lead_name'].disable();
       this.opportunity_form.patchValue(opportunity);
       this.opportunity_form.patchValue({
-        lead_name:this.GetAllLead.find((a: { value: any; }) => a.value === opportunity.lead_id),
+        lead_name: this.GetAllLead.find((a: { value: any; }) => a.value === opportunity.lead_id),
         stage: this.stage.find(s => s.name === opportunity.stage),
         forecast_category: this.forecast_category.find(s => s.name === opportunity.forecast_category),
         account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === opportunity.account_name),
@@ -429,10 +429,23 @@ export class OpportunityComponent implements OnInit {
       })
   }
 
+  // 變更線索狀態為 "發展中"
+  patchLeadStatus(id: any): void {
+    let body = {
+      status: "發展中"
+    }
+    this.HttpApi.patchLeadRequest(id, body)
+      .subscribe(request => {
+        console.log(request)
+      })
+  }
 
-  deleteOpportunity(id: any): void {
+  deleteOpportunity(opportunity: any): void {
+    let id = opportunity.opportunity_id
+    console.log(opportunity.lead_id)
     Swal.fire({
       title: '確認刪除？',
+      text: opportunity.lead_id ? '原轉換線索狀態將回到發展中' : undefined,
       icon: 'warning',
       confirmButtonColor: '#6EBE71',
       cancelButtonColor: '#FF3034',
@@ -445,6 +458,9 @@ export class OpportunityComponent implements OnInit {
         this.HttpApi.deleteOpportunityRequest(id).subscribe(request => {
           console.log(request)
           if (request.code === 200) {
+            if (opportunity.lead_id) {
+              this.patchLeadStatus(opportunity.lead_id);
+            }
             Swal.fire({
               title: '成功',
               text: "已刪除您的資料 :)",

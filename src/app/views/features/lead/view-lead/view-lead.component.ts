@@ -314,8 +314,7 @@ export class ViewLeadComponent implements OnInit {
     });
   }
 
-  showDialog(formData: any): void {
-    console.log(formData)
+  showDialog(): void {
     this.edit = true;
     this.opportunity_form.controls['account_name'].disable();
     this.opportunity_form.controls['description'].disable();

@@ -92,7 +92,7 @@
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button *ngIf="opportunity.stage === stage[0].name || opportunity.stage === stage[1].name"
-                          (click)="deleteOpportunity(opportunity.opportunity_id)" icon="pi pi-trash" pTooltip="刪除"
+                          (click)="deleteOpportunity(opportunity)" icon="pi pi-trash" pTooltip="刪除"
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button *ngIf="!(opportunity.stage === stage[0].name || opportunity.stage === stage[1].name)"
