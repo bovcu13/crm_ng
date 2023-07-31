@@ -96,19 +96,19 @@ export class OpportunityComponent implements OnInit {
   // 新增商機方式
   add_opportunity: MenuItem[] = [
     {
-      label: "使用帳戶新增",
+      label: "由 帳戶 新增",
       icon: "pi pi-user",
       command: () => {
         this.showDialog('add-account');
-        this.dialogHeader = "使用帳戶新增"
+        this.dialogHeader = "由 帳戶 新增"
       }
     },
     {
-      label: "使用線索新增",
+      label: "由 線索 新增",
       icon: "pi pi-search",
       command: () => {
         this.showDialog('add-lead');
-        this.dialogHeader = "使用線索新增"
+        this.dialogHeader = "由 線索 新增"
       }
     },
   ]

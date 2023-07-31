@@ -119,7 +119,7 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <ng-container *ngIf="dialogHeader === '使用帳戶新增' || (!opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
+          <ng-container *ngIf="dialogHeader === '由 帳戶 新增' || (!opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
             <label><span class="text-red-600">*</span>帳戶</label>
             <p-dropdown [options]="GetAllAccount" formControlName="account_name"
                         [filter]="true" optionLabel="label" appendTo="body" (onLazyLoad)="loadAccount($event)"
@@ -129,7 +129,7 @@
                         [ngClass]="{'ng-dirty':opportunity_form.controls['account_name'].hasError('required') && opportunity_form.controls['account_name'].touched}">
             </p-dropdown>
           </ng-container>
-          <ng-container *ngIf="dialogHeader === '使用線索新增' || (opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
+          <ng-container *ngIf="dialogHeader === '由 線索 新增' || (opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
             <label>帳戶</label>
             <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
                         [filter]="true" appendTo="body" optionLabel="label"
@@ -139,7 +139,7 @@
           </ng-container>
         </div>
       </div>
-      <ng-container *ngIf="dialogHeader === '使用線索新增' || (opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
+      <ng-container *ngIf="dialogHeader === '由 線索 新增' || (opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
         <div class="col-12 md:col-12 lg:col-12">
           <div class="field">
             <label><span class="text-red-600">*</span>線索描述</label>
