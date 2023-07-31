@@ -2,14 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpApiService} from "../../../../api/http-api.service";
 import {ActivatedRoute} from "@angular/router";
-import {MessageService} from "primeng/api";
 import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-view-lead',
   templateUrl: './view-lead.component.html',
   styleUrls: ['./view-lead.component.scss'],
-  providers: [MessageService]
 })
 export class ViewLeadComponent implements OnInit {
   name: string = "name"
@@ -165,8 +163,7 @@ export class ViewLeadComponent implements OnInit {
   opportunity_form: FormGroup;
   id: any;
 
-  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute
-    , private messageService: MessageService) {
+  constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute) {
     this.id = this.route.snapshot.paramMap.get('id');
     this.lead_form = this.fb.group({
       lead_id: ['', [Validators.required]],
@@ -191,7 +188,10 @@ export class ViewLeadComponent implements OnInit {
     });
     this.opportunity_form = this.fb.group({
       opportunity_id: ['', [Validators.required]],
-      account_name: ['', [Validators.required]],
+      account_name: [''],
+      account_id: [''],
+      lead_id: [''],
+      description: [''],
       name: ['', [Validators.required]],
       close_date: ['', [Validators.required]],
       stage: ['', [Validators.required]],
@@ -314,12 +314,15 @@ export class ViewLeadComponent implements OnInit {
     });
   }
 
-  showDialog(): void {
+  showDialog(formData: any): void {
+    console.log(formData)
     this.edit = true;
     this.opportunity_form.controls['account_name'].disable();
+    this.opportunity_form.controls['description'].disable();
     this.opportunity_form.controls['stage'].disable();
+    this.opportunity_form.patchValue(this.getData)
     this.opportunity_form.patchValue({
-      account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name),
+      account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name)
     });
   }
 
@@ -418,9 +421,7 @@ export class ViewLeadComponent implements OnInit {
         }
       })
     if (
-      this.opportunity_form.controls['account_name'].hasError('required') ||
       this.opportunity_form.controls['name'].hasError('required') ||
-      this.opportunity_form.controls['stage'].hasError('required') ||
       this.opportunity_form.controls['forecast_category'].hasError('required') ||
       this.opportunity_form.controls['close_date'].hasError('required')) {
       this.edit = false;
@@ -431,14 +432,8 @@ export class ViewLeadComponent implements OnInit {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.opportunity_form.controls['account_name'].hasError('required')) {
-          this.opportunity_form.controls['account_name'].markAsDirty();
-        }
         if (this.opportunity_form.controls['name'].hasError('required')) {
           this.opportunity_form.controls['name'].markAsDirty();
-        }
-        if (this.opportunity_form.controls['stage'].hasError('required')) {
-          this.opportunity_form.controls['stage'].markAsDirty();
         }
         if (this.opportunity_form.controls['forecast_category'].hasError('required')) {
           this.opportunity_form.controls['forecast_category'].markAsDirty();
@@ -456,11 +451,9 @@ export class ViewLeadComponent implements OnInit {
       name: this.opportunity_form.value.name,
       stage: this.stage[1].name,
       forecast_category: this.selectedForecastCategory.name,
-      // account_name: this.selectedAccountName,s
-      // account_id: this.selectedAccountId,
-      account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name).label,
-      account_id: this.GetAllAccount.find((a: { value: any; }) => a.value === this.getData.account_id).value,
+      account_id: this.getData.account_id,
       close_date: new Date(this.opportunity_form.value.close_date),
+      lead_id: this.id,
       amount: parseInt(this.opportunity_form.value?.amount),
     }
     console.log(body)
