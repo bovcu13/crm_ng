@@ -6,8 +6,9 @@
 
         <div class="flex ml-auto mr-2">
         <span class="p-buttonset">
-          <p-button (click)="showDialog('add')" pTooltip="新增商機" icon="pi pi-plus"
+          <p-button (click)="menu.toggle($event)" pTooltip="新增商機" icon="pi pi-plus"
                     styleClass="p-button-text"></p-button>
+          <p-menu #menu [model]="add_opportunity" [popup]="true"></p-menu>
         </span>
         </div>
       </div>
@@ -91,7 +92,7 @@
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button *ngIf="opportunity.stage === stage[0].name || opportunity.stage === stage[1].name"
-                          (click)="deleteOpportunity(opportunity.opportunity_id)" icon="pi pi-trash" pTooltip="刪除"
+                          (click)="deleteOpportunity(opportunity)" icon="pi pi-trash" pTooltip="刪除"
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button *ngIf="!(opportunity.stage === stage[0].name || opportunity.stage === stage[1].name)"
@@ -118,14 +119,40 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label><span class="text-red-600">*</span>帳戶</label>
-          <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
-                      [filter]="true" appendTo="body" optionLabel="label"
-                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶"
-                      [ngClass]="{'ng-dirty':opportunity_form.controls['account_name'].hasError('required') && opportunity_form.controls['account_name'].touched}">
-          </p-dropdown>
+          <ng-container *ngIf="dialogHeader === '由 帳戶 新增' || (!opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
+            <label><span class="text-red-600">*</span>帳戶</label>
+            <p-dropdown [options]="GetAllAccount" formControlName="account_name"
+                        [filter]="true" optionLabel="label" appendTo="body" (onLazyLoad)="loadAccount($event)"
+                        [lazy]="true"
+                        filterBy="label" [showClear]="true" placeholder="選擇現有帳戶" [virtualScroll]="true"
+                        [virtualScrollItemSize]="38"
+                        [ngClass]="{'ng-dirty':opportunity_form.controls['account_name'].hasError('required') && opportunity_form.controls['account_name'].touched}">
+            </p-dropdown>
+          </ng-container>
+          <ng-container *ngIf="dialogHeader === '由 線索 新增' || (opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
+            <label>帳戶</label>
+            <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
+                        [filter]="true" appendTo="body" optionLabel="label"
+                        filterBy="label" [showClear]="true" placeholder="線索帳戶"
+                        [ngClass]="{'ng-dirty':opportunity_form.controls['account_name'].hasError('required') && opportunity_form.controls['account_name'].touched}">
+            </p-dropdown>
+          </ng-container>
         </div>
       </div>
+      <ng-container *ngIf="dialogHeader === '由 線索 新增' || (opportunity_form.controls['lead_id'].value && dialogHeader === '編輯商機')">
+        <div class="col-12 md:col-12 lg:col-12">
+          <div class="field">
+            <label><span class="text-red-600">*</span>線索描述</label>
+            <p-dropdown [options]="GetAllLead" formControlName="lead_name"
+                        [filter]="true" optionLabel="label" appendTo="body" (onLazyLoad)="loadAccount($event)"
+                        [lazy]="true" (onChange)="leadValue($event)"
+                        filterBy="label" [showClear]="true" placeholder="選擇現有線索" [virtualScroll]="true"
+                        [virtualScrollItemSize]="38"
+                        [ngClass]="{'ng-dirty':opportunity_form.controls['lead_name'].hasError('required') && opportunity_form.controls['lead_name'].touched}">
+            </p-dropdown>
+          </div>
+        </div>
+      </ng-container>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>階段</label>

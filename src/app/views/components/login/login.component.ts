@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   isLoginFailed = false;
   errorMessage = '';
   roles: string[] = [];
+  showBack = false;
 
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private fb: FormBuilder, private router: Router) {
     this.login_form = this.fb.group({
@@ -86,6 +87,16 @@ export class LoginComponent implements OnInit {
 
   signUp() {
     this.container.nativeElement.classList.add('right-panel-active');
+  }
+
+  toggleCard() {
+    const card = document.querySelector('.card-container');
+    this.showBack = !this.showBack;
+    if (!this.showBack) {
+      card?.classList.remove('flip-front');
+    } else {
+      card?.classList.add('flip-front');
+    }
   }
 }
 

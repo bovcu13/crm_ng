@@ -4,6 +4,7 @@ import {HttpApiService} from "../../../api/http-api.service";
 import {Opportunity} from "../../../shared/models/opportunity";
 import Swal from "sweetalert2";
 import {Table} from "primeng/table";
+import {MenuItem} from "primeng/api";
 
 
 @Component({
@@ -43,7 +44,7 @@ export class OpportunityComponent implements OnInit {
   ]
   forecast_category: any[] = [
     {
-      "name": "被遺漏",
+      "name": "商機被遺漏",
       "code": "omitted"
     },
     {
@@ -69,7 +70,10 @@ export class OpportunityComponent implements OnInit {
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.opportunity_form = this.fb.group({
       opportunity_id: ['', [Validators.required]],
-      account_name: ['', [Validators.required]],
+      account_name: [''],
+      account_id: [''],
+      lead_name: [''],
+      lead_id: [''],
       name: ['', [Validators.required]],
       close_date: ['', [Validators.required]],
       stage: ['', [Validators.required]],
@@ -83,30 +87,31 @@ export class OpportunityComponent implements OnInit {
     });
   }
 
-  GetAllAccount!: any[];
-  accountSearch!: string;
-
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
-      next: request => {
-        this.GetAllAccount = request.body.accounts.map((account: any) => {
-          // console.log(account)
-          return {
-            label: account.name,
-            value: account.account_id
-          };
-        });
-        console.log(this.GetAllAccount)
-      },
-      error: err => {
-        console.log(err);
-      }
-    });
-  }
-
   ngOnInit() {
-    this.getAllAccountRequest();
+    this.getAllAccountRequest(1);
+    this.getAllLeadRequest(1);
+    console.log(this.opportunity_form.controls['lead_id'].value)
   }
+
+  // 新增商機方式
+  add_opportunity: MenuItem[] = [
+    {
+      label: "由 帳戶 新增",
+      icon: "pi pi-user",
+      command: () => {
+        this.showDialog('add-account');
+        this.dialogHeader = "由 帳戶 新增"
+      }
+    },
+    {
+      label: "由 線索 新增",
+      icon: "pi pi-search",
+      command: () => {
+        this.showDialog('add-lead');
+        this.dialogHeader = "由 線索 新增"
+      }
+    },
+  ]
 
   // 搜尋關鍵字
   search: string = '';
@@ -159,8 +164,7 @@ export class OpportunityComponent implements OnInit {
 
   showDialog(type: string, opportunity?: any): void {
     this.edit = true;
-    if (type === 'add') {
-      this.dialogHeader = '新增商機';
+    if (type === 'add-account') {
       this.opportunity_form.reset();
       // 將"商機"設定為不可修改
       this.opportunity_form.controls['stage'].disable();
@@ -168,18 +172,106 @@ export class OpportunityComponent implements OnInit {
       this.opportunity_form.patchValue({
         status: this.stage.find(s => s.name === this.stage[1].name),
       });
+    } else if (type === 'add-lead') {
+      this.opportunity_form.reset();
+      // 將"商機"設定為不可修改
+      this.opportunity_form.controls['stage'].disable();
+      this.opportunity_form.controls['account_name'].disable();
+      this.opportunity_form.controls['lead_name'].enable();
+      this.opportunity_form.patchValue({
+        status: this.stage.find(s => s.name === this.stage[1].name),
+      });
     } else if (type === 'edit') {
       this.dialogHeader = '編輯商機';
+      console.log(this.opportunity_form.controls['lead_id'].value)
       this.opportunity_form.controls['stage'].enable();
       this.opportunity_form.controls['account_name'].disable();
+      this.opportunity_form.controls['lead_name'].disable();
       this.opportunity_form.patchValue(opportunity);
       this.opportunity_form.patchValue({
+        lead_name: this.GetAllLead.find((a: { value: any; }) => a.value === opportunity.lead_id),
         stage: this.stage.find(s => s.name === opportunity.stage),
         forecast_category: this.forecast_category.find(s => s.name === opportunity.forecast_category),
         account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === opportunity.account_name),
         close_date: new Date(this.opportunity_form.value.close_date),
       });
     }
+  }
+
+  // 取得帳戶 option
+  GetAllAccount: any[] = [];
+  accountSearch!: string;
+  accountTotal!: number;
+  accountPage: number = 1;
+  accountLimit: number = 20;
+  first: number = 0;
+  last: number = 12;
+
+  // 取得 account fuction
+  getAllAccountRequest(page: number) {
+    this.HttpApi.getAllAccountRequest(this.accountSearch, 1, page, this.accountLimit).subscribe({
+      next: request => {
+        this.accountTotal = request.body.total
+        const newAccounts = request.body.accounts.map((account: any) => {
+          // console.log(account)
+          return {
+            label: account.name,
+            value: account.account_id
+          };
+        });
+        // 將新請求到的資料加入 GetAllAccount 陣列
+        this.GetAllAccount = [...this.GetAllAccount, ...newAccounts];
+        console.log(this.GetAllAccount)
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  // 帳戶懶加載
+  loadAccount(e: any) {
+    // console.log(e)
+    // 滾輪往下滑
+    if (e.first > this.first || e.last > this.last) {
+      // console.log('++')
+      if (e.last % this.accountLimit === 0 && this.accountPage < (Math.ceil(this.accountTotal / this.accountLimit))) {
+        this.accountPage++;
+        this.getAllAccountRequest(this.accountPage)
+        console.log(this.accountPage)
+      }
+    }
+    // 滾輪往上滑
+    else if (e.first < this.first || e.last < this.last) {
+      // console.log('--')
+    }
+  }
+
+  // 取得線索 option
+  GetAllLead: any[] = [];
+  leadTotal!: number;
+  leadtPage: number = 1;
+  leadLimit: number = 20;
+
+  // 取得 lead fuction
+  getAllLeadRequest(page: number) {
+    this.HttpApi.getAllLeadRequest(this.accountSearch, 1, page, this.leadLimit).subscribe({
+      next: request => {
+        this.leadTotal = request.body.total
+        const newLeads = request.body.leads.map((lead: any) => {
+          return {
+            label: lead.description,
+            value: lead.lead_id
+          };
+        });
+        // 將新請求到的資料加入 GetAllAccount 陣列
+        this.GetAllLead = [...this.GetAllLead, ...newLeads];
+        console.log(this.GetAllLead)
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
   getAllOpportunity(): void {
@@ -231,12 +323,13 @@ export class OpportunityComponent implements OnInit {
       name: this.opportunity_form.value.name,
       stage: this.stage[1].name,
       forecast_category: this.selectedForecastCategory.name,
-      account_id: this.selectedAccountId,
-      account_name: this.selectedAccountName,
+      account_id: this.opportunity_form.controls['account_name'].value.value,
+      account_name: this.opportunity_form.controls['account_name'].value.label,
+      lead_id: this.opportunity_form.controls['lead_id'].value,
       close_date: new Date(this.opportunity_form.value.close_date),
       amount: parseInt(this.opportunity_form.value?.amount),
     }
-
+    console.log(body)
     this.HttpApi.postOpportunityRequest(body)
       .subscribe(request => {
         console.log(request)
@@ -336,10 +429,23 @@ export class OpportunityComponent implements OnInit {
       })
   }
 
+  // 變更線索狀態為 "發展中"
+  patchLeadStatus(id: any): void {
+    let body = {
+      status: "發展中"
+    }
+    this.HttpApi.patchLeadRequest(id, body)
+      .subscribe(request => {
+        console.log(request)
+      })
+  }
 
-  deleteOpportunity(id: any): void {
+  deleteOpportunity(opportunity: any): void {
+    let id = opportunity.opportunity_id
+    console.log(opportunity.lead_id)
     Swal.fire({
       title: '確認刪除？',
+      text: opportunity.lead_id ? '原轉換線索狀態將回到發展中' : undefined,
       icon: 'warning',
       confirmButtonColor: '#6EBE71',
       cancelButtonColor: '#FF3034',
@@ -352,6 +458,9 @@ export class OpportunityComponent implements OnInit {
         this.HttpApi.deleteOpportunityRequest(id).subscribe(request => {
           console.log(request)
           if (request.code === 200) {
+            if (opportunity.lead_id) {
+              this.patchLeadStatus(opportunity.lead_id);
+            }
             Swal.fire({
               title: '成功',
               text: "已刪除您的資料 :)",
@@ -419,5 +528,23 @@ export class OpportunityComponent implements OnInit {
     this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
     this.selectedAccountId = event.value.value
     // console.log(this.selectedAccountId)
+  }
+
+  leadValue(event: any): void {
+    this.opportunity_form.patchValue({
+      lead_id: event.value.value
+    })
+    this.HttpApi.getOneLeadRequest(event.value.value).subscribe({
+      next: request => {
+        console.log(request)
+        this.opportunity_form.patchValue({
+          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === request.body.account_name),
+        })
+        console.log(this.opportunity_form.controls['account_name'].value)
+      },
+      error: err => {
+        console.log(err)
+      }
+    });
   }
 }

@@ -43,36 +43,70 @@
 <!--  </div>-->
 <!--</div>-->
 
-<div class="container">
-  <input id="signup_toggle" type="checkbox">
-  <form class="form" [formGroup]="login_form">
-    <div class="form_front">
-      <div class="form_details">
-        <img class="img" src="./assets/img/logo/logo.png" width=100 height=90 alt="Collective_logo" title="Collective">
-      </div>
-      <input pInputText placeholder="帳號" formControlName="user_name">
-      <p-password placeholder="密碼" formControlName="password" [feedback]="false"></p-password>
-      <p-button label="登入" (click)="onSubmit()"></p-button>
-      <span class="switch">未註冊帳號?
-                <label for="signup_toggle" class="signup_tog">
-                    註冊
-                </label>
-            </span>
+<div class="flex justify-content-center">
+  <div class="col-5">
+    <div class="flex justify-content-center mt-8">
+      <form [formGroup]="login_form" [ngClass]="{'flip-front': showBack}">
+        <div class="card-container">
+          <!-- 正面 -->
+          <p-card class="front" *ngIf="!showBack">
+            <div class="flex col-12  justify-content-center -mt-1">
+              <img src="./assets/img/logo/logo.png" width="100" height="90"
+                   alt="Collective_logo"
+                   title="Collective">
+            </div>
+            <div class="col-12 mt-4">
+              <input pInputText formControlName="user_name">
+            </div>
+            <div class="col-12 mt-1">
+              <p-password formControlName="password" [feedback]="false"></p-password>
+            </div>
+            <div class="col-12">
+              <div class="flex justify-content-center align-items-center mt-1">
+                <p-button label="登入" (click)="onSubmit()"></p-button>
+              </div>
+            </div>
+            <div class="col-12 flex justify-content-center mt-1">
+              <span class="text-xs">未註冊帳號?
+                <button class="text-button" (click)="toggleCard()">註冊</button>
+              </span>
+            </div>
+          </p-card>
+          <!-- 背面 -->
+          <p-card class="back" *ngIf="showBack">
+            <div class="flex col-12  justify-content-center -mt-1">
+              <img src="./assets/img/logo/logo.png" width="100" height="90"
+                   alt="Collective_logo"
+                   title="Collective">
+            </div>
+            <div class="col-12 mt-4">
+              <input pInputText placeholder="Username">
+            </div>
+            <div class="col-12 mt-1">
+              <input pInputText placeholder="Password">
+            </div>
+            <div class="col-12 mt-1">
+              <input pInputText placeholder="Confirm Password">
+            </div>
+            <div class="col-12">
+              <div class="flex justify-content-center align-items-center mt-1">
+                <p-button label="註冊"></p-button>
+              </div>
+            </div>
+            <div class="col-12 flex justify-content-center mt-1">
+              <span class="text-xs">擁有帳號?
+                <button class="text-button" (click)="toggleCard()">登入</button>
+              </span>
+            </div>
+          </p-card>
+        </div>
+      </form>
     </div>
-    <div class="form_back">
-      <div class="form_details">
-        <img class="img" src="../../../../assets/img/logo/logo.png" width=200 height=130 alt="Collective_logo" title="Collective">
-      </div>
-      <input pInputText placeholder="Firstname">
-      <input pInputText placeholder="Username">
-      <input pInputText placeholder="Password">
-      <input pInputText placeholder="Confirm Password">
-      <p-button label="註冊"></p-button>
-      <span class="switch">擁有帳號?
-                <label for="signup_toggle" class="signup_tog">
-                    登入
-                </label>
-            </span>
+    <div class="grid justify-content-center mt-5">
+      <span class="text-sm">SaaS - CRM</span>
     </div>
-  </form>
+    <div class="grid justify-content-center mt-1">
+      <span class="text-sm">客戶關係管理雲平台</span>
+    </div>
+  </div>
 </div>
