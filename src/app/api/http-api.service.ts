@@ -55,10 +55,11 @@ export class HttpApiService {
     return this.http.get<any>(url);
   }
 
+
   //--行業------------------------------------------------------------------------------------------------
 
-  getAllIndustryRequest(page = 1, limit = 10): Observable<any> {
-    const url = `${BaseUrl}/industries?page=${page}&limit=${limit}`;
+  getAllIndustryRequest(): Observable<any> {
+    const url = `${BaseUrl}/industries`;
     return this.http.get<any>(url);
   }
 
@@ -81,7 +82,6 @@ export class HttpApiService {
     const url = `${BaseUrl}/industries/${id}`;
     return this.http.delete<any>(url);
   }
-
 
 
   //--帳戶---------------------------------------------------------------------------------------------------
@@ -125,10 +125,10 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  // getAllAccountRequest(page: number): Observable<any> {
-  //   const url = `${BaseUrl}/accounts/list?page=${page}&limit=10`;
-  //   return this.http.get<any>(url);
-  // }
+  getAllAccountSelection(): Observable<any> {
+    const url = `${BaseUrl}/accounts`;
+    return this.http.get<any>(url);
+  }
 
   // getAllAccountDetailRequest(page: number): Observable<any> {
   //   const url = `${BaseUrl}/accounts/contacts?page=${page}&limit=10`;
@@ -195,10 +195,10 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  // getAllContactRequest(page: number): Observable<any> {
-  //   const url = `${BaseUrl}/contacts/list?page=${page}&limit=10`;
-  //   return this.http.get<any>(url);
-  // }
+  getAllContactSelection(): Observable<any> {
+    const url = `${BaseUrl}/contacts`;
+    return this.http.get<any>(url);
+  }
 
   getOneContactRequest(id: any): Observable<any> {
     const url = `${BaseUrl}/contacts/${id}`;
@@ -263,10 +263,10 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  // getAllLeadRequest(page: number): Observable<any> {
-  //   const url = `${BaseUrl}/leads/list?page=${page}&limit=10`;
-  //   return this.http.get<any>(url);
-  // }
+  getAllLeadSelection(): Observable<any> {
+    const url = `${BaseUrl}/leads`;
+    return this.http.get<any>(url);
+  }
 
   getOneLeadRequest(id: any): Observable<any> {
     const url = `${BaseUrl}/leads/${id}`;
@@ -327,10 +327,10 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  // getAllOpportunityRequest(page: number): Observable<any> {
-  //   const url = `${BaseUrl}/opportunities/list?page=${page}&limit=10`;
-  //   return this.http.get<any>(url);
-  // }
+  getAllOpportunitiesSelection(): Observable<any> {
+    const url = `${BaseUrl}/opportunities`;
+    return this.http.get<any>(url);
+  }
 
   getOneOpportunityRequest(id: any): Observable<any> {
     const url = `${BaseUrl}/opportunities/${id}`;
@@ -393,6 +393,11 @@ export class HttpApiService {
     }
     const url = `${BaseUrl}/products/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
+  }
+
+  getAllProductSelection(): Observable<any> {
+    const url = `${BaseUrl}/products`;
+    return this.http.get<any>(url);
   }
 
   //取得one  商品/服務資料 get one
@@ -487,10 +492,10 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  // getAllContractRequest(limit = 20, page = 1): Observable<any> {
-  //   let url = BaseUrl + '/contracts/list' + '?page=' + page + '&limit=' + limit;
-  //   return this.http.get<any>(url);
-  // }
+  getAllContractSelection(): Observable<any> {
+    const url = `${BaseUrl}/contracts`;
+    return this.http.get<any>(url);
+  }
 
   getOneContractRequest(sid: any): Observable<any> {
     const url = `${BaseUrl}/contracts/${sid}`;
@@ -555,6 +560,11 @@ export class HttpApiService {
     }
     const url = `${BaseUrl}/orders/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
+  }
+
+  getAllOrderSelection(): Observable<any> {
+    const url = `${BaseUrl}/orders`;
+    return this.http.get<any>(url);
   }
 
   getOneOrderRequest(id: any): Observable<any> {
@@ -655,6 +665,10 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
+  getAllQuoteSelection(): Observable<any> {
+    const url = `${BaseUrl}/quotes`;
+    return this.http.get<any>(url);
+  }
 
   //取得一筆 報價 getone
   getOneQuoteRequest(id: any): Observable<Quote> {
@@ -782,6 +796,7 @@ export class HttpApiService {
     const url = `${BaseUrl}/campaigns/${sid}`;
     return this.http.delete<any>(url);
   }
+
   //--日曆事件------------------------------------------------------------------------------------------------
   getAllEventRequest(search: string, status = 1, event?: any): Observable<any> {
     let obj: any = {
@@ -821,20 +836,24 @@ export class HttpApiService {
     const url = `${BaseUrl}/events/list`;
     return this.http.post<any>(url, obj);
   }
+
   getOneEventRequest(id: any): Observable<any> {
     const url = `${BaseUrl}/events/${id}`;
     return this.http.get<any>(url);
   }
+
   //新增 日曆事件 post
   postEventRequest(body: any): Observable<any> {
     const url = `${BaseUrl}/events`;
     return this.http.post<any>(url, body);
   }
+
   //修改 日曆事件 patch
   patchEventRequest(sid: string, body: any): Observable<any> {
     const url = `${BaseUrl}/events/${sid}`;
     return this.http.patch<any>(url, body);
   }
+
   //刪除 日曆事件 delete
   deleteEventRequest(sid: string): Observable<any> {
     const url = `${BaseUrl}/events/${sid}`;
