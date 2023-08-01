@@ -134,9 +134,7 @@ export class CampaignComponent {
           const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)
           const start_date = this.formatDate2(campaign.start_date)
           const end_date = this.formatDate2(campaign.end_date)
-          const created_at = this.formatDate(campaign.created_at);
-          const updated_at = this.formatDate(campaign.updated_at);
-          return {...campaign, parent_campaign_id, start_date, end_date, created_at, updated_at};
+          return {...campaign, parent_campaign_id, start_date, end_date};
         });
         this.totalRecords = request.body.total;
       });
@@ -166,9 +164,7 @@ export class CampaignComponent {
           const parent_campaign_id = this.parent_campaign_id(campaign.parent_campaign_id)
           const start_date = this.formatDate2(campaign.start_date)
           const end_date = this.formatDate2(campaign.end_date)
-          const created_at = this.formatDate(campaign.created_at);
-          const updated_at = this.formatDate(campaign.updated_at);
-          return {...campaign, parent_campaign_id, start_date, end_date, created_at, updated_at};
+          return {...campaign, parent_campaign_id, start_date, end_date};
         });
       }
       ,
@@ -324,9 +320,9 @@ export class CampaignComponent {
       this.campaign_form.patchValue(campaign);
       this.campaign_form.patchValue({
         type: this.type.find((s: { name: any; }) => s.name === campaign.type),
-        parent_campaign_name: this.GetAllparent_campaign.find((a: {
-          label: any;
-        }) => a.label === campaign.parent_campaign_name),
+        parent_campaign_name: this.GetAllparent_campaign.find((a: { label: any; }) => a.label === campaign.parent_campaign_name),
+        start_date: campaign.start_date !== null ? new Date(campaign.start_date) : null,
+        end_date: campaign.end_date !== null ? new Date(campaign.end_date) : null,
       });
       if (campaign.status === "已中止") {
         this.campaign_form.patchValue({
@@ -502,24 +498,12 @@ export class CampaignComponent {
     return parent_campaign_id;
   }
 
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
   //拿到到期日期轉格式
-  formatDate2(dateString2: string): any {
-    if (dateString2 == "0001-01-01T00:00:00Z" || dateString2 == "1970-01-01T00:00:00Z") {
+  formatDate2(dateString: string): any {
+    if (dateString == "0001-01-01T00:00:00Z" || dateString == "1970-01-01T00:00:00Z" || dateString == "1970-01-01") {
       return null;
-    } else {
-      const date = new Date(dateString2);
-      const date1 = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
-      return date1.toISOString().slice(0, 10);
+    }else {
+      return dateString;
     }
   }
 

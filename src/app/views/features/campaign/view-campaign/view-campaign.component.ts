@@ -115,32 +115,18 @@ export class ViewCampaignComponent {
         this.stage = res.body.status;
         this.GetOneStartDate = this.formatDate2(res.body.start_date);
         this.GetOneEndDate = this.formatDate2(res.body.end_date);
+        this.campaign_form.patchValue(res.body)
         this.campaign_form.patchValue({
-          name: res.body.name,
           status: this.status.find((s: { name: any; }) => s.name === this.GetOneCampaign.status),
           type: this.type.find((s: { name: any; }) => s.name === this.GetOneCampaign.type),
-          is_enable: res.body.is_enable,
-          parent_campaign_id: res.body.parent_campaign_id,
-          parent_campaign_name: res.body.parent_campaign_name,
-          start_date: this.formatDate2(res.body.start_date),
-          end_date: this.formatDate2(res.body.end_date),
-          description: res.body.description,
-          sent: res.body.sent,
-          budget_cost: res.body.budget_cost,
-          expected_responses: res.body.expected_responses,
-          actual_cost: res.body.actual_cost,
-          expected_income: res.body.expected_income,
-          salesperson_id: res.body.salesperson_id,
-          salesperson_name: res.body.salesperson_name,
-          updated_by: res.body.updated_by,
-          updated_at: this.formatDate(res.body.updated_at),
-          created_at: this.formatDate(res.body.created_at),
-          created_by: res.body.created_by,
+          start_date: this.GetOneStartDate !== null ? new Date(this.GetOneStartDate) : null,
+          end_date: this.GetOneEndDate !== null ? new Date(this.GetOneEndDate) : null,
         });
         if (this.GetOneCampaign.status === '已終止') {
           this.campaign_form.controls['status'].disable();
         }
         console.log(this.GetOneCampaign)
+        console.log(this.GetOneStartDate)
       },
       error: error => {
         console.log(error);
@@ -370,24 +356,12 @@ export class ViewCampaignComponent {
     return parent_campaign_id;
   }
 
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate())).slice(-2);
-    const hour = ("0" + (date.getHours())).slice(-2);
-    const minute = ("0" + date.getMinutes()).slice(-2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-
   //拿到到期日期轉格式
-  formatDate2(dateString2: string): any {
-    if (dateString2 == "0001-01-01T00:00:00Z" || dateString2 == "1970-01-01T00:00:00Z") {
+  formatDate2(dateString: string): any {
+    if (dateString == "0001-01-01T00:00:00Z" || dateString == "1970-01-01T00:00:00Z" || dateString == "1970-01-01") {
       return null;
-    } else {
-      const date = new Date(dateString2);
-      const date1 = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours());
-      return date1.toISOString().slice(0, 10);
+    }else {
+      return dateString;
     }
   }
 

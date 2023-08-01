@@ -227,7 +227,7 @@ export class ViewQuoteComponent {
         unit_price: unit_price,
         quantity: quantity,
         discount: discount,
-        description: ' ',
+        // description: ' ',
       };
       quoteProducts.push(quoteProduct);
       this.HttpApi.postQuoteProductRequest({products: quoteProducts}).subscribe({
@@ -605,13 +605,10 @@ export class ViewQuoteComponent {
       })
       return;
     }
-    let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
-    expiration_date.setHours(expiration_date.getHours() + 8);
-    console.log(expiration_date)
     let body = {
       name: this.quote_form.get('name')?.value,
       status: this.quote_form.get('status')?.value.name,
-      expiration_date: new Date(expiration_date).toISOString(),
+      expiration_date: this.quote_form.get('expiration_date')?.value,
       is_syncing: this.quote_form.get('is_syncing')?.value,
       account_id: this.selectedAccount_id, //帳戶ID
       description: this.quote_form.get('description')?.value,

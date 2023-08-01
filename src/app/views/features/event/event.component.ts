@@ -4,6 +4,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HttpApiService} from "../../../api/http-api.service";
 
 @Component({
   selector: 'app-event',
@@ -71,10 +72,14 @@ export class EventComponent {
   //建立formgroup表單
   event_form: FormGroup;
 
-  constructor(private fb: FormBuilder,private elementRef: ElementRef) {
+  constructor(private fb: FormBuilder,private elementRef: ElementRef, private HttpApi: HttpApiService) {
+    this.getAllEventRequest()
+    this.getAllUserRequest()
     this.event_form = this.fb.group({
       subject: ['', [Validators.required]],
       main: [[], [Validators.required]],
+      main_name: [[], [Validators.required]],
+      attendee_name: [[]],
       member: [[]],
       location: [''],
       account_name: [''],
@@ -85,6 +90,10 @@ export class EventComponent {
       end_date: ['', [Validators.required]],
       type: ['', [Validators.required]],
       description: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
     });
     const today = new Date();
     // 設定最小日期為今天
@@ -199,7 +208,6 @@ export class EventComponent {
       //點選日期開啟新增事件
       dateClick: () => {
         console.log("DATE CLICKED !!!");
-        //this.newDialog();
         this.showDialog('add');
         const titleElement = this.elementRef.nativeElement.querySelector('.fc-toolbar-title');
         if (titleElement) {
@@ -210,8 +218,6 @@ export class EventComponent {
       //點選事件開啟編輯事件
       eventClick: (info: any) => {
         this.showDialog('edit', info.event)
-        console.log("title: " + info.event.title + "/" + " main: " + info.event.extendedProps.main + "/" + " member: " + info.event.extendedProps.member + "/" + " start: " + info.event.start + "/" + " end: " + info.event.end + "/" + " allday: "
-          + info.event.allDay + "/" + " type: " + info.event.extendedProps.type);
       },
     };
   }
@@ -223,33 +229,105 @@ export class EventComponent {
   showDialog(type: string, event ?: any) {
     this.dialogHeader = type === 'edit' ? '編輯日曆事件' : '新增日曆事件';
     this.visible = true;
-    if (event && event.main) {
-      this.event_form.setValue({
-        main: event.extendedProps.main.split(',')?.map((name: string) => ({name})),
-        member: event.extendedProps.member.split(',')?.map((name: string) => ({name})),
-      });
-    }
     if (event) {
       this.event_form.patchValue({
         subject: event.title,
         main: event.extendedProps.main,
         member: event.extendedProps.member,
         allday: event.allDay,
-        start_date: event.start,
-        end_date: event.end,
+        start_date : new Date((event.start).getTime() - 8 * 60 * 60 * 1000),
+        // end_date : new Date((event.end).getTime() - 8 * 60 * 60 * 1000),
         type: event.extendedProps.type,
+        description: event.extendedProps.description,
+        location: event.extendedProps.location,
+        created_at: event.extendedProps.created_at,
+        created_by: event.extendedProps.created_by,
+        updated_by: event.extendedProps.updated_by,
+        updated_at: event.extendedProps.updated_at,
       });
+      console.log(event)
       this.showedit = true;
     } else {
       this.event_form.reset();
       this.showedit = false;
     }
   }
+  eventsearch: any;
+  GetAllEvent: any[] = [];
+  //取得所有日曆事件
+  getAllEventRequest() {
+    this.HttpApi.getAllEventRequest(this.eventsearch, 1).subscribe({
+      next: res => {
+        this.GetAllEvent = res.body.events
+        this.options.events = res.body.events.map(
+            (evt: { start_date: any; subject: string; type: string; description: any; end_date: any;is_whole: boolean;account_name: any;location: any; created_by: any; created_at: any; updated_at: any; updated_by: any;
+            }) => {
+            return { title: evt.subject ,start: evt.start_date, end: evt.end_date, description: evt.description,allDay: evt.is_whole,account_name: evt.account_name ,location: evt.location ,created_by: evt.created_by ,
+              created_at: evt.created_at, updated_at: evt.updated_at, updated_by: evt.updated_by }
+          })
+        console.log(this.GetAllEvent)
+        console.log(this.options.events)
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
+  }
+  search: string = '';  // 搜尋關鍵字
+  GetAllUser : any[] = []
+  getAllUserRequest(): void{
+    this.HttpApi.getAllUserRequest(this.search, 1).subscribe({
+      next: (res) => {
+        this.GetAllUser = res.body.users.map((users: any) => {
+          return {
+            label: users.name,
+            value: users.user_id,
+          };
+        });
+        this.GetAllAttendee = this.GetAllUser
+        this.GetAllMain = this.GetAllUser
+        console.log(this.GetAllUser)
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
 
 //類型選擇變化
   typeValue(event: any): void {
     const typeValue = this.type.find((s: { code: any; }) => s.code === event.value.code);
     console.log(event.value.code, typeValue.name);
+  }
+  //選擇主要人員的值
+  SelectMain : any[]=[]
+  GetAllMain : any[] = []
+  MultiSelectMain(event: any): void {
+    this.SelectMain = event.value
+    console.log('Selected Main: ', this.SelectMain);
+    this.removeDuplicatesFromAttendee();
+  }
+  //選擇主要人員的值
+  SelectAttendee : any[]=[]
+  GetAllAttendee : any[] = []
+  MultiSelectAttendee(event: any): void {
+    this.SelectAttendee = event.value
+    console.log('Selected Attendee: ', this.SelectAttendee);
+    this.removeDuplicatesFromMain();
+  }
+
+// 刪除主要人員中與參加成員重複的值
+  removeDuplicatesFromMain(): void {
+    this.GetAllMain = this.GetAllMain.filter(user => !this.SelectAttendee.includes(user));
+    // 重新載入參加成員的下拉選單選項，以包含完整的選項（包括剛選擇的主要人員）
+    this.GetAllAttendee = this.GetAllAttendee.concat(this.SelectMain.filter(user => !this.GetAllAttendee.includes(user)));
+  }
+
+// 刪除參加成員中與主要人員重複的值
+  removeDuplicatesFromAttendee(): void {
+    this.GetAllAttendee = this.GetAllAttendee.filter(user => !this.SelectMain.includes(user));
+    // 重新載入主要人員的下拉選單選項，以包含完整的選項（包括剛選擇的參加成員）
+    this.GetAllMain = this.GetAllMain.concat(this.SelectAttendee.filter(user => !this.GetAllMain.includes(user)));
   }
 }
 

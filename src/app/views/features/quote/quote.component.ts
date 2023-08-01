@@ -87,12 +87,10 @@ export class QuoteComponent {
       || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
     }
-    let expiration_date = new Date(this.quote_form.value.expiration_date);
-    expiration_date.setHours(expiration_date.getHours() + 8);
     let body = {
       name: this.quote_form.value.name,
       account_id: this.selectedAccount_id,//帳戶ID
-      expiration_date: new Date(expiration_date).toISOString(),
+      expiration_date: this.quote_form.value.expiration_date,
       opportunity_id: this.selectedOpportunity_id,//商機ID
       shipping_and_handling: this.quote_form.value.shipping_and_handling,
       status: this.quote_form.get('status')?.value.name,
@@ -157,12 +155,10 @@ export class QuoteComponent {
       || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
     }
-    let expiration_date = new Date(this.quote_form.get('expiration_date')?.value);
-    expiration_date.setHours(expiration_date.getHours() + 8);
     let body = {
       name: this.quote_form.get('name')?.value,
       status: this.quote_form.get('status')?.value,
-      expiration_date:new Date(expiration_date).toISOString(),
+      expiration_date: this.quote_form.get('expiration_date')?.value,
       is_syncing: this.quote_form.get('is_syncing')?.value,
       account_id: this.selectedAccount_id, //帳戶ID
       description: this.quote_form.get('description')?.value,
