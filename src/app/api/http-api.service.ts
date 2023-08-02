@@ -55,6 +55,10 @@ export class HttpApiService {
     return this.http.get<any>(url);
   }
 
+  getAllUserSelection(): Observable<any> {
+    const url = `${BaseUrl}/users`;
+    return this.http.get<any>(url);
+  }
 
   //--行業------------------------------------------------------------------------------------------------
 
