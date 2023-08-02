@@ -154,7 +154,7 @@ export class AccountComponent implements OnInit {
         this.getData = request.body.accounts;
         this.loading = false;
         this.totalRecords = request.body.total;
-        // console.log(this.total);
+        console.log(this.getData);
       },
       error: err => {
         console.log(err)
@@ -283,12 +283,11 @@ export class AccountComponent implements OnInit {
       })
       return;
     }
-
     let body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
       industry_id: this.account_form.controls['industry_id'].value?.industry_id,
-      parent_account_id: this.account_form.controls['parent_account_id'].value?.parent_account_id,
+      // parent_account_id: this.account_form.controls['parent_account_id'].value?.account_id,
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
       // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
@@ -296,6 +295,7 @@ export class AccountComponent implements OnInit {
         name: any;
       }) => item.name),
     }
+    console.log(body)
     this.HttpApi.postAccountRequest(body).subscribe({
       next: request => {
         if (request.code === 200) {
@@ -346,9 +346,9 @@ export class AccountComponent implements OnInit {
     let id = this.account_form.controls['account_id'].value
     let body = {
       name: this.account_form.controls['name'].value,
-      phone_number: this.account_form.controls['phone_number'].value,
-      industry_id: this.account_form.controls['industry_id'].value?.industry_id,
-      parent_account_id: this.account_form.controls['parent_account_id'].value?.parent_account_id,
+      phone_number: this.account_form.controls['phone_number']?.value,
+      industry_id: this.account_form.controls['industry_id']?.value.industry_id,
+      parent_account_id: this.account_form.controls['parent_account_id']?.value.account_id,
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
       // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
@@ -571,7 +571,7 @@ export class AccountComponent implements OnInit {
     this.dt.filterGlobal(JSON.stringify(mutiSearch).slice(1, -1).replace(/"/g, ""), 'contains');
   }
 
-  parent_account_selection(event:any):void{
-    console.log(event.value)
+  clearControls(controlName: string): void {
+    this.account_form.get(controlName)?.setValue(null)
   }
 }

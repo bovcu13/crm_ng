@@ -126,17 +126,15 @@
         <div class="field">
           <label>行業</label>
           <p-dropdown formControlName="industry_id" [options]="getIndustries" [showClear]="true" placeholder="　"
-                      [filter]="true" optionLabel="name" appendTo="body" filterBy="name"
-                      [lazy]="true" [virtualScroll]="true" [virtualScrollItemSize]="38"></p-dropdown>
+                      [filter]="true" optionLabel="name" appendTo="body" filterBy="name" (onClear)="clearControls('industry_id')"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系帳戶</label>
-          <p-dropdown [options]="getAccounts" formControlName="parent_account_id" (onChange)="parent_account_selection($event)"
-                      [filter]="true" optionLabel="name" appendTo="body" [lazy]="true"
-                      filterBy="name" [showClear]="true" placeholder="選擇現有帳戶" [virtualScroll]="true"
-                      [virtualScrollItemSize]="38"></p-dropdown>
+          <p-dropdown [options]="getAccounts" formControlName="parent_account_id"
+                      [filter]="true" optionLabel="name" appendTo="body" (onClear)="clearControls('parent_account_id')"
+                      filterBy="name" [showClear]="true" placeholder="選擇現有帳戶"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
