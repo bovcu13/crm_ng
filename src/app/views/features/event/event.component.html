@@ -29,8 +29,8 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>主要人員</label>
-          <p-multiSelect  placeholder="搜尋人員" [formControlName]="'main_name'" appendTo="body"
-                         optionLabel="label" [showClear]="true" [options]="GetAllMain" (onChange)="MultiSelectMain($event)"
+          <p-multiSelect placeholder="搜尋人員" [formControlName]="'main_name'" appendTo="body" (onClear)="onClearMain()" display="chip"
+                         optionLabel="main_name" [showClear]="true" [options]="GetAllMain" (onChange)="MultiSelectMain($event)"
                          [ngClass]="{'ng-dirty':event_form.controls['main_name'].hasError && event_form.controls['main_name'].touched}">
           </p-multiSelect>
         </div>
@@ -91,26 +91,28 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>參加成員</label>
-          <p-multiSelect  placeholder="搜尋人員" [formControlName]="'attendee_name'" appendTo="body" [options]="GetAllAttendee"
-                         optionLabel="label" [showClear]="true"  (onChange)="MultiSelectAttendee($event)"
+          <p-multiSelect  placeholder="搜尋人員" [formControlName]="'attendee_name'" appendTo="body" [options]="GetAllAttendee" display="chip"
+                         optionLabel="attendee_name" [showClear]="true"  (onChange)="MultiSelectAttendee($event)" (onClear)="onClearAttendee()"
                          [ngClass]="{'ng-dirty':event_form.controls['attendee_name'].hasError && event_form.controls['attendee_name'].touched}">
 
           </p-multiSelect>
-<!--          <p-multiSelect [options]="member" placeholder="搜尋人員" formControlName="member" appendTo="body"-->
-<!--                         optionLabel="name" display="chip"></p-multiSelect>-->
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>帳戶</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body"
-                      formControlName="account_name"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllAccount" optionLabel="name" [filter]="true" filterBy="name"
+                      formControlName="account_name" [showClear]="true"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>聯絡人</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" formControlName="contact"></p-dropdown>
+          <p-multiSelect  placeholder="搜尋人員" [formControlName]="'contact'" appendTo="body" [options]="GetAllContact" display="chip"
+                          optionLabel="contact_name" [showClear]="true"
+                          [ngClass]="{'ng-dirty':event_form.controls['contact'].hasError && event_form.controls['contact'].touched}">
+
+          </p-multiSelect>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">

@@ -97,7 +97,7 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {
     this.getAllAccountRequest(1);
-    this.getAllIndusty(1);
+    this.getAllIndusty();
   }
 
   // 開啟 新增/編輯帳戶 彈出視窗
@@ -430,8 +430,8 @@ export class AccountComponent implements OnInit {
   getIndustries: any[]=[];
   totalIndustries!: number;
 
-  getAllIndusty(page: number): void {
-    this.HttpApi.getAllIndustryRequest(page, this.industyLimit).subscribe({
+  getAllIndusty(): void {
+    this.HttpApi.getAllIndustryRequest().subscribe({
       next: request => {
         this.totalIndustries = request.body.total
         const newIndustries = request.body.industries.map((industry: any) => {
@@ -462,7 +462,7 @@ export class AccountComponent implements OnInit {
       // console.log('++')
       if (e.last % this.industyLimit === 0 && this.industyPage < (Math.ceil(this.accountTotal / this.industyLimit))) {
         this.industyPage++;
-        this.getAllIndusty(this.industyPage)
+        this.getAllIndusty()
         console.log(this.industyPage)
       }
     }
