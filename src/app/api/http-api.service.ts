@@ -199,8 +199,8 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  getAllContactSelection(): Observable<any> {
-    const url = `${BaseUrl}/contacts`;
+  getAllContactSelection(id: any): Observable<any> {
+    const url = `${BaseUrl}/contacts/get-by-account/${id}`;
     return this.http.get<any>(url);
   }
 
