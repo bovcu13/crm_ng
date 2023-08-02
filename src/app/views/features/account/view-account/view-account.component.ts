@@ -144,7 +144,7 @@ export class ViewAccountComponent implements OnInit {
       type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: {
         name: any;
       }) => item.name),
-      parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
+      parent_account_id: this.account_form.controls['parent_account_id'].value,
     }
     this.HttpApi.patchAccountRequest(id, body)
       .subscribe(request => {
