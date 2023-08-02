@@ -49,6 +49,8 @@ export class ViewAccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOneAccount(this.id)
+    this.getAllAccountSelection();
+    this.getAllIndusty();
   }
 
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute) {
@@ -108,15 +110,54 @@ export class ViewAccountComponent implements OnInit {
     this.HttpApi.getOneAccountRequest(id).subscribe(
       request => {
         this.account_form.patchValue(request.body)
+        const industry = {
+          industry_id: request.body.industry_id,
+          name: request.body.industry_name
+        };
+        const parent_account = {
+          account_id: request.body.parent_account_id,
+          name: request.body.parent_account_name
+        };
+        console.log()
         //dropdown
-        const selectedIndustry = this.industry_id.find((s) => s.name === request.body.industry_id);
         this.account_form.patchValue({
-          industry_id: selectedIndustry,
+          parent_account_id: parent_account,
+          industry_id: industry,
           type: this.account_form.controls['type'].value.map((name: string) => ({name})),
         });
         console.log(request.body)
       }
     )
+  }
+
+  // 取得帳戶下拉選項
+  getAccounts: any[] = [];
+
+  getAllAccountSelection() {
+    this.HttpApi.getAllAccountSelection().subscribe({
+      next: request => {
+        this.getAccounts = request.body.accounts
+        console.log(this.getAccounts)
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  // 取得行業下拉選單
+  getIndustries: any[] = [];
+
+  getAllIndusty(): void {
+    this.HttpApi.getAllIndustryRequest().subscribe({
+      next: request => {
+        this.getIndustries = request.body.industries;
+        console.log(this.getIndustries)
+      },
+      error: err => {
+        console.log(err)
+      }
+    })
   }
 
   patchAccount(): void {
@@ -144,7 +185,7 @@ export class ViewAccountComponent implements OnInit {
       type: JSON.parse(JSON.stringify(this.account_form.controls['type'].value)).map((item: {
         name: any;
       }) => item.name),
-      parent_account_id: this.account_form.controls['parent_account_id'].value ? this.account_form.controls['parent_account_id'].value : '00000000-0000-4000-a000-000000000000',
+      parent_account_id: this.account_form.controls['parent_account_id'].value,
     }
     this.HttpApi.patchAccountRequest(id, body)
       .subscribe(request => {
@@ -184,12 +225,9 @@ export class ViewAccountComponent implements OnInit {
     this.getOneAccount(this.id);
   }
 
-  industryValue(event: any): void {
-    const selectedIndustry = this.industry_id.find((s: { code: any; }) => s.code === event.value.code);
-    console.log(event.value.code);
-    console.log(selectedIndustry.name);
+  clearControls(controlName: string): void {
+    this.account_form.get(controlName)?.setValue(null)
   }
-
 }
 
 
