@@ -10,7 +10,7 @@ import {DatePipe} from "@angular/common";
   selector: 'app-view-opportunity',
   templateUrl: './view-opportunity.component.html',
   styleUrls: ['./view-opportunity.component.scss'],
-  providers: [MessageService,DatePipe]
+  providers: [MessageService, DatePipe]
 })
 export class ViewOpportunityComponent implements OnInit {
   name: string = "name"
@@ -18,48 +18,81 @@ export class ViewOpportunityComponent implements OnInit {
   stage: any[] = [
     {
       name: "資格評估",
-      code: "qualification"
+      // code: "qualification"
     },
     {
       name: "需求分析",
-      code: "needs_analysis "
+      // code: "needs_analysis"
     },
     {
       name: "提案",
-      code: "potential"
+      // code: "potential"
     },
     {
       name: "談判",
-      code: "negotiation"
+      // code: "negotiation"
     },
     {
       name: "已結束",
-      code: "closed"
+      // code: "closed"
     }
   ]
   forecast_category: any[] = [
     {
-      "name": "商機被遺漏",
-      "code": "omitted"
+      name: "商機被遺漏",
+      // "code": "omitted"
     },
     {
-      "name": "進行中",
-      "code": "pipeline"
+      name: "進行中",
+      // "code": "pipeline"
     },
     {
-      "name": "最佳情況",
-      "code": "best_case"
+      name: "最佳情況",
+      // "code": "best_case"
     },
     {
-      "name": "承諾",
-      "code": "commit"
+      name: "承諾",
+      // "code": "commit"
     },
     {
-      "name": "結案",
-      "code": "closed"
+      name: "結案",
+      // "code": "closed"
+    }
+  ]
+  quoteStatus: any[] = [
+    {
+      name: "草稿",
+      // code: "draft",
+      boolean: false
+    },
+    {
+      name: "需要審查",
+      // code: "need_review",
+      boolean: false
+    },
+    {
+      name: "審查中",
+      // code: "in_review",
+      boolean: false
+    },
+    {
+      name: "已批准",
+      // code: "approved",
+      boolean: false
+    },
+    {
+      name: "已報價",
+      // code: "presented",
+      boolean: false
+    },
+    {
+      name: "客戶簽回",
+      // code: "accepted",
+      boolean: false
     }
   ]
   opportunity_form: FormGroup;
+  quote_form: FormGroup;
   id: any;
 
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder, private route: ActivatedRoute
@@ -67,27 +100,45 @@ export class ViewOpportunityComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.opportunity_form = this.fb.group({
       opportunity_id: ['', [Validators.required]],
-      account_name: [''],
       account_id: [''],
-      lead_name: [''],
       lead_id: [''],
       name: ['', [Validators.required]],
       close_date: ['', [Validators.required]],
       stage: ['', [Validators.required]],
       forecast_category: ['', [Validators.required]],
       amount: [''],
-      owner: [''],
       created_at: [''],
       updated_at: [''],
       created_by: ['', Validators.required],
       updated_by: ['', Validators.required],
     });
+    this.quote_form = this.fb.group({
+      quote_id: [''],
+      code: [''],
+      name: ['', [Validators.required]],
+      opportunity_id: ['', [Validators.required]],
+      is_syncing: [false],
+      account_id: ['', [Validators.required]],
+      quoteStatus: [''],
+      description: [''],
+      expiration_date: [''],
+      total_price: [''],
+      tax: [0],
+      discount: [''],
+      shipping_and_handling: [0],
+      sub_total: [''],
+      grand_total: [''],
+      created_at: [''],
+      updated_at: [''],
+      created_by: [''],
+      updated_by: [''],
+    });
   }
 
   ngOnInit() {
-    this.getAllAccountRequest();
+    this.getAllAccountSelection();
     this.getOneOpportunity(this.id);
-    this.getAllLeadRequest(1);
+    this.getAllLeadSelection();
   }
 
   //取得商機歷程紀錄
@@ -143,41 +194,38 @@ export class ViewOpportunityComponent implements OnInit {
       request => {
         this.getData = request.body
         console.log(this.getData)
-        this.opportunity_form.controls['account_name'].disable();
-        this.opportunity_form.controls['lead_name'].disable();
+        this.opportunity_form.controls['account_id'].disable();
+        this.opportunity_form.controls['lead_id'].disable();
         this.opportunity_form.patchValue(this.getData)
+        const account = {
+          account_id: this.getData.account_id,
+          name: this.getData.account_name
+        };
+        const lead = {
+          lead_id: this.getData.lead_id,
+          description: this.getData.lead_description
+        };
         this.opportunity_form.patchValue({
-          stage: this.stage.find(s => s.name === this.getData.stage),
-          forecast_category: this.forecast_category.find(s => s.name === this.getData.forecast_category),
-          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name),
-          lead_name:this.GetAllLead.find((a: { value: any; }) => a.value === this.getData.lead_id),
+          stage: this.stage.find(stage => stage.name === this.getData.stage),
+          forecast_category: this.forecast_category.find(forecast_category => forecast_category.name === this.getData.forecast_category),
           close_date: new Date(this.opportunity_form.value.close_date),
+          account_id: account,
+          // 要先判斷lead_id有沒有值，否則會回傳 { lead_id: '', description: ''}
+          lead_id: this.getData.lead_id ? lead : '',
         });
-        this.status = this.stage.find((s: { name: any; }) => s.name === this.getData.stage).name
+        this.status = this.stage.find((status: { name: any; }) => status.name === this.getData.stage).name
       }
     )
   }
 
-  // 取得線索 option
-  GetAllLead: any[] = [];
-  leadTotal!: number;
-  leadtPage: number = 1;
-  leadLimit: number = 20;
+  // 取得帳戶下拉選項
+  getAccounts: any[] = [];
 
-  // 取得 lead fuction
-  getAllLeadRequest(page: number) {
-    this.HttpApi.getAllLeadRequest(this.accountSearch, 1, page, this.leadLimit).subscribe({
+  getAllAccountSelection() {
+    this.HttpApi.getAllAccountSelection().subscribe({
       next: request => {
-        this.leadTotal = request.body.total
-        const newLeads = request.body.leads.map((lead: any) => {
-          return {
-            label: lead.description,
-            value: lead.lead_id
-          };
-        });
-        // 將新請求到的資料加入 GetAllAccount 陣列
-        this.GetAllLead = [...this.GetAllLead, ...newLeads];
-        console.log(this.GetAllLead)
+        this.getAccounts = request.body.accounts
+        console.log(this.getAccounts)
       },
       error: err => {
         console.log(err);
@@ -185,36 +233,14 @@ export class ViewOpportunityComponent implements OnInit {
     });
   }
 
-  GetAllAccount: any[] = [];
-  accountSearch!: string;
+  // 取得帳戶下拉選項
+  getLeads: any[] = [];
 
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+  getAllLeadSelection() {
+    this.HttpApi.getAllLeadSelection().subscribe({
       next: request => {
-        this.GetAllAccount = request.body.accounts.map((account: any) => {
-          // console.log(account);
-          return {
-            label: account.name,
-            value: account.account_id
-          };
-        });
-        this.GetAllAccount = [
-          ...this.GetAllAccount.map((account: any) => {
-            return {
-              label: account.label,
-              value: account.value
-            };
-          })
-        ];
-        console.log(this.GetAllAccount)
-        this.HttpApi.getOneOpportunityRequest(this.id).subscribe(
-          request => {
-            this.getData = request.body
-            this.opportunity_form.patchValue({
-              account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name),
-            });
-          }
-        )
+        this.getLeads = request.body.leads
+        console.log(this.getLeads)
       },
       error: err => {
         console.log(err);
@@ -226,7 +252,7 @@ export class ViewOpportunityComponent implements OnInit {
   currentDate = new Date()
 
   patchOpportunity(id: any): void {
-    if (this.opportunity_form.controls['account_name'].hasError('required') ||
+    if (this.opportunity_form.controls['account_id'].hasError('required') ||
       this.opportunity_form.controls['name'].hasError('required') ||
       this.opportunity_form.controls['stage'].hasError('required') ||
       this.opportunity_form.controls['forecast_category'].hasError('required') ||
@@ -239,8 +265,8 @@ export class ViewOpportunityComponent implements OnInit {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.opportunity_form.controls['account_name'].hasError('required')) {
-          this.opportunity_form.controls['account_name'].markAsDirty();
+        if (this.opportunity_form.controls['account_id'].hasError('required')) {
+          this.opportunity_form.controls['account_id'].markAsDirty();
         }
         if (this.opportunity_form.controls['name'].hasError('required')) {
           this.opportunity_form.controls['name'].markAsDirty();
@@ -257,15 +283,14 @@ export class ViewOpportunityComponent implements OnInit {
       })
       return;
     }
-
     let body = {
-      name: this.opportunity_form.value?.name,
-      stage: this.selectedStage?.name,
-      forecast_category: this.selectedForecastCategory?.name,
-      account_id: this.selectedAccountId,
-      account_name: this.selectedAccountName,
-      close_date: new Date(this.opportunity_form.value?.close_date),
-      amount: parseInt(this.opportunity_form.value?.amount),
+      name: this.opportunity_form.controls['name'].value,
+      stage: this.opportunity_form.controls['stage'].value.name,
+      forecast_category: this.opportunity_form.controls['forecast_category'].value.name,
+      account_id: this.opportunity_form.controls['account_id'].value.account_id,
+      lead_id: this.opportunity_form.controls['lead_id'].value?.lead_id,
+      close_date: new Date(this.opportunity_form.controls['close_date'].value),
+      amount: parseInt(this.opportunity_form.controls['amount']?.value),
     }
     this.HttpApi.patchOpportunityRequest(id, body)
       .subscribe(request => {
@@ -292,6 +317,81 @@ export class ViewOpportunityComponent implements OnInit {
       });
   }
 
+  quoteDialog: boolean = false;
+
+  showQuote() {
+    this.quoteDialog = true
+    this.quote_form.controls['quoteStatus'].disable()
+    this.quote_form.patchValue({quoteStatus: this.quoteStatus.find(s => s.name === this.quoteStatus[0].name),});
+  }
+
+  //POST 一筆quote
+  postQuoteRequest(): void {
+    if (this.quote_form.controls['name'].hasError('required') ||
+      this.quote_form.controls['opportunity_id'].hasError('required')) {
+      this.quoteDialog = false;
+      Swal.fire({
+        title: '未填寫',
+        text: "請填寫必填欄位！",
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => {
+        if (this.quote_form.controls['name'].hasError('required')) {
+          this.quote_form.controls['name'].markAsDirty();
+        }
+        if (this.quote_form.controls['opportunity_id'].hasError('required')) {
+          this.quote_form.controls['opportunity_id'].markAsDirty();
+        }
+        this.quoteDialog = true;
+      })
+      return;
+    }
+
+    if (this.quote_form.controls['name'].hasError('required')
+      || this.quote_form.controls['opportunity_id'].hasError('required')) {
+      return;
+    }
+    let body = {
+      name: this.quote_form.value.name,
+      account_id: this.opportunity_form.controls['account_name'].value.value,
+      expiration_date: new Date(this.quote_form.value.expiration_date),
+      opportunity_id: this.id,
+      shipping_and_handling: this.quote_form.value.shipping_and_handling,
+      status: '草稿',
+      tax: this.quote_form.value.tax,
+      description: this.quote_form.value.description,
+    }
+    console.log(body)
+    this.HttpApi.postQuoteRequest(body).subscribe({
+      next: Request => {
+        console.log(Request)
+        this.quoteDialog = false;
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.quoteDialog = true;
+          })
+        }
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
+  }
 
   showAlertCancel() {
     Swal.fire({
@@ -306,27 +406,4 @@ export class ViewOpportunityComponent implements OnInit {
     this.getOneOpportunity(this.id)
   }
 
-  selectedStage: any;
-
-  stageValue(event: any):
-    void {
-    this.selectedStage = this.stage.find((s) => s.name === event.value.name);
-    this.opportunity_form.value.stage = this.selectedStage.name
-  }
-
-  selectedForecastCategory: any;
-
-  forecast_categoryValue(event: any): void {
-    this.selectedForecastCategory = this.forecast_category.find((s) => s.name === event.value.name);
-    this.opportunity_form.value.forecast_category = this.selectedForecastCategory.name
-  }
-
-
-  selectedAccountName!: string;
-  selectedAccountId!: string;
-
-  accountValue(event: any): void {
-    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
-    this.selectedAccountId = event.value.value
-  }
 }
