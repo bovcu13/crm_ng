@@ -16,99 +16,61 @@ export class ViewLeadComponent implements OnInit {
   status: any[] = [
     {
       name: "不明確",
-      code: "Unqualified",
+      // code: "Unqualified",
     },
     {
       name: "新線索",
-      code: "New",
+      // code: "New",
     },
     {
       name: "評估中",
-      code: "Working",
+      // code: "Working",
     },
     {
       name: "發展中",
-      code: "Nurturing",
+      // code: "Nurturing",
     },
     {
       name: "已轉換",
-      code: "Closed",
+      // code: "Closed",
     }
   ]
 
   source: any = [
     {
       name: "廣告",
-      code: "advertising"
+      // code: "advertising"
     },
     {
       name: "推薦",
-      code: "referral"
+      // code: "referral"
     },
     {
       name: "直接訪問",
-      code: "direct_traffic"
+      // code: "direct_traffic"
     },
     {
       name: "網路搜尋",
-      code: "web_search"
+      // code: "web_search"
     },
     {
       name: "朋友推薦",
-      code: "friend_referral"
-    }
-  ]
-
-  industry_id: any = [
-    {
-      name: "教育",
-      code: "education"
-    },
-    {
-      name: "金融服務",
-      code: "financial_services"
-    },
-    {
-      name: "醫療保健",
-      code: "healthcare"
-    },
-    {
-      name: "零售",
-      code: "retail"
-    },
-    {
-      name: "科技",
-      code: "technology"
+      // code: "friend_referral"
     }
   ]
 
   rating: any = [
     {
       name: "很有可能成交",
-      code: "Hot"
+      // code: "Hot"
     },
     {
       name: "可能性不明確",
-      code: "Warm"
+      // code: "Warm"
     },
     {
       name: "很有可能不成交",
-      code: "Cold"
-    }
-  ]
-
-  industry: any[] = [
-    {
-      "name": "零售業",
-      "code": "retail"
-    },
-    {
-      "name": "技術",
-      "code": "technology "
-    },
-    {
-      "name": "通訊",
-      "code": "telecommunications"
+      // code: "Cold"
     }
   ]
 
@@ -116,45 +78,45 @@ export class ViewLeadComponent implements OnInit {
   stage: any[] = [
     {
       name: "資格評估",
-      code: "qualification"
+      // code: "qualification"
     },
     {
       name: "需求分析",
-      code: "needs_analysis "
+      // code: "needs_analysis"
     },
     {
       name: "提案",
-      code: "potential"
+      // code: "potential"
     },
     {
       name: "談判",
-      code: "negotiation"
+      // code: "negotiation"
     },
     {
       name: "已結束",
-      code: "closed"
+      // code: "closed"
     }
   ]
   forecast_category: any[] = [
     {
       "name": "被遺漏",
-      "code": "omitted"
+      // "code": "omitted"
     },
     {
       "name": "進行中",
-      "code": "pipeline"
+      // "code": "pipeline"
     },
     {
       "name": "最佳情況",
-      "code": "best_case"
+      // "code": "best_case"
     },
     {
       "name": "承諾",
-      "code": "commit"
+      // "code": "commit"
     },
     {
       "name": "結案",
-      "code": "closed"
+      // "code": "closed"
     }
   ]
 
@@ -167,20 +129,11 @@ export class ViewLeadComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.lead_form = this.fb.group({
       lead_id: ['', [Validators.required]],
-      name: [''],
       status: ['', [Validators.required]],
       account_id: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      title: [''],
-      phone_number: [''],
-      cell_phone: [''],
-      email: [''],
-      line: [''],
       source: [''],
-      industry_id: [''],
       rating: ['',],
-      owner: [''],
-      account_name: [''],
       created_by: ['', [Validators.required]],
       created_at: [''],
       updated_by: ['', [Validators.required]],
@@ -188,7 +141,6 @@ export class ViewLeadComponent implements OnInit {
     });
     this.opportunity_form = this.fb.group({
       opportunity_id: ['', [Validators.required]],
-      account_name: [''],
       account_id: [''],
       lead_id: [''],
       description: [''],
@@ -197,7 +149,6 @@ export class ViewLeadComponent implements OnInit {
       stage: ['', [Validators.required]],
       forecast_category: ['', [Validators.required]],
       amount: [''],
-      owner: [''],
       created_by: [''],
       created_at: [''],
       updated_by: [''],
@@ -210,7 +161,7 @@ export class ViewLeadComponent implements OnInit {
   which: any[] = [];
 
   ngOnInit(): void {
-    this.getAllAccountRequest();
+    this.getAllAccountSelection();
     this.getOneLead(this.id);
     // 過濾"已結束"
     this.filteredStatus = this.status.filter(option => option.code !== 'Closed');
@@ -258,55 +209,37 @@ export class ViewLeadComponent implements OnInit {
       request => {
         this.getData = request.body
         console.log(this.getData)
-        this.lead_form.controls['account_name'].disable();
+        this.lead_form.controls['account_id'].disable();
         // 若線索狀態為"已轉換"，不能更改
         if (this.status.find((s: { name: any; }) => s.name === this.getData.status).name === "已轉換") {
-          // 將下拉選單資料改為有以轉換之資料，修正patchValue status bug
+          // 將下拉選單資料改為有已轉換之資料，修正patchValue status bug
           this.which = this.status;
           this.lead_form.controls['status'].disable();
         }
+        const account_name = {
+          account_id: this.getData.account_id,
+          name: this.getData.account_name
+        };
         this.lead_form.patchValue(this.getData)
         this.lead_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === this.getData.status),
           source: this.source.find((s: { name: any; }) => s.name === this.getData.source),
           rating: this.rating.find((s: { name: any; }) => s.name === this.getData.rating),
-          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name)
+          account_id: account_name,
         });
         this.status_value = this.status.find((s: { name: any; }) => s.name === this.getData.status).name
       }
     )
   }
 
-  GetAllAccount: any[] = [];
-  accountSearch!: string;
+  // 取得帳戶下拉選項
+  getAccounts: any[] = [];
 
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+  getAllAccountSelection() {
+    this.HttpApi.getAllAccountSelection().subscribe({
       next: request => {
-        this.GetAllAccount = request.body.accounts.map((account: any) => {
-          // console.log(account);
-          return {
-            label: account.name,
-            value: account.account_id
-          };
-        });
-        this.GetAllAccount = [
-          ...this.GetAllAccount.map((account: any) => {
-            return {
-              label: account.label,
-              value: account.value
-            };
-          })
-        ];
-        console.log(this.GetAllAccount)
-        this.HttpApi.getOneLeadRequest(this.id).subscribe(
-          request => {
-            this.getData = request.body
-            this.lead_form.patchValue({
-              account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name)
-            });
-          }
-        )
+        this.getAccounts = request.body.accounts
+        console.log(this.getAccounts)
       },
       error: err => {
         console.log(err);
@@ -316,12 +249,16 @@ export class ViewLeadComponent implements OnInit {
 
   showDialog(): void {
     this.edit = true;
-    this.opportunity_form.controls['account_name'].disable();
+    this.opportunity_form.controls['account_id'].disable();
     this.opportunity_form.controls['description'].disable();
     this.opportunity_form.controls['stage'].disable();
     this.opportunity_form.patchValue(this.getData)
+    const account_name = {
+      account_id: this.getData.account_id,
+      name: this.getData.account_name
+    };
     this.opportunity_form.patchValue({
-      account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === this.getData.account_name)
+      account_id: account_name
     });
   }
 
@@ -348,12 +285,12 @@ export class ViewLeadComponent implements OnInit {
       })
       return;
     }
-
     let body = {
+      account_id: this.lead_form.controls['account_id'].value.account_id,
       description: this.lead_form.controls['description'].value,
-      status: this.selectedStatus?.name,
-      source: this.selectedSource?.name,
-      rating: this.selectedRating?.name,
+      status: this.lead_form.controls['status'].value.name,
+      source: this.lead_form.controls['source'].value?.name,
+      rating: this.lead_form.controls['rating'].value?.name,
     }
     this.HttpApi.patchLeadRequest(this.id, body)
       .subscribe({
@@ -407,8 +344,9 @@ export class ViewLeadComponent implements OnInit {
             icon: 'success',
             showConfirmButton: false,
             timer: 1000
+          }).then(() => {
+            this.getOneLead(this.id);
           })
-          this.getOneLead(this.id);
         } else {
           Swal.fire({
             title: '失敗',
@@ -442,14 +380,13 @@ export class ViewLeadComponent implements OnInit {
         }
         this.edit = true;
       })
-      console.log("這")
       return;
     }
 
     let body = {
       name: this.opportunity_form.value.name,
       stage: this.stage[1].name,
-      forecast_category: this.selectedForecastCategory.name,
+      forecast_category: this.opportunity_form.value.forecast_category,
       account_id: this.getData.account_id,
       close_date: new Date(this.opportunity_form.value.close_date),
       lead_id: this.id,
@@ -468,8 +405,9 @@ export class ViewLeadComponent implements OnInit {
             icon: 'success',
             showConfirmButton: false,
             timer: 1000
+          }).then(() => {
+            this.getOneLead(this.id);
           })
-          this.getOneLead(this.id);
         } else {
           Swal.fire({
             title: '失敗',
@@ -479,7 +417,6 @@ export class ViewLeadComponent implements OnInit {
             timer: 1500
           }).then(() => {
             this.edit = true;
-            console.log("這")
           })
         }
       })
@@ -499,50 +436,6 @@ export class ViewLeadComponent implements OnInit {
     })
     this.getOneLead(this.id);
   }
-
-  selectedStatus: any;
-
-  statusValue(event: any): void {
-    this.selectedStatus = this.status.find((s: { name: any; }) => s.name === event.value.name);
-    this.lead_form.value.status = this.selectedStatus.name
-  }
-
-  selectedAccountName!: string;
-  selectedAccountId!: string;
-
-  accountValue(event: any): void {
-    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
-    this.selectedAccountId = event.value.value
-  }
-
-  selectedSource: any;
-
-  sourceValue(event: any): void {
-    this.selectedSource = this.source.find((s: { name: any; }) => s.name === event.value.name);
-    this.lead_form.value.source = this.selectedSource.name
-  }
-
-  selectedRating: any;
-
-  ratingValue(event: any): void {
-    this.selectedRating = this.rating.find((s: { name: any; }) => s.name === event.value.name);
-    this.lead_form.value.rating = this.selectedRating.name
-  }
-
-  selectedStage: any;
-
-  stageValue(event: any): void {
-    this.selectedStage = this.stage.find((s) => s.name === event.value.name);
-    this.opportunity_form.value.stage = this.selectedStage.name
-  }
-
-  selectedForecastCategory: any;
-
-  forecast_categoryValue(event: any): void {
-    this.selectedForecastCategory = this.forecast_category.find((s) => s.name === event.value.name);
-    this.opportunity_form.value.forecast_category = this.selectedForecastCategory.name
-  }
-
 }
 
 

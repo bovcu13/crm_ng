@@ -79,7 +79,6 @@ export class AccountComponent implements OnInit {
     this.account_form = this.fb.group({
       account_id: ['', [Validators.required]],
       name: ['', [Validators.required]],
-      owner: [''],
       phone_number: [''],
       industry_id: [''],
       type: ['', [Validators.required]],
@@ -287,7 +286,7 @@ export class AccountComponent implements OnInit {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number'].value,
       industry_id: this.account_form.controls['industry_id'].value?.industry_id,
-      // parent_account_id: this.account_form.controls['parent_account_id'].value?.account_id,
+      parent_account_id: this.account_form.controls['parent_account_id'].value?.account_id,
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
       // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
@@ -347,8 +346,8 @@ export class AccountComponent implements OnInit {
     let body = {
       name: this.account_form.controls['name'].value,
       phone_number: this.account_form.controls['phone_number']?.value,
-      industry_id: this.account_form.controls['industry_id']?.value.industry_id,
-      parent_account_id: this.account_form.controls['parent_account_id']?.value.account_id,
+      industry_id: this.account_form.controls['industry_id'].value?.industry_id,
+      parent_account_id: this.account_form.controls['parent_account_id'].value?.account_id,
       // 將 type 物件轉換為 string
       // 使用 JSON.parse() 將 JSON 字串解析為 JavaScript 物件
       // 使用 map() 遍歷物件陣列，提取每個物件的 name 屬性
@@ -356,6 +355,7 @@ export class AccountComponent implements OnInit {
         name: any;
       }) => item.name),
     }
+    console.log('id: '+id)
     console.log(body)
     this.HttpApi.patchAccountRequest(id, body)
       .subscribe(request => {

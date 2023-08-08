@@ -65,10 +65,10 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
-          <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
-                      [filter]="true" optionLabel="label" appendTo="body" (onLazyLoad)="loadAccount($event)" [lazy]="true"
-                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶" [virtualScroll]="true" [virtualScrollItemSize]="38"
-                      [ngClass]="{'ng-dirty':contact_form.controls['account_name'].hasError('required') && contact_form.controls['account_name'].touched}">
+          <p-dropdown [options]="getAccounts" formControlName="account_id"
+                      [filter]="true" optionLabel="name" appendTo="body" (onChange)="searchContact(contact_form.controls['account_id'].value)"
+                      filterBy="name" [showClear]="true" placeholder="選擇現有帳戶"
+                      [ngClass]="{'ng-dirty':contact_form.controls['account_id'].hasError('required') && contact_form.controls['account_id'].touched}">
           </p-dropdown>
         </div>
       </div>
@@ -90,7 +90,6 @@
         <div class="field">
           <label>稱謂</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="salutation" optionLabel="name"
-                      (onChange)="salutationValue($event)"
                       formControlName="salutation" appendTo="body"></p-dropdown>
         </div>
       </div>
@@ -129,8 +128,8 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>直屬上司</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true"
-                      formControlName="reports_to" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請先選擇帳戶" [options]="getContacts" optionLabel="name"
+                      formControlName="supervisor_id" appendTo="body"></p-dropdown>
         </div>
       </div>
     </div>

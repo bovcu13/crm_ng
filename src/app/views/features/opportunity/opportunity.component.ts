@@ -18,50 +18,50 @@ export class OpportunityComponent implements OnInit {
   stage: any[] = [
     {
       name: "資格評估",
-      code: "qualification",
+      // code: "qualification",
       boolean: false
     },
     {
       name: "需求分析",
-      code: "needs_analysis ",
+      // code: "needs_analysis ",
       boolean: false
     },
     {
       name: "提案",
-      code: "potential",
+      // code: "potential",
       boolean: false
     },
     {
       name: "談判",
-      code: "negotiation",
+      // code: "negotiation",
       boolean: false
     },
     {
       name: "已結束",
-      code: "closed",
+      // code: "closed",
       boolean: false
     }
   ]
   forecast_category: any[] = [
     {
-      "name": "商機被遺漏",
-      "code": "omitted"
+      name: "商機被遺漏",
+      // "code": "omitted"
     },
     {
-      "name": "進行中",
-      "code": "pipeline"
+      name: "進行中",
+      // "code": "pipeline"
     },
     {
-      "name": "最佳情況",
-      "code": "best_case"
+      name: "最佳情況",
+      // "code": "best_case"
     },
     {
-      "name": "承諾",
-      "code": "commit"
+      name: "承諾",
+      // "code": "commit"
     },
     {
-      "name": "結案",
-      "code": "closed"
+      name: "結案",
+      // "code": "closed"
     }
   ]
 
@@ -70,16 +70,13 @@ export class OpportunityComponent implements OnInit {
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.opportunity_form = this.fb.group({
       opportunity_id: ['', [Validators.required]],
-      account_name: [''],
       account_id: [''],
-      lead_name: [''],
       lead_id: [''],
       name: ['', [Validators.required]],
       close_date: ['', [Validators.required]],
       stage: ['', [Validators.required]],
       forecast_category: ['', [Validators.required]],
       amount: [''],
-      owner: [''],
       created_at: [''],
       updated_at: [''],
       created_by: ['', Validators.required],
@@ -88,8 +85,8 @@ export class OpportunityComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAllAccountRequest(1);
-    this.getAllLeadRequest(1);
+    this.getAllAccountSelection();
+    this.getAllLeadSelection();
     console.log(this.opportunity_form.controls['lead_id'].value)
   }
 
@@ -168,34 +165,74 @@ export class OpportunityComponent implements OnInit {
       this.opportunity_form.reset();
       // 將"商機"設定為不可修改
       this.opportunity_form.controls['stage'].disable();
-      this.opportunity_form.controls['account_name'].enable();
+      this.opportunity_form.controls['account_id'].enable();
       this.opportunity_form.patchValue({
-        status: this.stage.find(s => s.name === this.stage[1].name),
+        status: this.stage.find(stage => stage.name === this.stage[1].name),
       });
     } else if (type === 'add-lead') {
       this.opportunity_form.reset();
       // 將"商機"設定為不可修改
       this.opportunity_form.controls['stage'].disable();
-      this.opportunity_form.controls['account_name'].disable();
-      this.opportunity_form.controls['lead_name'].enable();
+      this.opportunity_form.controls['account_id'].disable();
+      this.opportunity_form.controls['lead_id'].enable();
       this.opportunity_form.patchValue({
-        status: this.stage.find(s => s.name === this.stage[1].name),
+        status: this.stage.find(status => status.name === this.stage[1].name),
       });
     } else if (type === 'edit') {
+      console.log(opportunity)
       this.dialogHeader = '編輯商機';
-      console.log(this.opportunity_form.controls['lead_id'].value)
+      // console.log(this.opportunity_form.controls['lead_id'].value)
       this.opportunity_form.controls['stage'].enable();
-      this.opportunity_form.controls['account_name'].disable();
-      this.opportunity_form.controls['lead_name'].disable();
+      this.opportunity_form.controls['account_id'].disable();
+      this.opportunity_form.controls['lead_id'].disable();
       this.opportunity_form.patchValue(opportunity);
+      const account = {
+        account_id: opportunity.account_id,
+        name: opportunity.account_name
+      };
+      const lead = {
+        lead_id: opportunity.lead_id,
+        description: opportunity.lead_description
+      };
       this.opportunity_form.patchValue({
-        lead_name: this.GetAllLead.find((a: { value: any; }) => a.value === opportunity.lead_id),
-        stage: this.stage.find(s => s.name === opportunity.stage),
-        forecast_category: this.forecast_category.find(s => s.name === opportunity.forecast_category),
-        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === opportunity.account_name),
+        stage: this.stage.find(stage => stage.name === opportunity.stage),
+        forecast_category: this.forecast_category.find(forecast_category => forecast_category.name === opportunity.forecast_category),
         close_date: new Date(this.opportunity_form.value.close_date),
+        account_id: account,
+        // 要先判斷lead_id有沒有值，否則會回傳 { lead_id: '', description: ''}
+        lead_id: opportunity.lead_id ? lead : '',
       });
     }
+  }
+
+  // 取得帳戶下拉選項
+  getAccounts: any[] = [];
+
+  getAllAccountSelection() {
+    this.HttpApi.getAllAccountSelection().subscribe({
+      next: request => {
+        this.getAccounts = request.body.accounts
+        console.log(this.getAccounts)
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  // 取得帳戶下拉選項
+  getLeads: any[] = [];
+
+  getAllLeadSelection() {
+    this.HttpApi.getAllLeadSelection().subscribe({
+      next: request => {
+        this.getLeads = request.body.leads
+        console.log(this.getLeads)
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
   // 取得帳戶 option
@@ -208,44 +245,44 @@ export class OpportunityComponent implements OnInit {
   last: number = 12;
 
   // 取得 account fuction
-  getAllAccountRequest(page: number) {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1, page, this.accountLimit).subscribe({
-      next: request => {
-        this.accountTotal = request.body.total
-        const newAccounts = request.body.accounts.map((account: any) => {
-          // console.log(account)
-          return {
-            label: account.name,
-            value: account.account_id
-          };
-        });
-        // 將新請求到的資料加入 GetAllAccount 陣列
-        this.GetAllAccount = [...this.GetAllAccount, ...newAccounts];
-        console.log(this.GetAllAccount)
-      },
-      error: err => {
-        console.log(err);
-      }
-    });
-  }
+  // getAllAccountRequest(page: number) {
+  //   this.HttpApi.getAllAccountRequest(this.accountSearch, 1, page, this.accountLimit).subscribe({
+  //     next: request => {
+  //       this.accountTotal = request.body.total
+  //       const newAccounts = request.body.accounts.map((account: any) => {
+  //         // console.log(account)
+  //         return {
+  //           label: account.name,
+  //           value: account.account_id
+  //         };
+  //       });
+  //       // 將新請求到的資料加入 GetAllAccount 陣列
+  //       this.GetAllAccount = [...this.GetAllAccount, ...newAccounts];
+  //       console.log(this.GetAllAccount)
+  //     },
+  //     error: err => {
+  //       console.log(err);
+  //     }
+  //   });
+  // }
 
   // 帳戶懶加載
-  loadAccount(e: any) {
-    // console.log(e)
-    // 滾輪往下滑
-    if (e.first > this.first || e.last > this.last) {
-      // console.log('++')
-      if (e.last % this.accountLimit === 0 && this.accountPage < (Math.ceil(this.accountTotal / this.accountLimit))) {
-        this.accountPage++;
-        this.getAllAccountRequest(this.accountPage)
-        console.log(this.accountPage)
-      }
-    }
-    // 滾輪往上滑
-    else if (e.first < this.first || e.last < this.last) {
-      // console.log('--')
-    }
-  }
+  // loadAccount(e: any) {
+  //   // console.log(e)
+  //   // 滾輪往下滑
+  //   if (e.first > this.first || e.last > this.last) {
+  //     // console.log('++')
+  //     if (e.last % this.accountLimit === 0 && this.accountPage < (Math.ceil(this.accountTotal / this.accountLimit))) {
+  //       this.accountPage++;
+  //       this.getAllAccountRequest(this.accountPage)
+  //       console.log(this.accountPage)
+  //     }
+  //   }
+  //   // 滾輪往上滑
+  //   else if (e.first < this.first || e.last < this.last) {
+  //     // console.log('--')
+  //   }
+  // }
 
   // 取得線索 option
   GetAllLead: any[] = [];
@@ -254,25 +291,25 @@ export class OpportunityComponent implements OnInit {
   leadLimit: number = 20;
 
   // 取得 lead fuction
-  getAllLeadRequest(page: number) {
-    this.HttpApi.getAllLeadRequest(this.accountSearch, 1, page, this.leadLimit).subscribe({
-      next: request => {
-        this.leadTotal = request.body.total
-        const newLeads = request.body.leads.map((lead: any) => {
-          return {
-            label: lead.description,
-            value: lead.lead_id
-          };
-        });
-        // 將新請求到的資料加入 GetAllAccount 陣列
-        this.GetAllLead = [...this.GetAllLead, ...newLeads];
-        console.log(this.GetAllLead)
-      },
-      error: err => {
-        console.log(err);
-      }
-    });
-  }
+  // getAllLeadRequest(page: number) {
+  //   this.HttpApi.getAllLeadRequest(this.accountSearch, 1, page, this.leadLimit).subscribe({
+  //     next: request => {
+  //       this.leadTotal = request.body.total
+  //       const newLeads = request.body.leads.map((lead: any) => {
+  //         return {
+  //           label: lead.description,
+  //           value: lead.lead_id
+  //         };
+  //       });
+  //       // 將新請求到的資料加入 GetAllAccount 陣列
+  //       this.GetAllLead = [...this.GetAllLead, ...newLeads];
+  //       console.log(this.GetAllLead)
+  //     },
+  //     error: err => {
+  //       console.log(err);
+  //     }
+  //   });
+  // }
 
   getAllOpportunity(): void {
     this.HttpApi.getAllOpportunityRequest(this.search, 1, 1, this.selectedRows).subscribe(
@@ -286,7 +323,7 @@ export class OpportunityComponent implements OnInit {
   currentDate = new Date()
 
   postOpportunity(): void {
-    if (this.opportunity_form.controls['account_name'].hasError('required') ||
+    if (this.opportunity_form.controls['account_id'].hasError('required') ||
       this.opportunity_form.controls['name'].hasError('required') ||
       this.opportunity_form.controls['stage'].hasError('required') ||
       this.opportunity_form.controls['forecast_category'].hasError('required') ||
@@ -299,8 +336,8 @@ export class OpportunityComponent implements OnInit {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.opportunity_form.controls['account_name'].hasError('required')) {
-          this.opportunity_form.controls['account_name'].markAsDirty();
+        if (this.opportunity_form.controls['account_id'].hasError('required')) {
+          this.opportunity_form.controls['account_id'].markAsDirty();
         }
         if (this.opportunity_form.controls['name'].hasError('required')) {
           this.opportunity_form.controls['name'].markAsDirty();
@@ -320,14 +357,13 @@ export class OpportunityComponent implements OnInit {
     }
 
     let body = {
-      name: this.opportunity_form.value.name,
+      name: this.opportunity_form.controls['name'].value,
       stage: this.stage[1].name,
-      forecast_category: this.selectedForecastCategory.name,
-      account_id: this.opportunity_form.controls['account_name'].value.value,
-      account_name: this.opportunity_form.controls['account_name'].value.label,
-      lead_id: this.opportunity_form.controls['lead_id'].value,
-      close_date: new Date(this.opportunity_form.value.close_date),
-      amount: parseInt(this.opportunity_form.value?.amount),
+      forecast_category: this.opportunity_form.controls['forecast_category'].value.name,
+      account_id: this.opportunity_form.controls['account_id'].value.account_id,
+      lead_id: this.opportunity_form.controls['lead_id'].value?.lead_id,
+      close_date: new Date(this.opportunity_form.controls['close_date'].value),
+      amount: parseInt(this.opportunity_form.controls['amount']?.value),
     }
     console.log(body)
     this.HttpApi.postOpportunityRequest(body)
@@ -359,7 +395,7 @@ export class OpportunityComponent implements OnInit {
 
 
   patchOpportunity(): void {
-    if (this.opportunity_form.controls['account_name'].hasError('required') ||
+    if (this.opportunity_form.controls['account_id'].hasError('required') ||
       this.opportunity_form.controls['name'].hasError('required') ||
       this.opportunity_form.controls['stage'].hasError('required') ||
       this.opportunity_form.controls['forecast_category'].hasError('required') ||
@@ -372,8 +408,8 @@ export class OpportunityComponent implements OnInit {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.opportunity_form.controls['account_name'].hasError('required')) {
-          this.opportunity_form.controls['account_name'].markAsDirty();
+        if (this.opportunity_form.controls['account_id'].hasError('required')) {
+          this.opportunity_form.controls['account_id'].markAsDirty();
         }
         if (this.opportunity_form.controls['name'].hasError('required')) {
           this.opportunity_form.controls['name'].markAsDirty();
@@ -394,13 +430,13 @@ export class OpportunityComponent implements OnInit {
 
     let id = this.opportunity_form.controls['opportunity_id'].value
     let body = {
-      name: this.opportunity_form.value?.name,
-      stage: this.selectedStage?.name,
-      forecast_category: this.selectedForecastCategory?.name,
-      account_id: this.selectedAccountId,
-      account_name: this.selectedAccountName,
-      close_date: new Date(this.opportunity_form.value?.close_date),
-      amount: parseInt(this.opportunity_form.value?.amount),
+      name: this.opportunity_form.controls['name'].value,
+      stage: this.opportunity_form.controls['stage'].value.name,
+      forecast_category: this.opportunity_form.controls['forecast_category'].value.name,
+      account_id: this.opportunity_form.controls['account_id'].value.account_id,
+      lead_id: this.opportunity_form.controls['lead_id'].value?.lead_id,
+      close_date: new Date(this.opportunity_form.controls['close_date'].value),
+      amount: parseInt(this.opportunity_form.controls['amount']?.value),
     }
     this.HttpApi.patchOpportunityRequest(id, body)
       .subscribe(request => {
@@ -506,30 +542,6 @@ export class OpportunityComponent implements OnInit {
     })
   }
 
-  selectedStage: any;
-
-  stageValue(event: any): void {
-    this.selectedStage = this.stage.find((s) => s.name === event.value.name);
-    this.opportunity_form.value.stage = this.selectedStage.name
-  }
-
-  selectedForecastCategory: any;
-
-  forecast_categoryValue(event: any): void {
-    this.selectedForecastCategory = this.forecast_category.find((s) => s.name === event.value.name);
-    this.opportunity_form.value.forecast_category = this.selectedForecastCategory.name
-  }
-
-
-  selectedAccountName!: string;
-  selectedAccountId!: string;
-
-  accountValue(event: any): void {
-    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
-    this.selectedAccountId = event.value.value
-    // console.log(this.selectedAccountId)
-  }
-
   leadValue(event: any): void {
     this.opportunity_form.patchValue({
       lead_id: event.value.value
@@ -538,9 +550,11 @@ export class OpportunityComponent implements OnInit {
       next: request => {
         console.log(request)
         this.opportunity_form.patchValue({
-          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === request.body.account_name),
+          account_id: this.getAccounts.find((account_id: {
+            value: any;
+          }) => account_id.value === request.body.account_id),
         })
-        console.log(this.opportunity_form.controls['account_name'].value)
+        console.log(this.opportunity_form.controls['account_id'].value)
       },
       error: err => {
         console.log(err)
