@@ -16,31 +16,13 @@ export class ContactComponent implements OnInit {
   @ViewChild('dt') dt!: Table;
   salutation: any[] = [
     {
-      "name": "先生",
-      "code": "Mr."
+      name: "先生"
     },
     {
-      "name": "小姐",
-      "code": "Ms."
+      name: "小姐"
     },
     {
-      "name": "醫師",
-      "code": "Dr."
-    }
-  ]
-
-  account_name: any = [
-    {
-      name: "公司A",
-      code: "company_a"
-    },
-    {
-      name: "公司B",
-      code: "company_b"
-    },
-    {
-      name: "公司C",
-      code: "company_c"
+      name: "醫師"
     }
   ]
 
@@ -49,9 +31,7 @@ export class ContactComponent implements OnInit {
   constructor(private HttpApi: HttpApiService, private fb: FormBuilder) {
     this.contact_form = this.fb.group({
       contact_id: ['', [Validators.required]],
-      account_name: ['', [Validators.required]],
       account_id: ['', [Validators.required]],
-      owner: [''],
       name: ['', [Validators.required]],
       salutation: [''],
       cell_phone: [''],
@@ -59,7 +39,7 @@ export class ContactComponent implements OnInit {
       email: [''],
       title: [''],
       department: [''],
-      reports_to: [''],
+      supervisor_id: [''],
       created_at: [''],
       updated_at: [''],
       created_by: ['', Validators.required],
@@ -68,7 +48,7 @@ export class ContactComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAllAccountRequest(1);
+    this.getAllAccountSelection();
   }
 
   // 搜尋關鍵字
@@ -99,8 +79,8 @@ export class ContactComponent implements OnInit {
       });
   }
 
-  // 取得帳戶 option
-  GetAllAccount: any[] = [];
+  // 取得帳戶下拉選項
+  getAccounts: any[] = [];
   accountSearch!: string;
   accountTotal!: number;
   accountPage: number = 1;
@@ -108,38 +88,43 @@ export class ContactComponent implements OnInit {
   first: number = 0;
   last: number = 12;
 
-  // 帳戶懶加載
-  loadAccount(e: any) {
-    // console.log(e)
-    // 滾輪往下滑
-    if (e.first > this.first || e.last > this.last) {
-      // console.log('++')
-      if (e.last % this.accountLimit === 0 && this.accountPage < (Math.ceil(this.accountTotal / this.accountLimit))) {
-        this.accountPage++;
-        this.getAllAccountRequest(this.accountPage)
+  // // 帳戶懶加載
+  // loadAccount(e: any) {
+  //   // console.log(e)
+  //   // 滾輪往下滑
+  //   if (e.first > this.first || e.last > this.last) {
+  //     // console.log('++')
+  //     if (e.last % this.accountLimit === 0 && this.accountPage < (Math.ceil(this.accountTotal / this.accountLimit))) {
+  //       this.accountPage++;
+  //       this.getAllAccountRequest(this.accountPage)
+  //     }
+  //   }
+  //   // 滾輪往上滑
+  //   else if (e.first < this.first || e.last < this.last) {
+  //     // console.log('--')
+  //   }
+  // }
+
+  getAllAccountSelection() {
+    this.HttpApi.getAllAccountSelection().subscribe({
+      next: request => {
+        this.getAccounts = request.body.accounts
+        console.log(this.getAccounts)
+      },
+      error: err => {
+        console.log(err);
       }
-    }
-    // 滾輪往上滑
-    else if (e.first < this.first || e.last < this.last) {
-      // console.log('--')
-    }
+    });
   }
 
-  // 取得 account fuction
-  getAllAccountRequest(page: number) {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1, page, this.accountLimit).subscribe({
+  // 直屬上司下拉選單
+  getContacts: any[] = [];
+
+  getAllContactSelection(id: any) {
+    this.HttpApi.getAllContactSelection(id).subscribe({
       next: request => {
-        this.accountTotal = request.body.total
-        const newAccounts = request.body.accounts.map((account: any) => {
-          // console.log(account)
-          return {
-            label: account.name,
-            value: account.account_id
-          };
-        });
-        // 將新請求到的資料加入 GetAllAccount 陣列
-        this.GetAllAccount = [...this.GetAllAccount, ...newAccounts];
-        console.log(this.GetAllAccount)
+        this.getContacts = request.body.contacts
+        console.log(this.getContacts)
       },
       error: err => {
         console.log(err);
@@ -157,10 +142,24 @@ export class ContactComponent implements OnInit {
       this.contact_form.reset();
     } else if (type === 'edit') {
       this.dialogHeader = '編輯聯絡人';
+      this.getAllContactSelection(contact.account_id)
+      console.log(contact)
       this.contact_form.patchValue(contact);
+      const account_name = {
+        account_id: contact.account_id,
+        name: contact.account_name
+      };
+      const salutation = {
+        name: contact.salutation
+      }
+      const supervisor = {
+        contact_id: contact.supervisor_id,
+        name: contact.supervisor_name,
+      }
       this.contact_form.patchValue({
-        salutation: this.salutation.find(s => s.name === contact.salutation),
-        account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === contact.account_name),
+        account_id: account_name,
+        supervisor_id: supervisor,
+        salutation: salutation,
       });
     }
   }
@@ -177,7 +176,7 @@ export class ContactComponent implements OnInit {
   currentDate = new Date()
 
   postContact(): void {
-    if (this.contact_form.controls['account_name'].hasError('required') ||
+    if (this.contact_form.controls['account_id'].hasError('required') ||
       this.contact_form.controls['name'].hasError('required') ||
       this.contact_form.controls['phone_number'].hasError('required')) {
       this.edit = false;
@@ -188,8 +187,8 @@ export class ContactComponent implements OnInit {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.contact_form.controls['account_name'].hasError('required')) {
-          this.contact_form.controls['account_name'].markAsDirty();
+        if (this.contact_form.controls['account_id'].hasError('required')) {
+          this.contact_form.controls['account_id'].markAsDirty();
         }
         if (this.contact_form.controls['name'].hasError('required')) {
           this.contact_form.controls['name'].markAsDirty();
@@ -203,19 +202,17 @@ export class ContactComponent implements OnInit {
     }
 
     let body = {
-      account_name: this.contact_form.controls['account_name'].value,
-      owner: this.contact_form.controls['owner'].value,
       name: this.contact_form.controls['name'].value,
-      salutation: this.selectedsalutation?.name,
-      cell_phone: this.contact_form.controls['cell_phone'].value,
+      salutation: this.contact_form.controls['salutation'].value?.name,
+      cell_phone: this.contact_form.controls['cell_phone']?.value,
       phone_number: this.contact_form.controls['phone_number'].value,
-      email: this.contact_form.controls['email'].value,
-      title: this.contact_form.controls['title'].value,
-      department: this.contact_form.controls['department'].value,
-      reports_to: this.contact_form.controls['reports_to'].value,
-      supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
-      account_id: this.selectedAccountId,
+      email: this.contact_form.controls['email']?.value,
+      title: this.contact_form.controls['title']?.value,
+      department: this.contact_form.controls['department']?.value,
+      supervisor_id: this.contact_form.controls['supervisor_id'].value?.contact_id,
+      account_id: this.contact_form.controls['account_id'].value.account_id,
     }
+    console.log(body)
     this.HttpApi.postContactRequest(body)
       .subscribe(request => {
         console.log(request)
@@ -245,7 +242,7 @@ export class ContactComponent implements OnInit {
 
 
   patchContact(): void {
-    if (this.contact_form.controls['account_name'].hasError('required') ||
+    if (this.contact_form.controls['account_id'].hasError('required') ||
       this.contact_form.controls['name'].hasError('required') ||
       this.contact_form.controls['phone_number'].hasError('required')) {
       this.edit = false;
@@ -256,8 +253,8 @@ export class ContactComponent implements OnInit {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.contact_form.controls['account_name'].hasError('required')) {
-          this.contact_form.controls['account_name'].markAsDirty();
+        if (this.contact_form.controls['account_id'].hasError('required')) {
+          this.contact_form.controls['account_id'].markAsDirty();
         }
         if (this.contact_form.controls['name'].hasError('required')) {
           this.contact_form.controls['name'].markAsDirty();
@@ -272,19 +269,17 @@ export class ContactComponent implements OnInit {
 
     let id = this.contact_form.controls['contact_id'].value
     let body = {
-      account_name: this.contact_form.controls['account_name'].value,
-      owner: this.contact_form.controls['owner'].value,
       name: this.contact_form.controls['name'].value,
-      salutation: this.selectedsalutation?.name,
-      cell_phone: this.contact_form.controls['cell_phone'].value,
+      salutation: this.contact_form.controls['salutation'].value?.name,
+      cell_phone: this.contact_form.controls['cell_phone']?.value,
       phone_number: this.contact_form.controls['phone_number'].value,
-      email: this.contact_form.controls['email'].value,
-      title: this.contact_form.controls['title'].value,
-      department: this.contact_form.controls['department'].value,
-      reports_to: this.contact_form.controls['reports_to'].value,
-      supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
-      account_id: this.selectedAccountId
+      email: this.contact_form.controls['email']?.value,
+      title: this.contact_form.controls['title']?.value,
+      department: this.contact_form.controls['department']?.value,
+      supervisor_id: this.contact_form.controls['supervisor_id'].value?.contact_id,
+      account_id: this.contact_form.controls['account_id'].value.account_id,
     }
+    console.log(body)
     this.HttpApi.patchContactRequest(id, body)
       .subscribe(request => {
         console.log(request)
@@ -373,21 +368,9 @@ export class ContactComponent implements OnInit {
     })
   }
 
-  selectedsalutation: any;
-
-  salutationValue(event: any): void {
-    this.selectedsalutation = this.salutation.find((s: { name: any; }) => s.name === event.value.name);
-    this.contact_form.value.salutation = this.selectedsalutation.name
-    console.log(this.selectedsalutation);
-    // console.log(this.contact_form.value.salutation)
-  }
-
-  selectedAccountName!: string;
-  selectedAccountId!: string;
-
-  accountValue(event: any): void {
-    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
-    this.selectedAccountId = event.value.value
-    // console.log(this.selectedAccountId)
+  // 選擇帳戶時搜尋該帳戶聯絡人
+  searchContact(id: any) {
+    console.log(id.account_id)
+    this.getAllContactSelection(id.account_id);
   }
 }
