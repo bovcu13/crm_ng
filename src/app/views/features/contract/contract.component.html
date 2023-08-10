@@ -105,9 +105,15 @@
                 <p-button icon="pi pi-pencil" (click)="showDialog('edit',contract)" pTooltip="編輯"
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" (click)="deleteContractRequest(contract.contract_id)" pTooltip="刪除"
+                <p-button *ngIf="contract.status === status[0].name"
+                          (click)="deleteContractRequest(contract.contract_id)" icon="pi pi-trash" pTooltip="刪除"
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button
+                  *ngIf="contract.status === status[1].name || contract.status === status[2].name || contract.status === status[3].name || contract.status === status[4].name || contract.status === status[5].name || contract.status === status[6].name"
+                  icon="pi pi-trash" pTooltip="{{contract.status}}狀態不可刪除"
+                  tooltipPosition="top" [disabled]="true"
+                  styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
           </tr>
@@ -206,8 +212,8 @@
       <ng-container *ngIf="!showedit">
         <p-button label="新增" (click)="postContractRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
-      <ng-container *ngIf="!disableSaveButton">
-        <ng-container *ngIf="showedit">
+      <ng-container *ngIf="showedit">
+        <ng-container *ngIf="!disableSaveButton">
           <p-button label="儲存" (click)="patchContractRequest(c_id)"
                     styleClass="p-button-info"></p-button>
         </ng-container>

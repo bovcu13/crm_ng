@@ -346,15 +346,15 @@ export class EventComponent {
 
   GetAllContact: any[] = []
   getAllContactSelection() {
-    this.HttpApi.getAllContactSelection().subscribe({
-      next: res => {
-        this.GetAllContact = res.body.contacts
-        console.log(res.body.contacts)
-      },
-      error: error => {
-        console.log(error);
-      }
-    });
+    // this.HttpApi.getAllContactSelection().subscribe({
+    //   next: res => {
+    //     this.GetAllContact = res.body.contacts
+    //     console.log(res.body.contacts)
+    //   },
+    //   error: error => {
+    //     console.log(error);
+    //   }
+    // });
   }
 
   ContactSearch: any;

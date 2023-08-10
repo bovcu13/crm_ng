@@ -111,7 +111,7 @@ export class ViewContractComponent {
             label: any;
           }) => opportunity.label === res.body.opportunity_name),
         })
-        if (this.GetOneContract.status === '已取消' || this.GetOneContract.status === '已過期') {
+        if (this.GetOneContract.status === '已簽署' || this.GetOneContract.status === '已取消' || this.GetOneContract.status === '已過期') {
           this.contract_form.controls['status'].disable();
         }
       },

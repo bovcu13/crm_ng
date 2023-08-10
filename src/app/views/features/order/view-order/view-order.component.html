@@ -6,8 +6,14 @@
           <h3>{{order_form.controls['code'].value}}</h3>
           <p-divider></p-divider>
           <span class="p-buttonset flex justify-content-center">
-            <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash" (click)="deleteOrderRequest(this.o_id)"
+             <ng-container *ngIf="stage =='草稿'">
+              <p-button (click)="deleteOrderRequest(this.o_id)" icon="pi pi-trash" pTooltip="刪除"
+                        tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+             </ng-container>
+             <ng-container *ngIf="stage =='啟動中'">
+            <p-button tooltipPosition="top" icon="pi pi-trash" pTooltip="{{stage}}狀態不可刪除" [disabled]="true"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+             </ng-container>
             <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
           </span>

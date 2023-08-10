@@ -235,7 +235,7 @@ export class ContractComponent {
         account_name: this.GetAllOpportunity.find((a: { label: any; }) => a.label === contract.account_name),
       });
       this.showedit = true;
-      if (contract.status === "已過期" || contract.status === "已取消") {
+      if (contract.status === "已簽署" || contract.status === "已過期" || contract.status === "已取消") {
         this.contract_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === contract.status),
         });
