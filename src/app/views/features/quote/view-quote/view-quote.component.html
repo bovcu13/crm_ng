@@ -6,7 +6,9 @@
           <h3>{{name}}</h3>
           <p-divider></p-divider>
           <span class="p-buttonset flex justify-content-center">
-            <p-button pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash" (click)="deleteQuoteRequest(this.q_id)"
+            <p-button *ngIf="stage === '草稿'" pTooltip="刪除" tooltipPosition="top" icon="pi pi-trash" (click)="deleteQuoteRequest(this.q_id)"
+                      styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
+            <p-button *ngIf="stage === '需要審查' || stage === '審查中' || stage === '已批准' || stage === '已報價' || stage === '客戶簽回'" tooltipPosition="top" icon="pi pi-trash" pTooltip="{{stage}}狀態不可刪除" [disabled]="true"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-left-lg"></p-button>
             <p-button pTooltip="複製" tooltipPosition="top" icon="pi pi-copy"
                       styleClass="p-button-rounded p-button-secondary p-button-outlined border-round-right-lg"></p-button>
@@ -117,7 +119,7 @@
                       <div class="mt-2">
                         <label *ngIf="ErrorMessage" class="required-star">選擇的項目必須至少1種</label>
                       </div>
-                      <ng-container *ngIf="stage !== '客戶簽回'">
+                      <ng-container *ngIf="stage === '草稿' || stage === '需要審查' || stage === '審查中'">
                         <div class="justify-content-end">
                           <p-button icon="pi pi-plus" pTooltip="新增商品/服務" (click)="addProduct()"
                                     tooltipPosition="top"
@@ -161,12 +163,14 @@
                     <td>{{ product.total_price }}</td>
                     <td>
                       <div class="flex justify-content-end">
+                        <ng-container *ngIf="stage === '草稿' || stage === '需要審查' || stage === '審查中'">
                         <p-button icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                                   (click)="editOneProduct(product)"
                                   styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                         <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
                                   pTooltip="刪除" tooltipPosition="top"
                                   (click)="deleteQuoteProductRequest(product.quote_product_id)"></p-button>
+                        </ng-container>
                       </div>
                     </td>
                   </tr>
@@ -294,7 +298,7 @@
                   </div>
                 </div>
               </div>
-              <ng-container *ngIf="stage !== '客戶簽回'">
+              <ng-container *ngIf="stage === '草稿' || stage === '需要審查' || stage === '審查中'">
                 <div class="flex justify-content-end">
                   <p-button label="取消" (click)="showAlertCancel()" styleClass="p-button-secondary mr-2"></p-button>
                   <p-button label="儲存" (click)="patchQuoteRequest(q_id)"

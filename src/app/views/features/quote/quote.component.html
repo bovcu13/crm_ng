@@ -96,9 +96,13 @@
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-secondary p-button-text"
-                          pTooltip="刪除"
-                          (click)="deleteQuoteRequest(quote.quote_id)" tooltipPosition="top"></p-button>
+                <p-button *ngIf="quote.status === status[0].name"
+                          (click)="deleteQuoteRequest(quote.order_id)" icon="pi pi-trash" pTooltip="刪除"
+                          tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button *ngIf="quote.status === status[1].name || quote.status === status[2].name || quote.status === status[3].name || quote.status === status[4].name || quote.status === status[5].name"
+                          icon="pi pi-trash" pTooltip="{{quote.status}}狀態不可刪除"
+                          tooltipPosition="top" [disabled]="true"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
           </tr>
