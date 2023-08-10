@@ -68,10 +68,13 @@
               <div class="flex justify-content-end">
               <p-button icon="pi pi-eye" pTooltip="檢視" tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-text"
                         [routerLink]="['/main/order/view/', order.order_id]"></p-button>
-              <p-button (click)="showDialog('edit',order)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-              <p-button icon="pi pi-trash" (click)="deleteOrderRequest(order.order_id)" pTooltip="刪除" tooltipPosition="top"
-                        styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button *ngIf="order.status === status[0].name"
+                          (click)="deleteOrderRequest(order.order_id)" icon="pi pi-trash" pTooltip="刪除"
+                          tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button *ngIf="order.status === status[1].name"
+                          icon="pi pi-trash" pTooltip="{{order.status}}狀態不可刪除"
+                          tooltipPosition="top" [disabled]="true"
+                          styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>
           </tr>
