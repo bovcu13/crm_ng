@@ -24,7 +24,7 @@ import {ViewQuoteComponent} from '../features/quote/view-quote/view-quote.compon
 import {ViewOrderComponent} from '../features/order/view-order/view-order.component';
 import {ViewContractComponent} from '../features/contract/view-contract/view-contract.component';
 import {ViewCampaignComponent} from '../features/campaign/view-campaign/view-campaign.component';
-import { RoleComponent } from '../features/role/role/role.component';
+import { RoleComponent } from '../features/role/role.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'dashboard', pathMatch: 'full'},

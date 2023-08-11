@@ -43,7 +43,7 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {AnimateModule} from 'primeng/animate';
 import {ChartModule} from 'primeng/chart';
 import {AccordionModule} from "primeng/accordion";
-
+import { TreeTableModule } from 'primeng/treetable';
 
 @NgModule({
   declarations: [],
@@ -94,7 +94,8 @@ import {AccordionModule} from "primeng/accordion";
     ToolbarModule,
     AnimateModule,
     ChartModule,
-    AccordionModule
+    AccordionModule,
+    TreeTableModule
   ],
 })
 export class PrimengModule {
