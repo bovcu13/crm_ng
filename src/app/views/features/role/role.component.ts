@@ -21,24 +21,58 @@ export class RoleComponent {
       created_at: "2023-04-15",
     }
   ];
-  test: any[] =[
+  data: any[] = [
     {
-      id: 1000,
-      name: 'James Butt',
-      country: {
-        name: 'Algeria',
-        code: 'dz'
-      },
-      company: 'Benton, John B Jr',
-      date: '2015-09-13',
-      status: 'unqualified',
-      verified: true,
-      activity: 17,
-      representative: {
-        name: 'Ioni Bowcher',
-        image: 'ionibowcher.png'
-      },
-      balance: 70663
+      name: "大名",
+      created_at: "2023-04-15",
+      data2: [
+        {
+          role: '權限管理',
+          examine: true,
+          suspension: false,
+          empowerment: true,
+        },
+      ],
+      data3: [
+        {
+          role: '後台帳號管理',
+          read: true,
+          create: true,
+          update: true,
+        },
+        {
+          role: '角色管理',
+          read: true,
+          create: false,
+          update: false,
+        },
+      ]
+    },
+    {
+      name: "小名",
+      created_at: "2023-04-25",
+      data2: [
+        {
+          role: '權限管理',
+          examine: false,
+          suspension: true,
+          empowerment: false,
+        },
+      ],
+      data3: [
+        {
+          role: '後台帳號管理',
+          read: false,
+          create: false,
+          update: true,
+        },
+        {
+          role: '角色管理',
+          read: true,
+          create: false,
+          update: true,
+        },
+      ]
     },
   ]
   roleForm: UntypedFormGroup;
@@ -50,15 +84,9 @@ export class RoleComponent {
       role_id: [ '' ],
       role_name: [ '', [Validators.required] ],
       permissions: this.fb.group({
-        examine: [ false ],
-        suspension: [ false ],
-        empowerment: [ false ],
-        admin_create: [ false ],
-        admin_read: [ false ],
-        admin_update: [ false ],
-        role_create: [ false ],
-        role_read: [ false ],
-        role_update: [ false ],
+        create: [ false ],
+        read: [ false ],
+        update: [ false ],
       })
     });
   }
@@ -74,6 +102,4 @@ export class RoleComponent {
       timer: 1000
     })
   }
-
-
 }
