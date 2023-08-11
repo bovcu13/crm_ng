@@ -259,7 +259,7 @@ export class HttpApiService {
           rating: keyword,
           source: keyword,
           salesperson_name: keyword,
-          status: keyword,
+d          status: [keyword],
         },
       };
     }
@@ -267,9 +267,20 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  getAllLeadSelection(): Observable<any> {
-    const url = `${BaseUrl}/leads`;
-    return this.http.get<any>(url);
+  // getAllLeadSelection(): Observable<any> {
+  //   const url = `${BaseUrl}/leads`;
+  //   return this.http.get<any>(url);
+  // }
+
+  getAllLeadSelection(filterData: any[]): Observable<any> {
+    let obj: any = {
+      description: null,
+      rating: null,
+      source: null,
+      status: filterData,
+    };
+    const url = `${BaseUrl}/leads/list/no-pagination`;
+    return this.http.post<any>(url, obj);
   }
 
   getOneLeadRequest(id: any): Observable<any> {
@@ -323,7 +334,7 @@ export class HttpApiService {
           name: keyword,
           account_name: keyword,
           salesperson_name: keyword,
-          stage: keyword
+          stage: [keyword]
         },
       };
     }
@@ -488,7 +499,7 @@ export class HttpApiService {
         field: status,
         filter: {
           code: keyword,
-          status: keyword,
+          status: [keyword],
         },
       };
     }
