@@ -30,7 +30,7 @@ export class ViewContactComponent implements OnInit {
   ]
 
   ngOnInit(): void {
-    this.getAllAccountRequest();
+    this.getAllAccountSelection();
     this.getOneContact(this.id)
   }
 
@@ -40,9 +40,7 @@ export class ViewContactComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.contact_form = this.fb.group({
       contact_id: ['', [Validators.required]],
-      account_name: ['', [Validators.required]],
       account_id: ['', [Validators.required]],
-      owner: [''],
       name: ['', [Validators.required]],
       salutation: [''],
       cell_phone: [''],
@@ -50,7 +48,7 @@ export class ViewContactComponent implements OnInit {
       email: [''],
       title: [''],
       department: [''],
-      reports_to: [''],
+      supervisor_id: [''],
       created_at: [''],
       updated_at: [''],
       created_by: ['', Validators.required],
@@ -94,29 +92,50 @@ export class ViewContactComponent implements OnInit {
     this.HttpApi.getOneContactRequest(id).subscribe(
       request => {
         this.contact_form.patchValue(request.body);
+        const account_name = {
+          account_id: request.body.account_id,
+          name: request.body.account_name
+        };
+        const salutation = {
+          name: request.body.salutation
+        }
+        const supervisor = {
+          contact_id: request.body.supervisor_id,
+          name: request.body.supervisor_name,
+        }
         this.contact_form.patchValue({
-          salutation: this.salutation.find(s => s.name === request.body.salutation),
-          account_name: this.GetAllAccount.find((a: { label: any; }) => a.label === request.body.account_name),
+          account_id: account_name,
+          supervisor_id: supervisor,
+          salutation: salutation,
         });
         console.log(request.body)
       }
     )
   }
 
-  // 取得帳戶 option
-  GetAllAccount!: any[];
-  accountSearch!: string;
+  // 取得帳戶下拉選項
+  getAccounts: any[] = [];
 
-  getAllAccountRequest() {
-    this.HttpApi.getAllAccountRequest(this.accountSearch, 1).subscribe({
+  getAllAccountSelection() {
+    this.HttpApi.getAllAccountSelection().subscribe({
       next: request => {
-        this.GetAllAccount = request.body.accounts.map((account: any) => {
-          // console.log(account)
-          return {
-            label: account.name,
-            value: account.account_id
-          };
-        });
+        this.getAccounts = request.body.accounts
+        console.log(this.getAccounts)
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  // 直屬上司下拉選單
+  getContacts: any[] = [];
+
+  getAllContactSelection(id: any) {
+    this.HttpApi.getAllContactSelection(id).subscribe({
+      next: request => {
+        this.getContacts = request.body.contacts
+        console.log(this.getContacts)
       },
       error: err => {
         console.log(err);
@@ -150,18 +169,15 @@ export class ViewContactComponent implements OnInit {
 
     let id = this.contact_form.controls['contact_id'].value
     let body = {
-      account_name: this.contact_form.controls['account_name'].value,
-      owner: this.contact_form.controls['owner'].value,
       name: this.contact_form.controls['name'].value,
-      salutation: this.selectedsalutation?.name,
-      cell_phone: this.contact_form.controls['cell_phone'].value,
+      salutation: this.contact_form.controls['salutation'].value?.name,
+      cell_phone: this.contact_form.controls['cell_phone']?.value,
       phone_number: this.contact_form.controls['phone_number'].value,
-      email: this.contact_form.controls['email'].value,
-      title: this.contact_form.controls['title'].value,
-      department: this.contact_form.controls['department'].value,
-      reports_to: this.contact_form.controls['reports_to'].value,
-      supervisor_id: "eb6751fe-ba8d-44f6-a92f-e2efea61793a",
-      account_id: this.selectedAccountId
+      email: this.contact_form.controls['email']?.value,
+      title: this.contact_form.controls['title']?.value,
+      department: this.contact_form.controls['department']?.value,
+      supervisor_id: this.contact_form.controls['supervisor_id'].value?.contact_id,
+      account_id: this.contact_form.controls['account_id'].value.account_id,
     }
     this.HttpApi.patchContactRequest(id, body)
       .subscribe(request => {
@@ -201,21 +217,10 @@ export class ViewContactComponent implements OnInit {
     })
   }
 
-  selectedsalutation: any;
-
-  salutationValue(event: any): void {
-    this.selectedsalutation = this.salutation.find((s: { name: any; }) => s.name === event.value.name);
-    this.contact_form.value.salutation = this.selectedsalutation.name
-    console.log(this.selectedsalutation);
-    // console.log(this.contact_form.value.salutation)
+  // 選擇帳戶時搜尋該帳戶聯絡人
+  searchContact(id: any) {
+    console.log(id.account_id)
+    this.getAllContactSelection(id.account_id);
   }
 
-  selectedAccountName!: string;
-  selectedAccountId!: string;
-
-  accountValue(event: any): void {
-    this.selectedAccountName = this.GetAllAccount.find((a: { label: any; }) => a.label === event.value.label);
-    this.selectedAccountId = event.value.value
-    // console.log(this.selectedAccountId)
-  }
 }

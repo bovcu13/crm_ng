@@ -59,8 +59,8 @@
             <th pSortableColumn="description">描述
               <p-sortIcon field="description"></p-sortIcon>
             </th>
-            <th pSortableColumn="account_name">帳戶
-              <p-sortIcon field="account_name"></p-sortIcon>
+            <th pSortableColumn="account_id">帳戶
+              <p-sortIcon field="account_id"></p-sortIcon>
             </th>
             <th pSortableColumn="rating">分級
               <p-sortIcon field="rating"></p-sortIcon>
@@ -138,7 +138,7 @@
         <div class="field">
           <label><span class="text-red-600">*</span>線索狀態</label>
           <p-dropdown placeholder="請選擇" optionLabel="name" [options]=which
-                      formControlName="status" appendTo="body" (onChange)="statusValue($event)"
+                      formControlName="status" appendTo="body"
                       [ngClass]="{'ng-dirty':lead_form.controls['status'].hasError('required') && lead_form.controls['status'].touched}"
           ></p-dropdown>
         </div>
@@ -154,10 +154,10 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="text-red-600">*</span>帳戶</label>
-          <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" formControlName="account_name"
-                      [filter]="true" optionLabel="label" appendTo="body"
-                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶"
-                      [ngClass]="{'ng-dirty':lead_form.controls['account_name'].hasError('required') && lead_form.controls['account_name'].touched}">
+          <p-dropdown [options]="getAccounts" formControlName="account_id"
+                      [filter]="true" optionLabel="name" appendTo="body"
+                      filterBy="name" [showClear]="true" placeholder="選擇現有帳戶"
+                      [ngClass]="{'ng-dirty':lead_form.controls['account_id'].hasError('required') && lead_form.controls['account_id'].touched}">
           </p-dropdown>
         </div>
       </div>
@@ -180,14 +180,14 @@
         <div class="field">
           <label>分級</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="rating" optionLabel="name"
-                      (onChange)="ratingValue($event)" formControlName="rating" appendTo="body"></p-dropdown>
+                      formControlName="rating" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>線索來源</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" [options]="source" optionLabel="name"
-                      (onChange)="sourceValue($event)" formControlName="source" appendTo="body"></p-dropdown>
+                      formControlName="source" appendTo="body"></p-dropdown>
         </div>
       </div>
     </div>
@@ -241,11 +241,11 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label>帳戶類別</label>
+          <label><span class="text-red-600">*</span>帳戶類別</label>
           <!--          <br>-->
           <!--          <label>{{(account_form.controls['type'].value)}}</label>-->
           <p-multiSelect [options]="type" formControlName="type" optionLabel="name"
-                         display="chip"></p-multiSelect>
+                         display="chip" appendTo="body"></p-multiSelect>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -257,16 +257,15 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>行業</label>
-          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="industry" optionLabel="name"
-                      (onChange)="industryValue($event)"
-                      formControlName="industry" appendTo="body"></p-dropdown>
+          <p-dropdown placeholder="請選擇" [disabled]="true" [options]="getIndustries" optionLabel="name"
+                      formControlName="industry_id" appendTo="body"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>父系帳戶</label>
-          <p-dropdown [options]="GetAllAccount" (onChange)="accountValue($event)" [filter]="true"
-                      filterBy="label" [showClear]="true" placeholder="選擇現有帳戶" optionLabel="label"
+          <p-dropdown [options]="getAccounts" [filter]="true"
+                      filterBy="name" [showClear]="true" placeholder="選擇現有帳戶" optionLabel="name"
                       formControlName="parent_account_id"></p-dropdown>
         </div>
       </div>
@@ -281,7 +280,7 @@
     </div>
     <div class="flex justify-content-end">
       <p-button label="取消" (click)="addAccshowAlertCancel()" styleClass="p-button-secondary mr-1"></p-button>
-      <p-button label="新增" (click)="add_Acount()"
+      <p-button label="新增" (click)="postAccount()"
                 styleClass="p-button-info"></p-button>
     </div>
   </p-dialog>

@@ -324,7 +324,7 @@ export class CampaignComponent {
         start_date: campaign.start_date !== null ? new Date(campaign.start_date) : null,
         end_date: campaign.end_date !== null ? new Date(campaign.end_date) : null,
       });
-      if (campaign.status === "已中止") {
+      if (campaign.status === "已完成" || campaign.status === "已中止") {
         this.campaign_form.patchValue({
           status: this.status.find((s: { name: any; }) => s.name === campaign.status),
         });
