@@ -111,7 +111,6 @@ export class ViewQuoteComponent {
 
   //新增產品dialog
   add: boolean = false;
-
   addProduct() {
     this.add = true;
     this.selectedProducts = [];
@@ -169,6 +168,7 @@ export class ViewQuoteComponent {
         this.GetOneIsSyncing = res.body.is_syncing ? '是' : '否';
         this.quote_form.patchValue(res.body)
         this.quote_form.patchValue({
+          opportunity_id: this.GetAllOpportunity.find((opportunity: { name: any; }) => opportunity.name === res.body.opportunity_name),
           status: this.status.find((s: { name: any; }) => s.name === this.GetOneQuote.status),
           expiration_date: new Date(res.body.expiration_date)
         });
@@ -756,12 +756,7 @@ export class ViewQuoteComponent {
   getAllOpportunitiesSelection() {
     this.HttpApi.getAllOpportunitiesSelection("提案,談判").subscribe({
       next: (res) => {
-        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
-          return {
-            label: opportunity.name,
-            value: opportunity.opportunity_id,
-          };
-        });
+        this.GetAllOpportunity = res.body.opportunities
         console.log(this.GetAllOpportunity)
       },
       error: (error) => {

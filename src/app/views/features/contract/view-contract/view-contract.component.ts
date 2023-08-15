@@ -263,12 +263,7 @@ export class ViewContractComponent {
   getAllOpportunitiesSelection() {
     this.HttpApi.getAllOpportunitiesSelection("已結束").subscribe({
       next: (res) => {
-        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
-          return {
-            label: opportunity.name,
-            value: opportunity.opportunity_id,
-          };
-        });
+        this.GetAllOpportunity = res.body.opportunities
         console.log(this.GetAllOpportunity)
       },
       error: (error) => {

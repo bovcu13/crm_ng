@@ -84,12 +84,7 @@ export class ContractComponent {
   getAllOpportunitiesSelection() {
     this.HttpApi.getAllOpportunitiesSelection("已結束").subscribe({
       next: (res) => {
-        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
-          return {
-            label: opportunity.name,
-            value: opportunity.opportunity_id,
-          };
-        });
+        this.GetAllOpportunity = res.body.opportunities
         console.log(this.GetAllOpportunity)
       },
       error: (error) => {
@@ -228,8 +223,8 @@ export class ContractComponent {
       this.dialogHeader = '編輯契約';
       this.contract_form.patchValue(contract);
       this.contract_form.patchValue({
+        opportunity_id: this.GetAllOpportunity.find((opportunity: { name: any; }) => opportunity.name === contract.opportunity_name),
         start_date: new Date(contract.start_date),
-        account_name: this.GetAllOpportunity.find((a: { label: any; }) => a.label === contract.account_name),
       });
       this.showedit = true;
       if (contract.status === "已簽署" || contract.status === "已過期" || contract.status === "已取消") {
