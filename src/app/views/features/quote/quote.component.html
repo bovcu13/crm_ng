@@ -139,7 +139,7 @@
         <div class="field">
           <label><span class="required-star">*</span>商機</label>
           <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'"
-                      [filter]="true" filterBy="label" [showClear]="true"
+                      [filter]="true" filterBy="name" optionLabel="name" [showClear]="true"
                       [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError('required') && quote_form.controls['opportunity_id'].touched}"></p-dropdown>
         </div>
       </div>

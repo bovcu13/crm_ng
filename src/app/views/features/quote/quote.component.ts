@@ -376,6 +376,7 @@ export class QuoteComponent {
       }
       this.quote_form.patchValue(quote);
       this.quote_form.patchValue({
+        opportunity_id: this.GetAllOpportunity.find((opportunity: { name: any; }) => opportunity.name === quote.opportunity_name),
         status: this.status.find((s: { name: any; }) => s.name === quote.status),
         expiration_date: new Date(this.quote_form.value.expiration_date),
       });
@@ -396,12 +397,7 @@ export class QuoteComponent {
   getAllOpportunitiesSelection() {
     this.HttpApi.getAllOpportunitiesSelection("提案,談判").subscribe({
       next: (res) => {
-        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
-          return {
-            label: opportunity.name,
-            value: opportunity.opportunity_id,
-          };
-        });
+        this.GetAllOpportunity = res.body.opportunities
         console.log(this.GetAllOpportunity)
       },
       error: (error) => {

@@ -515,7 +515,7 @@ export class HttpApiService {
     let obj: any = {
       filter: {
         code: "",
-        stage: keyword.split(','),
+        status: keyword.split(','),
       }
     };
     const url = `${BaseUrl}/contracts/list/no-pagination`;
