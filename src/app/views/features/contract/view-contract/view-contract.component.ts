@@ -61,7 +61,6 @@ export class ViewContractComponent {
   //取得當筆契約歷史紀錄
   GetContractHistoricalRecords: any[] = [];
   totalHistorical: any;
-
   getAllContractHistoricalRecordsRequest(c_id: any) {
     this.HttpApi.getAllHistoricalRecordsRequest(20, 1, c_id).subscribe(res => {
         this.GetContractHistoricalRecords = res.body.historical_records
@@ -260,21 +259,14 @@ export class ViewContractComponent {
 
   // GET全部Opportunity
   GetAllOpportunity: any[] = [];
-  OpportunitySearch!: string;
-
-  getAllOpportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe({
-      next: res => {
-        const GetOpportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage == "已結束")
-        this.GetAllOpportunity = GetOpportunity.map((opportunity: any) => {
-          return {
-            label: opportunity.name,
-            value: opportunity.opportunity_id,
-            account_id: opportunity.account_id,
-          };
-        });
+  //取得商機階段如果不到已結束就無法選擇
+  getAllOpportunitiesSelection() {
+    this.HttpApi.getAllOpportunitiesSelection("已結束").subscribe({
+      next: (res) => {
+        this.GetAllOpportunity = res.body.opportunities
+        console.log(this.GetAllOpportunity)
       },
-      error: error => {
+      error: (error) => {
         console.log(error);
       }
     });
@@ -321,7 +313,7 @@ export class ViewContractComponent {
     this.c_id = this.route.snapshot.paramMap.get('c_id')
     console.log("取到的o_id: " + this.c_id)
     this.getOneContractRequest(this.c_id)
-    this.getAllOpportunityRequest()
+    this.getAllOpportunitiesSelection()
     this.getAllOrderRequest()
     this.getAllContractHistoricalRecordsRequest(this.c_id)
   }

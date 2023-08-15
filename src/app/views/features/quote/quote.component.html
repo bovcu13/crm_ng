@@ -97,7 +97,7 @@
                 <p-button (click)="showDialog('edit',quote)" icon="pi pi-pencil" pTooltip="編輯" tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button *ngIf="quote.status === status[0].name"
-                          (click)="deleteQuoteRequest(quote.order_id)" icon="pi pi-trash" pTooltip="刪除"
+                          (click)="deleteQuoteRequest(quote.quote_id)" icon="pi pi-trash" pTooltip="刪除"
                           tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
                 <p-button *ngIf="quote.status === status[1].name || quote.status === status[2].name || quote.status === status[3].name || quote.status === status[4].name || quote.status === status[5].name"
                           icon="pi pi-trash" pTooltip="{{quote.status}}狀態不可刪除"
@@ -125,7 +125,7 @@
         <div class="field">
           <label>狀態</label>
           <p-dropdown placeholder="請選擇" appendTo="body" [options]="status" formControlName="status"
-                      optionLabel="name" (onChange)="onStatusChange($event)" [(ngModel)]="selectedStatus"></p-dropdown>
+                      optionLabel="name" (onChange)="onStatusChange($event)"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-12 lg:col-12">
@@ -139,8 +139,7 @@
         <div class="field">
           <label><span class="required-star">*</span>商機</label>
           <p-dropdown placeholder="搜尋商機" [options]="GetAllOpportunity" [formControlName]="'opportunity_id'"
-                      [(ngModel)]="selectedOpportunity_id"
-                      [filter]="true" filterBy="label" [showClear]="true" (ngModelChange)="selectedOpportunity()"
+                      [filter]="true" filterBy="name" optionLabel="name" [showClear]="true"
                       [ngClass]="{'ng-dirty':quote_form.controls['opportunity_id'].hasError('required') && quote_form.controls['opportunity_id'].touched}"></p-dropdown>
         </div>
       </div>
