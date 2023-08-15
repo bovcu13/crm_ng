@@ -58,7 +58,7 @@ export class ContractComponent {
   ]
 
   ngOnInit() {
-    this.getAllOpportunityRequest()
+    this.getAllOpportunitiesSelection()
   }
 
   //GET全部contract
@@ -80,21 +80,19 @@ export class ContractComponent {
 
   // GET全部Opportunity
   GetAllOpportunity: any[] = [];
-  OpportunitySearch!: string;
-
-  getAllOpportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.OpportunitySearch, 1).subscribe({
-      next: res => {
-        const GetOpportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage == "已結束")
-        this.GetAllOpportunity = GetOpportunity.map((opportunity: any) => {
+  //取得商機階段如果不到已結束就無法選擇
+  getAllOpportunitiesSelection() {
+    this.HttpApi.getAllOpportunitiesSelection("已結束").subscribe({
+      next: (res) => {
+        this.GetAllOpportunity = res.body.opportunities.map((opportunity: any) => {
           return {
             label: opportunity.name,
             value: opportunity.opportunity_id,
-            account_id: opportunity.account_id,
           };
         });
+        console.log(this.GetAllOpportunity)
       },
-      error: error => {
+      error: (error) => {
         console.log(error);
       }
     });
@@ -139,7 +137,6 @@ export class ContractComponent {
       term: this.contract_form.value.term,
       opportunity_id: this.contract_form.value.opportunity_id,
     }
-
     this.HttpApi.postContractRequest(body).subscribe({
       next: Request => {
         console.log(Request)
@@ -414,7 +411,6 @@ export class ContractComponent {
 
   //上傳檔案
   uploadedFiles: any[] = [];
-
   onUpload(event: any) {
     for (let file of event.files) {
       this.uploadedFiles.push(file);
