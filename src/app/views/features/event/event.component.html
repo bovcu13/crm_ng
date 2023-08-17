@@ -17,7 +17,7 @@
 </div>
 <!--dialog事件-->
 <form [formGroup]="event_form">
-  <p-dialog [(visible)]="visible" header={{dialogHeader}} [modal]="true">
+  <p-dialog [(visible)]="visible" header={{dialogHeader}} [modal]="true" (onHide)="onDialogHide()">
     <div class="grid">
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
@@ -29,8 +29,8 @@
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>主要人員</label>
-          <p-multiSelect placeholder="搜尋人員" [formControlName]="'main_name'" appendTo="body" (onClear)="onClearMain()" display="chip"
-                         optionLabel="main_name" [showClear]="true" [options]="GetAllMain" (onChange)="MultiSelectMain($event)"
+          <p-multiSelect placeholder="搜尋人員" [formControlName]="'main_name'" appendTo="body" display="chip"
+                         optionLabel="main_name" [showClear]="true" [options]="GetAllMain" (onChange)="MultiSelectMain($event)" (onClear)="onClearMain()"
                          [ngClass]="{'ng-dirty':event_form.controls['main_name'].hasError && event_form.controls['main_name'].touched}">
           </p-multiSelect>
         </div>
@@ -102,14 +102,15 @@
         <div class="field">
           <label>帳戶</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllAccount" optionLabel="name" [filter]="true" filterBy="name"
-                      formControlName="account_name" [showClear]="true"></p-dropdown>
+                      formControlName="account_name" [showClear]="true" (onChange)="onAccountSelected($event)"
+                      [ngClass]="{'ng-dirty':event_form.controls['account_name'].hasError && event_form.controls['account_name'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label>聯絡人</label>
           <p-multiSelect  placeholder="搜尋人員" [formControlName]="'contact'" appendTo="body" [options]="GetAllContact" display="chip"
-                          optionLabel="contact_name" [showClear]="true"
+                          optionLabel="name" [showClear]="true" [filter]="true" filterBy="name"
                           [ngClass]="{'ng-dirty':event_form.controls['contact'].hasError && event_form.controls['contact'].touched}">
 
           </p-multiSelect>
@@ -150,7 +151,7 @@
       </ng-container>
       <p-button label="取消" (click)="visible= false" styleClass="p-button-secondary mr-1"></p-button>
       <ng-container *ngIf="showedit">
-        <p-button label="儲存" (click)="visible= false" styleClass="p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchEventRequest(e_id)" styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="!showedit">
         <p-button label="新增" (click)="visible= false" styleClass="p-button-info"></p-button>
