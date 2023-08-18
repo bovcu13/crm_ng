@@ -89,7 +89,7 @@ export class QuoteComponent {
     let body = {
       name: this.quote_form.value.name,
       expiration_date: this.quote_form.value.expiration_date,
-      opportunity_id: this.quote_form.value.opportunity_id,
+      opportunity_id: this.quote_form.value.opportunity_id.opportunity_id,
       shipping_and_handling: this.quote_form.value.shipping_and_handling,
       status: this.quote_form.get('status')?.value.name,
       tax: this.quote_form.value.tax,
@@ -157,7 +157,7 @@ export class QuoteComponent {
       expiration_date: this.quote_form.get('expiration_date')?.value,
       is_syncing: this.quote_form.get('is_syncing')?.value,
       description: this.quote_form.get('description')?.value,
-      opportunity_id: this.quote_form.get('opportunity_id')?.value,
+      opportunity_id: this.quote_form.get('opportunity_id')?.value.opportunity_id,
       shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
       tax: this.quote_form.get('tax')?.value,
     }
