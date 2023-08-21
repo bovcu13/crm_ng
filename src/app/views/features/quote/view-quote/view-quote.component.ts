@@ -611,7 +611,7 @@ export class ViewQuoteComponent {
       expiration_date: this.quote_form.get('expiration_date')?.value,
       is_syncing: this.quote_form.get('is_syncing')?.value,
       description: this.quote_form.get('description')?.value,
-      opportunity_id: this.quote_form.get('opportunity_id')?.value,
+      opportunity_id: this.quote_form.get('opportunity_id')?.value.opportunity_id,
       shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
       tax: this.quote_form.get('tax')?.value,
     }

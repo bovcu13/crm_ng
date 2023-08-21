@@ -527,7 +527,7 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label>銷售價格</label>
+          <label><span class="required-star">*</span>銷售價格</label>
           <br>
           <p-inputNumber inputId="integeronly" mode="currency" currency="TWD" locale="en-tw" class="w-full"
                          [min]="0" [formControlName]="'unit_price'" [minFractionDigits]="0"
@@ -538,7 +538,7 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label>數量</label>
+          <label><span class="required-star">*</span>數量</label>
           <br>
           <p-inputNumber inputId="integeronly" class="w-full" [min]="1" [formControlName]="'quantity'"
                          [ngClass]="{'ng-dirty':quote_product_form.controls['quantity'].hasError('required') && quote_product_form.controls['quantity'].touched}">
@@ -557,7 +557,7 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label>折扣</label>
+          <label><span class="required-star">*</span>折扣</label>
           <br>
           <p-inputNumber inputId="integeronly" [min]="0" [max]="100" suffix="%" [formControlName]="'discount'"
                          class="w-full"

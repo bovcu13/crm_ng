@@ -277,7 +277,7 @@ export class ContractComponent {
     let body = {
       status: this.contract_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      opportunity_id: this.contract_form.get('opportunity_id')?.value,
+      opportunity_id: this.contract_form.get('opportunity_id')?.value.opportunity_id,
       term: this.contract_form.get('term')?.value,
       description: this.contract_form.get('description')?.value,
     }
