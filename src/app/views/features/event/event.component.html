@@ -100,7 +100,7 @@
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
-          <label>帳戶</label>
+          <label><span class="required-star">*</span>帳戶</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllAccount" optionLabel="name" [filter]="true" filterBy="name"
                       formControlName="account_name" [showClear]="true" (onChange)="onAccountSelected($event)"
                       [ngClass]="{'ng-dirty':event_form.controls['account_name'].hasError && event_form.controls['account_name'].touched}"></p-dropdown>
@@ -110,9 +110,7 @@
         <div class="field">
           <label>聯絡人</label>
           <p-multiSelect  placeholder="搜尋人員" [formControlName]="'contact'" appendTo="body" [options]="GetAllContact" display="chip"
-                          optionLabel="name" [showClear]="true" [filter]="true" filterBy="name"
-                          [ngClass]="{'ng-dirty':event_form.controls['contact'].hasError && event_form.controls['contact'].touched}">
-
+                          optionLabel="contact_name" [showClear]="true" [filter]="true" filterBy="contact_name">
           </p-multiSelect>
         </div>
       </div>
@@ -147,14 +145,14 @@
     </div>
     <div class="flex justify-content-end">
       <ng-container *ngIf="showedit">
-        <p-button label="刪除" (click)="visible= false" styleClass="p-button-danger mr-1"></p-button>
+        <p-button label="刪除" (click)="deleteEventRequest()" styleClass="p-button-danger mr-1"></p-button>
       </ng-container>
       <p-button label="取消" (click)="visible= false" styleClass="p-button-secondary mr-1"></p-button>
       <ng-container *ngIf="showedit">
-        <p-button label="儲存" (click)="patchEventRequest(e_id)" styleClass="p-button-info"></p-button>
+        <p-button label="儲存" (click)="patchEventRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
       <ng-container *ngIf="!showedit">
-        <p-button label="新增" (click)="visible= false" styleClass="p-button-info"></p-button>
+        <p-button label="新增" (click)="postEventRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
     </div>
   </p-dialog>

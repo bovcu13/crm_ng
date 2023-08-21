@@ -5,6 +5,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpApiService} from "../../../api/http-api.service";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-event',
@@ -141,10 +142,25 @@ export class EventComponent {
   visible: boolean = false;
   dialogHeader!: string;
   showedit = true;//判斷是否dialog為新增與編輯
+  e_id: any
   showDialog(type: string, event ?: any) {
     this.dialogHeader = type === 'edit' ? '編輯日曆事件' : '新增日曆事件';
     this.visible = true;
     if (event) {
+      this.HttpApi.getAllContactSelection(event.extendedProps.account_id).subscribe({
+        next: res => {
+          this.GetAllContact = res.body.contacts.map((contacts: any) => {
+            return {
+              contact_name: contacts.name,
+              contact_id: contacts.contact_id,
+            };
+          });
+          console.log(this.GetAllContact)
+        },
+        error: error => {
+          console.log(error);
+        }
+      })
       this.event_form.patchValue({
         subject: event.title,
         main_name: event.extendedProps.mains,
@@ -152,8 +168,9 @@ export class EventComponent {
         allday: event.allDay,
         start_date: new Date((event.start)),
         end_date: new Date((event.end)),
+        account_name: this.GetAllAccount.find((account: { name: any; }) => account.name === event.extendedProps.account_name),
         contact: event.extendedProps.contacts,
-        // type: this.type.find((s: { name: any; }) => s.name === event.extendedProps.type.status),
+        type: this.type.find((s: { name: any; }) => s.name === event.extendedProps.type),
         description: event.extendedProps.description,
         location: event.extendedProps.location,
         created_at: event.extendedProps.created_at,
@@ -193,6 +210,7 @@ export class EventComponent {
             end_date: any;
             is_whole: boolean;
             account_id: any;
+            account_name: any;
             location: any;
             created_by: any;
             created_at: any;
@@ -207,9 +225,11 @@ export class EventComponent {
               title: evt.subject,
               start: evt.start_date,
               end: evt.end_date,
+              type: evt.type,
               description: evt.description,
               allDay: evt.is_whole,
               account_id: evt.account_id,
+              account_name: evt.account_name,
               location: evt.location,
               created_by: evt.created_by,
               created_at: evt.created_at,
@@ -254,11 +274,42 @@ export class EventComponent {
   //新增一筆 日曆事件
   postEventRequest() {
     let body = {
+      subject: this.event_form.get('subject')?.value,
+      main:this.event_form.get('main_name')?.value.map((item: { main_id: any; }) => item.main_id),
+      start_date: this.event_form.get('start_date')?.value,
+      end_date: this.event_form.get('end_date')?.value,
+      is_whole: this.event_form.get('allday')?.value,
+      type: this.event_form.get('type')?.value.name,
+      attendee:this.event_form.get('attendee_name')?.value.map((item: { attendee_id: any; }) => item.attendee_id),
+      account_id: this.event_form.get('account_name')?.value.account_id,
+      contact:this.event_form.get('contact')?.value.map((item: { contact_id: any; }) => item.contact_id),
+      location: this.event_form.get('location')?.value,
+      description: this.event_form.get('description')?.value,
     }
     this.HttpApi.postEventRequest(body).subscribe({
       next: Request => {
         console.log(Request)
-        this.getAllEventRequest()
+        this.visible = false;
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getAllEventRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.visible = true;
+          })
+        }
       },
       error: (error) => {
         console.log(error);
@@ -266,34 +317,122 @@ export class EventComponent {
     })
   }
   //修改一筆 日曆事件
-  e_id: any
-  patchEventRequest(e_id:any) {
+  patchEventRequest() {
     let body = {
       subject: this.event_form.get('subject')?.value,
-      main_name:this.event_form.get('main_name')?.value.map((item: { main_id: any; }) => item.main_id),
+      main:this.event_form.get('main_name')?.value.map((item: { main_id: any; }) => item.main_id),
       start_date: this.event_form.get('start_date')?.value,
       end_date: this.event_form.get('end_date')?.value,
-      allday: this.event_form.get('allday')?.value,
+      is_whole: this.event_form.get('allday')?.value,
       type: this.event_form.get('type')?.value.name,
-      attendee_name:this.event_form.get('attendee_name')?.value.map((item: { attendee_id: any; }) => item.attendee_id),
+      attendee:this.event_form.get('attendee_name')?.value.map((item: { attendee_id: any; }) => item.attendee_id),
+      account_id: this.event_form.get('account_name')?.value.account_id,
+      contact:this.event_form.get('contact')?.value.map((item: { contact_id: any; }) => item.contact_id),
       location: this.event_form.get('location')?.value,
       description: this.event_form.get('description')?.value,
     }
-    console.log(body)
-    // this.HttpApi.patchEventRequest(e_id,body).subscribe({
-    //   next: Request => {
-    //     console.log(Request)
-    //     this.getAllEventRequest()
-    //   },
-    //   error: (error) => {
-    //     console.log(error);
-    //   }
-    // })
+    this.HttpApi.patchEventRequest(this.e_id,body).subscribe({
+      next: Request => {
+        console.log(Request)
+        this.visible = false;
+        if (Request.code === 200) {
+          Swal.fire({
+            title: '成功',
+            text: "已儲存您的資料 :)",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          this.getAllEventRequest()
+        } else {
+          Swal.fire({
+            title: '失敗',
+            text: "請確認資料是否正確 :(",
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.visible = true;
+          })
+        }
+      },
+      error: (error) => {
+        if(error.status == 400){
+					this.showAlertCancel()
+        }
+      }
+    })
+  }
+  //Delete 一筆event
+  deleteEventRequest(): void {
+    this.visible = false
+    Swal.fire({
+      title: '確認刪除？',
+      icon: 'warning',
+      confirmButtonColor: '#6EBE71',
+      cancelButtonColor: '#FF3034',
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.HttpApi.deleteEventRequest(this.e_id).subscribe({
+          next: Request => {
+            console.log(Request)
+            if (Request.code === 200) {
+              this.visible = false;
+              Swal.fire({
+                title: '成功',
+                text: "已刪除您的資料 :)",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+              })
+              this.getAllEventRequest()
+            } else {
+              Swal.fire({
+                title: '失敗',
+                text: "請確認資料是否正確 :(",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          },
+          error: error => {
+            console.log(error);
+          }
+        })
+      } else {
+        Swal.fire({
+          title: '取消',
+          text: "已取消您的變更！",
+          icon: 'error',
+          showCancelButton: false,
+          showConfirmButton: false,
+          reverseButtons: false,
+          timer: 1000
+        })
+      }
+    })
+  }
+  showAlertCancel() {
+    this.visible = false
+    Swal.fire({
+      title: '修改期限已過!',
+      text: "已取消您的變更！",
+      icon: 'error',
+      showCancelButton: false,
+      showConfirmButton: false,
+      reverseButtons: false,
+      timer: 1000
+    })
   }
 
   GetAllAccount: any[] = []
   getAllAccountSelection() {
-    this.HttpApi.getAllAccountSelection().subscribe({
+    this.HttpApi.getAllAccountSelection("個人客戶,法人客戶").subscribe({
       next: res => {
         this.GetAllAccount = res.body.accounts;
       },
@@ -305,12 +444,16 @@ export class EventComponent {
   GetAllContact: any[] = []
   onAccountSelected(selectedAccount: any) {
     const selectedAccountId = selectedAccount.value.account_id;
-    console.log(selectedAccountId)
     if (selectedAccountId) {
       this.HttpApi.getAllContactSelection(selectedAccountId).subscribe({
         next: res => {
-          this.GetAllContact = res.body.contacts
-          console.log(res.body.contacts)
+          this.GetAllContact = res.body.contacts.map((contacts: any) => {
+            return {
+              contact_name: contacts.name,
+              contact_id: contacts.contact_id,
+            };
+          });
+          console.log(this.GetAllContact)
         },
         error: error => {
           console.log(error);

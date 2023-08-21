@@ -129,11 +129,16 @@ export class HttpApiService {
     return this.http.post<any>(url, obj);
   }
 
-  getAllAccountSelection(): Observable<any> {
-    const url = `${BaseUrl}/accounts`;
-    return this.http.get<any>(url);
+  getAllAccountSelection(keyword?:string): Observable<any> {
+    let obj: any = {
+      filter: {
+        name: "",
+        type: keyword?.split(','),
+      }
+    };
+    const url = `${BaseUrl}/accounts/list/no-pagination`;
+    return this.http.post<any>(url,obj);
   }
-
   // getAllAccountDetailRequest(page: number): Observable<any> {
   //   const url = `${BaseUrl}/accounts/contacts?page=${page}&limit=10`;
   //   return this.http.get<any>(url);
