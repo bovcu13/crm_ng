@@ -91,8 +91,12 @@
                 <p-button (click)="showDialog('edit',campaign)" icon="pi pi-pencil" pTooltip="編輯"
                           tooltipPosition="top"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-                <p-button icon="pi pi-trash" pTooltip="刪除" tooltipPosition="top"
-                          (click)="deleteCampaignRequest(campaign.campaign_id)"
+                <p-button *ngIf="campaign.status === status[0].name"
+                          (click)="deleteCampaignRequest(campaign.campaign_id)" icon="pi pi-trash" pTooltip="刪除"
+                          tooltipPosition="top" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button *ngIf="campaign.status === status[1].name || campaign.status === status[2].name || campaign.status === status[3].name"
+                          icon="pi pi-trash" pTooltip="{{campaign.status}}狀態不可刪除"
+                          tooltipPosition="top" [disabled]="true"
                           styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
               </div>
             </td>

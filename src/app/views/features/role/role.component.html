@@ -1,0 +1,166 @@
+
+  <div class="flex justify-content-center">
+    <div class="col-10 md:col-10 lg:col-10">
+      <p-card>
+        <h2>角色管理</h2>
+        <p-table [value]="data" dataKey="name">
+          <ng-template pTemplate="caption">
+            <div class="flex justify-content-between flex-wrap">
+              <div class="flex align-items-center justify-content-center">
+                <button pButton label="新增" class="p-button-outlined" icon="pi pi-plus"></button>
+              </div>
+              <div class="flex align-items-center justify-content-center">
+            <span class="p-input-icon-left table-search">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" placeholder="搜尋角色名稱">
+            </span>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th></th>
+              <th pSortableColumn="role_name">角色名稱 <p-sortIcon field="role_name"></p-sortIcon>
+              </th>
+              <th pSortableColumn="created_at">建立時間 <p-sortIcon field="created_at"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-role let-expanded="expanded">
+            <tr>
+              <td>
+                <button type="button" pButton pRipple [pRowToggler]="role"
+                        class="p-button-text p-button-rounded p-button-plain"
+                        [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+              </td>
+              <td>{{ role.name }}</td>
+              <td>{{ role.created_at }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="rowexpansion" let-data>
+            <tr>
+              <td colspan="7">
+                <div class="p-3">
+                  <p-table [value]="data.data2" dataKey="id">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th pSortableColumn="role" [style]="{width: '450px'}">權限
+                        </th>
+                        <th pSortableColumn="read">審核
+                        </th>
+                        <th pSortableColumn="create">停權
+                        </th>
+                        <th pSortableColumn="update">賦權
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-order>
+                      <tr>
+                        <td>{{ order.role }}</td>
+                        <td>
+                          <p-checkbox [binary]="true" [(ngModel)]="order.examine"></p-checkbox>
+                        </td>
+                        <td>
+                          <p-checkbox [binary]="true" [(ngModel)]="order.suspension"></p-checkbox>
+                        </td>
+                        <td>
+                          <p-checkbox [binary]="true" [(ngModel)]="order.empowerment"></p-checkbox>
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="6">目前尚無資料</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                  <p-table [value]="data.data3" dataKey="id">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th pSortableColumn="role" [style]="{width: '450px'}">權限
+                        </th>
+                        <th pSortableColumn="read">查詢
+                        </th>
+                        <th pSortableColumn="create">新增
+                        </th>
+                        <th pSortableColumn="update">修改
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-order>
+                      <tr>
+                        <td>{{ order.role }}</td>
+                        <td>
+                          <p-checkbox [binary]="true" [(ngModel)]="order.read"></p-checkbox>
+                        </td>
+                        <td>
+                          <p-checkbox [binary]="true" [(ngModel)]="order.create"></p-checkbox>
+                        </td>
+                        <td>
+                          <p-checkbox [binary]="true" [(ngModel)]="order.update"></p-checkbox>
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="6">目前尚無資料</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
+    </div>
+  </div>
+
+
+<!--  <div class="col-12 md:col-12 lg:col-12">-->
+<!--    <p-card>-->
+<!--      <h2>角色管理</h2>-->
+<!--      <p-accordion [multiple]="true">-->
+<!--        <p-accordionTab header="經理">-->
+<!--          <p-table #dt1 responsiveLayout="scroll" dataKey="role_id" [rows]="10" [value]="order"-->
+<!--                   [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,20]" sortField="created_at"-->
+<!--                   [sortOrder]="-1"-->
+<!--                   styleClass="p-datatable-gridlines" [paginator]="true"-->
+<!--                   currentPageReportTemplate="從 {first} 到 {last} 筆，共 {totalRecords} 筆"-->
+<!--                   [globalFilterFields]="['role_name']">-->
+<!--            <ng-template pTemplate="header">-->
+<!--              <tr>-->
+<!--                <th pSortableColumn="role_name">角色名稱-->
+<!--                  <p-sortIcon field="role_name"></p-sortIcon>-->
+<!--                </th>-->
+<!--                <th pSortableColumn="created_at">建立時間-->
+<!--                  <p-sortIcon field="created_at"></p-sortIcon>-->
+<!--                </th>-->
+<!--                <th></th>-->
+<!--              </tr>-->
+<!--            </ng-template>-->
+<!--            <ng-template pTemplate="body" let-role>-->
+<!--              <tr>-->
+<!--                <td>-->
+<!--                  {{role.role_name}}-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                  {{role.created_at | date: 'yyyy-MM-dd HH:mm'}}-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                  <div class="btn-group">-->
+<!--                    <p-button label="修改" styleClass="p-button-success"></p-button>-->
+<!--                  </div>-->
+<!--                </td>-->
+<!--              </tr>-->
+<!--            </ng-template>-->
+<!--            <ng-template pTemplate="emptymessage">-->
+<!--              <tr>-->
+<!--                <td colspan="4">找不到角色資料</td>-->
+<!--              </tr>-->
+<!--            </ng-template>-->
+<!--          </p-table>-->
+<!--        </p-accordionTab>-->
+<!--      </p-accordion>-->
+<!--    </p-card>-->
+<!--  </div>-->

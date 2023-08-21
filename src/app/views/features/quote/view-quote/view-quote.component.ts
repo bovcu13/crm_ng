@@ -74,7 +74,7 @@ export class ViewQuoteComponent {
     console.log("取到的q_id: " + this.q_id)
     this.getQuoteProductRequest()
     this.getOneQuoteRequest(this.q_id)
-    this.getAllopportunityRequest()
+    this.getAllOpportunitiesSelection()
     this.getAllProductRequest()
     this.getAllQuoteHistoricalRecordsRequest(this.q_id)
     // this.getAllQuoteProductsRequest()
@@ -111,7 +111,6 @@ export class ViewQuoteComponent {
 
   //新增產品dialog
   add: boolean = false;
-
   addProduct() {
     this.add = true;
     this.selectedProducts = [];
@@ -152,7 +151,6 @@ export class ViewQuoteComponent {
       this.showErrorMessage = true;
       return;
     }
-
   }
 
   //取得當筆報價資料
@@ -170,6 +168,7 @@ export class ViewQuoteComponent {
         this.GetOneIsSyncing = res.body.is_syncing ? '是' : '否';
         this.quote_form.patchValue(res.body)
         this.quote_form.patchValue({
+          opportunity_id: this.GetAllOpportunity.find((opportunity: { name: any; }) => opportunity.name === res.body.opportunity_name),
           status: this.status.find((s: { name: any; }) => s.name === this.GetOneQuote.status),
           expiration_date: new Date(res.body.expiration_date)
         });
@@ -227,6 +226,7 @@ export class ViewQuoteComponent {
         unit_price: unit_price,
         quantity: quantity,
         discount: discount,
+        //todo
         // description: ' ',
       };
       quoteProducts.push(quoteProduct);
@@ -585,7 +585,7 @@ export class ViewQuoteComponent {
     })
   }
 
-
+//PATCH 一筆quote
   patchQuoteRequest(q_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
       this.quote_form.controls['opportunity_id'].hasError('required')) {
@@ -610,9 +610,8 @@ export class ViewQuoteComponent {
       status: this.quote_form.get('status')?.value.name,
       expiration_date: this.quote_form.get('expiration_date')?.value,
       is_syncing: this.quote_form.get('is_syncing')?.value,
-      account_id: this.selectedAccount_id, //帳戶ID
       description: this.quote_form.get('description')?.value,
-      opportunity_id: this.selectedOpportunity_id, //商機ID
+      opportunity_id: this.quote_form.get('opportunity_id')?.value.opportunity_id,
       shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
       tax: this.quote_form.get('tax')?.value,
     }
@@ -645,7 +644,7 @@ export class ViewQuoteComponent {
       }
     })
   }
-
+//Delete 一筆quote
   deleteQuoteRequest(q_id: any): void {
     Swal.fire({
       title: '確認刪除？',
@@ -753,37 +752,18 @@ export class ViewQuoteComponent {
 
   // GET全部Opportunity
   GetAllOpportunity: any[] = [];
-  selectedOpportunity_id: string = '';
-  opportunitysearch: any;
-
-  getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe({
+  //取得商機階段如果不到提案或談判狀態就無法選擇
+  getAllOpportunitiesSelection() {
+    this.HttpApi.getAllOpportunitiesSelection("提案,談判").subscribe({
       next: (res) => {
-        //商機階段如果不到提案狀態就無法選擇
-        const getopportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage !== "資格評估" && opportunity.stage !== "需求分析");
-        this.GetAllOpportunity = getopportunity.map((opportunity: any) => {
-          return {
-            label: opportunity.name,
-            value: opportunity.opportunity_id,
-            account_id: opportunity.account_id,
-          };
-        });
+        this.GetAllOpportunity = res.body.opportunities
+        console.log(this.GetAllOpportunity)
       },
       error: (error) => {
         console.log(error);
       }
     });
   }
-
-  selectedAccount_id: string = '';
-
-  //取得選擇的商機帳戶id
-  selectedOpportunity() {
-    const selectedOpportunity = this.GetAllOpportunity.find((opportunity) => opportunity.value === this.selectedOpportunity_id);
-    this.selectedAccount_id = selectedOpportunity?.account_id;
-  }
-
-
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
@@ -792,7 +772,6 @@ export class ViewQuoteComponent {
   //取得當筆報價歷史紀錄
   GetQuoteHistoricalRecords: any[] = [];
   totalHistorical: any;
-
   getAllQuoteHistoricalRecordsRequest(q_id: any) {
     this.HttpApi.getAllHistoricalRecordsRequest(20, 1, q_id).subscribe(res => {
         this.GetQuoteHistoricalRecords = res.body.historical_records

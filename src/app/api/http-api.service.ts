@@ -264,7 +264,7 @@ export class HttpApiService {
           rating: keyword,
           source: keyword,
           salesperson_name: keyword,
-          status: keyword,
+          status: [keyword],
         },
       };
     }
@@ -276,6 +276,17 @@ export class HttpApiService {
     const url = `${BaseUrl}/leads`;
     return this.http.get<any>(url);
   }
+
+  // getAllLeadSelection(filterData: any[]): Observable<any> {
+  //   let obj: any = {
+  //     description: null,
+  //     rating: null,
+  //     source: null,
+  //     status: filterData,
+  //   };
+  //   const url = `${BaseUrl}/leads/list/no-pagination`;
+  //   return this.http.post<any>(url, obj);
+  // }
 
   getOneLeadRequest(id: any): Observable<any> {
     const url = `${BaseUrl}/leads/${id}`;
@@ -328,17 +339,22 @@ export class HttpApiService {
           name: keyword,
           account_name: keyword,
           salesperson_name: keyword,
-          stage: keyword
+          stage: [keyword]
         },
       };
     }
     const url = `${BaseUrl}/opportunities/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
-
-  getAllOpportunitiesSelection(): Observable<any> {
-    const url = `${BaseUrl}/opportunities`;
-    return this.http.get<any>(url);
+  getAllOpportunitiesSelection(keyword:string): Observable<any> {
+    let obj: any = {
+      filter: {
+        name: "",
+        stage: keyword.split(','),
+      }
+    };
+    const url = `${BaseUrl}/opportunities/list/no-pagination`;
+    return this.http.post<any>(url,obj);
   }
 
   getOneOpportunityRequest(id: any): Observable<any> {
@@ -493,17 +509,22 @@ export class HttpApiService {
         field: status,
         filter: {
           code: keyword,
-          status: keyword,
+          status: [keyword],
         },
       };
     }
     const url = `${BaseUrl}/contracts/list?page=${page}&limit=${limit}`;
     return this.http.post<any>(url, obj);
   }
-
-  getAllContractSelection(): Observable<any> {
-    const url = `${BaseUrl}/contracts`;
-    return this.http.get<any>(url);
+  getAllContractSelection(keyword:string): Observable<any> {
+    let obj: any = {
+      filter: {
+        code: "",
+        status: keyword.split(','),
+      }
+    };
+    const url = `${BaseUrl}/contracts/list/no-pagination`;
+    return this.http.post<any>(url,obj);
   }
 
   getOneContractRequest(sid: any): Observable<any> {

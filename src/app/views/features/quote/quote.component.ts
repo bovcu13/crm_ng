@@ -82,16 +82,14 @@ export class QuoteComponent {
       })
       return;
     }
-
     if (this.quote_form.controls['name'].hasError('required')
       || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
     }
     let body = {
       name: this.quote_form.value.name,
-      account_id: this.selectedAccount_id,//帳戶ID
       expiration_date: this.quote_form.value.expiration_date,
-      opportunity_id: this.selectedOpportunity_id,//商機ID
+      opportunity_id: this.quote_form.value.opportunity_id.opportunity_id,
       shipping_and_handling: this.quote_form.value.shipping_and_handling,
       status: this.quote_form.get('status')?.value.name,
       tax: this.quote_form.value.tax,
@@ -127,7 +125,7 @@ export class QuoteComponent {
       }
     })
   }
-
+//PATCH 一筆quote
   patchQuoteRequest(p_id: any): void {
     if (this.quote_form.controls['name'].hasError('required') ||
       this.quote_form.controls['opportunity_id'].hasError('required')) {
@@ -149,24 +147,20 @@ export class QuoteComponent {
       })
       return;
     }
-
-    this.editStatus()//處理status的值，抓取name
     if (this.quote_form.controls['name'].hasError('required')
       || this.quote_form.controls['opportunity_id'].hasError('required')) {
       return;
     }
     let body = {
       name: this.quote_form.get('name')?.value,
-      status: this.quote_form.get('status')?.value,
+      status: this.quote_form.get('status')?.value.name,
       expiration_date: this.quote_form.get('expiration_date')?.value,
       is_syncing: this.quote_form.get('is_syncing')?.value,
-      account_id: this.selectedAccount_id, //帳戶ID
       description: this.quote_form.get('description')?.value,
-      opportunity_id: this.selectedOpportunity_id, //商機ID
+      opportunity_id: this.quote_form.get('opportunity_id')?.value.opportunity_id,
       shipping_and_handling: this.quote_form.get('shipping_and_handling')?.value,
       tax: this.quote_form.get('tax')?.value,
     }
-    console.log(this.quote_form.get('shipping_and_handling')?.value)
     this.HttpApi.patchQuoteRequest(p_id, body).subscribe({
       next: Request => {
         console.log(Request)
@@ -198,8 +192,7 @@ export class QuoteComponent {
       }
     });
   }
-
-
+//Delete 一筆quote
   deleteQuoteRequest(q_id: any): void {
     Swal.fire({
       title: '確認刪除？',
@@ -311,7 +304,6 @@ export class QuoteComponent {
   }
 
   quote_form: FormGroup;
-
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.quote_form = this.fb.group({
       quote_id: [''],
@@ -344,7 +336,6 @@ export class QuoteComponent {
   selectedStatus!: any;
   q_id: any;
   disableSaveButton: boolean = false
-
   // 點擊表頭狀態列執行搜尋
   toggleStatusFilter(index: number) {
     // 若已被點擊過則取消 filter
@@ -360,7 +351,6 @@ export class QuoteComponent {
       }
       this.status[index].boolean = true
     }
-    // console.log(this.status)
   }
 
   showDialog(type: string, quote?: any): void {
@@ -386,6 +376,7 @@ export class QuoteComponent {
       }
       this.quote_form.patchValue(quote);
       this.quote_form.patchValue({
+        opportunity_id: this.GetAllOpportunity.find((opportunity: { name: any; }) => opportunity.name === quote.opportunity_name),
         status: this.status.find((s: { name: any; }) => s.name === quote.status),
         expiration_date: new Date(this.quote_form.value.expiration_date),
       });
@@ -397,39 +388,22 @@ export class QuoteComponent {
   }
 
   ngOnInit() {
-    this.getAllopportunityRequest()
+    this.getAllOpportunitiesSelection()
   }
 
-  // GET全部Account
+  // GET全部Opportunity
   GetAllOpportunity: any[] = [];
-  selectedOpportunity_id: string = '';
-  opportunitysearch: any;
-
-  getAllopportunityRequest() {
-    this.HttpApi.getAllOpportunityRequest(this.opportunitysearch, 1).subscribe({
+  //取得商機階段如果不到提案或談判狀態就無法選擇
+  getAllOpportunitiesSelection() {
+    this.HttpApi.getAllOpportunitiesSelection("提案,談判").subscribe({
       next: (res) => {
-        //商機階段如果不到提案狀態就無法選擇
-        const getopportunity = res.body.opportunities.filter((opportunity: any) => opportunity.stage !== "資格評估" && opportunity.stage !== "需求分析");
-        this.GetAllOpportunity = getopportunity.map((opportunity: any) => {
-          return {
-            label: opportunity.name,
-            value: opportunity.opportunity_id,
-            account_id: opportunity.account_id,
-          };
-        });
+        this.GetAllOpportunity = res.body.opportunities
+        console.log(this.GetAllOpportunity)
       },
       error: (error) => {
         console.log(error);
       }
     });
-  }
-
-  selectedAccount_id: string = '';
-
-  //取得選擇的商機帳戶id
-  selectedOpportunity() {
-    const selectedOpportunity = this.GetAllOpportunity.find((opportunity) => opportunity.value === this.selectedOpportunity_id);
-    this.selectedAccount_id = selectedOpportunity?.account_id;
   }
 
   // table lazyload
@@ -466,14 +440,6 @@ export class QuoteComponent {
   //偵測status變量
   onStatusChange(event: any) {
     console.log("狀態選擇status: " + event.value.code + event.value.name);
-  }
-
-  //處理status的值
-  editStatus(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    let statusName = this.selectedStatus ? this.selectedStatus.name : "";
-    //將statusName更新到表單中
-    this.quote_form.patchValue({status: statusName});
   }
 
 }

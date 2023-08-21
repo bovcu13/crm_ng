@@ -46,17 +46,15 @@ export class OrderComponent {
     {
       name: "草稿",
       code: "draft",
-      boolean: false
     },
     {
       name: "啟動中",
       code: "activated",
-      boolean: false
     }
   ]
 
   ngOnInit() {
-    this.getAllContractRequest()
+    this.getAllContractSelection()
   }
 
   getAllOrderRequest() {
@@ -134,8 +132,7 @@ export class OrderComponent {
       status: this.order_form.get('status')?.value.name,
       description: this.order_form.value.description,
       start_date: this.order_form.value.start_date,
-      contract_id: this.selectedContract_id, //契約ID
-      //account_id: this.selectedAccount_id //帳戶ID
+      contract_id: this.order_form.value.contract_id, //契約ID
     }
     this.HttpApi.postOrderRequest(body).subscribe({
       next: Request => {
@@ -171,7 +168,6 @@ export class OrderComponent {
 
   //建立formgroup
   order_form: FormGroup;
-
   constructor(private fb: FormBuilder, private HttpApi: HttpApiService) {
     this.order_form = this.fb.group({
       code: [''],
@@ -218,11 +214,8 @@ export class OrderComponent {
   //編輯&新增dialog
   edit: boolean = false;
   dialogHeader!: string;
-  selectedStatus!: any;
   showedit = true;//判斷是否dialog為新增與編輯
   o_id: any;
-  selectedStatusName: any;
-
   showDialog(type: string, order?: any): void {
     if (type === 'add') {
       this.dialogHeader = '新增訂單';
@@ -234,26 +227,21 @@ export class OrderComponent {
       console.log("order: " + JSON.stringify(order))
       this.dialogHeader = '編輯訂單';
       if (order.status === "啟動中") {
-        this.order_form.patchValue({
-          status: this.status.find((s: { name: any; }) => s.name === order.status),
-        });
         this.order_form.controls['status'].disable();
       }else{
         this.order_form.controls['status'].enable();
       }
       this.order_form.patchValue(order);
       this.order_form.patchValue({
+        contract_code: this.GetAllContract.find((s: { code: any; }) => s.code === order.contract_code),
+        status: this.status.find((s: { name: any; }) => s.name === order.status),
         start_date: new Date(order.start_date),
       });
       this.showedit = true; // 顯示 activated_by 控件
-      // 綁定已經選擇的狀態
-      this.selectedStatus = this.status.find(s => s.name === order.status);
-      this.selectedStatusName = this.selectedStatus.name
       this.o_id = order.order_id
     }
     this.edit = true;
   }
-
 
   patchOrderRequest(o_id: any): void {
     if (this.order_form.controls['contract_id'].hasError('required') ||
@@ -284,17 +272,15 @@ export class OrderComponent {
     } else {
       this.order_form.controls['start_date'].value;
     }
-    this.editStatus()//處理status的值，抓取name
     if (this.order_form.controls['account_id'].hasError('required') || this.order_form.controls['contract_id'].hasError('dateError')
       || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
       return;
     }
     let body = {
-      status: this.order_form.get('status')?.value,
+      status: this.order_form.get('status')?.value.name,
       start_date: this.order_form.get('start_date')?.value,
-      //account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
-      contract_id: this.selectedContract_id, //契約ID
+      contract_id: this.order_form.get('contract_id')?.value, //契約ID
     }
     this.HttpApi.patchOrderRequest(o_id, body).subscribe(
       Request => {
@@ -322,7 +308,6 @@ export class OrderComponent {
         }
       })
   }
-
 
   deleteOrderRequest(o_id: any): void {
     Swal.fire({
@@ -373,23 +358,14 @@ export class OrderComponent {
 
   // GET全部Contract
   GetAllContract: any[] = [];
-  selectedContract_id: any;
-  contractsearch: any;
-
-  getAllContractRequest() {
-    this.HttpApi.getAllContractRequest(this.contractsearch, 1).subscribe({
-      next: res => {
-        const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
-        this.GetAllContract = contracts.map((contract: any) => {
-          return {
-            label: contract.code,
-            value: contract.contract_id,
-            date: contract.start_date,
-            account_id: contract.account_id,
-          };
-        });
+  //取得契約階段如果不到已簽署就無法選擇
+  getAllContractSelection() {
+    this.HttpApi.getAllContractSelection("已簽署").subscribe({
+      next: (res) => {
+        this.GetAllContract = res.body.contracts
+        console.log(this.GetAllContract)
       },
-      error: error => {
+      error: (error) => {
         console.log(error);
       }
     });
@@ -407,20 +383,12 @@ export class OrderComponent {
       timer: 1000
     })
   }
-
-//處理status的值
-  editStatus(): void {
-    //判斷selectedStatus是否有值，若有值則取出name屬性
-    let statusName = this.selectedStatus ? this.selectedStatus.name : "";
-    //將statusName更新到表單中
-    this.order_form.patchValue({status: statusName});
-  }
-
+	//todo
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
   validateStartDate() {
-    const selectedContract = this.GetAllContract.find((contract) => contract.value === this.selectedContract_id);
+    const selectedContract = this.GetAllContract.find((contract) => contract.value === this.order_form.get('contract_id')?.value);
     const contractStartDate = selectedContract?.date.substring(0, 10);
     this.MinDate = new Date(contractStartDate);
   }

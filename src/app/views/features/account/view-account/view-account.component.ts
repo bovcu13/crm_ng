@@ -58,7 +58,6 @@ export class ViewAccountComponent implements OnInit {
     this.account_form = this.fb.group({
       account_id: ['', [Validators.required]],
       name: ['', [Validators.required]],
-      owner: [''],
       phone_number: [''],
       industry_id: [''],
       type: [''],

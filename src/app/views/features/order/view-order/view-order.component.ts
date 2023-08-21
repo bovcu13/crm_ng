@@ -31,16 +31,18 @@ export class ViewOrderComponent {
   GetOneOrder: any;
   stage: any;
   GetOneStartDate: any;
-
+  ContractCode: any;
   getOneOrderRequest(o_id: any): void {
     this.HttpApi.getOneOrderRequest(o_id).subscribe({
       next: res => {
         this.GetOneOrder = res.body
         this.stage = res.body.status;
         this.GetOneStartDate = res.body.start_date;
+        this.ContractCode = res.body.contract_code
         this.order_form.patchValue(res.body)
         this.order_form.patchValue({
-          status: this.status.find((s: { name: any; }) => s.name === this.GetOneOrder.status),
+          contract_code: this.GetAllContract.find((s: { code: any; }) => s.code === res.body.contract_code),
+          status: this.status.find((s: { name: any; }) => s.name === res.body.status),
           start_date: new Date(res.body.start_date),
           activated_at: new Date(res.body.activated_at),
         });
@@ -71,6 +73,7 @@ export class ViewOrderComponent {
 
   GetAllProduct: any[] = [];
   totalRecords = 0;
+  search: any;
   //GET 取得可選取所有商品含報價金額
   getAllOrderProductRequest():void{
     this.HttpApi.getAllOrderProdcutRequest(this.search, this.o_id,1).subscribe({
@@ -139,7 +142,8 @@ export class ViewOrderComponent {
         quote_price: product.quote_price,
         unit_price: unit_price,
         quantity: quantity,
-        description: ' ',
+        //todo
+        // description: ' ',
       };
       orderProducts.push(orderProduct);
       this.HttpApi.postOrderProductRequest({products: orderProducts}).subscribe({
@@ -473,7 +477,7 @@ export class ViewOrderComponent {
     console.log("取到的o_id: " + this.o_id)
     this.getOrderProductRequest(this.o_id)
     this.getOneOrderRequest(this.o_id)
-    this.getAllContractRequest()
+    this.getAllContractSelection()
     this.getAllOrderProductRequest()
     this.getAllHistoricalRecordsRequest(this.o_id)
     this.edit_product_form = this.fb.group({
@@ -554,22 +558,14 @@ export class ViewOrderComponent {
 
   // GET全部Contract
   GetAllContract: any[] = [];
-  search: string = '';
-
-  getAllContractRequest() {
-    this.HttpApi.getAllContractRequest(this.search, 1).subscribe({
-      next: res => {
-        const contracts = res.body.contracts.filter((contract: any) => contract.status == '已簽署');
-        this.GetAllContract = contracts.map((contract: any) => {
-          return {
-            label: contract.code,
-            value: contract.contract_id,
-            // account_id: contract.account_id,
-            date: contract.start_date,
-          };
-        });
+  //取得契約階段如果不到已簽署就無法選擇
+  getAllContractSelection() {
+    this.HttpApi.getAllContractSelection("已簽署").subscribe({
+      next: (res) => {
+        this.GetAllContract = res.body.contracts
+        console.log(this.GetAllContract)
       },
-      error: error => {
+      error: (error) => {
         console.log(error);
       }
     });
@@ -602,7 +598,7 @@ export class ViewOrderComponent {
     } else {
       this.order_form.controls['start_date'].value;
     }
-    if (this.order_form.controls['account_id'].hasError('required') || this.order_form.controls['contract_id'].hasError('dateError')
+    if (this.order_form.controls['contract_id'].hasError('dateError')
       || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
       return;
     }
@@ -610,9 +606,8 @@ export class ViewOrderComponent {
     let body = {
       status: this.order_form.get('status')?.value.name,
       start_date: start_date.toISOString(),
-      // account_id: this.selectedAccount_id, //帳戶ID
       description: this.order_form.get('description')?.value,
-      contract_id: this.selectedContract_id, //契約ID
+      contract_id: this.order_form.get('contract_id')?.value, //契約ID
     }
     this.HttpApi.patchOrderRequest(this.o_id, body).subscribe(
       Request => {
@@ -691,8 +686,7 @@ export class ViewOrderComponent {
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
-  selectedContract_id: any;
-
+  //todo
   validateStartDate() {
     const selectedContract = this.GetAllContract.find((contract) => contract.value === this.order_form.get('contract_id')?.value);
     const contractStartDate = selectedContract?.date.substring(0, 10);
