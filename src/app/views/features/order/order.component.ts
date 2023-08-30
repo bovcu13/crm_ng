@@ -234,7 +234,6 @@ export class OrderComponent {
       this.order_form.patchValue(order);
       this.order_form.patchValue({
         contract_code: this.GetAllContract.find((s: { contract_id: any; }) => s.contract_id === order.contract_id),
-        // contract_code: order.contract_code,
         status: this.status.find((s: { name: any; }) => s.name === order.status),
         start_date: new Date(order.start_date),
       });
