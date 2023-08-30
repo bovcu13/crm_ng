@@ -40,7 +40,7 @@
         <div class="field">
           <label><span class="required-star">*</span>開始</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
-                      formControlName="start_date" [readonlyInput]="true" [minDate]="minDate"
+                      formControlName="start_date" [readonlyInput]="false" [minDate]="minDate"
                       [ngClass]="{'ng-dirty':event_form.controls['start_date'].hasError && event_form.controls['start_date'].touched}"></p-calendar>
         </div>
       </div>
@@ -49,7 +49,7 @@
         <div class="field">
           <label><span class="required-star">*</span>開始</label>
           <p-calendar [showTime]="true" [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
-                      formControlName="start_date" [readonlyInput]="true" [minDate]="minDate"
+                      formControlName="start_date" [readonlyInput]="false" [minDate]="minDate"
                       (onSelect)="onDateSelect($event)"
                       [ngClass]="{'ng-dirty':event_form.controls['start_date'].hasError && event_form.controls['start_date'].touched}"></p-calendar>
         </div>
@@ -67,7 +67,7 @@
           <label><span class="required-star">*</span>結束</label>
           <p-calendar [showTime]="true" [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
                       formControlName="end_date" [minDate]="event_form.controls['start_date'].value"
-                      [readonlyInput]="true" [maxDate]="maxDate"
+                      [readonlyInput]="false" [maxDate]="maxDate"
                       [ngClass]="{'ng-dirty':event_form.controls['end_date'].hasError && event_form.controls['end_date'].touched}"></p-calendar>
         </div>
       </div>
@@ -75,7 +75,7 @@
         <div class="field">
           <label><span class="required-star">*</span>結束</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
-                      formControlName="end_date" [readonlyInput]="true"
+                      formControlName="end_date" [readonlyInput]="false"
                       [minDate]="event_form.controls['start_date'].value"
                       [ngClass]="{'ng-dirty':event_form.controls['end_date'].hasError && event_form.controls['end_date'].touched}"></p-calendar>
         </div>
