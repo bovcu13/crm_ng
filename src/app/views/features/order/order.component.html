@@ -101,14 +101,14 @@
           <p-dropdown placeholder="搜尋契約" [disabled]="true" formControlName="contract_code" appendTo="body"
                       [options]="GetAllContract" (ngModelChange)="validateStartDate()"
                       [filter]="true" filterBy="code" optionLabel="code" [showClear]="true"
-                      [ngClass]="{'ng-dirty': order_form.controls['contract_id'].hasError('required') && order_form.controls['contract_id'].touched}"
+                      [ngClass]="{'ng-dirty': order_form.controls['contract_code'].hasError('required') && order_form.controls['contract_code'].touched}"
           ></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
         <div class="field">
           <label><span class="required-star">*</span>訂單開始日期</label>
-          <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="start_date" [minDate]="MinDate"
+          <p-calendar (ngModelChange)="validateStartDate()" [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true" formControlName="start_date" [minDate]="MinDate"
                       [ngClass]="{'ng-dirty':order_form.controls['start_date'].hasError('required') && order_form.controls['start_date'].touched}"></p-calendar>
           <div class="required-star" *ngIf="order_form.controls['start_date'].hasError('required-star')">
             訂單開始日期不可早於契約日期
@@ -170,7 +170,7 @@
       <ng-container *ngIf="!showedit">
         <p-button label="新增" (click)="postOrderRequest()" styleClass="p-button-info"></p-button>
       </ng-container>
-      <ng-container *ngIf="order_form.controls['status'].value === '草稿'">
+      <ng-container *ngIf="order_form.controls['status'].value.name === '草稿'">
           <p-button label="儲存" (click)="patchOrderRequest(o_id)"
                     styleClass="p-button-info"></p-button>
         </ng-container>
