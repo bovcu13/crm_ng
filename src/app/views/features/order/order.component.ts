@@ -97,7 +97,7 @@ export class OrderComponent {
   }
 
   postOrderRequest(): void {
-    if (this.order_form.controls['contract_id'].hasError('required') ||
+    if (this.order_form.controls['contract_code'].hasError('required') ||
       this.order_form.controls['start_date'].hasError('required')) {
       this.edit = false;
       Swal.fire({
@@ -107,8 +107,8 @@ export class OrderComponent {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.order_form.controls['contract_id'].hasError('required')) {
-          this.order_form.controls['contract_id'].markAsDirty();
+        if (this.order_form.controls['contract_code'].hasError('required')) {
+          this.order_form.controls['contract_code'].markAsDirty();
         }
         if (this.order_form.controls['start_date'].hasError('required')) {
           this.order_form.controls['start_date'].markAsDirty();
@@ -125,14 +125,14 @@ export class OrderComponent {
     } else {
       this.order_form.controls['start_date'].value;
     }
-    if (this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
+    if (this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_code'].hasError('required')) {
       return;
     }
     let body = {
       status: this.order_form.get('status')?.value.name,
       description: this.order_form.value.description,
       start_date: this.order_form.value.start_date,
-      contract_id: this.order_form.value.contract_id, //契約ID
+      contract_id: this.order_form.value.contract_code.contract_id, //契約ID
     }
     this.HttpApi.postOrderRequest(body).subscribe({
       next: Request => {
@@ -175,7 +175,7 @@ export class OrderComponent {
       account_name: ['', [Validators.required]],
       start_date: ['', [Validators.required]],
       status: [''],
-      contract_id: ['', [Validators.required]],
+      contract_id: [''],
       contract_code: ['', [Validators.required]],
       grand_total: [''],
       activated_by: [''],
@@ -233,7 +233,7 @@ export class OrderComponent {
       }
       this.order_form.patchValue(order);
       this.order_form.patchValue({
-        contract_code: this.GetAllContract.find((s: { code: any; }) => s.code === order.contract_code),
+        contract_code: this.GetAllContract.find((s: { contract_id: any; }) => s.contract_id === order.contract_id),
         status: this.status.find((s: { name: any; }) => s.name === order.status),
         start_date: new Date(order.start_date),
       });
@@ -244,7 +244,7 @@ export class OrderComponent {
   }
 
   patchOrderRequest(o_id: any): void {
-    if (this.order_form.controls['contract_id'].hasError('required') ||
+    if (this.order_form.controls['contract_code'].hasError('required') ||
       this.order_form.controls['start_date'].hasError('required')) {
       this.edit = false;
       Swal.fire({
@@ -254,8 +254,8 @@ export class OrderComponent {
         showConfirmButton: false,
         timer: 1000
       }).then(() => {
-        if (this.order_form.controls['contract_id'].hasError('required')) {
-          this.order_form.controls['contract_id'].markAsDirty();
+        if (this.order_form.controls['contract_code'].hasError('required')) {
+          this.order_form.controls['contract_code'].markAsDirty();
         }
         if (this.order_form.controls['start_date'].hasError('required')) {
           this.order_form.controls['start_date'].markAsDirty();
@@ -272,7 +272,7 @@ export class OrderComponent {
     } else {
       this.order_form.controls['start_date'].value;
     }
-    if (this.order_form.controls['account_id'].hasError('required') || this.order_form.controls['contract_id'].hasError('dateError')
+    if (this.order_form.controls['contract_code'].hasError('required') || this.order_form.controls['contract_code'].hasError('dateError')
       || this.order_form.controls['start_date'].hasError('required') || this.order_form.controls['contract_id'].hasError('required')) {
       return;
     }
@@ -280,7 +280,7 @@ export class OrderComponent {
       status: this.order_form.get('status')?.value.name,
       start_date: this.order_form.get('start_date')?.value,
       description: this.order_form.get('description')?.value,
-      contract_id: this.order_form.get('contract_id')?.value, //契約ID
+      contract_id: this.order_form.get('contract_code')?.value.contract_id, //契約ID
     }
     this.HttpApi.patchOrderRequest(o_id, body).subscribe(
       Request => {
@@ -360,7 +360,7 @@ export class OrderComponent {
   GetAllContract: any[] = [];
   //取得契約階段如果不到已簽署就無法選擇
   getAllContractSelection() {
-    this.HttpApi.getAllContractSelection("已簽署").subscribe({
+    this.HttpApi.getAllContractSelection("已簽署").subscribe( {
       next: (res) => {
         this.GetAllContract = res.body.contracts
         console.log(this.GetAllContract)
@@ -383,13 +383,12 @@ export class OrderComponent {
       timer: 1000
     })
   }
-	//todo
+
   //設定訂單開始天數不能開始於契約開始日期
   MinDate!: any;//契約日期
   orderStartDate: any;
   validateStartDate() {
-    const selectedContract = this.GetAllContract.find((contract) => contract.value === this.order_form.get('contract_id')?.value);
-    const contractStartDate = selectedContract?.date.substring(0, 10);
-    this.MinDate = new Date(contractStartDate);
+    const selectedContract = this.GetAllContract.find((contract) => contract.contract_id === this.order_form.get('contract_code')?.value.contract_id);
+    this.MinDate = new Date(selectedContract.start_date);
   }
 }
