@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {MenuItem} from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 import Swal from "sweetalert2";
 
 @Component({
@@ -18,7 +18,7 @@ export class ToolbarComponent implements OnInit {
       {
         label: '首頁',
         routerLink: ['/main/dashboard'],
-        },
+      },
       {
         label: '帳戶',
         items: [
@@ -43,15 +43,15 @@ export class ToolbarComponent implements OnInit {
       {
         label: '報價',
         routerLink: ['/main/quote'],
-        },
+      },
       {
         label: '契約',
         routerLink: ['/main/contract'],
-        },
+      },
       {
         label: '訂單',
         routerLink: ['/main/order'],
-        },
+      },
       {
         label: '報表',
         routerLink: ['/main/report'],
@@ -59,7 +59,7 @@ export class ToolbarComponent implements OnInit {
       {
         label: '預測',
         routerLink: ['/main/forecasting'],
-        },
+      },
       {
         label: '行銷活動',
         routerLink: ['/main/campaign'],

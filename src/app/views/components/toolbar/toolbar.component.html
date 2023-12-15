@@ -1,4 +1,4 @@
-  <p-menubar [model]="items" class="fixed-header-container">
+  <p-menubar [model]="items" styleClass="fixed-header-container">
     <ng-template pTemplate="start">
       <img class="img" src="./assets/img/logo/home.png" width=23 height=29.8 alt="Collective_logo" title="Collective"
       style="display: flex">
@@ -9,10 +9,18 @@
       <input type="text" placeholder="搜尋" name="text" class="input">
       <i class="pi pi-search"></i>
     </span>
-      <p-button pTooltip="行事曆" icon="pi pi-calendar" routerLink="/main/event"
-                styleClass="text-white p-button-rounded p-button-secondary p-button-text p-button-lg mr-2"></p-button>
-      <p-button pTooltip="帳號" icon="pi pi-user" (click)="menu.toggle($event)"
-                styleClass="text-white p-button-rounded p-button-secondary p-button-text p-button-lg mr-3"></p-button>
+      <p-button pTooltip="行事曆"
+                icon="pi pi-calendar text-white"
+                routerLink="/main/event"
+                [text]="true"
+                severity="secondary"
+                styleClass="mr-2"></p-button>
+      <p-button pTooltip="帳號"
+                icon="pi pi-user text-white"
+                (click)="menu.toggle($event)"
+                [text]="true"
+                severity="secondary"
+                styleClass="mr-3"></p-button>
     </ng-template>
   </p-menubar>
   <p-menu #menu [model]="account" [popup]="true"></p-menu>

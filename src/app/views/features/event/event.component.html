@@ -23,7 +23,7 @@
         <div class="field">
           <label><span class="required-star">*</span>主題</label>
           <input type="text" pInputText formControlName="subject"
-                 [ngClass]="{'ng-dirty':event_form.controls['subject'].hasError && event_form.controls['subject'].touched}"/>
+                 [ngClass]="{'ng-dirty':event_form.controls['subject'].hasError('required') && event_form.controls['subject'].touched}"/>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -31,7 +31,7 @@
           <label><span class="required-star">*</span>主要人員</label>
           <p-multiSelect placeholder="搜尋人員" [formControlName]="'main_name'" appendTo="body" display="chip"
                          optionLabel="main_name" [showClear]="true" [options]="GetAllMain" (onChange)="MultiSelectMain($event)" (onClear)="onClearMain()"
-                         [ngClass]="{'ng-dirty':event_form.controls['main_name'].hasError && event_form.controls['main_name'].touched}">
+                         [ngClass]="{'ng-dirty':event_form.controls['main_name'].hasError('required') && event_form.controls['main_name'].touched}">
           </p-multiSelect>
         </div>
       </div>
@@ -41,7 +41,7 @@
           <label><span class="required-star">*</span>開始</label>
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
                       formControlName="start_date" [readonlyInput]="false" [minDate]="minDate"
-                      [ngClass]="{'ng-dirty':event_form.controls['start_date'].hasError && event_form.controls['start_date'].touched}"></p-calendar>
+                      [ngClass]="{'ng-dirty':event_form.controls['start_date'].hasError('required') && event_form.controls['start_date'].touched}"></p-calendar>
         </div>
       </div>
       <!--       如果無勾選全天日期則p-calendar 顯示開始與結束日期，並開啟時間選擇-->
@@ -51,7 +51,7 @@
           <p-calendar [showTime]="true" [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
                       formControlName="start_date" [readonlyInput]="false" [minDate]="minDate"
                       (onSelect)="onDateSelect($event)"
-                      [ngClass]="{'ng-dirty':event_form.controls['start_date'].hasError && event_form.controls['start_date'].touched}"></p-calendar>
+                      [ngClass]="{'ng-dirty':event_form.controls['start_date'].hasError('required') && event_form.controls['start_date'].touched}"></p-calendar>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -68,7 +68,7 @@
           <p-calendar [showTime]="true" [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
                       formControlName="end_date" [minDate]="event_form.controls['start_date'].value"
                       [readonlyInput]="false" [maxDate]="maxDate"
-                      [ngClass]="{'ng-dirty':event_form.controls['end_date'].hasError && event_form.controls['end_date'].touched}"></p-calendar>
+                      [ngClass]="{'ng-dirty':event_form.controls['end_date'].hasError('required') && event_form.controls['end_date'].touched}"></p-calendar>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6" *ngIf="event_form.get('allday')?.value">
@@ -77,7 +77,7 @@
           <p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
                       formControlName="end_date" [readonlyInput]="false"
                       [minDate]="event_form.controls['start_date'].value"
-                      [ngClass]="{'ng-dirty':event_form.controls['end_date'].hasError && event_form.controls['end_date'].touched}"></p-calendar>
+                      [ngClass]="{'ng-dirty':event_form.controls['end_date'].hasError('required') && event_form.controls['end_date'].touched}"></p-calendar>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -85,7 +85,7 @@
           <label><span class="required-star">*</span>類型</label>
           <p-dropdown [options]="type" [editable]="true" optionLabel="name" appendTo="body"
                       (onChange)="typeValue($event)" formControlName="type"
-                      [ngClass]="{'ng-dirty':event_form.controls['type'].hasError && event_form.controls['type'].touched}"></p-dropdown>
+                      [ngClass]="{'ng-dirty':event_form.controls['type'].hasError('required') && event_form.controls['type'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
@@ -93,7 +93,7 @@
           <label>參加成員</label>
           <p-multiSelect  placeholder="搜尋人員" [formControlName]="'attendee_name'" appendTo="body" [options]="GetAllAttendee" display="chip"
                          optionLabel="attendee_name" [showClear]="true"  (onChange)="MultiSelectAttendee($event)" (onClear)="onClearAttendee()"
-                         [ngClass]="{'ng-dirty':event_form.controls['attendee_name'].hasError && event_form.controls['attendee_name'].touched}">
+                         [ngClass]="{'ng-dirty':event_form.controls['attendee_name'].hasError('required') && event_form.controls['attendee_name'].touched}">
 
           </p-multiSelect>
         </div>
@@ -103,7 +103,7 @@
           <label><span class="required-star">*</span>帳戶</label>
           <p-dropdown placeholder="請選擇" [disabled]="true" appendTo="body" [options]="GetAllAccount" optionLabel="name" [filter]="true" filterBy="name"
                       formControlName="account_name" [showClear]="true" (onChange)="onAccountSelected($event)"
-                      [ngClass]="{'ng-dirty':event_form.controls['account_name'].hasError && event_form.controls['account_name'].touched}"></p-dropdown>
+                      [ngClass]="{'ng-dirty':event_form.controls['account_name'].hasError('required') && event_form.controls['account_name'].touched}"></p-dropdown>
         </div>
       </div>
       <div class="col-12 md:col-6 lg:col-6">
